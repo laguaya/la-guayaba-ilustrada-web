@@ -156,14 +156,26 @@ def note_get(nid):
     return None, None
 
 
+def mejor(a, b):
+    """True si la foto a tiene más resolución que la foto b."""
+    from PIL import Image
+    try:
+        return Image.open(a).size[0] > Image.open(b).size[0] * 1.15
+    except Exception:
+        return False
+
+
 def add_photo(nid, dest, caption=''):
-    """Primera foto real = portada; las siguientes van a la galería de la nota."""
+    """Primera foto = portada. Si llega una foto de más calidad que la portada, la reemplaza.
+    Si escribes "galería" en el texto de la foto, se va a la galería."""
     n, put = note_get(nid)
     if not n:
         return None
-    if '-foto' not in n.get('img', ''):
-        set_cover(nid, dest)
-        return 'portada'
+    cur = n.get('img', '').split('?')[0]
+    if '-foto' not in cur or 'portada' in caption.lower() or mejor(dest, cur):
+        if 'galer' not in caption.lower():
+            set_cover(nid, dest)
+            return 'portada'
     n.setdefault('g', []).append({'s': dest, 'c': caption} if caption else dest)
     put(n)
     return 'galeria'
