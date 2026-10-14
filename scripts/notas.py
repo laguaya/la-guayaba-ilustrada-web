@@ -94,6 +94,36 @@ def set_cover(nid, src_img):
     return True
 
 
+def note_get(nid):
+    """Regresa (dict, guardar) para un borrador o una nota publicada en formato JSON."""
+    path = f'drafts/{nid}.json'
+    if os.path.exists(path):
+        n = load(path)
+        return n, lambda x: save(path, x)
+    lines = open('posts.js', encoding='utf-8').read().split('\n')
+    for i, ln in enumerate(lines):
+        if ln.strip().startswith('{"id": "' + nid + '"'):
+            n = json.loads(ln.strip().rstrip(','))
+            def put(x, i=i):
+                lines[i] = '  ' + json.dumps(x, ensure_ascii=False) + ','
+                open('posts.js', 'w', encoding='utf-8').write('\n'.join(lines))
+            return n, put
+    return None, None
+
+
+def add_photo(nid, dest, caption=''):
+    """Primera foto real = portada; las siguientes van a la galería de la nota."""
+    n, put = note_get(nid)
+    if not n:
+        return None
+    if '-foto' not in n.get('img', ''):
+        set_cover(nid, dest)
+        return 'portada'
+    n.setdefault('g', []).append({'s': dest, 'c': caption} if caption else dest)
+    put(n)
+    return 'galeria'
+
+
 def handle_message(u, msg):
     """Fotos y pedidos que manda Sergio por Telegram."""
     os.makedirs('inbox', exist_ok=True)
@@ -108,14 +138,22 @@ def handle_message(u, msg):
               '• Para cambiar la portada de una nota, responde a su mensaje con la foto.\n'
               '• Una foto suelta se guarda para usarla en la siguiente nota.')
         return
+    mg = msg.get('media_group_id')
+    if mg:
+        if nid:
+            remember('mg' + str(mg), nid)
+        else:
+            nid = msgs().get('mg' + str(mg))
     if is_photo:
         if nid:
             dest = f'assets/work/nota-{nid}-foto{u["update_id"]}.webp'
             get_photo(msg, dest)
-            if set_cover(nid, dest):
+            r = add_photo(nid, dest, text if mg is None else '')
+            if r == 'portada':
                 reply(mid, '🖼 Listo, esta foto queda como portada de esa nota.')
-                if text:
-                    save(f'inbox/{u["update_id"]}.json', {'tipo': 'texto', 'nota': nid, 'texto': text, 'fecha': msg['date']})
+                return
+            if r == 'galeria':
+                reply(mid, '🖼 Listo, foto agregada a la galería de la nota.')
                 return
         dest = f'inbox/foto-{u["update_id"]}.webp'
         get_photo(msg, dest)

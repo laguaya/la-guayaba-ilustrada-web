@@ -124,6 +124,15 @@ footer small{font-size:13px;color:var(--gray)}
 .clock b{font-weight:900;font-size:clamp(34px,4vw,48px);letter-spacing:-0.03em;font-variant-numeric:tabular-nums;line-height:1}
 .clock span{font-size:14px;font-weight:500;letter-spacing:.02em}
 .credit{font-size:12.5px;color:var(--gray,#565656);text-align:center;margin:8px 0 0}
+.gal{width:100%;max-width:62ch;display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 0 10px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.gal::-webkit-scrollbar{display:none}
+.gal figure{flex:0 0 86%;margin:0;scroll-snap-align:center;display:flex;flex-direction:column;gap:8px}
+.gal.one figure{flex-basis:100%}
+.gal img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:22px;background:var(--pink-wash);cursor:zoom-in}
+.gal figcaption{font-size:13.5px;color:var(--gray,#565656);text-align:center}
+.gal-hint{font-size:13px;color:var(--gray,#565656);text-align:center;margin:-8px 0 0}
+.zoom{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;padding:20px;cursor:zoom-out}
+.zoom img{max-width:100%;max-height:100%;border-radius:16px}
 .source{font-size:14px;color:var(--gray,#565656);border-top:1.5px solid var(--line,#eee);padding-top:16px;margin:0}
 .source a{color:var(--ink,#000);font-weight:700;text-decoration:underline;text-underline-offset:3px}
 .loadmore{display:flex;justify-content:center;margin-top:10px}
@@ -194,6 +203,21 @@ const fD=new Intl.DateTimeFormat('es-MX',{weekday:'long',day:'numeric',month:'lo
 function tickClock(){const d=document.getElementById('cdate'),t=document.getElementById('ctime');if(!d)return;const n=new Date(),x=fD.format(n);d.textContent=x.charAt(0).toUpperCase()+x.slice(1);t.textContent=fT.format(n)}
 setInterval(tickClock,1000);
 
+function gallery(p){
+  const g=(p.g||[]).map(x=>typeof x==='string'?{s:x}:x);
+  if(!g.length)return '';
+  return `</div><div class="gal${g.length===1?' one':''}">${g.map(x=>`<figure><img src="${x.s}" alt="${x.c||p.t}" loading="lazy">${x.c?`<figcaption>${x.c}</figcaption>`:''}</figure>`).join('')}</div>${g.length>1?'<p class="gal-hint">Desliza para ver más fotos →</p>':''}<div class="body">`;
+}
+function body(p){
+  const ps=p.b.map(x=>`<p>${x}</p>`);
+  const at=Math.min(2,ps.length);
+  return ps.slice(0,at).join('')+gallery(p)+ps.slice(at).join('');
+}
+document.addEventListener('click',e=>{
+  const im=e.target.closest('.gal img');
+  if(im){const z=document.createElement('div');z.className='zoom';z.innerHTML=`<img src="${im.src}" alt="">`;z.onclick=()=>z.remove();document.body.appendChild(z);return}
+});
+
 function article(p){
   document.title=p.t+' · La Guayaba Ilustrada';
   const others=P.filter(x=>x.id!==p.id).slice(0,3);
@@ -206,7 +230,7 @@ function article(p){
     <p class="dek">${p.x}</p>
     <span class="by">Por La Guayaba Ilustrada</span>
     <div class="cover"><img src="${p.img}" alt="${p.alt}"></div>${p.cr?`<p class="credit">${p.cr}</p>`:''}
-    <div class="body">${p.b.map(x=>`<p>${x}</p>`).join('')}</div>
+    <div class="body">${body(p)}</div>
     ${p.src?`<p class="source">Fuente: <a href="${p.src}" target="_blank" rel="noopener">${p.sn||host(p.src)}</a></p>`:''}
     <div class="share">
       <a class="cta" href="https://wa.me/?text=${encodeURIComponent(p.t+' · La Guayaba Ilustrada')}" target="_blank" rel="noopener">Compartir por WhatsApp</a>
