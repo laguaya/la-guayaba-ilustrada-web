@@ -186,7 +186,7 @@ def mark(cq, texto):
 def poll():
     global changed
     off = int(open(OFFSET).read().strip() or 0) if os.path.exists(OFFSET) else 0
-    r = tg('getUpdates', offset=off, timeout=0, allowed_updates=['callback_query', 'message'])
+    r = tg('getUpdates', offset=off, timeout=int(os.environ.get('LONGPOLL', '0')), allowed_updates=['callback_query', 'message'])
     ups = r.get('result', [])
     dbg = {'ok': r.get('ok'), 'error': r.get('description'), 'updates': len(ups), 'offset': off,
            'tipos': [k for u in ups for k in u if k != 'update_id'],
