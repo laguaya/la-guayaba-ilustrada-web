@@ -251,7 +251,7 @@ def main():
     lines = [f'# {NAME}', '',
              '> Agencia creativa independiente en Cuernavaca, Morelos, México. Branding, páginas web, diseño gráfico, video y locución, '
              'fotografía, motion graphics, modelado 3D y contenido con inteligencia artificial. Director creativo: Sergio Enrique Martínez Toledo.', '',
-             f'- Sitio: {SITE}/', f'- WhatsApp: 720 909 7907 (https://wa.me/527209097907)', '- Correo: hola@guayabailustrada.com.mx', f'- Instagram: {IG}', f'- Facebook: {FB}', '- Ubicación: Cuernavaca, Morelos, México', '',
+             f'- Sitio: {SITE}/', f'- WhatsApp: 720 909 7907 (https://wa.me/527209097907)', '- Correo: hola@guayabailustrada.com.mx', f'- Instagram: {IG}', f'- Facebook: {FB}', '- Instagram de noticias (Newsbrand): https://www.instagram.com/lgi.newsbrand/', '- Ubicación: Cuernavaca, Morelos, México', '',
              '## Servicios y precios (MXN, más IVA si requieres factura)', '']
     for s in SVC:
         lines.append(f'### {s["t"]}')
