@@ -16,6 +16,7 @@ SITE = 'https://guayabailustrada.com.mx'
 NAME = 'La Guayaba Ilustrada'
 PHONE = '+527209097907'
 IG = 'https://instagram.com/guayabailustrada'
+FB = 'https://www.facebook.com/guayabailustrada'
 MES = {m: i + 1 for i, m in enumerate(['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'])}
 e = lambda s: html.escape(str(s or ''), quote=True)
 strip = lambda s: re.sub(r'<[^>]+>', '', str(s or ''))
@@ -79,7 +80,7 @@ ORG = {
     'telephone': PHONE, 'priceRange': '$$',
     'address': {'@type': 'PostalAddress', 'addressLocality': 'Cuernavaca', 'addressRegion': 'Morelos', 'addressCountry': 'MX'},
     'areaServed': [{'@type': 'City', 'name': 'Cuernavaca'}, {'@type': 'State', 'name': 'Morelos'}, {'@type': 'Country', 'name': 'México'}],
-    'sameAs': [IG],
+    'sameAs': [IG, FB],
     'founder': {'@type': 'Person', '@id': SITE + '/#sergio', 'name': 'Sergio Enrique Martínez Toledo', 'jobTitle': 'Director creativo',
                 'alumniOf': 'Universidad Autónoma del Estado de Morelos'},
     'knowsAbout': ['Branding', 'Diseño web', 'Diseño gráfico', 'Producción de video', 'Fotografía de producto', 'Motion graphics',
@@ -138,7 +139,7 @@ def article_ld(n, url):
             {'@type': 'ListItem', 'position': 3, 'name': strip(n['t']), 'item': url}]},
         {'@type': ['ProfessionalService', 'LocalBusiness'], '@id': SITE + '/#negocio', 'name': NAME,
                                               'url': SITE + '/', 'logo': SITE + '/assets/icon-512.png', 'telephone': PHONE,
-                                              'address': ORG['address'], 'sameAs': [IG]}]}
+                                              'address': ORG['address'], 'sameAs': [IG, FB]}]}
 
 
 def head_meta(title, desc, url, kind='website', image=None, extra=''):
@@ -250,7 +251,7 @@ def main():
     lines = [f'# {NAME}', '',
              '> Agencia creativa independiente en Cuernavaca, Morelos, México. Branding, páginas web, diseño gráfico, video y locución, '
              'fotografía, motion graphics, modelado 3D y contenido con inteligencia artificial. Director creativo: Sergio Enrique Martínez Toledo.', '',
-             f'- Sitio: {SITE}/', f'- WhatsApp: 720 909 7907 (https://wa.me/527209097907)', f'- Instagram: {IG}', '- Ubicación: Cuernavaca, Morelos, México', '',
+             f'- Sitio: {SITE}/', f'- WhatsApp: 720 909 7907 (https://wa.me/527209097907)', f'- Instagram: {IG}', f'- Facebook: {FB}', '- Ubicación: Cuernavaca, Morelos, México', '',
              '## Servicios y precios (MXN, más IVA si requieres factura)', '']
     for s in SVC:
         lines.append(f'### {s["t"]}')
