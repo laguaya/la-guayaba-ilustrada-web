@@ -393,7 +393,7 @@ def instagram():
     if not (tok and uid):
         return
     api = os.environ.get('IG_API', 'https://graph.instagram.com/v21.0')
-    site = os.environ.get('SITE', 'https://la-guayaba-ilustrada-web.pages.dev')
+    site = os.environ.get('SITE', 'https://guayabailustrada.com.mx')
     rest = []
     for item in q:
         urls = [f'{site}/assets/ig/{item["id"]}/{i}.jpg' for i in (1, 2, 3)]
