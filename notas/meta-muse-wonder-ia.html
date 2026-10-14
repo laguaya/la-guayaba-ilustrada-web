@@ -175,6 +175,28 @@ footer small{font-size:13px;color:var(--gray)}
 .article{animation:art-in .7s cubic-bezier(.2,.7,.2,1) both}
 @keyframes art-in{from{opacity:0;transform:translateY(16px)}}
 .foot-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;font-size:14px;font-weight:700}.foot-links a{color:inherit;text-decoration:none;font-weight:700;transition:color .25s}.foot-links a:hover{color:var(--pink)}
+.menu-btn{display:none}
+.nav-links>div{display:flex;gap:24px;justify-content:center}
+@media (max-width:1000px){
+  .nav{grid-template-columns:1fr auto;grid-template-rows:60px;height:auto;border-radius:30px;padding:0 6px 0 20px;row-gap:0;transition:border-radius .4s var(--ease)}
+  .nav .logo b{font-size:25px}.nav .logo span{font-size:11px}
+  .nav-end{gap:6px}
+  .nav .quote{height:46px;padding:0 20px;font-size:14.5px}
+  .menu-btn{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:46px;height:46px;border-radius:50%;background:#1d1d1d;border:0;cursor:pointer;padding:0}
+  .menu-btn i{display:block;width:18px;height:2px;border-radius:2px;background:var(--white);transition:transform .4s var(--ease)}
+  .nav.open .menu-btn i:first-child{transform:translateY(3.5px) rotate(45deg)}
+  .nav.open .menu-btn i:last-child{transform:translateY(-3.5px) rotate(-45deg)}
+  .nav-links{grid-column:1/-1;grid-row:2;display:grid;grid-template-rows:0fr;overflow:hidden;mask-image:none;padding:0;gap:0;transition:grid-template-rows .45s var(--ease)}
+  .nav-links{justify-self:stretch;width:100%;justify-content:stretch;grid-template-columns:1fr}
+  .nav-links>div{min-height:0;display:flex;flex-direction:column;gap:2px;width:100%;padding-right:14px}
+  .nav.open .nav-links{grid-template-rows:1fr}
+  .nav.open{border-radius:28px}
+  .nav-links a{font-size:21px;font-weight:700;color:var(--white);padding:11px 2px;border-top:1px solid #222;opacity:0;translate:0 -6px;transition:opacity .35s var(--ease),translate .35s var(--ease),color .2s}
+  .nav-links a:first-child{margin-top:4px}
+  .nav-links a:last-child{margin-bottom:14px}
+  .nav.open .nav-links a{opacity:1;translate:0 0}
+  .nav.open .nav-links a:nth-child(2){transition-delay:.04s}.nav.open .nav-links a:nth-child(3){transition-delay:.08s}.nav.open .nav-links a:nth-child(4){transition-delay:.12s}.nav.open .nav-links a:nth-child(5){transition-delay:.16s}.nav.open .nav-links a:nth-child(6){transition-delay:.2s}
+}
 </style>
 </head>
 <body>
@@ -182,7 +204,7 @@ footer small{font-size:13px;color:var(--gray)}
 
   <nav class="nav" aria-label="Principal">
     <a class="logo" href="index.html" aria-label="La Guayaba Ilustrada, inicio"><b>LG.I</b><span>La Guayaba<br>Ilustrada</span></a>
-    <div class="nav-links">
+    <div class="nav-links"><div>
       <a href="index.html#servicios">Servicios</a>
       <a href="index.html#cotizador">Cotizador</a>
       <a href="index.html#planes">Planes</a>
@@ -190,7 +212,8 @@ footer small{font-size:13px;color:var(--gray)}
       <a href="blog.html" aria-current="page">Blog</a>
       <a href="index.html#contacto">Contacto</a>
     </div>
-    <div class="nav-end"><span>Cuernavaca, Morelos</span><a class="quote" href="index.html#cotizador">Cotizar</a></div>
+    </div>
+    <div class="nav-end"><span>Cuernavaca, Morelos</span><a class="quote" href="index.html#cotizador">Cotizar</a><button class="menu-btn" type="button" aria-label="Abrir menú" aria-expanded="false"><i></i><i></i></button></div>
   </nav>
 
   <main id="view"><article class="article"><a class="cta light sm back" href="blog">Volver al blog</a><span class="kind" style="background:#FF9D00">Noticias</span><time datetime="2026-10-14">14 oct 2026</time><h1>Meta lanza Muse Wonder, su IA más potente, y apuesta por una que te recuerde</h1><p class="dek">La empresa de Instagram y WhatsApp presentó dos modelos nuevos que prometen resolver tareas largas y acordarse de lo que le importa a cada usuario.</p><span class="by">Por La Guayaba Ilustrada</span><div class="cover"><img src="assets/work/nota-meta-muse-wonder-ia-foto500286067.webp" alt="Portada de La Guayaba Ilustrada sobre el lanzamiento de Muse Wonder de Meta"></div><div class="body"><p>Meta presentó el lunes 12 de octubre Muse Wonder y Muse Wonder Full, los dos modelos de inteligencia artificial más avanzados que ha lanzado hasta ahora. Los desarrolló su laboratorio de superinteligencia y son los que moverán a Muse, el agente personal que la compañía estrenó en septiembre en Estados Unidos.</p><p>La gran apuesta es la memoria. Meta asegura que estos modelos retienen y conectan lo que el usuario les va contando, y que pueden sostener trabajos largos, incluso de varios días. Según pruebas publicadas por la propia empresa, Muse Wonder alcanza a los modelos más fuertes del mercado y los supera en una evaluación de memoria, aunque esas cifras todavía no tienen verificación independiente.</p><p>Para desarrolladores, Muse Wonder cuesta 4 dólares por millón de tokens de entrada y 20 por millón de salida a través de la API de Meta, un precio similar al de sus principales competidores, de acuerdo con TechCrunch. La versión Full queda reservada para suscriptores de Muse Code.</p><p>No todo es entusiasmo. Social Media Today recordó el caso de un usuario en Toronto que dejó que el agente gestionara una venta en Facebook Marketplace y terminó compartiendo la dirección de su casa sin darse cuenta. La duda de fondo es cuánta información personal estaremos dispuestos a confiarle a una IA de Meta.</p><p>Por ahora, Muse funciona solo en Estados Unidos para mayores de 18 años, en iOS, Android y WhatsApp. Meta no ha dado fecha para su llegada a México, según Expansión.</p><p>Para tu marca: si Muse llega a México, tus clientes podrían pedirle a un agente que compare, reserve o compre por ellos dentro de WhatsApp e Instagram. Las marcas con perfiles completos, información clara y contenido constante serán las más fáciles de recomendar. Es buen momento para revisar que tu catálogo, horarios y precios estén actualizados en redes.</p></div><p class="source">Fuente: <a href="https://techcrunch.com/2026/10/12/meta-releases-its-first-frontier-model-muse-wonder" rel="noopener">Con información de TechCrunch</a></p></article></main>
@@ -301,5 +324,6 @@ route();
 <script>window.REVEAL=".head > *, .feature, .grid .post, .article > *, .more > *, .closing > *, footer > *";</script>
 <script src="reveal.js"></script>
 <script>(()=>{const n=document.querySelector(".nav");if(!n)return;const f=()=>document.documentElement.style.setProperty("--navh",(n.offsetHeight+18)+"px");f();addEventListener("resize",f);addEventListener("load",f)})()</script>
+<script>(()=>{const n=document.querySelector(".nav"),b=n&&n.querySelector(".menu-btn");if(!b)return;const set=o=>{n.classList.toggle("open",o);b.setAttribute("aria-expanded",o);b.setAttribute("aria-label",o?"Cerrar menú":"Abrir menú")};b.addEventListener("click",()=>set(!n.classList.contains("open")));n.querySelectorAll(".nav-links a").forEach(a=>a.addEventListener("click",()=>set(false)));document.addEventListener("click",e=>{if(!n.contains(e.target))set(false)});addEventListener("scroll",()=>{if(n.classList.contains("open")&&Math.abs(scrollY-(n._y??scrollY))>160)set(false)},{passive:true});b.addEventListener("click",()=>{n._y=scrollY})})()</script>
 </body>
 </html>

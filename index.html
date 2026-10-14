@@ -465,6 +465,28 @@ footer small{font-size:13px;color:var(--gray)}
 .qa .ans{overflow:hidden}
 .qa p{color:var(--gray);max-width:68ch;padding:0 4px 22px;transition:opacity .5s var(--ease) .08s,translate .5s var(--ease) .08s}
 .qa:not([open]) p,.qa.closing p{opacity:0;translate:0 -6px}
+.menu-btn{display:none}
+.nav-links>div{display:flex;gap:24px;justify-content:center}
+@media (max-width:1000px){
+  .nav{grid-template-columns:1fr auto;grid-template-rows:60px;height:auto;border-radius:30px;padding:0 6px 0 20px;row-gap:0;transition:border-radius .4s var(--ease)}
+  .nav .logo b{font-size:25px}.nav .logo span{font-size:11px}
+  .nav-end{gap:6px}
+  .nav .quote{height:46px;padding:0 20px;font-size:14.5px}
+  .menu-btn{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:46px;height:46px;border-radius:50%;background:#1d1d1d;border:0;cursor:pointer;padding:0}
+  .menu-btn i{display:block;width:18px;height:2px;border-radius:2px;background:var(--white);transition:transform .4s var(--ease)}
+  .nav.open .menu-btn i:first-child{transform:translateY(3.5px) rotate(45deg)}
+  .nav.open .menu-btn i:last-child{transform:translateY(-3.5px) rotate(-45deg)}
+  .nav-links{grid-column:1/-1;grid-row:2;display:grid;grid-template-rows:0fr;overflow:hidden;mask-image:none;padding:0;gap:0;transition:grid-template-rows .45s var(--ease)}
+  .nav-links{justify-self:stretch;width:100%;justify-content:stretch;grid-template-columns:1fr}
+  .nav-links>div{min-height:0;display:flex;flex-direction:column;gap:2px;width:100%;padding-right:14px}
+  .nav.open .nav-links{grid-template-rows:1fr}
+  .nav.open{border-radius:28px}
+  .nav-links a{font-size:21px;font-weight:700;color:var(--white);padding:11px 2px;border-top:1px solid #222;opacity:0;translate:0 -6px;transition:opacity .35s var(--ease),translate .35s var(--ease),color .2s}
+  .nav-links a:first-child{margin-top:4px}
+  .nav-links a:last-child{margin-bottom:14px}
+  .nav.open .nav-links a{opacity:1;translate:0 0}
+  .nav.open .nav-links a:nth-child(2){transition-delay:.04s}.nav.open .nav-links a:nth-child(3){transition-delay:.08s}.nav.open .nav-links a:nth-child(4){transition-delay:.12s}.nav.open .nav-links a:nth-child(5){transition-delay:.16s}.nav.open .nav-links a:nth-child(6){transition-delay:.2s}
+}
 </style>
 
 <div id="intro"><button class="skip" type="button" id="skip">Saltar</button></div>
@@ -474,7 +496,7 @@ footer small{font-size:13px;color:var(--gray)}
 
   <nav class="nav" aria-label="Principal">
     <a class="logo" href="#inicio" aria-label="La Guayaba Ilustrada, inicio"><b>LG.I</b><span>La Guayaba<br>Ilustrada</span></a>
-    <div class="nav-links">
+    <div class="nav-links"><div>
       <a href="#servicios">Servicios</a>
       <a href="#cotizador">Cotizador</a>
       <a href="#planes">Planes</a>
@@ -482,7 +504,8 @@ footer small{font-size:13px;color:var(--gray)}
       <a href="blog.html">Blog</a>
       <a href="#contacto">Contacto</a>
     </div>
-    <div class="nav-end"><span>Cuernavaca, Morelos</span><a class="quote" href="#cotizador">Cotizar</a></div>
+    </div>
+    <div class="nav-end"><span>Cuernavaca, Morelos</span><a class="quote" href="#cotizador">Cotizar</a><button class="menu-btn" type="button" aria-label="Abrir menú" aria-expanded="false"><i></i><i></i></button></div>
   </nav>
 
   <section class="hero" id="inicio">
@@ -919,3 +942,4 @@ document.addEventListener('click',e=>{const sm=e.target.closest('.qa summary');i
 const a=d.querySelector('.ans');if(d.dataset.busy)return;d.dataset.busy=1;const ez='cubic-bezier(.22,.8,.2,1)';
 if(d.open){d.classList.add('closing');const h=a.offsetHeight;a.animate([{height:h+'px'},{height:'0px'}],{duration:420,easing:ez}).onfinish=()=>{d.open=false;d.classList.remove('closing');delete d.dataset.busy}}
 else{document.querySelectorAll('.qa[open]').forEach(o=>{if(o!==d)o.querySelector('summary').click()});d.open=true;const h=a.offsetHeight;a.animate([{height:'0px'},{height:h+'px'}],{duration:520,easing:ez}).onfinish=()=>{delete d.dataset.busy}}})})()</script>
+<script>(()=>{const n=document.querySelector(".nav"),b=n&&n.querySelector(".menu-btn");if(!b)return;const set=o=>{n.classList.toggle("open",o);b.setAttribute("aria-expanded",o);b.setAttribute("aria-label",o?"Cerrar menú":"Abrir menú")};b.addEventListener("click",()=>set(!n.classList.contains("open")));n.querySelectorAll(".nav-links a").forEach(a=>a.addEventListener("click",()=>set(false)));document.addEventListener("click",e=>{if(!n.contains(e.target))set(false)});addEventListener("scroll",()=>{if(n.classList.contains("open")&&Math.abs(scrollY-(n._y??scrollY))>160)set(false)},{passive:true});b.addEventListener("click",()=>{n._y=scrollY})})()</script>

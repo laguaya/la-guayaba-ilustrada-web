@@ -175,6 +175,28 @@ footer small{font-size:13px;color:var(--gray)}
 .article{animation:art-in .7s cubic-bezier(.2,.7,.2,1) both}
 @keyframes art-in{from{opacity:0;transform:translateY(16px)}}
 .foot-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;font-size:14px;font-weight:700}.foot-links a{color:inherit;text-decoration:none;font-weight:700;transition:color .25s}.foot-links a:hover{color:var(--pink)}
+.menu-btn{display:none}
+.nav-links>div{display:flex;gap:24px;justify-content:center}
+@media (max-width:1000px){
+  .nav{grid-template-columns:1fr auto;grid-template-rows:60px;height:auto;border-radius:30px;padding:0 6px 0 20px;row-gap:0;transition:border-radius .4s var(--ease)}
+  .nav .logo b{font-size:25px}.nav .logo span{font-size:11px}
+  .nav-end{gap:6px}
+  .nav .quote{height:46px;padding:0 20px;font-size:14.5px}
+  .menu-btn{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:46px;height:46px;border-radius:50%;background:#1d1d1d;border:0;cursor:pointer;padding:0}
+  .menu-btn i{display:block;width:18px;height:2px;border-radius:2px;background:var(--white);transition:transform .4s var(--ease)}
+  .nav.open .menu-btn i:first-child{transform:translateY(3.5px) rotate(45deg)}
+  .nav.open .menu-btn i:last-child{transform:translateY(-3.5px) rotate(-45deg)}
+  .nav-links{grid-column:1/-1;grid-row:2;display:grid;grid-template-rows:0fr;overflow:hidden;mask-image:none;padding:0;gap:0;transition:grid-template-rows .45s var(--ease)}
+  .nav-links{justify-self:stretch;width:100%;justify-content:stretch;grid-template-columns:1fr}
+  .nav-links>div{min-height:0;display:flex;flex-direction:column;gap:2px;width:100%;padding-right:14px}
+  .nav.open .nav-links{grid-template-rows:1fr}
+  .nav.open{border-radius:28px}
+  .nav-links a{font-size:21px;font-weight:700;color:var(--white);padding:11px 2px;border-top:1px solid #222;opacity:0;translate:0 -6px;transition:opacity .35s var(--ease),translate .35s var(--ease),color .2s}
+  .nav-links a:first-child{margin-top:4px}
+  .nav-links a:last-child{margin-bottom:14px}
+  .nav.open .nav-links a{opacity:1;translate:0 0}
+  .nav.open .nav-links a:nth-child(2){transition-delay:.04s}.nav.open .nav-links a:nth-child(3){transition-delay:.08s}.nav.open .nav-links a:nth-child(4){transition-delay:.12s}.nav.open .nav-links a:nth-child(5){transition-delay:.16s}.nav.open .nav-links a:nth-child(6){transition-delay:.2s}
+}
 </style>
 </head>
 <body>
@@ -182,7 +204,7 @@ footer small{font-size:13px;color:var(--gray)}
 
   <nav class="nav" aria-label="Principal">
     <a class="logo" href="index.html" aria-label="La Guayaba Ilustrada, inicio"><b>LG.I</b><span>La Guayaba<br>Ilustrada</span></a>
-    <div class="nav-links">
+    <div class="nav-links"><div>
       <a href="index.html#servicios">Servicios</a>
       <a href="index.html#cotizador">Cotizador</a>
       <a href="index.html#planes">Planes</a>
@@ -190,7 +212,8 @@ footer small{font-size:13px;color:var(--gray)}
       <a href="blog.html" aria-current="page">Blog</a>
       <a href="index.html#contacto">Contacto</a>
     </div>
-    <div class="nav-end"><span>Cuernavaca, Morelos</span><a class="quote" href="index.html#cotizador">Cotizar</a></div>
+    </div>
+    <div class="nav-end"><span>Cuernavaca, Morelos</span><a class="quote" href="index.html#cotizador">Cotizar</a><button class="menu-btn" type="button" aria-label="Abrir menú" aria-expanded="false"><i></i><i></i></button></div>
   </nav>
 
   <main id="view"><article class="article"><a class="cta light sm back" href="blog">Volver al blog</a><span class="kind" style="background:#FF3674">Tendencias</span><time datetime="2026-10-14">14 oct 2026</time><h1>Pinterest pide a las marcas algo raro: dejar que su audiencia se vaya del celular</h1><p class="dek">Su nueva guía, Design the Exit, propone dejar de pelear por el scroll y ayudar a la gente a actuar en su vida real.</p><span class="by">Por La Guayaba Ilustrada</span><div class="cover"><img src="assets/work/nota-pinterest-disena-la-salida-foto500286066.webp" alt="Portada de La Guayaba Ilustrada con el titular sobre la guía Design the Exit de Pinterest"></div><div class="body"><p>Pinterest publicó esta semana una guía de marketing llamada Design the Exit, en la que invita a las marcas a dejar de diseñar contenido para retener a la gente frente a la pantalla y, en cambio, ayudarla a encontrar rápido lo que busca para que siga con su día. La plataforma ya había presentado la idea en septiembre en DMEXCO, la feria de marketing digital de Colonia, Alemania, en una charla de Greg Owens, su vicepresidente internacional.</p><p>El argumento parte de un cansancio que Pinterest asegura ver en sus datos. Según cifras que cita la compañía, 40% de la Generación Z dice que preferiría que las redes sociales nunca se hubieran inventado y 63% de los adultos de esa generación quiere desconectarse de forma más intencional. En su buscador, consultas como "cosas que hacer en lugar de scrollear" crecieron 365% en un año, "estética análoga" 260% y "dumb phone" (teléfonos básicos) 150%.</p><p>La empresa sostiene que la mayoría de las redes están construidas para mantener al usuario deslizando sin fin, porque así venden más anuncios, y que en ese estado la publicidad suele ignorarse. Cuando el uso es más intencional, dice Pinterest, las marcas tienen más probabilidad de ser recordadas, de generar confianza y de terminar en una compra.</p><p>Sus recomendaciones son concretas: mostrar los valores de la marca y el efecto real de sus productos en la vida de las personas, presentar lo que vendes como un camino claro hacia una meta personal y no atrapar a la gente en la experiencia una vez que ya encontró lo que necesitaba. Vale tomarlo con contexto: Pinterest lleva tiempo posicionándose como una herramienta de descubrimiento y no como una red social más, así que la guía también es una forma de venderse frente a sus competidores.</p><p>Para tu marca: en lugar de medir solo cuánto tiempo pasa la gente viendo tu contenido, pregúntate qué hace después. Un post que resuelve una duda, da un paso a paso o lleva a una visita, una reserva o una compra puede valer más que uno que solo entretiene. Diseña cada pieza con una salida clara: qué quieres que la persona haga cuando cierre la app.</p></div><p class="source">Fuente: <a href="https://www.socialmediatoday.com/news/pinterest-asks-brands-to-send-people-back-into-their-life/832922/" rel="noopener">Con información de Social Media Today</a></p></article></main>
@@ -301,5 +324,6 @@ route();
 <script>window.REVEAL=".head > *, .feature, .grid .post, .article > *, .more > *, .closing > *, footer > *";</script>
 <script src="reveal.js"></script>
 <script>(()=>{const n=document.querySelector(".nav");if(!n)return;const f=()=>document.documentElement.style.setProperty("--navh",(n.offsetHeight+18)+"px");f();addEventListener("resize",f);addEventListener("load",f)})()</script>
+<script>(()=>{const n=document.querySelector(".nav"),b=n&&n.querySelector(".menu-btn");if(!b)return;const set=o=>{n.classList.toggle("open",o);b.setAttribute("aria-expanded",o);b.setAttribute("aria-label",o?"Cerrar menú":"Abrir menú")};b.addEventListener("click",()=>set(!n.classList.contains("open")));n.querySelectorAll(".nav-links a").forEach(a=>a.addEventListener("click",()=>set(false)));document.addEventListener("click",e=>{if(!n.contains(e.target))set(false)});addEventListener("scroll",()=>{if(n.classList.contains("open")&&Math.abs(scrollY-(n._y??scrollY))>160)set(false)},{passive:true});b.addEventListener("click",()=>{n._y=scrollY})})()</script>
 </body>
 </html>
