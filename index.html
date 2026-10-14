@@ -170,7 +170,7 @@ section{scroll-margin-top:20px}
 .gwrap .gallery{width:100%}
 .gmore{border:0;border-radius:999px;background:#000;color:#fff;font:inherit;font-weight:700;font-size:15px;padding:13px 22px;cursor:pointer}
 .gallery .ph:focus-visible{outline:3px solid #FF5B00;outline-offset:3px}
-.lb{position:fixed;inset:0;z-index:120;background:rgba(0,0,0,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:64px 16px 24px;opacity:0;pointer-events:none;transition:opacity .3s}
+.lb{position:fixed;inset:0;z-index:120;background:#0b0b0b;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:64px 16px 24px;opacity:0;pointer-events:none;transition:opacity .3s}
 .lb.on{opacity:1;pointer-events:auto}
 .lb-media{max-width:min(1000px,100%);display:flex;align-items:center;justify-content:center}
 .lb-media img,.lb-media video{max-width:100%;max-height:calc(100vh - 160px);border-radius:18px;display:block}
@@ -179,6 +179,7 @@ section{scroll-margin-top:20px}
 .lb-x{top:14px;right:14px}.lb-prev{left:14px;top:50%;margin-top:-26px}.lb-next{right:14px;top:50%;margin-top:-26px}
 @media (max-width:640px){.lb-prev,.lb-next{display:none}.lb{padding-bottom:40px}.lb-cap::after{content:' · Desliza para ver más';opacity:.6}}
 .lb-media{touch-action:pan-y}
+.lb-media > *{will-change:transform}
 
 /* COTIZADOR */
 .calc{background:var(--pink-wash);border-radius:var(--r-xl);padding:64px 32px;display:flex;flex-direction:column;align-items:center;gap:36px}
@@ -795,14 +796,22 @@ document.getElementById('posts').innerHTML=(window.POSTS||[]).slice(0,3).map(p=>
   const lb=document.getElementById('lb'),box=lb.querySelector('.lb-media'),cap=lb.querySelector('.lb-cap');
   let list=[],i=0,last=null;
   const show=()=>{const p=list[i];box.innerHTML=p.v?`<video src="${p.v}" poster="${p.s}" controls autoplay playsinline loop></video>`:`<img src="${p.s}" alt="${p.a}">`;cap.textContent=p.a+'  ·  '+(i+1)+' / '+list.length};
-  const open=(k,src)=>{list=window.PORT[k].filter(p=>!p.u);i=Math.max(0,list.findIndex(p=>p.s===src));show();lb.classList.add('on');lb.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';lb.querySelector('.lb-x').focus()};
+  const open=(k,src)=>{list=window.PORT[k].filter(p=>!p.u);i=Math.max(0,list.findIndex(p=>p.s===src));show();lb.classList.add('on');lb.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';lb.querySelector('.lb-x').focus();hint()};
   const close=()=>{lb.classList.remove('on');lb.setAttribute('aria-hidden','true');box.innerHTML='';document.body.style.overflow='';if(last)last.focus()};
   const go=d=>{i=(i+d+list.length)%list.length;show()};
   document.addEventListener('click',e=>{const m=e.target.closest('.gmore');if(m){const g=m.previousElementSibling;const on=g.classList.toggle('all');m.textContent=on?'Ver menos':'Ver todo ('+m.dataset.n+')';if(!on)g.closest('.svc').scrollIntoView({behavior:'smooth',block:'start'});return}const t=e.target.closest('.gallery button.ph');if(t){last=t;open(t.dataset.k,t.dataset.src)}});
   lb.querySelector('.lb-x').onclick=close;lb.querySelector('.lb-prev').onclick=()=>go(-1);lb.querySelector('.lb-next').onclick=()=>go(1);
   lb.addEventListener('click',e=>{if(e.target===lb)close()});
-  let sx=null,sy=0;lb.addEventListener('touchstart',e=>{const t=e.touches[0];sx=t.clientX;sy=t.clientY},{passive:true});
-  lb.addEventListener('touchend',e=>{if(sx===null)return;const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;sx=null;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.3)go(dx<0?1:-1)},{passive:true});
+  /* arrastre con el dedo: la pieza sigue al dedo y se va hacia el lado */
+  let sx=null,sy=0,dx=0,drag=false,lock=null;
+  const m=()=>box.firstElementChild;
+  const setX=(x,t)=>{const el=m();if(!el)return;el.style.transition=t?'transform .32s cubic-bezier(.22,.8,.2,1)':'none';el.style.transform=`translateX(${x}px) rotate(${x/40}deg)`};
+  lb.addEventListener('touchstart',e=>{if(e.target.closest('.lb-btn'))return;const t=e.touches[0];sx=t.clientX;sy=t.clientY;dx=0;drag=true;lock=null},{passive:true});
+  lb.addEventListener('touchmove',e=>{if(!drag)return;const t=e.touches[0];dx=t.clientX-sx;const dy=t.clientY-sy;if(lock===null&&(Math.abs(dx)>8||Math.abs(dy)>8))lock=Math.abs(dx)>Math.abs(dy);if(lock){e.preventDefault();setX(dx,false)}},{passive:false});
+  lb.addEventListener('touchend',()=>{if(!drag)return;drag=false;if(!lock){return}const W=innerWidth;if(Math.abs(dx)>W*.18){const d=dx<0?1:-1;setX(-d*W,true);setTimeout(()=>{go(d);setX(d*W*.6,false);requestAnimationFrame(()=>requestAnimationFrame(()=>setX(0,true)))},260)}else setX(0,true)},{passive:true});
+  /* pista: la primera vez en el celular, la pieza se mueve sola para enseñar que se puede deslizar */
+  let hinted=false;
+  const hint=()=>{if(hinted||!matchMedia('(pointer:coarse)').matches||list.length<2)return;hinted=true;setTimeout(()=>{setX(-70,true);setTimeout(()=>setX(0,true),420)},650)};
   document.addEventListener('keydown',e=>{if(!lb.classList.contains('on'))return;if(e.key==='Escape')close();if(e.key==='ArrowRight')go(1);if(e.key==='ArrowLeft')go(-1)});
 })();
 </script>
