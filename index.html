@@ -803,9 +803,9 @@ document.getElementById('posts').innerHTML=(window.POSTS||[]).slice(0,3).map(p=>
   const go=d=>{i=(i+d+list.length)%list.length;show();shake(box.firstElementChild)};
   document.addEventListener('click',e=>{const m=e.target.closest('.gmore');if(m){const g=m.previousElementSibling;const on=g.classList.toggle('all');m.textContent=on?'Ver menos':'Ver todo ('+m.dataset.n+')';if(!on)g.closest('.svc').scrollIntoView({behavior:'smooth',block:'start'});return}const t=e.target.closest('.gallery button.ph');if(t){if(t.dataset.boom){delete t.dataset.boom;return}last=t;haptic();shake(t);setTimeout(()=>open(t.dataset.k,t.dataset.src),230)}});
   /* mantener presionado una pieza: confeti */
-  const boom=(x,y,el)=>{haptic('boom');shake(el);confetti(x,y)};
-  document.querySelectorAll('.gallery').forEach(g=>g.querySelectorAll('.ph').forEach(t=>longPress(t,(x,y)=>{t.dataset.boom=1;boom(x,y,t)})));
-  longPress(box,(x,y)=>{if(Math.abs(dx)<10)boom(x,y,box.firstElementChild)});
+  const boom=(x,y)=>{haptic('boom');confetti(x,y)};
+  document.querySelectorAll('.gallery').forEach(g=>g.querySelectorAll('.ph').forEach(t=>longPress(t,()=>t,(x,y)=>{t.dataset.boom=1;boom(x,y)})));
+  longPress(box,()=>box.firstElementChild,(x,y)=>boom(x,y));
   lb.querySelector('.lb-x').onclick=close;lb.querySelector('.lb-prev').onclick=()=>go(-1);lb.querySelector('.lb-next').onclick=()=>go(1);
   lb.addEventListener('click',e=>{if(e.target===lb)close()});
   /* arrastre con el dedo: la pieza sigue al dedo y se va hacia el lado */

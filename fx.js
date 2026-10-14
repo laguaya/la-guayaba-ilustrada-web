@@ -24,16 +24,30 @@
   };
   /* Temblor */
   const st=document.createElement('style');
-  st.textContent='@keyframes lgiShake{0%,100%{translate:0 0;rotate:0deg}20%{translate:-4px 0;rotate:-1.5deg}40%{translate:4px 0;rotate:1.5deg}60%{translate:-3px 0;rotate:-1deg}80%{translate:2px 0;rotate:.6deg}}.lgi-shake{animation:lgiShake .32s ease}.gallery .ph,.lb-media,.lb-media img,.lb-media video{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}';
+  st.textContent='@keyframes lgiShake{0%,100%{translate:0 0;rotate:0deg}20%{translate:-4px 0;rotate:-1.5deg}40%{translate:4px 0;rotate:1.5deg}60%{translate:-3px 0;rotate:-1deg}80%{translate:2px 0;rotate:.6deg}}.lgi-shake{animation:lgiShake .32s ease}.lb-media img,.lb-media video{clip-path:inset(0 round 18px)}.gallery .ph{clip-path:inset(0 round 20px)}.gallery .ph,.lb-media,.lb-media img,.lb-media video{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}';
   document.head.appendChild(st);
   window.shake=function(el){if(!el)return;el.classList.remove('lgi-shake');void el.offsetWidth;el.classList.add('lgi-shake');setTimeout(()=>el.classList.remove('lgi-shake'),340)};
-  /* Mantener presionado: explosión de confeti */
-  window.longPress=function(el,cb){let t=null,sx=0,sy=0,fired=false;
-    const start=e=>{const p=e.touches?e.touches[0]:e;sx=p.clientX;sy=p.clientY;fired=false;clearTimeout(t);t=setTimeout(()=>{fired=true;cb(sx,sy)},650)};
-    const move=e=>{const p=e.touches?e.touches[0]:e;if(Math.hypot(p.clientX-sx,p.clientY-sy)>10)clearTimeout(t)};
-    const end=()=>clearTimeout(t);
-    el.addEventListener('touchstart',start,{passive:true});el.addEventListener('touchmove',move,{passive:true});el.addEventListener('touchend',end);el.addEventListener('touchcancel',end);
-    el.addEventListener('mousedown',start);el.addEventListener('mousemove',move);el.addEventListener('mouseup',end);el.addEventListener('mouseleave',end);
+  /* Carga de energía: tiembla cada vez más fuerte, crece un poco y al final explota */
+  const CHARGE=1600;
+  window.charge=function(getEl,done){
+    let raf=0,t0=performance.now(),stop=false,lastTick=0;const el0=getEl();
+    try{if(navigator.vibrate){const pat=[];let gap=150;for(let t=0;t<CHARGE;){pat.push(14,gap);t+=14+gap;gap=Math.max(30,gap*0.8)}navigator.vibrate(pat)}}catch(e){}
+    (function f(t){if(stop)return;const el=getEl();const k=Math.min(1,(t-t0)/CHARGE),amp=0.6+k*k*6;
+      if(el){el.style.translate=`${(Math.random()-.5)*amp*2}px ${(Math.random()-.5)*amp}px`;el.style.rotate=`${(Math.random()-.5)*amp*0.5}deg`;el.style.scale=String(1+k*0.06);el.style.filter=`brightness(${1+k*0.25})`}
+      if(!navigator.vibrate&&t-lastTick>Math.max(70,260*(1-k))){lastTick=t;haptic()}
+      if(k<1)raf=requestAnimationFrame(f);else{reset(el,true);done()}})(t0);
+    function reset(el,pop){if(!el)return;el.style.translate='';el.style.rotate='';el.style.filter='';
+      el.style.transition='scale .45s cubic-bezier(.34,1.8,.64,1)';el.style.scale=pop?'1.12':'1';setTimeout(()=>{el.style.scale='1';setTimeout(()=>{el.style.transition='';el.style.scale=''},460)},pop?120:0)}
+    return function cancel(){if(stop)return;stop=true;cancelAnimationFrame(raf);try{navigator.vibrate&&navigator.vibrate(0)}catch(e){}reset(getEl(),false)};
+  };
+  /* Mantener presionado: empieza a cargar y, si no sueltas, explota en confeti */
+  window.longPress=function(el,getTarget,cb){let t=null,sx=0,sy=0,fired=false,cancel=null;
+    const stopAll=()=>{clearTimeout(t);if(cancel){cancel();cancel=null}};
+    const start=e=>{const p=e.touches?e.touches[0]:e;sx=p.clientX;sy=p.clientY;fired=false;stopAll();
+      t=setTimeout(()=>{cancel=charge(getTarget,()=>{cancel=null;fired=true;cb(sx,sy)})},260)};
+    const move=e=>{const p=e.touches?e.touches[0]:e;if(Math.hypot(p.clientX-sx,p.clientY-sy)>10)stopAll()};
+    el.addEventListener('touchstart',start,{passive:true});el.addEventListener('touchmove',move,{passive:true});el.addEventListener('touchend',stopAll);el.addEventListener('touchcancel',stopAll);
+    el.addEventListener('mousedown',start);el.addEventListener('mousemove',move);el.addEventListener('mouseup',stopAll);el.addEventListener('mouseleave',stopAll);
     el.addEventListener('contextmenu',e=>e.preventDefault());
     return ()=>fired;};
 })();
