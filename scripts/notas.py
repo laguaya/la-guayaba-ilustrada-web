@@ -488,12 +488,12 @@ def listen(hours=5.6):
     sh('git', 'config', 'user.name', 'La Guayaba Ilustrada')
     sh('git', 'config', 'user.email', 'laguayabailustrada@gmail.com')
     os.environ['LONGPOLL'], os.environ['ROUNDS'] = '25', '1'
-    code = sh('git', 'rev-parse', 'HEAD:scripts/notas.py').stdout.strip()
+    code = sh('git', 'rev-parse', 'HEAD:scripts').stdout.strip()
     t0 = time.time()
     while time.time() - t0 < hours * 3600:
         try:
             sh('git', 'pull', '--rebase', '-q', 'origin', 'main')
-            if sh('git', 'rev-parse', 'HEAD:scripts/notas.py').stdout.strip() != code:
+            if sh('git', 'rev-parse', 'HEAD:scripts').stdout.strip() != code:
                 print('Hay una versión nueva del bot; reinicio.')
                 break
             changed = False

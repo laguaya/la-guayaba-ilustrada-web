@@ -11,7 +11,7 @@ datos.json:
   "marca": "Nombre de la marca o tema (va en la pestaña)",
   "fecha": "14 OCTUBRE 2026"
 }
-Marcas de texto:  *texto* = marcatextos rosa   _texto_ = serif itálica   [texto] = rosa en negritas
+Marcas de texto:  *texto* = marcatextos rosa   _texto_ = Linear Grotesk itálica   [texto] = rosa en negritas
 Genera 1.jpg (portada), 2.jpg (la nota) y 3.jpg (cierre).
 """
 import json, os, re, sys
@@ -26,6 +26,23 @@ TOTAL = 3
 
 
 # ---------- texto enriquecido ----------
+def tw(d, text, f, track=0.0):
+    """Ancho del texto con espaciado entre letras (track en em, como en la web)."""
+    if not track:
+        return d.textlength(text, font=f)
+    t = f.size * track
+    return sum(d.textlength(c, font=f) + t for c in text) - t
+
+
+def dt(d, xy, text, f, fill, track=0.0):
+    if not track:
+        d.text(xy, text, font=f, fill=fill); return
+    x, y = xy
+    t = f.size * track
+    for c in text:
+        d.text((x, y), c, font=f, fill=fill)
+        x += d.textlength(c, font=f) + t
+
 def tokens(text):
     """Devuelve palabras; cada palabra es una lista de (texto, estilo) pegados sin espacio."""
     words, cur, style = [], [], 'n'
@@ -45,12 +62,12 @@ def tokens(text):
     return words
 
 
-def layout(d, text, fonts, maxw):
+def layout(d, text, fonts, maxw, track=0.0):
     """Líneas de segmentos (texto, estilo, ancho, espacio_antes)."""
     sp = d.textlength(' ', font=fonts['n'])
     lines, cur, cw = [], [], 0
     for word in tokens(text):
-        segs = [(w, s, d.textlength(w, font=fonts[s])) for w, s in word]
+        segs = [(w, s, tw(d, w, fonts[s], track)) for w, s in word]
         ww = sum(x[2] for x in segs)
         if cur and cw + sp + ww > maxw:
             lines.append(cur); cur, cw = [], 0
@@ -63,7 +80,7 @@ def layout(d, text, fonts, maxw):
     return lines
 
 
-def render(d, x, y, lines, fonts, lh, color, hl_bg=PINK, hl_fg=INK, pk=PINK, align='left', maxw=None, pad=10):
+def render(d, x, y, lines, fonts, lh, color, hl_bg=PINK, hl_fg=INK, pk=PINK, align='left', maxw=None, pad=10, it_color=None, track=0.0):
     for ln in lines:
         lw = sum(w + g for _, _, w, g in ln)
         cx = x + ((maxw - lw) / 2 if align == 'center' and maxw else 0)
@@ -80,24 +97,24 @@ def render(d, x, y, lines, fonts, lh, color, hl_bg=PINK, hl_fg=INK, pk=PINK, ali
                 for k in range(i, j):
                     if k > i:
                         cx += ln[k][3]
-                    d.text((cx, y), ln[k][0], font=fonts['hl'], fill=hl_fg); cx += ln[k][2]
+                    dt(d, (cx, y), ln[k][0], fonts['hl'], hl_fg, track); cx += ln[k][2]
                 i = j
                 continue
             cx += g
             if s == 'it':
-                d.text((cx, y + size * 0.02), w, font=fonts['it'], fill=color)
+                dt(d, (cx, y), w, fonts['it'], it_color or color, track)
             else:
-                d.text((cx, y), w, font=fonts[s], fill=pk if s == 'pk' else color)
+                dt(d, (cx, y), w, fonts[s], pk if s == 'pk' else color, track)
             cx += ww; i += 1
         y += lh
     return y
 
 
-def fitted(d, text, maxw, max_lines, base, big, small, step=2, it_scale=1.12):
+def fitted(d, text, maxw, max_lines, base, big, small, step=2, it_scale=1.0, it_font='lg-italic.woff2', track=0.0):
     for size in range(big, small, -step):
         fonts = {'n': font(base, size), 'hl': font(base, size), 'pk': font(base, size),
-                 'it': font('serif-italic.woff2', int(size * it_scale))}
-        ls = layout(ImageDraw.Draw(Image.new('RGB', (4, 4))), text, fonts, maxw)
+                 'it': font(it_font, int(size * it_scale))}
+        ls = layout(ImageDraw.Draw(Image.new('RGB', (4, 4))), text, fonts, maxw, track)
         if len(ls) <= max_lines:
             return fonts, ls, size
     return fonts, ls, size
@@ -161,13 +178,14 @@ def slide2(data, out):
     header(d, INK, 2, dark_counter=True)
 
     maxw = W - 2 * M
-    fonts, ls, size = fitted(d, data['titulo'], maxw, 3, 'lg-medium.woff2', 78, 48)
+    TR = -0.035
+    fonts, ls, size = fitted(d, data['titulo'], maxw, 3, 'lg-black.woff2', 80, 48, track=TR)
     y = M + 108
-    y = render(d, M, y, ls, fonts, size * 1.12, INK, hl_bg=PINK, hl_fg=INK)
+    y = render(d, M, y, ls, fonts, size * 1.0, INK, hl_bg=PINK, hl_fg=INK, it_color=PINK, track=TR)
     # resumen
     y += 38
     fr = {'n': font('lg-regular.woff2', 36), 'pk': font('lg-bold.woff2', 36),
-          'hl': font('lg-regular.woff2', 36), 'it': font('serif-italic.woff2', 40)}
+          'hl': font('lg-regular.woff2', 36), 'it': font('lg-italic.woff2', 36)}
     rl = layout(d, data['resumen'], fr, maxw)[:5]
     y = render(d, M, y, rl, fr, 48, INK, pk=PINK)
     # foto con pestaña
@@ -197,13 +215,14 @@ def slide3(data, out):
     d = ImageDraw.Draw(can)
     header(d, INK, 3, dark_counter=True)
     maxw = W - 2 * M
-    fonts, ls, size = fitted(d, '¿Quieres saber _más_ de esta nota?', maxw, 3, 'lg-black.woff2', 120, 70, it_scale=1.2)
+    TR = -0.035
+    fonts, ls, size = fitted(d, '¿Quieres saber _más_ de esta nota?', maxw, 3, 'lg-black.woff2', 124, 70, track=TR)
     fb = {'n': font('lg-regular.woff2', 42), 'pk': font('lg-bold.woff2', 42), 'hl': font('lg-regular.woff2', 42),
-          'it': font('serif-italic.woff2', 46)}
+          'it': font('lg-italic.woff2', 42)}
     rl = layout(d, 'Léela completa en nuestra página web. Ahí te contamos todo y lo que significa para tu marca.', fb, maxw)
-    block = len(ls) * size * 1.05 + 40 + len(rl) * 56 + 70 + 110
+    block = len(ls) * size * 0.98 + 40 + len(rl) * 56 + 70 + 110
     y = (M + 64 + (H - M - 140)) / 2 - block / 2
-    y = render(d, M, y, ls, fonts, size * 1.05, INK)
+    y = render(d, M, y, ls, fonts, size * 0.98, INK, it_color=WHITE, track=TR)
     y += 40
     y = render(d, M, y, rl, fb, 56, INK)
     # botón
@@ -211,7 +230,7 @@ def slide3(data, out):
     d.rounded_rectangle((M, by, M + 520, by + 110), radius=55, fill=INK)
     d.text((M + 260, by + 57), 'LINK EN BIO  →', font=font('lg-black.woff2', 40), fill=PINK, anchor='mm')
     # firma
-    d.text((M, H - M - 70), 'LG.I', font=font('lg-black.woff2', 84), fill=INK, anchor='lm')
+    dt(d, (M, H - M - 70 - 42), 'LG.I', font('lg-bold.woff2', 84), INK, -0.05)
     d.text((M + 196, H - M - 88), 'La Guayaba', font=font('lg-regular.woff2', 30), fill=INK, anchor='lm')
     d.text((M + 196, H - M - 52), 'Ilustrada', font=font('lg-regular.woff2', 30), fill=INK, anchor='lm')
     d.text((W - M, H - M - 70), 'Síguenos para más\nnoticias creativas', font=font('lg-medium.woff2', 28), fill=INK,
