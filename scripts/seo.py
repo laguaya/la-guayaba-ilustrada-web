@@ -77,7 +77,7 @@ ORG = {
     'alternateName': ['LG.I', 'Guayaba Ilustrada'], 'url': SITE + '/',
     'logo': SITE + '/assets/icon-512.png', 'image': SITE + '/assets/icon-512.png',
     'description': 'Agencia creativa en Cuernavaca, Morelos: branding, páginas web, diseño gráfico, video, fotografía, motion graphics, 3D y contenido con inteligencia artificial.',
-    'telephone': PHONE, 'priceRange': '$$',
+    'telephone': PHONE, 'email': 'hola@guayabailustrada.com.mx', 'priceRange': '$$',
     'address': {'@type': 'PostalAddress', 'addressLocality': 'Cuernavaca', 'addressRegion': 'Morelos', 'addressCountry': 'MX'},
     'areaServed': [{'@type': 'City', 'name': 'Cuernavaca'}, {'@type': 'State', 'name': 'Morelos'}, {'@type': 'Country', 'name': 'México'}],
     'sameAs': [IG, FB],
@@ -251,7 +251,7 @@ def main():
     lines = [f'# {NAME}', '',
              '> Agencia creativa independiente en Cuernavaca, Morelos, México. Branding, páginas web, diseño gráfico, video y locución, '
              'fotografía, motion graphics, modelado 3D y contenido con inteligencia artificial. Director creativo: Sergio Enrique Martínez Toledo.', '',
-             f'- Sitio: {SITE}/', f'- WhatsApp: 720 909 7907 (https://wa.me/527209097907)', f'- Instagram: {IG}', f'- Facebook: {FB}', '- Ubicación: Cuernavaca, Morelos, México', '',
+             f'- Sitio: {SITE}/', f'- WhatsApp: 720 909 7907 (https://wa.me/527209097907)', '- Correo: hola@guayabailustrada.com.mx', f'- Instagram: {IG}', f'- Facebook: {FB}', '- Ubicación: Cuernavaca, Morelos, México', '',
              '## Servicios y precios (MXN, más IVA si requieres factura)', '']
     for s in SVC:
         lines.append(f'### {s["t"]}')
