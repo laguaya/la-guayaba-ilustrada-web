@@ -166,6 +166,7 @@ section{scroll-margin-top:20px}
 .gallery .ph .pl{position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;background:rgba(0,0,0,.6);display:grid;place-items:center}
 .gallery .ph .pl svg{width:22px;height:22px;margin-left:3px}
 .gallery a.ph{cursor:pointer}
+.gallery .ph,.gallery .ph *,.lb,.lb *{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;-webkit-user-drag:none;-webkit-tap-highlight-color:transparent}
 .gallery .ph .go{position:absolute;left:10px;right:10px;bottom:10px;background:#000;color:#fff;border-radius:999px;padding:9px 12px;font-size:13px;font-weight:700;text-align:center;line-height:1}
 .gwrap{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}
 .gwrap .gallery{width:100%}
@@ -632,8 +633,8 @@ footer small{font-size:13px;color:var(--gray)}
 </div>
 
 <script src="posts.js"></script>
-<script src="portafolio.js?v=1791949777"></script>
-<script src="chat.js?v=1791949777"></script>
+<script src="portafolio.js?v=1791950503"></script>
+<script src="chat.js?v=1791950503"></script>
 <script src="assets/matter.min.js"></script>
 <script>
 /* ---------- DATOS ---------- */
@@ -804,6 +805,7 @@ document.getElementById('posts').innerHTML=(window.POSTS||[]).slice(0,3).map(p=>
   document.addEventListener('click',e=>{const m=e.target.closest('.gmore');if(m){const g=m.previousElementSibling;const on=g.classList.toggle('all');m.textContent=on?'Ver menos':'Ver todo ('+m.dataset.n+')';if(!on)g.closest('.svc').scrollIntoView({behavior:'smooth',block:'start'});return}const t=e.target.closest('.gallery button.ph');if(t){last=t;open(t.dataset.k,t.dataset.src)}});
   lb.querySelector('.lb-x').onclick=close;lb.querySelector('.lb-prev').onclick=()=>go(-1);lb.querySelector('.lb-next').onclick=()=>go(1);
   lb.addEventListener('click',e=>{if(e.target===lb)close()});
+  ['contextmenu','dragstart'].forEach(ev=>document.addEventListener(ev,e=>{if(e.target.closest&&e.target.closest('.gallery,.lb'))e.preventDefault()}));
   /* arrastre con el dedo: la pieza se desliza y se desvanece; la siguiente entra suave desde el otro lado */
   let sx=null,sy=0,dx=0,drag=false,lock=null,busy=false;
   const m=()=>box.firstElementChild;
