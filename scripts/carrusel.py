@@ -27,73 +27,68 @@ TOTAL = 3
 
 # ---------- texto enriquecido ----------
 def tokens(text):
-    """Devuelve [(palabra, estilo)] con estilo en {'n','hl','it','pk'}."""
-    out, style = [], 'n'
+    """Devuelve palabras; cada palabra es una lista de (texto, estilo) pegados sin espacio."""
+    words, cur, style = [], [], 'n'
     for part in re.split(r'(\*|_|\[|\])', text):
         if part == '*': style = 'n' if style == 'hl' else 'hl'; continue
         if part == '_': style = 'n' if style == 'it' else 'it'; continue
         if part == '[': style = 'pk'; continue
         if part == ']': style = 'n'; continue
-        for w in part.split(' '):
+        pieces = part.split(' ')
+        for k, w in enumerate(pieces):
+            if k > 0 and cur:
+                words.append(cur); cur = []
             if w:
-                out.append((w, style))
-            out.append((' ', style))
-    while out and out[-1][0] == ' ':
-        out.pop()
-    return out
+                cur.append((w, style))
+    if cur:
+        words.append(cur)
+    return words
 
 
 def layout(d, text, fonts, maxw):
-    """Parte en líneas. fonts: dict estilo -> fuente."""
+    """Líneas de segmentos (texto, estilo, ancho, espacio_antes)."""
+    sp = d.textlength(' ', font=fonts['n'])
     lines, cur, cw = [], [], 0
-    words = []
-    for w, s in tokens(text):
-        if w == ' ':
-            words.append(None)
-        else:
-            words.append((w, s))
-    # agrupar en palabras con espacio
-    i = 0
-    items = []
-    while i < len(words):
-        if words[i] is None:
-            i += 1; continue
-        items.append(words[i]); i += 1
-    for w, s in items:
-        f = fonts[s]
-        ww = d.textlength(w, font=f)
-        sp = d.textlength(' ', font=fonts['n'])
+    for word in tokens(text):
+        segs = [(w, s, d.textlength(w, font=fonts[s])) for w, s in word]
+        ww = sum(x[2] for x in segs)
         if cur and cw + sp + ww > maxw:
             lines.append(cur); cur, cw = [], 0
-        cur.append((w, s, ww)); cw += (sp if len(cur) > 1 else 0) + ww
+        gap = sp if cur else 0
+        for k, (w, s, x) in enumerate(segs):
+            cur.append((w, s, x, gap if k == 0 else 0))
+        cw += gap + ww
     if cur:
         lines.append(cur)
     return lines
 
 
 def render(d, x, y, lines, fonts, lh, color, hl_bg=PINK, hl_fg=INK, pk=PINK, align='left', maxw=None, pad=10):
-    sp = d.textlength(' ', font=fonts['n'])
     for ln in lines:
-        lw = sum(w for _, _, w in ln) + sp * (len(ln) - 1)
+        lw = sum(w + g for _, _, w, g in ln)
         cx = x + ((maxw - lw) / 2 if align == 'center' and maxw else 0)
         i = 0
         size = fonts['n'].size
         while i < len(ln):
-            w, s, ww = ln[i]
+            w, s, ww, g = ln[i]
             if s == 'hl':
                 j, run = i, 0
                 while j < len(ln) and ln[j][1] == 'hl':
-                    run += ln[j][2] + (sp if j > i else 0); j += 1
+                    run += ln[j][2] + (ln[j][3] if j > i else 0); j += 1
+                cx += g
                 d.rectangle((cx - pad, y + size * 0.06, cx + run + pad, y + size * 1.06), fill=hl_bg)
                 for k in range(i, j):
-                    d.text((cx, y), ln[k][0], font=fonts['hl'], fill=hl_fg); cx += ln[k][2] + sp
+                    if k > i:
+                        cx += ln[k][3]
+                    d.text((cx, y), ln[k][0], font=fonts['hl'], fill=hl_fg); cx += ln[k][2]
                 i = j
                 continue
+            cx += g
             if s == 'it':
                 d.text((cx, y + size * 0.02), w, font=fonts['it'], fill=color)
             else:
                 d.text((cx, y), w, font=fonts[s], fill=pk if s == 'pk' else color)
-            cx += ww + sp; i += 1
+            cx += ww; i += 1
         y += lh
     return y
 

@@ -57,6 +57,21 @@ def wrap(d, text, f, maxw):
     return lines
 
 
+def fondo(nid, cat, out, size=(1080, 1350)):
+    """Fondo de marca sin texto (para el carrusel cuando no hay foto)."""
+    bg, ink, soft = PAL.get(cat, PAL['Tendencias'])
+    w, h = size
+    im = Image.new('RGB', (w, h), bg)
+    d = ImageDraw.Draw(im)
+    rnd = random.Random(nid)
+    for _ in range(4):
+        r = rnd.randint(int(w * 0.25), int(w * 0.5))
+        x, y = rnd.randint(-150, w), rnd.randint(-150, int(h * 0.7))
+        d.ellipse((x - r, y - r, x + r, y + r), fill=soft)
+    im.save(out, 'JPEG', quality=90)
+    return out
+
+
 def main(nid, cat, title):
     bg, ink, soft = PAL.get(cat, PAL['Tendencias'])
     im = Image.new('RGB', (W, H), bg)

@@ -137,6 +137,11 @@ def build_carousel(n):
     data.setdefault('img', n['img'])
     if not os.path.exists(data['img']):
         data['img'] = n['img']
+    if '-foto' not in data['img']:
+        # sin foto real: fondo de marca limpio en vez de la portada con texto
+        import portada
+        os.makedirs(out, exist_ok=True)
+        data['img'] = portada.fondo(n['id'], n['k'], f'/tmp/fondo-{n["id"]}.jpg')
     now = datetime.now(timezone(timedelta(hours=-6)))
     meses = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE']
     data.setdefault('fecha', f'{now.day} {meses[now.month - 1]} {now.year}')
