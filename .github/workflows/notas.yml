@@ -1,0 +1,39 @@
+name: Notas por Telegram
+
+on:
+  push:
+    branches: [main]
+    paths: ['drafts/**']
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: notas
+  cancel-in-progress: false
+
+jobs:
+  notas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -q requests
+      - id: run
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: '8941716448'
+        run: python scripts/notas.py
+      - if: steps.run.outputs.changed == 'true'
+        run: |
+          git config user.name "La Guayaba Ilustrada"
+          git config user.email "laguayabailustrada@gmail.com"
+          git add -A drafts posts.js assets/work
+          git commit -m "Notas: actualización desde Telegram"
+          for i in 1 2 3; do git pull --rebase -q origin main && git push -q origin main && break; sleep 3; done
