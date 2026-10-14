@@ -181,6 +181,21 @@ def add_photo(nid, dest, caption=''):
     return 'galeria'
 
 
+def siguiente_vuelta():
+    """Hora (Ciudad de México) de la siguiente vuelta del redactor: minuto 52, de 6:52 a 21:52."""
+    from datetime import datetime, timedelta, timezone
+    now = datetime.now(timezone(timedelta(hours=-6)))
+    t = now.replace(minute=52, second=0, microsecond=0)
+    if t <= now:
+        t += timedelta(hours=1)
+    if t.hour < 6:
+        t = t.replace(hour=6)
+    elif t.hour > 21:
+        t = (t + timedelta(days=1)).replace(hour=6)
+    h = t.hour % 12 or 12
+    return f"{h}:52 {'am' if t.hour < 12 else 'pm'}" + ('' if t.date() == now.date() else ' de mañana')
+
+
 def handle_message(u, msg):
     """Fotos y pedidos que manda Sergio por Telegram."""
     os.makedirs('inbox', exist_ok=True)
@@ -220,7 +235,10 @@ def handle_message(u, msg):
     if text:
         urgente = bool(re.search(r'urgent|ya mismo|ahorita|de inmediato', text, re.I))
         save(f'inbox/{u["update_id"]}.json', {'tipo': 'texto', 'texto': text, 'nota': nid, 'urgente': urgente, 'fecha': msg['date']})
-        reply(mid, '📥 Recibido. Lo redacto en mi próxima vuelta, que es en menos de una hora, y te lo mando aquí para que lo apruebes.')
+        aviso = ''
+        if re.search(r'(facebook\.com|fb\.watch|instagram\.com|tiktok\.com|x\.com/|twitter\.com)', text):
+            aviso = '\n\nℹ️ Ese link es de una red social y no se puede abrir sin sesión. Voy a buscar la noticia en medios; si tienes el link de una página de noticias o el texto, mándamelo.'
+        reply(mid, f'📥 Recibido. Lo redacto en la vuelta de las {siguiente_vuelta()} y te lo mando aquí para que lo apruebes (unos 10 minutos después).' + aviso)
 
 
 def build_carousel(n):
