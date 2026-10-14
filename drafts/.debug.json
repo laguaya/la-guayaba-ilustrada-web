@@ -1,10 +1,12 @@
 {
  "ok": true,
  "error": null,
- "updates": 0,
+ "updates": 1,
  "offset": 0,
- "tipos": [],
- "hora": "2026-10-14T13:41:12.173301+00:00",
+ "tipos": [
+  "callback_query"
+ ],
+ "hora": "2026-10-14T13:46:34.462167+00:00",
  "webhook": false,
- "pendientes": 0
+ "pendientes": 1
 }
