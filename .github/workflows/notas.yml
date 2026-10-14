@@ -24,7 +24,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install -q requests
+      - run: pip install -q requests pillow
       - id: run
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
@@ -34,6 +34,6 @@ jobs:
         run: |
           git config user.name "La Guayaba Ilustrada"
           git config user.email "laguayabailustrada@gmail.com"
-          git add -A drafts posts.js assets/work
+          git add -A drafts inbox posts.js assets/work
           git commit -m "Notas: actualización desde Telegram"
           for i in 1 2 3; do git pull --rebase -q origin main && git push -q origin main && break; sleep 3; done

@@ -5,7 +5,7 @@
 
 Corre dentro de GitHub Actions. Necesita el secreto TELEGRAM_TOKEN.
 """
-import glob, json, os, re, sys
+import glob, io, json, os, re, sys
 from datetime import datetime, timezone, timedelta
 import requests
 
@@ -13,6 +13,7 @@ TOKEN = os.environ['TELEGRAM_TOKEN']
 CHAT = int(os.environ['TELEGRAM_CHAT_ID'])
 API = f'https://api.telegram.org/bot{TOKEN}/'
 OFFSET = 'drafts/.offset'
+MSGS = 'drafts/.msgs.json'
 COLORS = {'Noticias': '#FF9D00', 'Tendencias': '#FF3674', 'Inspiración': '#FFA4BE'}
 MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic']
 changed = False
@@ -41,6 +42,91 @@ def save(path, data):
     json.dump(data, open(path, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 
 
+def msgs():
+    return load(MSGS) if os.path.exists(MSGS) else {}
+
+
+def remember(mid, nid):
+    m = msgs(); m[str(mid)] = nid
+    save(MSGS, dict(list(m.items())[-400:]))
+
+
+def reply(mid, text):
+    tg('sendMessage', chat_id=CHAT, text=text, reply_to_message_id=mid)
+
+
+def get_photo(msg, dest):
+    from PIL import Image
+    ph = msg.get('photo')
+    fid = ph[-1]['file_id'] if ph else msg['document']['file_id']
+    info = tg('getFile', file_id=fid)
+    url = f'https://api.telegram.org/file/bot{TOKEN}/' + info['result']['file_path']
+    raw = requests.get(url, timeout=60).content
+    im = Image.open(io.BytesIO(raw)).convert('RGB')
+    im.thumbnail((1600, 1600))
+    im.save(dest, 'WEBP', quality=86)
+
+
+def set_cover(nid, src_img):
+    """Pone la foto como portada de un borrador o de una nota ya publicada."""
+    path = f'drafts/{nid}.json'
+    if os.path.exists(path):
+        n = load(path); old = n.get('img', '')
+        n['img'] = src_img; n['cr'] = 'Foto: La Guayaba Ilustrada'
+        save(path, n)
+    else:
+        js = open('posts.js', encoding='utf-8').read()
+        lines = js.split('\n')
+        for i, ln in enumerate(lines):
+            if f'"id": "{nid}"' in ln or f"id:'{nid}'" in ln:
+                m = re.search(r'("img": "|img:\')([^"\']+)', ln)
+                old = m.group(2) if m else ''
+                ln = ln.replace(old, src_img, 1) if old else ln
+                ln = re.sub(r'"cr": "[^"]*"', '"cr": "Foto: La Guayaba Ilustrada"', ln)
+                lines[i] = re.sub(r"cr:'[^']*'", "cr:'Foto: La Guayaba Ilustrada'", ln)
+                break
+        else:
+            return False
+        open('posts.js', 'w', encoding='utf-8').write('\n'.join(lines))
+    if old.startswith('assets/work/nota-') and old != src_img and os.path.exists(old):
+        os.remove(old)
+    return True
+
+
+def handle_message(u, msg):
+    """Fotos y pedidos que manda Sergio por Telegram."""
+    os.makedirs('inbox', exist_ok=True)
+    mid = msg['message_id']
+    rto = (msg.get('reply_to_message') or {}).get('message_id')
+    nid = msgs().get(str(rto)) if rto else None
+    text = msg.get('text') or msg.get('caption') or ''
+    is_photo = 'photo' in msg or (msg.get('document', {}).get('mime_type', '').startswith('image/'))
+    if text.strip().lower() in ('/start', '/help', '/ayuda'):
+        reply(mid, 'Hola. Aquí te llegan las notas para aprobar.\n\n'
+              '• Mándame un link o un texto con lo que quieres que se publique y lo redacto en mi próxima vuelta.\n'
+              '• Para cambiar la portada de una nota, responde a su mensaje con la foto.\n'
+              '• Una foto suelta se guarda para usarla en la siguiente nota.')
+        return
+    if is_photo:
+        if nid:
+            dest = f'assets/work/nota-{nid}-foto{u["update_id"]}.webp'
+            get_photo(msg, dest)
+            if set_cover(nid, dest):
+                reply(mid, '🖼 Listo, esta foto queda como portada de esa nota.')
+                if text:
+                    save(f'inbox/{u["update_id"]}.json', {'tipo': 'texto', 'nota': nid, 'texto': text, 'fecha': msg['date']})
+                return
+        dest = f'inbox/foto-{u["update_id"]}.webp'
+        get_photo(msg, dest)
+        save(f'inbox/{u["update_id"]}.json', {'tipo': 'foto', 'archivo': dest, 'texto': text, 'nota': nid, 'fecha': msg['date']})
+        reply(mid, '📥 Foto guardada. La uso en la nota que me indiques o en la siguiente que redacte.')
+        return
+    if text:
+        urgente = bool(re.search(r'urgent|ya mismo|ahorita|de inmediato', text, re.I))
+        save(f'inbox/{u["update_id"]}.json', {'tipo': 'texto', 'texto': text, 'nota': nid, 'urgente': urgente, 'fecha': msg['date']})
+        reply(mid, '📥 Recibido. Lo redacto en mi próxima vuelta, que es en menos de una hora, y te lo mando aquí para que lo apruebes.')
+
+
 def send_pending():
     global changed
     for path in sorted(glob.glob('drafts/*.json')):
@@ -51,9 +137,11 @@ def send_pending():
         img = n.get('img', '')
         if img and os.path.exists(img):
             with open(img, 'rb') as f:
-                tg('sendPhoto', files={'photo': f}, chat_id=CHAT, caption=cap[:1000], parse_mode='HTML')
+                r0 = tg('sendPhoto', files={'photo': f}, chat_id=CHAT, caption=cap[:1000], parse_mode='HTML')
         else:
-            tg('sendMessage', chat_id=CHAT, text=cap, parse_mode='HTML')
+            r0 = tg('sendMessage', chat_id=CHAT, text=cap, parse_mode='HTML')
+        if r0.get('ok'):
+            remember(r0['result']['message_id'], n['id'])
         body = '\n\n'.join(esc(p) for p in n['b'])
         if n.get('src'):
             body += f'\n\nFuente: {esc(n["src"])}'
@@ -64,6 +152,7 @@ def send_pending():
                    {'text': '🗑 Descartar', 'callback_data': 'del:' + n['id']}]]})
         if r.get('ok'):
             n['tg'] = r['result']['message_id']
+            remember(n['tg'], n['id'])
             save(path, n)
             changed = True
             print('Enviada a Telegram:', n['id'])
@@ -101,6 +190,15 @@ def poll():
     ups = r.get('result', [])
     for u in ups:
         off = u['update_id'] + 1
+        msg = u.get('message')
+        if msg and msg.get('chat', {}).get('id') == CHAT:
+            try:
+                handle_message(u, msg)
+            except Exception as e:
+                print('Error con mensaje:', e, file=sys.stderr)
+                reply(msg['message_id'], 'No pude procesar este mensaje, ¿me lo mandas otra vez?')
+            changed = True
+            continue
         cq = u.get('callback_query')
         if not cq or cq['from']['id'] != CHAT:
             continue
