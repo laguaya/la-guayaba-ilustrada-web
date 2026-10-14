@@ -135,7 +135,7 @@ def article_ld(n, url):
          **({'isBasedOn': n['src']} if n.get('src') else {})},
         {'@type': 'BreadcrumbList', 'itemListElement': [
             {'@type': 'ListItem', 'position': 1, 'name': 'Inicio', 'item': SITE + '/'},
-            {'@type': 'ListItem', 'position': 2, 'name': 'Blog', 'item': SITE + '/blog'},
+            {'@type': 'ListItem', 'position': 2, 'name': 'Noticias', 'item': SITE + '/blog'},
             {'@type': 'ListItem', 'position': 3, 'name': strip(n['t']), 'item': url}]},
         {'@type': ['ProfessionalService', 'LocalBusiness'], '@id': SITE + '/#negocio', 'name': NAME,
                                               'url': SITE + '/', 'logo': SITE + '/assets/icon-512.png', 'telephone': PHONE,
@@ -174,7 +174,7 @@ def static_article(n):
     body = ''.join(f'<p>{x}</p>' for x in n.get('b', []))
     g = ''.join(f'<figure><img src="{e((x if isinstance(x, str) else x["s"]))}" alt="{e(n["t"])}" loading="lazy"></figure>' for x in n.get('g', []))
     src = f'<p class="source">Fuente: <a href="{e(n["src"])}" rel="noopener">{e(n.get("sn") or n["src"])}</a></p>' if n.get('src') else ''
-    return (f'<article class="article"><a class="cta light sm back" href="blog">Volver al blog</a>'
+    return (f'<article class="article"><a class="cta light sm back" href="blog">Volver a Noticias</a>'
             f'<span class="kind" style="background:{e(n.get("c"))}">{e(n.get("k"))}</span><time datetime="{iso(n.get("d"))[:10]}">{e(n.get("d"))}</time>'
             f'<h1>{n["t"]}</h1><p class="dek">{n.get("x", "")}</p><span class="by">Por La Guayaba Ilustrada</span>'
             f'<div class="cover"><img src="{e(n["img"])}" alt="{e(n.get("alt"))}"></div>'
@@ -260,7 +260,7 @@ def main():
     lines += ['### Planes mensuales', '- Esencial: $6,500 al mes', '- Profesional: $12,500 al mes', '- Marca completa: $22,000 al mes',
               '- Contrato mínimo de 3 meses, 10% de descuento pagando 6 meses, cancelación con 30 días de aviso.', '',
               '## Preguntas frecuentes', ''] + [f'**{q}** {a}\n' for q, a in faq_items()] + \
-             ['## Páginas', f'- [Precios]({SITE}/precios)', f'- [Blog de noticias]({SITE}/blog)', f'- [RSS]({SITE}/feed.xml)', '', '## Notas recientes'] + \
+             ['## Páginas', f'- [Precios]({SITE}/precios)', f'- [Noticias]({SITE}/blog)', f'- [RSS]({SITE}/feed.xml)', '', '## Notas recientes'] + \
              [f'- [{strip(n["t"])}]({SITE}/notas/{n["id"]}): {strip(n.get("x"))}' for n in POSTS[:20]]
     write(p('llms.txt'), '\n'.join(lines) + '\n')
     print(f'SEO listo: {len(POSTS)} notas')

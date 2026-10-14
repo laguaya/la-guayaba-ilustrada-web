@@ -88,7 +88,7 @@
 
 ## Páginas
 - [Precios](https://guayabailustrada.com.mx/precios)
-- [Blog de noticias](https://guayabailustrada.com.mx/blog)
+- [Noticias](https://guayabailustrada.com.mx/blog)
 - [RSS](https://guayabailustrada.com.mx/feed.xml)
 
 ## Notas recientes

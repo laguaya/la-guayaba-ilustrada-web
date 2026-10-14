@@ -10,12 +10,12 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=2">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="La Guayaba Ilustrada · Noticias" href="/feed.xml">
-<title>Blog de noticias de marketing, diseño y redes sociales · La Guayaba Ilustrada</title>
+<title>Noticias de marcas, diseño y publicidad · La Guayaba Ilustrada</title>
 <meta name="description" content="Noticias, tendencias e inspiración de publicidad, diseño y marcas, por La Guayaba Ilustrada.">
 <link rel="canonical" href="https://guayabailustrada.com.mx/blog">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="La Guayaba Ilustrada">
-<meta property="og:title" content="Blog · La Guayaba Ilustrada">
+<meta property="og:title" content="Noticias · La Guayaba Ilustrada">
 <meta property="og:description" content="Noticias, tendencias e inspiración de publicidad, diseño y marcas, por La Guayaba Ilustrada.">
 <meta property="og:url" content="https://guayabailustrada.com.mx/blog">
 <meta name="twitter:card" content="summary">
@@ -204,7 +204,7 @@ footer small{font-size:13px;color:var(--gray)}
       <a href="index.html#cotizador">Cotizador</a>
       <a href="index.html#planes">Planes</a>
       <a href="index.html#proyectos">Proyectos</a>
-      <a href="blog.html" aria-current="page">Blog</a>
+      <a href="blog.html" aria-current="page">Noticias</a>
       <a href="index.html#contacto">Contacto</a>
     </div>
     </div>
@@ -221,7 +221,7 @@ footer small{font-size:13px;color:var(--gray)}
   <footer>
     <a class="logo" href="index.html"><b>LG.I</b><span>La Guayaba<br>Ilustrada</span></a>
     <p>Organizando ideas creativas para ejecutarlas.</p>
-    <nav class="foot-links" aria-label="Más"><a href="/precios">Precios</a><a href="/blog">Blog</a><a href="https://wa.me/527209097907" target="_blank" rel="noopener">WhatsApp</a><a href="mailto:hola@guayabailustrada.com.mx">Correo</a><a href="https://instagram.com/guayabailustrada" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/guayabailustrada" target="_blank" rel="noopener">Facebook</a></nav>
+    <nav class="foot-links" aria-label="Más"><a href="/precios">Precios</a><a href="/blog">Noticias</a><a href="https://wa.me/527209097907" target="_blank" rel="noopener">WhatsApp</a><a href="mailto:hola@guayabailustrada.com.mx">Correo</a><a href="https://instagram.com/guayabailustrada" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/guayabailustrada" target="_blank" rel="noopener">Facebook</a></nav>
     <small>© 2026 La Guayaba Ilustrada · Cuernavaca, Morelos</small>
   </footer>
 
@@ -237,12 +237,12 @@ let filter='todo',shown=13;
 const host=u=>{try{return new URL(u).hostname.replace(/^www\./,'')}catch(e){return 'Ver fuente'}};
 
 function list(){
-  document.title='Blog · La Guayaba Ilustrada';
+  document.title="Noticias · La Guayaba Ilustrada";
   const items=P.filter(p=>filter==='todo'||p.k===filter);
   const [first,...all]=items,rest=all.slice(0,shown-1);
   view.innerHTML=`<div class="wrap fade">
     <section class="head">
-      <span class="eyebrow">Blog</span>
+      <span class="eyebrow">Noticias</span>
       
       <h1>Noticias e <i class="it">inspiración</i>.</h1>
       <p>Lo más relevante de la publicidad, el diseño y las marcas, contado por nuestro equipo.</p>
@@ -286,7 +286,7 @@ function article(p){
   document.title=p.t+' · La Guayaba Ilustrada';
   const others=P.filter(x=>x.id!==p.id).slice(0,3);
   view.innerHTML=`<article class="article fade">
-    <a class="cta light sm back" href="blog.html">Volver al blog</a>
+    <a class="cta light sm back" href="blog.html">Volver a Noticias</a>
     <div class="clock"><b id="ctime"></b><span><span id="cdate"></span> · Ciudad de México</span></div>
     <span class="kind" style="background:${p.c}">${p.k}</span>
     <time>${p.d}</time>
