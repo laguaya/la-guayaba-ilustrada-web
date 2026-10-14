@@ -8,3 +8,5 @@
   Cache-Control: no-cache
 /assets/work/*
   Cache-Control: public, max-age=300
+/blog
+  Cache-Control: no-cache
