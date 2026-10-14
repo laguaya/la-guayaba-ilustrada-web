@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
+<meta name="theme-color" content="#ffffff">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Blog · La Guayaba Ilustrada</title>
 <meta name="description" content="Noticias, tendencias e inspiración de publicidad, diseño y marcas, por La Guayaba Ilustrada.">
@@ -44,7 +45,7 @@ i.it{font-style:italic;font-weight:400;letter-spacing:-0.02em}
 .nav-end span{color:#BDBDBD;font-size:14px;line-height:1}
 /* Menú fijo: baja contigo al hacer scroll */
 .nav{position:sticky;top:10px;z-index:90;box-shadow:0 8px 24px rgba(0,0,0,.12)}
-body::before{content:"";position:fixed;z-index:89;top:0;left:0;right:0;height:var(--navh,84px);background:var(--white);pointer-events:none}
+body::before{content:"";position:fixed;z-index:89;top:-120px;left:0;right:0;height:calc(var(--navh,84px) + 120px);background:var(--white);pointer-events:none}
 [id]{scroll-margin-top:96px}
 
 .quote{display:inline-flex;align-items:center;justify-content:center;height:48px;padding:0 24px;border-radius:999px;background:var(--pink);color:var(--ink);font-weight:700;font-size:15px;line-height:1}
@@ -151,6 +152,16 @@ footer small{font-size:13px;color:var(--gray)}
 .source{font-size:14px;color:var(--gray,#565656);border-top:1.5px solid var(--line,#eee);padding-top:16px;margin:0}
 .source a{color:var(--ink,#000);font-weight:700;text-decoration:underline;text-underline-offset:3px}
 .loadmore{display:flex;justify-content:center;margin-top:10px}
+@view-transition{navigation:auto}
+::view-transition-old(root){animation:vt-out .35s cubic-bezier(.4,0,.2,1) both}
+::view-transition-new(root){animation:vt-in .6s cubic-bezier(.2,.7,.2,1) both}
+@keyframes vt-out{to{opacity:0;transform:translateY(-8px)}}
+@keyframes vt-in{from{opacity:0;transform:translateY(14px)}}
+.nav{view-transition-name:nav}
+::view-transition-group(nav){animation-duration:0s}
+@media (prefers-reduced-motion:reduce){::view-transition-old(root),::view-transition-new(root){animation:none}}
+.article{animation:art-in .7s cubic-bezier(.2,.7,.2,1) both}
+@keyframes art-in{from{opacity:0;transform:translateY(16px)}}
 </style>
 </head>
 <body>
@@ -236,7 +247,7 @@ document.addEventListener('click',e=>{
 function fitCover(im){
   /* No estirar fotos chicas: se muestran como máximo a su tamaño real */
   const w=im.naturalWidth;if(!w)return;
-  const box=im.closest('.cover');if(w<1100&&box)box.style.maxWidth=Math.max(w,560)+'px';
+  const box=im.closest('.cover');const max=Math.round(w/(window.devicePixelRatio||1));if(box)box.style.maxWidth=Math.max(Math.min(max,1100),520)+'px';
 }
 
 function article(p){
