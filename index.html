@@ -439,6 +439,7 @@ footer small{font-size:13px;color:var(--gray)}
 </style>
 
 <div id="intro"><button class="skip" type="button" id="skip">Saltar</button></div>
+<script>(()=>{let k="";try{k=new Date().toLocaleDateString("es-MX");if(localStorage.getItem("lgi-intro")===k){document.getElementById("intro").remove();window.LGI_SKIP_INTRO=1}else localStorage.setItem("lgi-intro",k)}catch(e){}})()</script>
 
 <div class="wrap">
 
@@ -765,6 +766,7 @@ document.getElementById('posts').innerHTML=(window.POSTS||[]).slice(0,3).map(p=>
 /* ---------- INTRO CON GRAVEDAD ---------- */
 (function(){
   const intro=document.getElementById('intro');
+  if(!intro||window.LGI_SKIP_INTRO)return;
   let done=false;
   function finish(){if(done)return;done=true;document.body.classList.remove('intro-on');intro.classList.add('out');setTimeout(()=>intro.remove(),450)}
   document.getElementById('skip').addEventListener('click',finish);
