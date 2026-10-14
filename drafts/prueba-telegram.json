@@ -3,9 +3,13 @@
  "k": "Noticias",
  "t": "Nota de prueba: si ves esto, el bot ya funciona",
  "x": "Esta nota solo sirve para comprobar que los botones funcionan. Dale Descartar.",
- "b": ["Hola Sergio. Si te llegó este mensaje con la portada naranja, la conexión entre GitHub y tu bot de Telegram ya quedó.", "Presiona Descartar. En unos minutos te debe contestar que la nota se descartó y no va a aparecer en el blog."],
+ "b": [
+  "Hola Sergio. Si te llegó este mensaje con la portada naranja, la conexión entre GitHub y tu bot de Telegram ya quedó.",
+  "Presiona Descartar. En unos minutos te debe contestar que la nota se descartó y no va a aparecer en el blog."
+ ],
  "img": "assets/work/nota-prueba-telegram.webp",
  "alt": "Portada de prueba de La Guayaba Ilustrada",
  "cr": "",
- "src": "https://la-guayaba-ilustrada-web.pages.dev/blog.html"
+ "src": "https://la-guayaba-ilustrada-web.pages.dev/blog.html",
+ "tg": 3
 }
