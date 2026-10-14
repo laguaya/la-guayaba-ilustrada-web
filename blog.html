@@ -225,6 +225,12 @@ document.addEventListener('click',e=>{
   if(im){const z=document.createElement('div');z.className='zoom';z.innerHTML=`<img src="${im.src}" alt="">`;z.onclick=()=>z.remove();document.body.appendChild(z);return}
 });
 
+function fitCover(im){
+  /* No estirar fotos chicas: se muestran como máximo a su tamaño real */
+  const w=im.naturalWidth;if(!w)return;
+  const box=im.closest('.cover');if(w<1100&&box)box.style.maxWidth=Math.max(w,560)+'px';
+}
+
 function article(p){
   document.title=p.t+' · La Guayaba Ilustrada';
   const others=P.filter(x=>x.id!==p.id).slice(0,3);
@@ -236,7 +242,7 @@ function article(p){
     <h1>${p.t}</h1>
     <p class="dek">${p.x}</p>
     <span class="by">Por La Guayaba Ilustrada</span>
-    <div class="cover"><img src="${p.img}" alt="${p.alt}"></div>${p.cr?`<p class="credit">${p.cr}</p>`:''}
+    <div class="cover"><img src="${p.img}" alt="${p.alt}" onload="fitCover(this)"></div>${p.cr?`<p class="credit">${p.cr}</p>`:''}
     <div class="body">${body(p)}</div>
     ${p.src?`<p class="source">Fuente: <a href="${p.src}" target="_blank" rel="noopener">${p.sn||host(p.src)}</a></p>`:''}
     <div class="share">

@@ -102,17 +102,14 @@ def get_photo(msg, dest):
     from PIL import ImageOps
     im = ImageOps.exif_transpose(im).convert('RGB')
     orig = im.size
-    if max(orig) < 1800:
-        im = mejorar(im)
-    else:
-        im.thumbnail((2400, 2400), Image.LANCZOS)
-    im.save(dest, 'WEBP', quality=88, method=6)
+    im.thumbnail((2400, 2400), Image.LANCZOS)  # se guarda tal cual, sin inventar detalle
+    im.save(dest, 'WEBP', quality=92, method=6)
     return orig
 
 
 def tip(orig):
     if max(orig) < 1280:
-        return f'\n\nℹ️ La foto llegó chica ({orig[0]}×{orig[1]} px) y la mejoré con IA. Para máxima calidad mándala como archivo: 📎 → Archivo → elige la foto.'
+        return f'\n\nℹ️ Ojo: la foto llegó chica ({orig[0]}×{orig[1]} px) y en computadora se verá pequeña. Para buena calidad mándala como archivo (📎 → Archivo) y de al menos 1600 px de ancho.'
     return ''
 
 
