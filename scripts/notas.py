@@ -386,7 +386,64 @@ def instagram():
     changed = True
 
 
-if __name__ == '__main__' and '--instagram' in sys.argv:
+def sh(*a):
+    import subprocess
+    return subprocess.run(a, capture_output=True, text=True)
+
+
+def commit(msg):
+    sh('git', 'add', '-A', 'drafts', 'inbox', 'posts.js', 'assets')
+    if sh('git', 'diff', '--cached', '--quiet').returncode == 0:
+        return
+    sh('git', 'commit', '-m', msg)
+    for _ in range(4):
+        if sh('git', 'pull', '--rebase', '-q', 'origin', 'main').returncode == 0 and \
+           sh('git', 'push', '-q', 'origin', 'main').returncode == 0:
+            return
+        import time; time.sleep(4)
+
+
+def listen(hours=5.6):
+    """Escucha Telegram sin parar (hasta ~6 h) y luego se vuelve a lanzar solo."""
+    import time
+    global changed
+    sh('git', 'config', 'user.name', 'La Guayaba Ilustrada')
+    sh('git', 'config', 'user.email', 'laguayabailustrada@gmail.com')
+    os.environ['LONGPOLL'], os.environ['ROUNDS'] = '25', '1'
+    code = sh('git', 'rev-parse', 'HEAD:scripts/notas.py').stdout.strip()
+    t0 = time.time()
+    while time.time() - t0 < hours * 3600:
+        try:
+            sh('git', 'pull', '--rebase', '-q', 'origin', 'main')
+            if sh('git', 'rev-parse', 'HEAD:scripts/notas.py').stdout.strip() != code:
+                print('Hay una versión nueva del bot; reinicio.')
+                break
+            changed = False
+            send_pending()
+            poll()
+            if changed:
+                commit('Notas: actualización desde Telegram')
+            if os.path.exists(IGQ) and os.environ.get('IG_TOKEN'):
+                changed = False
+                instagram()
+                if changed:
+                    commit('Notas: carrusel publicado en Instagram')
+        except Exception as e:
+            print('Error en la vuelta:', e, file=sys.stderr)
+            time.sleep(10)
+    # relevo: lanza otra vez este mismo workflow
+    repo, tok = os.environ.get('GITHUB_REPOSITORY'), os.environ.get('GITHUB_TOKEN')
+    if repo and tok:
+        r = requests.post(f'https://api.github.com/repos/{repo}/actions/workflows/notas.yml/dispatches',
+                          headers={'Authorization': f'Bearer {tok}', 'Accept': 'application/vnd.github+json'},
+                          json={'ref': 'main'}, timeout=30)
+        print('Relevo:', r.status_code)
+
+
+if __name__ == '__main__' and '--listen' in sys.argv:
+    os.makedirs('drafts', exist_ok=True)
+    listen()
+elif __name__ == '__main__' and '--instagram' in sys.argv:
     instagram()
     open(os.environ.get('GITHUB_OUTPUT', os.devnull), 'a').write(f'changed={"true" if changed else "false"}\n')
 elif __name__ == '__main__':
