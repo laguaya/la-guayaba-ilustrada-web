@@ -73,6 +73,7 @@ input{font:inherit}
 .nav-end span{color:#BDBDBD;font-size:14px;line-height:1}
 /* Menú fijo: baja contigo al hacer scroll */
 .nav{position:sticky;top:10px;z-index:90;box-shadow:0 8px 24px rgba(0,0,0,.12)}
+body::before{content:"";position:fixed;z-index:89;top:0;left:0;right:0;height:var(--navh,84px);background:var(--white);pointer-events:none}
 [id]{scroll-margin-top:96px}
 
 .quote{display:inline-flex;align-items:center;justify-content:center;height:48px;padding:0 24px;border-radius:999px;background:var(--pink);color:var(--ink);font-weight:700;font-size:15px;line-height:1;transition:transform .2s}
@@ -862,3 +863,4 @@ document.getElementById('posts').innerHTML=(window.POSTS||[]).slice(0,3).map(p=>
 </script>
 <script>window.REVEAL=".hero > *, .services .sec-head, .svc, .calc > *, .calc-body > *, .plans .sec-head, .plan, .terms, .note-box, .work .sec-head, .fan, .work > .cta, .sites .sec-head, .site, .offer > *, .process > .eyebrow, .process > h2, .st, .track > *, .blog .sec-head, .post, .blog > .cta, .bio > *, .facts > div, .contact > *, footer > *";</script>
 <script src="reveal.js"></script>
+<script>(()=>{const n=document.querySelector(".nav");if(!n)return;const f=()=>document.documentElement.style.setProperty("--navh",(n.offsetHeight+18)+"px");f();addEventListener("resize",f);addEventListener("load",f)})()</script>
