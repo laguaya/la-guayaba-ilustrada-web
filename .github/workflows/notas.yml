@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
     paths: ['drafts/**']
+  repository_dispatch:
+    types: [telegram]
   schedule:
     - cron: '*/5 * * * *'
   workflow_dispatch:
@@ -18,24 +20,39 @@ concurrency:
 jobs:
   notas:
     runs-on: ubuntu-latest
-    timeout-minutes: 6
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install -q requests pillow
+      - run: pip install -q requests pillow fonttools
       - id: run
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: '8941716448'
+          UPDATE: ${{ toJson(github.event.client_payload.update) }}
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
           LONGPOLL: '50'
-          ROUNDS: ${{ github.event_name == 'push' && '5' || '1' }}
+          ROUNDS: ${{ github.event_name == 'push' && '3' || '1' }}
         run: python scripts/notas.py
       - if: steps.run.outputs.changed == 'true'
         run: |
           git config user.name "La Guayaba Ilustrada"
           git config user.email "laguayabailustrada@gmail.com"
-          git add -A drafts inbox posts.js assets/work
+          git add -A drafts inbox posts.js assets/work assets/ig
           git commit -m "Notas: actualización desde Telegram"
+          for i in 1 2 3; do git pull --rebase -q origin main && git push -q origin main && break; sleep 3; done
+      - id: ig
+        if: hashFiles('drafts/.igqueue.json') != ''
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: '8941716448'
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+        run: python scripts/notas.py --instagram
+      - if: steps.ig.outputs.changed == 'true'
+        run: |
+          git add -A drafts
+          git commit -m "Notas: carrusel publicado en Instagram"
           for i in 1 2 3; do git pull --rebase -q origin main && git push -q origin main && break; sleep 3; done

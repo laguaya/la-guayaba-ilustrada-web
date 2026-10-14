@@ -14,6 +14,7 @@ CHAT = int(os.environ['TELEGRAM_CHAT_ID'])
 API = f'https://api.telegram.org/bot{TOKEN}/'
 OFFSET = 'drafts/.offset'
 MSGS = 'drafts/.msgs.json'
+IGQ = 'drafts/.igqueue.json'
 COLORS = {'Noticias': '#FF9D00', 'Tendencias': '#FF3674', 'Inspiración': '#FFA4BE'}
 MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic']
 changed = False
@@ -127,6 +128,50 @@ def handle_message(u, msg):
         reply(mid, '📥 Recibido. Lo redacto en mi próxima vuelta, que es en menos de una hora, y te lo mando aquí para que lo apruebes.')
 
 
+def build_carousel(n):
+    """Crea las 3 láminas en assets/ig/<id>/ y regresa sus rutas."""
+    sys.path.insert(0, 'scripts')
+    import carrusel
+    out = f'assets/ig/{n["id"]}'
+    data = dict(n['ig'])
+    data.setdefault('img', n['img'])
+    if not os.path.exists(data['img']):
+        data['img'] = n['img']
+    now = datetime.now(timezone(timedelta(hours=-6)))
+    meses = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE']
+    data.setdefault('fecha', f'{now.day} {meses[now.month - 1]} {now.year}')
+    carrusel.make(data, out)
+    return [f'{out}/{i}.jpg' for i in (1, 2, 3)]
+
+
+def send_carousel(n):
+    try:
+        files = build_carousel(n)
+    except Exception as e:
+        print('No se pudo armar el carrusel:', e, file=sys.stderr)
+        return False
+    media, fh = [], {}
+    for i, f in enumerate(files):
+        fh[f'f{i}'] = open(f, 'rb')
+        item = {'type': 'photo', 'media': f'attach://f{i}'}
+        if i == 0:
+            item['caption'] = ('📲 Carrusel para Instagram\n\n' + n['ig'].get('caption', ''))[:1000]
+        media.append(item)
+    r = tg('sendMediaGroup', files=fh, chat_id=CHAT, media=media)
+    for f in fh.values():
+        f.close()
+    if r.get('ok'):
+        for m in r['result']:
+            remember(m['message_id'], n['id'])
+    return bool(r.get('ok'))
+
+
+def queue_instagram(n):
+    q = load(IGQ) if os.path.exists(IGQ) else []
+    q.append({'id': n['id'], 'caption': n['ig'].get('caption', ''), 'reply': n.get('tg')})
+    save(IGQ, q)
+
+
 def send_pending():
     global changed
     for path in sorted(glob.glob('drafts/*.json')):
@@ -145,11 +190,12 @@ def send_pending():
         body = '\n\n'.join(esc(p) for p in n['b'])
         if n.get('src'):
             body += f'\n\nFuente: {esc(n["src"])}'
+        kb = [[{'text': '✅ Publicar en la web', 'callback_data': 'pub:' + n['id']}]]
+        if n.get('ig') and send_carousel(n):
+            kb.append([{'text': '📲 Web + Instagram', 'callback_data': 'pig:' + n['id']}])
+        kb.append([{'text': '🗑 Descartar', 'callback_data': 'del:' + n['id']}])
         r = tg('sendMessage', chat_id=CHAT, text=body[:3900], parse_mode='HTML',
-               disable_web_page_preview='true',
-               reply_markup={'inline_keyboard': [[
-                   {'text': '✅ Publicar', 'callback_data': 'pub:' + n['id']},
-                   {'text': '🗑 Descartar', 'callback_data': 'del:' + n['id']}]]})
+               disable_web_page_preview='true', reply_markup={'inline_keyboard': kb})
         if r.get('ok'):
             n['tg'] = r['result']['message_id']
             remember(n['tg'], n['id'])
@@ -186,19 +232,17 @@ def mark(cq, texto):
 def poll():
     global changed
     off = int(open(OFFSET).read().strip() or 0) if os.path.exists(OFFSET) else 0
-    rounds = int(os.environ.get('ROUNDS', '1'))
+    upd = os.environ.get('UPDATE', '').strip()
+    if upd and upd != 'null':
+        ups = [json.loads(upd)]
+        rounds = 0
+    else:
+        rounds = int(os.environ.get('ROUNDS', '1'))
     for _ in range(rounds):
         r = tg('getUpdates', offset=off, timeout=int(os.environ.get('LONGPOLL', '0')), allowed_updates=['callback_query', 'message'])
         ups = r.get('result', [])
         if ups or not r.get('ok'):
             break
-    dbg = {'ok': r.get('ok'), 'error': r.get('description'), 'updates': len(ups), 'offset': off,
-           'tipos': [k for u in ups for k in u if k != 'update_id'],
-           'hora': datetime.now(timezone.utc).isoformat()}
-    wh = tg('getWebhookInfo').get('result', {})
-    dbg['webhook'] = bool(wh.get('url')); dbg['pendientes'] = wh.get('pending_update_count')
-    save('drafts/.debug.json', dbg)
-    changed = True
     for u in ups:
         off = u['update_id'] + 1
         msg = u.get('message')
@@ -221,25 +265,86 @@ def poll():
             tg('answerCallbackQuery', callback_query_id=cq['id'], text='Esa nota ya se había procesado.')
             continue
         n = load(path)
-        if accion == 'pub':
+        if accion in ('pub', 'pig'):
             publish(n)
             os.remove(path)
-            mark(cq, '✅ Publicada. Aparece en el blog en uno o dos minutos.')
+            if accion == 'pig' and n.get('ig'):
+                queue_instagram(n)
+                if os.environ.get('IG_TOKEN'):
+                    mark(cq, '✅ Publicada en la web. En unos minutos sale el carrusel en Instagram.')
+                else:
+                    mark(cq, '✅ Publicada en la web. Instagram todavía no está conectado: descarga el carrusel de arriba y súbelo tú.')
+            else:
+                mark(cq, '✅ Publicada. Aparece en el blog en uno o dos minutos.')
             print('Publicada:', nid)
         elif accion == 'del':
             os.remove(path)
             if n.get('img', '').startswith('assets/work/nota-') and os.path.exists(n['img']):
                 os.remove(n['img'])
+            import shutil
+            shutil.rmtree(f'assets/ig/{nid}', ignore_errors=True)
             mark(cq, '🗑 Descartada.')
             print('Descartada:', nid)
         changed = True
-    if ups:
+    if ups and rounds:
         os.makedirs('drafts', exist_ok=True)
         open(OFFSET, 'w').write(str(off))
         changed = True
 
 
-if __name__ == '__main__':
+def instagram():
+    """Publica los carruseles en cola usando la API oficial de Instagram."""
+    import time
+    global changed
+    if not os.path.exists(IGQ):
+        return
+    q = load(IGQ)
+    tok, uid = os.environ.get('IG_TOKEN'), os.environ.get('IG_USER_ID')
+    if not (tok and uid):
+        return
+    api = os.environ.get('IG_API', 'https://graph.instagram.com/v21.0')
+    site = os.environ.get('SITE', 'https://la-guayaba-ilustrada-web.pages.dev')
+    rest = []
+    for item in q:
+        urls = [f'{site}/assets/ig/{item["id"]}/{i}.jpg' for i in (1, 2, 3)]
+        for _ in range(30):  # espera a que la web publique las imágenes
+            if all(requests.head(u, timeout=20).status_code == 200 for u in urls):
+                break
+            time.sleep(10)
+        try:
+            kids = []
+            for u in urls:
+                c = requests.post(f'{api}/{uid}/media', data={'image_url': u, 'is_carousel_item': 'true', 'access_token': tok}, timeout=60).json()
+                kids.append(c['id'])
+            car = requests.post(f'{api}/{uid}/media', data={'media_type': 'CAROUSEL', 'children': ','.join(kids),
+                                'caption': item['caption'], 'access_token': tok}, timeout=60).json()
+            for _ in range(20):
+                st = requests.get(f'{api}/{car["id"]}', params={'fields': 'status_code', 'access_token': tok}, timeout=30).json()
+                if st.get('status_code') == 'FINISHED':
+                    break
+                time.sleep(6)
+            pub = requests.post(f'{api}/{uid}/media_publish', data={'creation_id': car['id'], 'access_token': tok}, timeout=60).json()
+            if 'id' not in pub:
+                raise RuntimeError(pub)
+            tg('sendMessage', chat_id=CHAT, text='📲 Listo, el carrusel ya está publicado en Instagram.', reply_to_message_id=item.get('reply'))
+        except Exception as e:
+            print('Instagram falló:', e, file=sys.stderr)
+            item['intentos'] = item.get('intentos', 0) + 1
+            if item['intentos'] < 3:
+                rest.append(item)
+            else:
+                tg('sendMessage', chat_id=CHAT, text='⚠️ No pude publicar el carrusel en Instagram. Súbelo a mano con las imágenes de arriba.', reply_to_message_id=item.get('reply'))
+    if rest:
+        save(IGQ, rest)
+    else:
+        os.remove(IGQ)
+    changed = True
+
+
+if __name__ == '__main__' and '--instagram' in sys.argv:
+    instagram()
+    open(os.environ.get('GITHUB_OUTPUT', os.devnull), 'a').write(f'changed={"true" if changed else "false"}\n')
+elif __name__ == '__main__':
     os.makedirs('drafts', exist_ok=True)
     send_pending()
     poll()
