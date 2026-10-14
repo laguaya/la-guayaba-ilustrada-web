@@ -56,16 +56,64 @@ def reply(mid, text):
     tg('sendMessage', chat_id=CHAT, text=text, reply_to_message_id=mid)
 
 
+SR_MODEL = '/tmp/FSRCNN_x2.pb'
+SR_URL = 'https://raw.githubusercontent.com/Saafke/FSRCNN_Tensorflow/master/models/FSRCNN_x2.pb'
+
+
+def mejorar(im, objetivo=2000):
+    """Agranda con IA (FSRCNN) las fotos chicas y las afina; las grandes solo se ajustan."""
+    from PIL import Image, ImageFilter
+    try:
+        import cv2, numpy as np
+        if not os.path.exists(SR_MODEL):
+            open(SR_MODEL, 'wb').write(requests.get(SR_URL, timeout=60).content)
+        sr = cv2.dnn_superres.DnnSuperResImpl_create()
+        sr.readModel(SR_MODEL); sr.setModel('fsrcnn', 2)
+        a = cv2.cvtColor(np.asarray(im), cv2.COLOR_RGB2BGR)
+        a = cv2.fastNlMeansDenoisingColored(a, None, 3, 3, 7, 21)  # quita ruido de compresión
+        for _ in range(2):
+            if max(a.shape[:2]) >= objetivo * 0.8:
+                break
+            a = sr.upsample(a)
+        im = Image.fromarray(cv2.cvtColor(a, cv2.COLOR_BGR2RGB))
+    except Exception as e:
+        print('Mejora con IA no disponible:', e, file=sys.stderr)
+        k = objetivo / max(im.size)
+        if k > 1:
+            im = im.resize((round(im.size[0] * min(k, 2.5)), round(im.size[1] * min(k, 2.5))), Image.LANCZOS)
+    im = im.filter(ImageFilter.UnsharpMask(radius=1.0, percent=35, threshold=2))
+    im.thumbnail((objetivo, objetivo), Image.LANCZOS)
+    return im
+
+
 def get_photo(msg, dest):
+    """Descarga la foto de Telegram, la mejora y la guarda. Regresa el tamaño original."""
     from PIL import Image
+    try:
+        import pillow_heif; pillow_heif.register_heif_opener()  # fotos de iPhone mandadas como archivo
+    except Exception:
+        pass
     ph = msg.get('photo')
     fid = ph[-1]['file_id'] if ph else msg['document']['file_id']
     info = tg('getFile', file_id=fid)
     url = f'https://api.telegram.org/file/bot{TOKEN}/' + info['result']['file_path']
-    raw = requests.get(url, timeout=60).content
-    im = Image.open(io.BytesIO(raw)).convert('RGB')
-    im.thumbnail((1600, 1600))
-    im.save(dest, 'WEBP', quality=86)
+    raw = requests.get(url, timeout=120).content
+    im = Image.open(io.BytesIO(raw))
+    from PIL import ImageOps
+    im = ImageOps.exif_transpose(im).convert('RGB')
+    orig = im.size
+    if max(orig) < 1800:
+        im = mejorar(im)
+    else:
+        im.thumbnail((2400, 2400), Image.LANCZOS)
+    im.save(dest, 'WEBP', quality=88, method=6)
+    return orig
+
+
+def tip(orig):
+    if max(orig) < 1280:
+        return f'\n\nℹ️ La foto llegó chica ({orig[0]}×{orig[1]} px) y la mejoré con IA. Para máxima calidad mándala como archivo: 📎 → Archivo → elige la foto.'
+    return ''
 
 
 def set_cover(nid, src_img):
@@ -147,13 +195,13 @@ def handle_message(u, msg):
     if is_photo:
         if nid:
             dest = f'assets/work/nota-{nid}-foto{u["update_id"]}.webp'
-            get_photo(msg, dest)
+            orig = get_photo(msg, dest)
             r = add_photo(nid, dest, text if mg is None else '')
             if r == 'portada':
-                reply(mid, '🖼 Listo, esta foto queda como portada de esa nota.')
+                reply(mid, '🖼 Listo, esta foto queda como portada de esa nota.' + tip(orig))
                 return
             if r == 'galeria':
-                reply(mid, '🖼 Listo, foto agregada a la galería de la nota.')
+                reply(mid, '🖼 Listo, foto agregada a la galería de la nota.' + tip(orig))
                 return
         dest = f'inbox/foto-{u["update_id"]}.webp'
         get_photo(msg, dest)
