@@ -1,0 +1,10 @@
+/posts.js
+  Cache-Control: no-cache
+/portafolio.js
+  Cache-Control: no-cache
+/*.html
+  Cache-Control: no-cache
+/
+  Cache-Control: no-cache
+/assets/work/*
+  Cache-Control: public, max-age=300
