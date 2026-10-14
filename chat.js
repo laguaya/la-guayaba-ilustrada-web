@@ -27,6 +27,7 @@
   .lgi-opt.alt{background:#FFEDF2;color:#000}
   .lgi-note{font-size:12.5px;color:#565656}
   .lgi-chat :focus-visible{outline:3px solid #FF5B00;outline-offset:3px}
+  @media (max-width:640px){.lgi-bubble{width:56px;padding:0;justify-content:center;font-size:0;gap:0}.lgi-bubble svg{margin:0}}
   @media (prefers-reduced-motion:reduce){.lgi-chat *{animation:none!important;transition:none!important}}`;
   const st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
 
