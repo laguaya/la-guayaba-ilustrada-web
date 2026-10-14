@@ -1,0 +1,236 @@
+"""Carrusel de Instagram (1080x1350) para cada nota de La Guayaba Ilustrada.
+
+Uso: python scripts/carrusel.py datos.json carpeta_salida
+datos.json:
+{
+  "img": "ruta/a/la/foto",
+  "etiqueta": "ÚLTIMA HORA" | "NOTICIAS" | ...,
+  "portada": "Titular gancho con *palabras resaltadas*",
+  "titulo": "Titular de la segunda lámina con _palabra en itálica_",
+  "resumen": "Resumen corto con [palabras clave] en rosa.",
+  "marca": "Nombre de la marca o tema (va en la pestaña)",
+  "fecha": "14 OCTUBRE 2026"
+}
+Marcas de texto:  *texto* = marcatextos rosa   _texto_ = serif itálica   [texto] = rosa en negritas
+Genera 1.jpg (portada), 2.jpg (la nota) y 3.jpg (cierre).
+"""
+import json, os, re, sys
+from PIL import Image, ImageDraw, ImageOps, ImageFilter
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from portada import font
+
+W, H = 1080, 1350
+PINK, INK, WHITE, WASH = '#FF3674', '#0B0B0B', '#FFFFFF', '#FFF2F6'
+M = 64
+TOTAL = 3
+
+
+# ---------- texto enriquecido ----------
+def tokens(text):
+    """Devuelve [(palabra, estilo)] con estilo en {'n','hl','it','pk'}."""
+    out, style = [], 'n'
+    for part in re.split(r'(\*|_|\[|\])', text):
+        if part == '*': style = 'n' if style == 'hl' else 'hl'; continue
+        if part == '_': style = 'n' if style == 'it' else 'it'; continue
+        if part == '[': style = 'pk'; continue
+        if part == ']': style = 'n'; continue
+        for w in part.split(' '):
+            if w:
+                out.append((w, style))
+            out.append((' ', style))
+    while out and out[-1][0] == ' ':
+        out.pop()
+    return out
+
+
+def layout(d, text, fonts, maxw):
+    """Parte en líneas. fonts: dict estilo -> fuente."""
+    lines, cur, cw = [], [], 0
+    words = []
+    for w, s in tokens(text):
+        if w == ' ':
+            words.append(None)
+        else:
+            words.append((w, s))
+    # agrupar en palabras con espacio
+    i = 0
+    items = []
+    while i < len(words):
+        if words[i] is None:
+            i += 1; continue
+        items.append(words[i]); i += 1
+    for w, s in items:
+        f = fonts[s]
+        ww = d.textlength(w, font=f)
+        sp = d.textlength(' ', font=fonts['n'])
+        if cur and cw + sp + ww > maxw:
+            lines.append(cur); cur, cw = [], 0
+        cur.append((w, s, ww)); cw += (sp if len(cur) > 1 else 0) + ww
+    if cur:
+        lines.append(cur)
+    return lines
+
+
+def render(d, x, y, lines, fonts, lh, color, hl_bg=PINK, hl_fg=INK, pk=PINK, align='left', maxw=None, pad=10):
+    sp = d.textlength(' ', font=fonts['n'])
+    for ln in lines:
+        lw = sum(w for _, _, w in ln) + sp * (len(ln) - 1)
+        cx = x + ((maxw - lw) / 2 if align == 'center' and maxw else 0)
+        i = 0
+        size = fonts['n'].size
+        while i < len(ln):
+            w, s, ww = ln[i]
+            if s == 'hl':
+                j, run = i, 0
+                while j < len(ln) and ln[j][1] == 'hl':
+                    run += ln[j][2] + (sp if j > i else 0); j += 1
+                d.rectangle((cx - pad, y + size * 0.06, cx + run + pad, y + size * 1.06), fill=hl_bg)
+                for k in range(i, j):
+                    d.text((cx, y), ln[k][0], font=fonts['hl'], fill=hl_fg); cx += ln[k][2] + sp
+                i = j
+                continue
+            if s == 'it':
+                d.text((cx, y + size * 0.02), w, font=fonts['it'], fill=color)
+            else:
+                d.text((cx, y), w, font=fonts[s], fill=pk if s == 'pk' else color)
+            cx += ww + sp; i += 1
+        y += lh
+    return y
+
+
+def fitted(d, text, maxw, max_lines, base, big, small, step=2, it_scale=1.12):
+    for size in range(big, small, -step):
+        fonts = {'n': font(base, size), 'hl': font(base, size), 'pk': font(base, size),
+                 'it': font('serif-italic.woff2', int(size * it_scale))}
+        ls = layout(ImageDraw.Draw(Image.new('RGB', (4, 4))), text, fonts, maxw)
+        if len(ls) <= max_lines:
+            return fonts, ls, size
+    return fonts, ls, size
+
+
+# ---------- piezas ----------
+def counter(d, n, dark=True):
+    t = f'{n}/{TOTAL}'
+    f = font('lg-medium.woff2', 26)
+    w = d.textlength(t, font=f) + 36
+    x1, y1 = W - M, M - 6
+    d.rounded_rectangle((x1 - w, y1, x1, y1 + 46), radius=23, fill=(0, 0, 0) if dark else (255, 255, 255))
+    d.text((x1 - w / 2, y1 + 24), t, font=f, fill=WHITE if dark else INK, anchor='mm')
+
+
+def header(d, color, n, dark_counter=True):
+    f = font('lg-bold.woff2', 22)
+    d.text((M, M + 17), 'LA GUAYABA ILUSTRADA', font=f, fill=color, anchor='lm')
+    counter(d, n, dark_counter)
+    d.line((M, M + 64, W - M, M + 64), fill=color, width=2)
+
+
+def slide1(data, out):
+    can = ImageOps.fit(Image.open(data['img']).convert('RGB'), (W, H), Image.LANCZOS, centering=(0.5, 0.35))
+    g = Image.new('L', (1, H))
+    for y in range(H):
+        t = max(0.0, (y - H * 0.28) / (H * 0.45))
+        g.putpixel((0, y), int(255 * min(1.0, t) ** 0.85 * 0.92))
+    can.paste(Image.new('RGB', (W, H), INK), (0, 0), g.resize((W, H)))
+    top = Image.linear_gradient('L').rotate(180).resize((W, 320)).point(lambda v: int(v * 0.7))
+    can.paste(Image.new('RGB', (W, 320), INK), (0, 0), top)
+    d = ImageDraw.Draw(can)
+    header(d, WHITE, 1, dark_counter=True)
+
+    maxw = W - 2 * M
+    foot = H - M - 26
+    fonts, ls, size = fitted(d, data['portada'], maxw, 4, 'lg-black.woff2', 104, 56)
+    lh = size * 1.08
+    y = foot - 74 - len(ls) * lh
+    # etiqueta
+    fe = font('lg-black.woff2', 30)
+    et = data.get('etiqueta', 'NOTICIAS').upper()
+    ew = d.textlength(et, font=fe) + 44
+    d.rounded_rectangle((M, y - 84, M + ew, y - 30), radius=27, fill=PINK)
+    d.text((M + ew / 2, y - 56), et, font=fe, fill=INK, anchor='mm')
+    render(d, M, y, ls, fonts, lh, WHITE, hl_bg=PINK, hl_fg=INK, pad=12)
+    d.line((M, foot - 34, W - M, foot - 34), fill=WHITE, width=2)
+    fm = font('lg-bold.woff2', 24)
+    d.text((M, foot), data.get('fecha', ''), font=fm, fill=WHITE, anchor='lm')
+    d.text((W - M, foot), 'DESLIZA PARA SABER MÁS  →', font=fm, fill=WHITE, anchor='rm')
+    can.save(out, 'JPEG', quality=92, optimize=True)
+
+
+def slide2(data, out):
+    can = Image.new('RGB', (W, H), WASH)
+    glow = Image.new('L', (W, H), 0)
+    ImageDraw.Draw(glow).ellipse((-200, -520, W + 200, 520), fill=150)
+    glow = glow.filter(ImageFilter.GaussianBlur(160))
+    can.paste(Image.new('RGB', (W, H), '#FFC2D4'), (0, 0), glow)
+    d = ImageDraw.Draw(can)
+    header(d, INK, 2, dark_counter=True)
+
+    maxw = W - 2 * M
+    fonts, ls, size = fitted(d, data['titulo'], maxw, 3, 'lg-medium.woff2', 78, 48)
+    y = M + 108
+    y = render(d, M, y, ls, fonts, size * 1.12, INK, hl_bg=PINK, hl_fg=INK)
+    # resumen
+    y += 38
+    fr = {'n': font('lg-regular.woff2', 36), 'pk': font('lg-bold.woff2', 36),
+          'hl': font('lg-regular.woff2', 36), 'it': font('serif-italic.woff2', 40)}
+    rl = layout(d, data['resumen'], fr, maxw)[:5]
+    y = render(d, M, y, rl, fr, 48, INK, pk=PINK)
+    # foto con pestaña
+    bar_h = 72
+    ph_top = int(y + 40)
+    ph_bottom = H - bar_h
+    ph = ImageOps.fit(Image.open(data['img']).convert('RGB'), (W - 2 * M, ph_bottom - ph_top + 30), Image.LANCZOS, centering=(0.5, 0.45))
+    mask = Image.new('L', ph.size, 0)
+    ImageDraw.Draw(mask).rounded_rectangle((0, 0, *ph.size), radius=30, fill=255)
+    can.paste(ph, (M, ph_top), mask)
+    d.rectangle((0, H - bar_h, W, H), fill=PINK)
+    ft = font('lg-black.woff2', 38)
+    label = data.get('marca', '')
+    if label:
+        tw = d.textlength(label, font=ft) + 90
+        tx = (W - tw) / 2
+        ty = H - bar_h - 66
+        d.rounded_rectangle((tx, ty, tx + tw, H - bar_h + 20), radius=26, fill=PINK)
+        d.text((W / 2, ty + 36), label, font=ft, fill=INK, anchor='mm')
+    d.text((W / 2, H - bar_h / 2 + 2), 'la guayaba ilustrada · noticias de marketing, diseño y branding',
+           font=font('lg-medium.woff2', 22), fill=INK, anchor='mm')
+    can.save(out, 'JPEG', quality=92, optimize=True)
+
+
+def slide3(data, out):
+    can = Image.new('RGB', (W, H), PINK)
+    d = ImageDraw.Draw(can)
+    header(d, INK, 3, dark_counter=True)
+    maxw = W - 2 * M
+    fonts, ls, size = fitted(d, '¿Quieres saber _más_ de esta nota?', maxw, 3, 'lg-black.woff2', 120, 70, it_scale=1.2)
+    fb = {'n': font('lg-regular.woff2', 42), 'pk': font('lg-bold.woff2', 42), 'hl': font('lg-regular.woff2', 42),
+          'it': font('serif-italic.woff2', 46)}
+    rl = layout(d, 'Léela completa en nuestra página web. Ahí te contamos todo y lo que significa para tu marca.', fb, maxw)
+    block = len(ls) * size * 1.05 + 40 + len(rl) * 56 + 70 + 110
+    y = (M + 64 + (H - M - 140)) / 2 - block / 2
+    y = render(d, M, y, ls, fonts, size * 1.05, INK)
+    y += 40
+    y = render(d, M, y, rl, fb, 56, INK)
+    # botón
+    by = y + 70
+    d.rounded_rectangle((M, by, M + 520, by + 110), radius=55, fill=INK)
+    d.text((M + 260, by + 57), 'LINK EN BIO  →', font=font('lg-black.woff2', 40), fill=PINK, anchor='mm')
+    # firma
+    d.text((M, H - M - 70), 'LG.I', font=font('lg-black.woff2', 84), fill=INK, anchor='lm')
+    d.text((M + 196, H - M - 88), 'La Guayaba', font=font('lg-regular.woff2', 30), fill=INK, anchor='lm')
+    d.text((M + 196, H - M - 52), 'Ilustrada', font=font('lg-regular.woff2', 30), fill=INK, anchor='lm')
+    d.text((W - M, H - M - 70), 'Síguenos para más\nnoticias creativas', font=font('lg-medium.woff2', 28), fill=INK,
+           anchor='rm', align='right')
+    can.save(out, 'JPEG', quality=92, optimize=True)
+
+
+def make(data, outdir):
+    os.makedirs(outdir, exist_ok=True)
+    slide1(data, os.path.join(outdir, '1.jpg'))
+    slide2(data, os.path.join(outdir, '2.jpg'))
+    slide3(data, os.path.join(outdir, '3.jpg'))
+    print(outdir)
+
+
+if __name__ == '__main__':
+    make(json.load(open(sys.argv[1], encoding='utf-8')), sys.argv[2])
