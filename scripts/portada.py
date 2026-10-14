@@ -67,27 +67,25 @@ def main(nid, cat, title):
         r = rnd.randint(260, 520)
         x, y = rnd.randint(-150, W), rnd.randint(-150, H)
         d.ellipse((x - r, y - r, x + r, y + r), fill=soft)
-    pad = 110
-    # etiqueta de categoría
-    fc = font('lg-bold.woff2', 40)
-    tw = d.textlength(cat.upper(), font=fc)
-    d.rounded_rectangle((pad, pad, pad + tw + 64, pad + 74), radius=37, fill=ink)
-    d.text((pad + 32, pad + 39), cat.upper(), font=fc, fill=bg, anchor='lm')
-    # título que quepa en el área
-    for size in range(124, 60, -4):
+    # Todo el texto va centrado dentro de una zona segura (60% del ancho, 64% del alto)
+    # para que no se corte en ningún recorte del sitio (4:3, 16:9 o casi cuadrado).
+    safe_w = int(W * 0.60)
+    safe_h = int(H * 0.64)
+    for size in range(116, 48, -4):
         ft = font('lg-black.woff2', size)
-        lines = wrap(d, title, ft, W - pad * 2)
-        lh = size * 1.02
-        if len(lines) * lh <= H - pad * 2 - 200:
+        lines = wrap(d, title, ft, safe_w)
+        lh = size * 1.04
+        if len(lines) <= 4 and len(lines) * lh + 110 <= safe_h:
             break
-    y = H - pad - 90 - len(lines) * lh
+    block = len(lines) * lh + 110
+    y = (H - block) / 2
+    fl = font('lg-black.woff2', 44)
+    d.text((W / 2, y + 22), 'LG.I', font=fl, fill=ink, anchor='mm')
+    y += 110
     for ln in lines:
-        draw_line(d, (pad, y), ln, ft, ink, -size * 0.012)
+        lw = line_w(d, ln, ft, -size * 0.012)
+        draw_line(d, ((W - lw) / 2, y), ln, ft, ink, -size * 0.012)
         y += lh
-    # firma
-    fs = font('lg-bold.woff2', 34)
-    d.text((pad, H - pad + 6), 'La Guayaba Ilustrada', font=fs, fill=ink, anchor='ls')
-    d.text((W - pad, H - pad + 6), 'LG.I', font=font('lg-black.woff2', 46), fill=ink, anchor='rs')
     out = os.path.join(R, 'assets', 'work', f'nota-{nid}.webp')
     im.save(out, 'WEBP', quality=88)
     print(out)
