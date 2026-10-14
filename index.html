@@ -156,6 +156,7 @@ section{scroll-margin-top:20px}
 .gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .gallery .ph{position:relative;display:block;width:100%;aspect-ratio:4/5;margin:0;border-radius:20px;background:var(--pink-wash);border:0;padding:0;overflow:hidden;cursor:zoom-in;text-decoration:none;color:inherit;opacity:0;transform:translateY(16px);transition:opacity .5s var(--ease),transform .6s var(--ease)}
 .svc.open .gallery .ph{opacity:1;transform:none}
+.gallery.sq .ph{aspect-ratio:1}
 .gallery .ph.more{display:none}
 .gallery .ph::after{content:'';position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1.5px rgba(0,0,0,.08);pointer-events:none}
 .gallery.all .ph.more{display:block}
@@ -542,7 +543,7 @@ footer small{font-size:13px;color:var(--gray)}
     <div class="site-row">
       <a class="site s-dl" href="https://dlashes.com.mx" target="_blank" rel="noopener"><span class="logo-box"><img src="assets/work/card-dlashes.webp" alt="Logotipo de D'Lashes" loading="lazy"></span><span class="site-txt"><small>Estudio de pestañas</small><b>D'Lashes</b><em>dlashes.com.mx</em></span><span class="cta sm">Visitar sitio</span></a>
       <a class="site s-mc" href="https://moriclub.com.mx" target="_blank" rel="noopener"><span class="logo-box"><img src="assets/work/card-mori.webp" alt="Logotipo de Mori Club" loading="lazy"></span><span class="site-txt"><small>Bebidas y antojos</small><b>Mori Club</b><em>moriclub.com.mx</em></span><span class="cta sm">Visitar sitio</span></a>
-      <a class="site s-dy" href="https://dyanamakeup.com.mx/#inicio" target="_blank" rel="noopener"><span class="logo-box"><img src="assets/p/brand-01.webp" alt="Logotipo de Dyana" loading="lazy"></span><span class="site-txt"><small>Tienda de maquillaje</small><b>Dyana</b><em>dyanamakeup.com.mx</em></span><span class="cta sm">Visitar sitio</span></a>
+      <a class="site s-dy" href="https://dyanamakeup.com.mx/#inicio" target="_blank" rel="noopener"><span class="logo-box"><img src="assets/p/br-01.webp" alt="Logotipo de Dyana" loading="lazy"></span><span class="site-txt"><small>Tienda de maquillaje</small><b>Dyana</b><em>dyanamakeup.com.mx</em></span><span class="cta sm">Visitar sitio</span></a>
     </div>
   </section>
 
@@ -631,6 +632,7 @@ footer small{font-size:13px;color:var(--gray)}
 
 <script src="posts.js"></script>
 <script src="portafolio.js"></script>
+<script src="fx.js"></script>
 <script src="chat.js"></script>
 <script src="assets/matter.min.js"></script>
 <script>
@@ -682,7 +684,7 @@ SVC.forEach((s,n)=>{
   const ph=items.map((p,j)=>{const cls='ph'+(j>=9?' more':'')+(p.v?' cover':'');const st=`transition-delay:${120+Math.min(j,6)*60}ms;background:${p.b||'#FFEDF2'}`;const im=`<img src="${p.s}" alt="${p.a}" loading="lazy" width="600" height="${Math.round(600/(p.r||1))}">`;
     return p.u?`<a class="${cls}" href="${p.u}" target="_blank" rel="noopener" style="${st}">${im}<span class="go">Visitar sitio</span></a>`:`<button type="button" class="${cls}" data-k="${s.k}" data-src="${p.s}" aria-label="Ver ${p.a}" style="${st}">${im}${p.v?play:''}</button>`}).join('');
   const more=items.length>9?`<button type="button" class="gmore" data-n="${items.length}">Ver todo (${items.length})</button>`:'';
-  el.innerHTML=`<button type="button" class="cap ${s.c}" aria-expanded="false" aria-controls="dr-${n}"><span class="ico" aria-hidden="true">${ICON[s.i]}</span><span><h3>${s.t}</h3><p>${s.d}</p></span><span class="price">Desde ${money(minPrice(s))}</span><span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button><div class="drawer" id="dr-${n}"><div><div class="panel"><ul class="prices">${rows}</ul><div class="gwrap"><div class="gallery">${ph}</div>${more}</div></div></div></div>`;
+  el.innerHTML=`<button type="button" class="cap ${s.c}" aria-expanded="false" aria-controls="dr-${n}"><span class="ico" aria-hidden="true">${ICON[s.i]}</span><span><h3>${s.t}</h3><p>${s.d}</p></span><span class="price">Desde ${money(minPrice(s))}</span><span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button><div class="drawer" id="dr-${n}"><div><div class="panel"><ul class="prices">${rows}</ul><div class="gwrap"><div class="gallery${s.k==='brand'?' sq':''}">${ph}</div>${more}</div></div></div></div>`;
   caps.appendChild(el);
 });
 function toggle(n,force){
@@ -798,8 +800,12 @@ document.getElementById('posts').innerHTML=(window.POSTS||[]).slice(0,3).map(p=>
   const show=()=>{const p=list[i];box.innerHTML=p.v?`<video src="${p.v}" poster="${p.s}" controls autoplay playsinline loop></video>`:`<img src="${p.s}" alt="${p.a}">`;cap.textContent=p.a+'  ·  '+(i+1)+' / '+list.length};
   const open=(k,src)=>{list=window.PORT[k].filter(p=>!p.u);i=Math.max(0,list.findIndex(p=>p.s===src));show();lb.classList.add('on');lb.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';lb.querySelector('.lb-x').focus();hint()};
   const close=()=>{lb.classList.remove('on');lb.setAttribute('aria-hidden','true');box.innerHTML='';document.body.style.overflow='';if(last)last.focus()};
-  const go=d=>{i=(i+d+list.length)%list.length;show()};
-  document.addEventListener('click',e=>{const m=e.target.closest('.gmore');if(m){const g=m.previousElementSibling;const on=g.classList.toggle('all');m.textContent=on?'Ver menos':'Ver todo ('+m.dataset.n+')';if(!on)g.closest('.svc').scrollIntoView({behavior:'smooth',block:'start'});return}const t=e.target.closest('.gallery button.ph');if(t){last=t;open(t.dataset.k,t.dataset.src)}});
+  const go=d=>{i=(i+d+list.length)%list.length;show();shake(box.firstElementChild)};
+  document.addEventListener('click',e=>{const m=e.target.closest('.gmore');if(m){const g=m.previousElementSibling;const on=g.classList.toggle('all');m.textContent=on?'Ver menos':'Ver todo ('+m.dataset.n+')';if(!on)g.closest('.svc').scrollIntoView({behavior:'smooth',block:'start'});return}const t=e.target.closest('.gallery button.ph');if(t){if(t.dataset.boom){delete t.dataset.boom;return}last=t;haptic();shake(t);setTimeout(()=>open(t.dataset.k,t.dataset.src),230)}});
+  /* mantener presionado una pieza: confeti */
+  const boom=(x,y,el)=>{haptic('boom');shake(el);confetti(x,y)};
+  document.querySelectorAll('.gallery').forEach(g=>g.querySelectorAll('.ph').forEach(t=>longPress(t,(x,y)=>{t.dataset.boom=1;boom(x,y,t)})));
+  longPress(box,(x,y)=>{if(Math.abs(dx)<10)boom(x,y,box.firstElementChild)});
   lb.querySelector('.lb-x').onclick=close;lb.querySelector('.lb-prev').onclick=()=>go(-1);lb.querySelector('.lb-next').onclick=()=>go(1);
   lb.addEventListener('click',e=>{if(e.target===lb)close()});
   /* arrastre con el dedo: la pieza sigue al dedo y se va hacia el lado */
@@ -808,7 +814,7 @@ document.getElementById('posts').innerHTML=(window.POSTS||[]).slice(0,3).map(p=>
   const setX=(x,t)=>{const el=m();if(!el)return;el.style.transition=t?'transform .32s cubic-bezier(.22,.8,.2,1)':'none';el.style.transform=`translateX(${x}px) rotate(${x/40}deg)`};
   lb.addEventListener('touchstart',e=>{if(e.target.closest('.lb-btn'))return;const t=e.touches[0];sx=t.clientX;sy=t.clientY;dx=0;drag=true;lock=null},{passive:true});
   lb.addEventListener('touchmove',e=>{if(!drag)return;const t=e.touches[0];dx=t.clientX-sx;const dy=t.clientY-sy;if(lock===null&&(Math.abs(dx)>8||Math.abs(dy)>8))lock=Math.abs(dx)>Math.abs(dy);if(lock){e.preventDefault();setX(dx,false)}},{passive:false});
-  lb.addEventListener('touchend',()=>{if(!drag)return;drag=false;if(!lock){return}const W=innerWidth;if(Math.abs(dx)>W*.18){const d=dx<0?1:-1;setX(-d*W,true);setTimeout(()=>{go(d);setX(d*W*.6,false);requestAnimationFrame(()=>requestAnimationFrame(()=>setX(0,true)))},260)}else setX(0,true)},{passive:true});
+  lb.addEventListener('touchend',()=>{if(!drag)return;drag=false;if(!lock){return}const W=innerWidth;if(Math.abs(dx)>W*.18){const d=dx<0?1:-1;haptic();setX(-d*W,true);setTimeout(()=>{go(d);setX(d*W*.6,false);requestAnimationFrame(()=>requestAnimationFrame(()=>setX(0,true)))},260)}else setX(0,true)},{passive:true});
   /* pista: la primera vez en el celular, la pieza se mueve sola para enseñar que se puede deslizar */
   let hinted=false;
   const hint=()=>{if(hinted||!matchMedia('(pointer:coarse)').matches||list.length<2)return;hinted=true;setTimeout(()=>{setX(-70,true);setTimeout(()=>setX(0,true),420)},650)};
