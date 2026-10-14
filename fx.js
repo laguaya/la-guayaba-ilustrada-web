@@ -24,7 +24,7 @@
   };
   /* Temblor */
   const st=document.createElement('style');
-  st.textContent='@keyframes lgiShake{0%,100%{translate:0 0;rotate:0deg}20%{translate:-4px 0;rotate:-1.5deg}40%{translate:4px 0;rotate:1.5deg}60%{translate:-3px 0;rotate:-1deg}80%{translate:2px 0;rotate:.6deg}}.lgi-shake{animation:lgiShake .32s ease}.lb-media img,.lb-media video{clip-path:inset(0 round 18px)}.gallery .ph{clip-path:inset(0 round 20px)}.gallery .ph,.lb-media,.lb-media img,.lb-media video{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}';
+  st.textContent='@keyframes lgiShake{0%,100%{translate:0 0;rotate:0deg}20%{translate:-4px 0;rotate:-1.5deg}40%{translate:4px 0;rotate:1.5deg}60%{translate:-3px 0;rotate:-1deg}80%{translate:2px 0;rotate:.6deg}}.lgi-shake{animation:lgiShake .32s ease}.gallery .ph{clip-path:inset(0 round 20px)}.gallery .ph,.lb-media,.lb-media img,.lb-media video{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}';
   document.head.appendChild(st);
   window.shake=function(el){if(!el)return;el.classList.remove('lgi-shake');void el.offsetWidth;el.classList.add('lgi-shake');setTimeout(()=>el.classList.remove('lgi-shake'),340)};
   /* Carga de energía: tiembla cada vez más fuerte, crece un poco y al final explota */
