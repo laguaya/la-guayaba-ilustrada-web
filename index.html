@@ -181,7 +181,7 @@ section{scroll-margin-top:20px}
 .lb-x{top:14px;right:14px}.lb-prev{left:14px;top:50%;margin-top:-26px}.lb-next{right:14px;top:50%;margin-top:-26px}
 @media (max-width:640px){.lb-prev,.lb-next{display:none}.lb{padding-bottom:40px}.lb-cap::after{content:' · Desliza para ver más';opacity:.6}}
 .lb-media{touch-action:pan-y}
-.lb-media > *{will-change:transform}
+.lb-media > *{will-change:transform,opacity}
 
 /* COTIZADOR */
 .calc{background:var(--pink-wash);border-radius:var(--r-xl);padding:64px 32px;display:flex;flex-direction:column;align-items:center;gap:36px}
@@ -632,9 +632,8 @@ footer small{font-size:13px;color:var(--gray)}
 </div>
 
 <script src="posts.js"></script>
-<script src="portafolio.js?v=1791949575"></script>
-<script src="fx.js?v=1791949575"></script>
-<script src="chat.js?v=1791949575"></script>
+<script src="portafolio.js?v=1791949777"></script>
+<script src="chat.js?v=1791949777"></script>
 <script src="assets/matter.min.js"></script>
 <script>
 /* ---------- DATOS ---------- */
@@ -802,23 +801,25 @@ document.getElementById('posts').innerHTML=(window.POSTS||[]).slice(0,3).map(p=>
   const open=(k,src)=>{list=window.PORT[k].filter(p=>!p.u);i=Math.max(0,list.findIndex(p=>p.s===src));show();lb.classList.add('on');lb.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';lb.querySelector('.lb-x').focus();hint()};
   const close=()=>{lb.classList.remove('on');lb.setAttribute('aria-hidden','true');box.innerHTML='';document.body.style.overflow='';if(last)last.focus()};
   const go=d=>{i=(i+d+list.length)%list.length;show()};
-  document.addEventListener('click',e=>{const m=e.target.closest('.gmore');if(m){const g=m.previousElementSibling;const on=g.classList.toggle('all');m.textContent=on?'Ver menos':'Ver todo ('+m.dataset.n+')';if(!on)g.closest('.svc').scrollIntoView({behavior:'smooth',block:'start'});return}const t=e.target.closest('.gallery button.ph');if(t){if(t.dataset.boom){delete t.dataset.boom;return}last=t;open(t.dataset.k,t.dataset.src)}});
-  /* mantener presionado una pieza: confeti */
-  const boom=(x,y)=>{haptic('boom');confetti(x,y)};
-  document.querySelectorAll('.gallery').forEach(g=>g.querySelectorAll('.ph').forEach(t=>longPress(t,()=>t,(x,y)=>{t.dataset.boom=1;boom(x,y)})));
-  longPress(box,()=>box.firstElementChild,(x,y)=>boom(x,y));
+  document.addEventListener('click',e=>{const m=e.target.closest('.gmore');if(m){const g=m.previousElementSibling;const on=g.classList.toggle('all');m.textContent=on?'Ver menos':'Ver todo ('+m.dataset.n+')';if(!on)g.closest('.svc').scrollIntoView({behavior:'smooth',block:'start'});return}const t=e.target.closest('.gallery button.ph');if(t){last=t;open(t.dataset.k,t.dataset.src)}});
   lb.querySelector('.lb-x').onclick=close;lb.querySelector('.lb-prev').onclick=()=>go(-1);lb.querySelector('.lb-next').onclick=()=>go(1);
   lb.addEventListener('click',e=>{if(e.target===lb)close()});
-  /* arrastre con el dedo: la pieza sigue al dedo y se va hacia el lado */
-  let sx=null,sy=0,dx=0,drag=false,lock=null;
+  /* arrastre con el dedo: la pieza se desliza y se desvanece; la siguiente entra suave desde el otro lado */
+  let sx=null,sy=0,dx=0,drag=false,lock=null,busy=false;
   const m=()=>box.firstElementChild;
-  const setX=(x,t)=>{const el=m();if(!el)return;el.style.transition=t?'transform .32s cubic-bezier(.22,.8,.2,1)':'none';el.style.transform=`translateX(${x}px) rotate(${x/40}deg)`};
-  lb.addEventListener('touchstart',e=>{if(e.target.closest('.lb-btn'))return;const t=e.touches[0];sx=t.clientX;sy=t.clientY;dx=0;drag=true;lock=null},{passive:true});
-  lb.addEventListener('touchmove',e=>{if(!drag)return;const t=e.touches[0];dx=t.clientX-sx;const dy=t.clientY-sy;if(lock===null&&(Math.abs(dx)>8||Math.abs(dy)>8))lock=Math.abs(dx)>Math.abs(dy);if(lock){e.preventDefault();setX(dx,false)}},{passive:false});
-  lb.addEventListener('touchend',()=>{if(!drag)return;drag=false;if(!lock){return}const W=innerWidth;if(Math.abs(dx)>W*.18){const d=dx<0?1:-1;setX(-d*W,true);setTimeout(()=>{go(d);setX(d*W*.6,false);requestAnimationFrame(()=>requestAnimationFrame(()=>setX(0,true)))},260)}else setX(0,true)},{passive:true});
+  const EASE='cubic-bezier(.22,.8,.2,1)';
+  const setX=(x,ms,op)=>{const el=m();if(!el)return;const W=innerWidth,k=Math.min(1,Math.abs(x)/W);
+    el.style.transition=ms?`transform ${ms}ms ${EASE},opacity ${ms}ms ${EASE}`:'none';
+    el.style.transform=`translate3d(${x}px,0,0) scale(${1-k*0.08})`;el.style.opacity=String(op!=null?op:1-k*0.9)};
+  lb.addEventListener('touchstart',e=>{if(busy||e.target.closest('.lb-btn'))return;const t=e.touches[0];sx=t.clientX;sy=t.clientY;dx=0;drag=true;lock=null},{passive:true});
+  lb.addEventListener('touchmove',e=>{if(!drag)return;const t=e.touches[0];dx=t.clientX-sx;const dy=t.clientY-sy;if(lock===null&&(Math.abs(dx)>8||Math.abs(dy)>8))lock=Math.abs(dx)>Math.abs(dy);if(lock){e.preventDefault();setX(dx*0.9,0)}},{passive:false});
+  lb.addEventListener('touchend',()=>{if(!drag)return;drag=false;if(!lock)return;const W=innerWidth;
+    if(Math.abs(dx)>W*.15&&list.length>1){busy=true;const d=dx<0?1:-1;setX(-d*W*0.45,260,0);
+      setTimeout(()=>{go(d);setX(d*W*0.3,0,0);requestAnimationFrame(()=>requestAnimationFrame(()=>{setX(0,420,1);setTimeout(()=>busy=false,420)}))},260)}
+    else setX(0,380,1)},{passive:true});
   /* pista: la primera vez en el celular, la pieza se mueve sola para enseñar que se puede deslizar */
   let hinted=false;
-  const hint=()=>{if(hinted||!matchMedia('(pointer:coarse)').matches||list.length<2)return;hinted=true;setTimeout(()=>{setX(-70,true);setTimeout(()=>setX(0,true),420)},650)};
+  const hint=()=>{if(hinted||!matchMedia('(pointer:coarse)').matches||list.length<2)return;hinted=true;setTimeout(()=>{setX(-60,420,.75);setTimeout(()=>setX(0,520,1),440)},700)};
   document.addEventListener('keydown',e=>{if(!lb.classList.contains('on'))return;if(e.key==='Escape')close();if(e.key==='ArrowRight')go(1);if(e.key==='ArrowLeft')go(-1)});
 })();
 </script>
