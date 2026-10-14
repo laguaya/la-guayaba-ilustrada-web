@@ -188,25 +188,22 @@ def slide2(data, out):
           'hl': font('lg-regular.woff2', 36), 'it': font('lg-italic.woff2', 36)}
     rl = layout(d, data['resumen'], fr, maxw)[:5]
     y = render(d, M, y, rl, fr, 48, INK, pk=PINK)
-    # foto con pestaña
-    bar_h = 72
+    # foto con etiqueta de la marca (rectángulo recto, separado del pie)
+    foot_h = 64
     ph_top = int(y + 40)
-    ph_bottom = H - bar_h
-    ph = ImageOps.fit(Image.open(data['img']).convert('RGB'), (W - 2 * M, ph_bottom - ph_top + 30), Image.LANCZOS, centering=(0.5, 0.45))
-    mask = Image.new('L', ph.size, 0)
-    ImageDraw.Draw(mask).rounded_rectangle((0, 0, *ph.size), radius=30, fill=255)
-    can.paste(ph, (M, ph_top), mask)
-    d.rectangle((0, H - bar_h, W, H), fill=PINK)
-    ft = font('lg-black.woff2', 38)
+    ph_bottom = H - M - foot_h
+    ph = ImageOps.fit(Image.open(data['img']).convert('RGB'), (W - 2 * M, ph_bottom - ph_top), Image.LANCZOS, centering=(0.5, 0.45))
+    can.paste(ph, (M, ph_top))
+    ft = font('lg-black.woff2', 30)
     label = data.get('marca', '')
     if label:
-        tw = d.textlength(label, font=ft) + 90
-        tx = (W - tw) / 2
-        ty = H - bar_h - 66
-        d.rounded_rectangle((tx, ty, tx + tw, H - bar_h + 20), radius=26, fill=PINK)
-        d.text((W / 2, ty + 36), label, font=ft, fill=INK, anchor='mm')
-    d.text((W / 2, H - bar_h / 2 + 2), 'la guayaba ilustrada · noticias de marketing, diseño y branding',
-           font=font('lg-medium.woff2', 22), fill=INK, anchor='mm')
+        lw = tw(d, label.upper(), ft, 0.02) + 44
+        d.rectangle((M, ph_bottom - 58, M + lw, ph_bottom), fill=PINK)
+        dt(d, (M + 22, ph_bottom - 46), label.upper(), ft, INK, 0.02)
+    d.line((M, H - M - 30, W - M, H - M - 30), fill=INK, width=2)
+    fm = font('lg-medium.woff2', 22)
+    d.text((M, H - M), 'la guayaba ilustrada', font=fm, fill=INK, anchor='ls')
+    d.text((W - M, H - M), 'noticias de marketing, diseño y branding', font=fm, fill=INK, anchor='rs')
     can.save(out, 'JPEG', quality=92, optimize=True)
 
 
