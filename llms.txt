@@ -91,6 +91,7 @@
 - [RSS](https://guayabailustrada.com.mx/feed.xml)
 
 ## Notas recientes
+- [Deezer dejará a sus usuarios ocultar la música hecha con IA](https://guayabailustrada.com.mx/notas/deezer-filtro-musica-ia): La plataforma de streaming prepara un interruptor para quitar de su catálogo las canciones creadas por inteligencia artificial, una señal de que el público quiere saber qué es real.
 - [Meta lanza Muse Wonder, su IA más potente, y apuesta por una que te recuerde](https://guayabailustrada.com.mx/notas/meta-muse-wonder-ia): La empresa de Instagram y WhatsApp presentó dos modelos nuevos que prometen resolver tareas largas y acordarse de lo que le importa a cada usuario.
 - [Apple lanza HomeView, su pantalla para el hogar, pero no llega a México](https://guayabailustrada.com.mx/notas/apple-homeview-mexico): Es la respuesta de Apple a Alexa: una pantalla de 7 pulgadas con Siri renovada por IA que controla la casa.
 - [Pinterest pide a las marcas algo raro: dejar que su audiencia se vaya del celular](https://guayabailustrada.com.mx/notas/pinterest-disena-la-salida): Su nueva guía, Design the Exit, propone dejar de pelear por el scroll y ayudar a la gente a actuar en su vida real.
