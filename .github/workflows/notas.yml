@@ -30,6 +30,7 @@ jobs:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: '8941716448'
           LONGPOLL: '50'
+          ROUNDS: ${{ github.event_name == 'push' && '5' || '1' }}
         run: python scripts/notas.py
       - if: steps.run.outputs.changed == 'true'
         run: |
