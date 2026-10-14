@@ -188,6 +188,13 @@ def poll():
     off = int(open(OFFSET).read().strip() or 0) if os.path.exists(OFFSET) else 0
     r = tg('getUpdates', offset=off, timeout=0, allowed_updates=['callback_query', 'message'])
     ups = r.get('result', [])
+    dbg = {'ok': r.get('ok'), 'error': r.get('description'), 'updates': len(ups), 'offset': off,
+           'tipos': [k for u in ups for k in u if k != 'update_id'],
+           'hora': datetime.now(timezone.utc).isoformat()}
+    wh = tg('getWebhookInfo').get('result', {})
+    dbg['webhook'] = bool(wh.get('url')); dbg['pendientes'] = wh.get('pending_update_count')
+    save('drafts/.debug.json', dbg)
+    changed = True
     for u in ups:
         off = u['update_id'] + 1
         msg = u.get('message')
