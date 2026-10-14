@@ -148,7 +148,7 @@ def send_carousel(n):
     try:
         files = build_carousel(n)
     except Exception as e:
-        print('No se pudo armar el carrusel:', e, file=sys.stderr)
+        tg('sendMessage', chat_id=CHAT, text=f'⚠️ No pude armar el carrusel de Instagram: {e}')
         return False
     media, fh = [], {}
     for i, f in enumerate(files):
@@ -163,6 +163,8 @@ def send_carousel(n):
     if r.get('ok'):
         for m in r['result']:
             remember(m['message_id'], n['id'])
+    else:
+        tg('sendMessage', chat_id=CHAT, text=f'⚠️ Telegram no aceptó el carrusel: {r.get("description")}')
     return bool(r.get('ok'))
 
 
