@@ -449,7 +449,10 @@ def sh(*a):
 
 
 def commit(msg):
-    sh('git', 'add', '-A', 'drafts', 'inbox', 'posts.js', 'assets')
+    if sh('git', 'diff', '--quiet', '--', 'posts.js').returncode != 0:
+        sh('python', 'scripts/seo.py')  # páginas de notas, sitemap, RSS y llms.txt
+    sh('git', 'add', '-A', 'drafts', 'inbox', 'posts.js', 'assets', 'notas', 'index.html', 'blog.html', 'precios.html',
+       'sitemap.xml', 'feed.xml', 'llms.txt', 'robots.txt')
     if sh('git', 'diff', '--cached', '--quiet').returncode == 0:
         return
     sh('git', 'commit', '-m', msg)

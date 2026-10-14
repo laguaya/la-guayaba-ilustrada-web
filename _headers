@@ -10,3 +10,11 @@
   Cache-Control: public, max-age=300
 /blog
   Cache-Control: no-cache
+/notas/*
+  Cache-Control: no-cache
+/precios
+  Cache-Control: no-cache
+/sitemap.xml
+  Cache-Control: no-cache
+/feed.xml
+  Cache-Control: no-cache

@@ -1,0 +1,31 @@
+name: SEO (notas, sitemap, RSS, llms.txt)
+
+on:
+  push:
+    branches: [main]
+    paths: ['posts.js', 'index.html', 'blog.html', 'scripts/seo.py']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seo
+  cancel-in-progress: false
+
+jobs:
+  seo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python scripts/seo.py
+      - run: |
+          git config user.name "La Guayaba Bot"
+          git config user.email "bot@guayabailustrada.com.mx"
+          git add -A notas index.html blog.html precios.html sitemap.xml feed.xml llms.txt robots.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "SEO: actualizar notas, sitemap y RSS"
+          for i in 1 2 3 4; do git pull --rebase -q origin main && git push -q origin main && exit 0; sleep 5; done

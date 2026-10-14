@@ -4,14 +4,19 @@
 <meta charset="utf-8">
 <meta name="theme-color" content="#ffffff">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Blog · La Guayaba Ilustrada</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="La Guayaba Ilustrada · Noticias" href="/feed.xml">
+<title>Blog de noticias de marketing, diseño y redes sociales · La Guayaba Ilustrada</title>
 <meta name="description" content="Noticias, tendencias e inspiración de publicidad, diseño y marcas, por La Guayaba Ilustrada.">
-<link rel="canonical" href="https://guayabailustrada.com.mx/blog.html">
+<link rel="canonical" href="https://guayabailustrada.com.mx/blog">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="La Guayaba Ilustrada">
 <meta property="og:title" content="Blog · La Guayaba Ilustrada">
 <meta property="og:description" content="Noticias, tendencias e inspiración de publicidad, diseño y marcas, por La Guayaba Ilustrada.">
-<meta property="og:url" content="https://guayabailustrada.com.mx/blog.html">
+<meta property="og:url" content="https://guayabailustrada.com.mx/blog">
 <meta name="twitter:card" content="summary">
 <style>
 @font-face{font-family:"Linear Grotesk";src:url("assets/lg-light.woff2") format("woff2");font-weight:300;font-display:swap}
@@ -162,7 +167,9 @@ footer small{font-size:13px;color:var(--gray)}
 @media (prefers-reduced-motion:reduce){::view-transition-old(root),::view-transition-new(root){animation:none}}
 .article{animation:art-in .7s cubic-bezier(.2,.7,.2,1) both}
 @keyframes art-in{from{opacity:0;transform:translateY(16px)}}
+.foot-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;font-size:14px;font-weight:700}.foot-links a{color:inherit;text-decoration:none;border-bottom:1.5px solid currentColor}
 </style>
+<!--seo:ld--><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Blog","@id":"https://guayabailustrada.com.mx/blog#blog","url":"https://guayabailustrada.com.mx/blog","name":"Blog de La Guayaba Ilustrada","inLanguage":"es-MX","publisher":{"@id":"https://guayabailustrada.com.mx/#negocio"},"blogPost":[{"@type":"BlogPosting","headline":"Meta lanza Muse Wonder, su IA más potente, y apuesta por una que te recuerde","url":"https://guayabailustrada.com.mx/notas/meta-muse-wonder-ia","datePublished":"2026-10-14T09:00:00-06:00"},{"@type":"BlogPosting","headline":"Apple lanza HomeView, su pantalla para el hogar, pero no llega a México","url":"https://guayabailustrada.com.mx/notas/apple-homeview-mexico","datePublished":"2026-10-14T09:00:00-06:00"},{"@type":"BlogPosting","headline":"Pinterest pide a las marcas algo raro: dejar que su audiencia se vaya del celular","url":"https://guayabailustrada.com.mx/notas/pinterest-disena-la-salida","datePublished":"2026-10-14T09:00:00-06:00"},{"@type":"BlogPosting","headline":"Facebook ya te deja decirle a su algoritmo, con tus palabras, qué quieres ver","url":"https://guayabailustrada.com.mx/notas/facebook-algoritmo-con-tus-palabras","datePublished":"2026-10-14T09:00:00-06:00"}]},{"@type":"Organization","@id":"https://guayabailustrada.com.mx/#negocio","name":"La Guayaba Ilustrada","url":"https://guayabailustrada.com.mx/","logo":"https://guayabailustrada.com.mx/assets/icon-512.png"}]}</script><!--/seo:ld-->
 </head>
 <body>
 <div class="wrap">
@@ -190,6 +197,7 @@ footer small{font-size:13px;color:var(--gray)}
   <footer>
     <a class="logo" href="index.html"><b>LG.I</b><span>La Guayaba<br>Ilustrada</span></a>
     <p>Organizando ideas creativas para ejecutarlas.</p>
+    <nav class="foot-links" aria-label="Más"><a href="/precios">Precios</a><a href="/blog">Blog</a><a href="/feed.xml">RSS</a><a href="https://instagram.com/guayabailustrada" rel="noopener">Instagram</a></nav>
     <small>© 2026 La Guayaba Ilustrada · Cuernavaca, Morelos</small>
   </footer>
 
@@ -200,7 +208,7 @@ footer small{font-size:13px;color:var(--gray)}
 <script>
 const P=window.POSTS||[];
 const view=document.getElementById('view');
-const card=p=>`<a class="post" href="#${p.id}"><div class="pic"><img src="${p.img}" alt="${p.alt}" loading="lazy"></div><div class="in"><span class="kind" style="background:${p.c}">${p.k}</span><time>${p.d}</time><h3>${p.t}</h3><p>${p.x}</p><span class="cta sm">Leer nota</span></div></a>`;
+const card=p=>`<a class="post" href="notas/${p.id}"><div class="pic"><img src="${p.img}" alt="${p.alt}" loading="lazy"></div><div class="in"><span class="kind" style="background:${p.c}">${p.k}</span><time>${p.d}</time><h3>${p.t}</h3><p>${p.x}</p><span class="cta sm">Leer nota</span></div></a>`;
 let filter='todo',shown=13;
 const host=u=>{try{return new URL(u).hostname.replace(/^www\./,'')}catch(e){return 'Ver fuente'}};
 
@@ -217,7 +225,7 @@ function list(){
       <div class="clock"><b id="ctime"></b><span><span id="cdate"></span> · Ciudad de México</span></div>
       <div class="tabs" role="group" aria-label="Filtrar notas">${['todo','Noticias','Tendencias','Inspiración'].map(k=>`<button type="button" data-k="${k}" aria-pressed="${k===filter}">${k==='todo'?'Todo':k}</button>`).join('')}</div>
     </section>
-    ${first?`<a class="feature" href="#${first.id}"><div class="pic"><img src="${first.img}" alt="${first.alt}"></div><div class="in"><span class="kind" style="background:${first.c}">${first.k}</span><time>${first.d}</time><h2>${first.t}</h2><p>${first.x}</p><span class="cta">Leer nota</span></div></a>`:'<p class="empty">Todavía no hay notas en esta categoría.</p>'}
+    ${first?`<a class="feature" href="notas/${first.id}"><div class="pic"><img src="${first.img}" alt="${first.alt}"></div><div class="in"><span class="kind" style="background:${first.c}">${first.k}</span><time>${first.d}</time><h2>${first.t}</h2><p>${first.x}</p><span class="cta">Leer nota</span></div></a>`:'<p class="empty">Todavía no hay notas en esta categoría.</p>'}
     ${rest.length?`<div class="grid">${rest.map(card).join('')}</div>`:''}
     ${all.length>rest.length?`<div class="loadmore"><button type="button" class="cta" id="more">Cargar más notas</button></div>`:''}
   </div>`;
@@ -265,7 +273,7 @@ function article(p){
     <div class="body">${body(p)}</div>
     ${p.src?`<p class="source">Fuente: <a href="${p.src}" target="_blank" rel="noopener">${p.sn||host(p.src)}</a></p>`:''}
     <div class="share">
-      <a class="cta" href="https://wa.me/?text=${encodeURIComponent(p.t+' · La Guayaba Ilustrada')}" target="_blank" rel="noopener">Compartir por WhatsApp</a>
+      <a class="cta" href="https://wa.me/?text=${encodeURIComponent(p.t+' · La Guayaba Ilustrada '+SITE+'/notas/'+p.id)}" target="_blank" rel="noopener">Compartir por WhatsApp</a>
       <a class="cta light" href="index.html#cotizador">Cotizar un proyecto</a>
     </div>
     <div class="more">${others.length?`<h2>Más <i class="it" style="color:var(--pink)">notas</i></h2><div class="grid">${others.map(card).join('')}</div>`:''}<div class="loadmore"><a class="cta" href="blog.html">Ver todas las notas</a></div></div>
@@ -273,8 +281,10 @@ function article(p){
   tickClock();
 }
 
+const SITE='https://guayabailustrada.com.mx';
 function route(){
-  const id=location.hash.slice(1),p=P.find(x=>x.id===id);
+  if(!window.NOTE_ID&&location.hash.length>1&&P.some(x=>x.id===location.hash.slice(1))){location.replace('notas/'+location.hash.slice(1));return}
+  const id=window.NOTE_ID||location.hash.slice(1),p=P.find(x=>x.id===id);
   p?article(p):list();
   window.scrollTo(0,0);
 }

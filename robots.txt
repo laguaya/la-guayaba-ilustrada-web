@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /drafts/
+Disallow: /inbox/
+Disallow: /scripts/
+Disallow: /worker/
+
+Sitemap: https://guayabailustrada.com.mx/sitemap.xml
