@@ -302,6 +302,9 @@ def handle_message(u, msg):
         n, put = note_get(nid)
         if n:
             n['vm'] = vm.group(1); n.pop('yt', None)
+            vt = vimeo_thumb(n['vm'])
+            if vt:
+                n['vt'] = vt
             put(n)
             reply(mid, '🎬 Listo, ese video de Vimeo queda en la nota de la web. En Instagram van las fotos que me mandes.')
             return
@@ -470,7 +473,7 @@ def publish(n):
     post = {'id': n['id'], 'k': n['k'], 'c': n.get('c') or COLORS.get(n['k'], '#FF3674'),
             'd': f'{now.day} {MESES[now.month - 1]} {now.year}', 'img': n['img'],
             'alt': n.get('alt', ''), 'cr': n.get('cr', ''), 't': n['t'], 'x': n['x'], 'b': n['b']}
-    for k in ('g', 'yt', 'vm'):
+    for k in ('g', 'yt', 'vm', 'vt'):
         if n.get(k):
             post[k] = n[k]
     if n.get('src'):
@@ -684,6 +687,29 @@ def commit(msg):
 IGSTAT = 'drafts/.ig_status.json'
 
 
+def vimeo_thumb(vid):
+    """Miniatura grande de un video de Vimeo (para la tarjeta de afuera)."""
+    try:
+        r = requests.get('https://vimeo.com/api/oembed.json', params={'url': f'https://vimeo.com/{vid}', 'width': 1280}, timeout=20).json()
+        return re.sub(r'_\d+x\d+', '_1280x720', r.get('thumbnail_url', '')) or None
+    except Exception as e:
+        print('Vimeo:', e, file=sys.stderr)
+        return None
+
+
+def vimeo_backfill():
+    """Notas publicadas con video de Vimeo que todavía no tienen miniatura."""
+    js = open('posts.js', encoding='utf-8').read()
+    for nid in re.findall(r'\{"id": "([^"]+)"[^\n]*"vm": "\d+"', js):
+        n, put = note_get(nid)
+        if n and n.get('vm') and not n.get('vt'):
+            vt = vimeo_thumb(n['vm'])
+            if vt:
+                n['vt'] = vt; put(n)
+                return True
+    return False
+
+
 def ig_check():
     """Confirma por Telegram que Instagram está conectado y avisa antes de que venza el token (60 días)."""
     import hashlib
@@ -729,6 +755,9 @@ def listen(hours=5.6):
     sh('git', 'config', 'user.name', 'La Guayaba Ilustrada')
     sh('git', 'config', 'user.email', 'laguayabailustrada@gmail.com')
     try:
+        while vimeo_backfill():
+            pass
+        commit('Notas: miniaturas de Vimeo')
         if ig_check():
             commit('Notas: estado de Instagram')
     except Exception as e:
