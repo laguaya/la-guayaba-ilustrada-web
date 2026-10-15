@@ -165,29 +165,66 @@ def mejor(a, b):
         return False
 
 
+PREVIEW = set()   # borradores a los que hay que reenviarles el carrusel
+NOFOTO = {}       # id -> True si el último carrusel salió sin foto real
+
+
+def ig_store(nid, n, put):
+    """Dónde se guardan las fotos del carrusel: en el borrador o, si ya está publicada, en drafts/ig/<id>.json."""
+    if os.path.exists(f'drafts/{nid}.json'):
+        return n, put
+    p = f'drafts/ig/{nid}.json'
+    d = load(p) if os.path.exists(p) else {}
+    def sput(x):
+        os.makedirs('drafts/ig', exist_ok=True)
+        save(p, x)
+    return d, sput
+
+
+def misma(a, b):
+    import hashlib
+    try:
+        return hashlib.md5(open(a, 'rb').read()).digest() == hashlib.md5(open(b, 'rb').read()).digest()
+    except Exception:
+        return False
+
+
 def add_photo(nid, dest, caption=''):
-    """Primera foto = portada. Si llega una foto de más calidad que la portada, la reemplaza.
-    Si escribes "galería" en el texto de la foto, se va a la galería."""
+    """Fotos que manda Sergio respondiendo a una nota.
+    - Nota con video: las fotos son solo para Instagram (1a = lámina 1, 2a = lámina 2); la web no cambia.
+    - Nota sin video: la 1a foto real es portada de la web y lámina 1; las demás van a la lámina 2.
+    - Texto "2" = lámina 2; "portada" = portada de la web; "galería" = galería de la web.
+    - Una foto repetida se ignora."""
     n, put = note_get(nid)
     if not n:
         return None
     c = caption.lower().strip()
+    st, sput = ig_store(nid, n, put)
+    g = [x['s'] if isinstance(x, dict) else x for x in n.get('g', [])]
+    for k in [n.get('img', '').split('?')[0], st.get('ig1'), st.get('ig2')] + g:
+        if k and k != dest and os.path.exists(k) and misma(k, dest):
+            os.remove(dest)
+            return 'dup'
+    if 'galer' in c:
+        n.setdefault('g', []).append({'s': dest, 'c': caption})
+        put(n)
+        return 'galeria'
     if c in ('2', 'segunda', 'lámina 2', 'lamina 2') or 'carrusel' in c or 'segunda foto' in c:
-        igp = f'drafts/ig/{nid}.json'
-        if not os.path.exists(f'drafts/{nid}.json') and os.path.exists(igp):
-            ig = load(igp); ig['ig2'] = dest; save(igp, ig)
-        else:
-            n['ig2'] = dest
-            put(n)
+        st['ig2'] = dest; sput(st)
         return 'ig2'
+    if 'portada' in c and not n.get('yt'):
+        set_cover(nid, dest)
+        return 'portada'
+    if n.get('yt'):
+        r = 'ig1' if not st.get('ig1') else 'ig2'
+        st[r] = dest; sput(st)
+        return r
     cur = n.get('img', '').split('?')[0]
-    if '-foto' not in cur or 'portada' in caption.lower() or mejor(dest, cur):
-        if 'galer' not in caption.lower():
-            set_cover(nid, dest)
-            return 'portada'
-    n.setdefault('g', []).append({'s': dest, 'c': caption} if caption else dest)
-    put(n)
-    return 'galeria'
+    if '-foto' not in cur or mejor(dest, cur):
+        set_cover(nid, dest)
+        return 'portada'
+    st['ig2'] = dest; sput(st)
+    return 'ig2'
 
 
 def siguiente_vuelta():
@@ -242,16 +279,19 @@ def handle_message(u, msg):
         if not os.environ.get('IG_TOKEN'):
             reply(mid, 'Instagram no está conectado todavía.')
             return
+        if NOFOTO.get(nid):
+            reply(mid, '⚠️ Esta nota no tiene fotos para el carrusel. Respóndele con 1 o 2 fotos y vuelve a escribir "instagram".')
+            return
         queue_instagram(n)
         reply(mid, '📲 Va. Armé el carrusel y lo subo a Instagram en unos minutos. Te aviso aquí cuando esté publicado.')
         return
     if text.strip().lower() in ('/start', '/help', '/ayuda'):
         reply(mid, 'Hola. Aquí te llegan las notas para aprobar.\n\n'
               '• Mándame un link o un texto con lo que quieres que se publique y lo redacto en mi próxima vuelta.\n'
-              '• Para cambiar la portada de una nota, responde a su mensaje con la foto.\n'
+              '• Fotos para el carrusel: responde a la nota con 1 o 2 fotos. Si la nota es video, las fotos son solo para Instagram; si no, la primera también es la portada de la web.\n'
               '• Para poner un video de YouTube como portada, responde a la nota con el link del video.\n'
               '• Para subir a Instagram una nota que ya está en la web, responde a la nota con la palabra "instagram".\n'
-              '• Para la segunda foto del carrusel de Instagram, responde a la nota con la foto y escribe "2" en el texto.\n'
+              '• Para forzar la segunda lámina escribe "2" en el texto de la foto; para mandarla a la galería de la web escribe "galería".\n'
               '• Una foto suelta se guarda para usarla en la siguiente nota.')
         return
     mg = msg.get('media_group_id')
@@ -265,17 +305,19 @@ def handle_message(u, msg):
             dest = f'assets/work/nota-{nid}-foto{u["update_id"]}.webp'
             orig = get_photo(msg, dest)
             r = add_photo(nid, dest, text if mg is None else '')
-            if r == 'portada':
-                reply(mid, '🖼 Listo, esta foto queda como portada de esa nota.' + tip(orig))
-                return
-            if r == 'galeria':
-                reply(mid, '🖼 Listo, foto agregada a la galería de la nota.' + tip(orig))
-                return
-            if r == 'ig2':
-                reply(mid, '📲 Listo, esta foto va en la segunda lámina del carrusel de Instagram. Te mando cómo queda.')
-                n2, _ = note_get(nid)
-                if n2 and n2.get('ig') and os.path.exists(f'drafts/{nid}.json'):
-                    send_carousel(n2)
+            if r:
+                borrador = os.path.exists(f'drafts/{nid}.json')
+                extra = '' if borrador else '\n\nCuando tengas las fotos que quieres, responde "instagram" a la nota para subir el carrusel.'
+                txt = {
+                    'portada': '🖼 Esta foto queda de portada en la web y en la primera lámina del carrusel.' + tip(orig),
+                    'ig1': '📲 Esta foto va en la primera lámina del carrusel de Instagram. En la web se queda el video.',
+                    'ig2': '📲 Esta foto va en la segunda lámina del carrusel de Instagram. No se agrega a la página.',
+                    'galeria': '🖼 Listo, foto agregada a la galería de la nota en la web.',
+                    'dup': '👌 Esa foto ya la tenía, no la repetí.',
+                }[r]
+                reply(mid, txt + ('' if r in ('galeria', 'dup') else extra))
+                if borrador and r in ('portada', 'ig1', 'ig2'):
+                    PREVIEW.add(nid)
                 return
         dest = f'inbox/foto-{u["update_id"]}.webp'
         get_photo(msg, dest)
@@ -297,14 +339,12 @@ def build_carousel(n):
     import carrusel
     out = f'assets/ig/{n["id"]}'
     data = dict(n['ig'])
-    data.setdefault('img', n['img'])
-    if not os.path.exists(data['img']):
-        data['img'] = n['img']
-    g = [x['s'] if isinstance(x, dict) else x for x in n.get('g', [])]
-    for cand in [n.get('ig2')] + g:
-        if cand and os.path.exists(cand.split('?')[0]):
-            data['img2'] = cand.split('?')[0]
-            break
+    ig1 = n.get('ig1') or n['ig'].get('ig1')
+    ig2 = n.get('ig2') or n['ig'].get('ig2')
+    data['img'] = ig1 if ig1 and os.path.exists(ig1) else n['img'].split('?')[0]
+    if ig2 and os.path.exists(ig2):
+        data['img2'] = ig2
+    NOFOTO[n['id']] = '-foto' not in data['img']
     if '-foto' not in data['img']:
         # sin foto real: fondo de marca limpio en vez de la portada con texto
         import portada
@@ -328,7 +368,9 @@ def send_carousel(n):
         fh[f'f{i}'] = open(f, 'rb')
         item = {'type': 'photo', 'media': f'attach://f{i}'}
         if i == 0:
-            item['caption'] = ('📲 Carrusel para Instagram\n\n' + n['ig'].get('caption', ''))[:1000]
+            aviso = ('⚠️ Este carrusel no tiene foto. Respóndele a la nota con 1 o 2 fotos antes de publicar.\n\n'
+                     if NOFOTO.get(n['id']) else '')
+            item['caption'] = (aviso + '📲 Carrusel para Instagram\n\n' + n['ig'].get('caption', ''))[:1000]
         media.append(item)
     r = tg('sendMediaGroup', files=fh, chat_id=CHAT, media=media)
     for f in fh.values():
@@ -488,8 +530,11 @@ def poll():
                     build_carousel(n)  # rehace las láminas con las fotos más recientes
                 except Exception as e:
                     print('Carrusel:', e, file=sys.stderr)
-                queue_instagram(n)
-                if os.environ.get('IG_TOKEN'):
+                if NOFOTO.get(n['id']):
+                    mark(cq, '✅ Publicada en la web. El carrusel no tenía foto, así que NO lo subí a Instagram. '
+                             'Respóndele a la nota con 1 o 2 fotos y después escribe "instagram".')
+                elif os.environ.get('IG_TOKEN'):
+                    queue_instagram(n)
                     mark(cq, '✅ Publicada en la web. En unos minutos sale el carrusel en Instagram.')
                 else:
                     mark(cq, '✅ Publicada en la web. Instagram todavía no está conectado: descarga el carrusel de arriba y súbelo tú.')
@@ -655,6 +700,13 @@ def listen(hours=5.6):
             changed = False
             send_pending()
             poll()
+            for pid in list(PREVIEW):
+                PREVIEW.discard(pid)
+                if os.path.exists(f'drafts/{pid}.json'):
+                    pn = load(f'drafts/{pid}.json')
+                    if pn.get('ig'):
+                        send_carousel(pn)
+                        changed = True
             if changed:
                 commit('Notas: actualización desde Telegram')
             if os.path.exists(VERIFY):
