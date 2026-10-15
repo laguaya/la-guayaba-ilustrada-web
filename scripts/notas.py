@@ -242,6 +242,52 @@ def siguiente_vuelta():
     return f"{h}:52 {'am' if t.hour < 12 else 'pm'}" + ('' if t.date() == now.date() else ' de mañana')
 
 
+def ig_command(nid, mid):
+    """Sube a Instagram el carrusel de una nota ya publicada."""
+    if os.path.exists(f'drafts/{nid}.json'):
+        reply(mid, 'Esa nota todavía no está publicada. Usa el botón 📲 Web + Instagram de la nota.')
+        return
+    n, _ = note_get(nid)
+    igp = f'drafts/ig/{nid}.json'
+    if not n or not os.path.exists(igp):
+        reply(mid, '⚠️ Esa nota no tiene textos de carrusel guardados, no puedo armarlo.')
+        return
+    n['ig'] = load(igp)
+    if n['ig'].get('ig2'):
+        n['ig2'] = n['ig']['ig2']
+    n['tg'] = mid
+    try:
+        build_carousel(n)
+    except Exception as e:
+        reply(mid, f'⚠️ No pude armar el carrusel: {e}')
+        return
+    if not os.environ.get('IG_TOKEN'):
+        reply(mid, 'Instagram no está conectado todavía.')
+        return
+    if NOFOTO.get(nid):
+        reply(mid, '⚠️ Esta nota no tiene fotos para el carrusel. Respóndele con 1 o 2 fotos y vuelve a escribir "instagram".')
+        return
+    queue_instagram(n)
+    reply(mid, '📲 Va. Armé el carrusel y lo subo a Instagram en unos minutos. Te aviso aquí cuando esté publicado.')
+    return
+
+
+LAST = 'drafts/.last.json'
+IGNOW = {}   # id -> message_id: subir a Instagram después de procesar las fotos
+
+
+def set_last(nid):
+    save(LAST, {'id': nid, 't': time.time()})
+
+
+def last_note():
+    if not os.path.exists(LAST):
+        return None
+    d = load(LAST)
+    n, _ = note_get(d['id']) if time.time() - d.get('t', 0) < 24 * 3600 else (None, None)
+    return d['id'] if n else None
+
+
 def handle_message(u, msg):
     """Fotos y pedidos que manda Sergio por Telegram."""
     os.makedirs('inbox', exist_ok=True)
@@ -258,32 +304,13 @@ def handle_message(u, msg):
             put(n)
             reply(mid, '🎬 Listo, ese video de YouTube queda como portada de la nota.')
             return
-    if nid and not is_photo and len(text) < 40 and re.search(r'\b(instagram|ig)\b', text, re.I):
-        if os.path.exists(f'drafts/{nid}.json'):
-            reply(mid, 'Esa nota todavía no está publicada. Usa el botón 📲 Web + Instagram de la nota.')
-            return
-        n, _ = note_get(nid)
-        igp = f'drafts/ig/{nid}.json'
-        if not n or not os.path.exists(igp):
-            reply(mid, '⚠️ Esa nota no tiene textos de carrusel guardados, no puedo armarlo.')
-            return
-        n['ig'] = load(igp)
-        if n['ig'].get('ig2'):
-            n['ig2'] = n['ig']['ig2']
-        n['tg'] = mid
-        try:
-            build_carousel(n)
-        except Exception as e:
-            reply(mid, f'⚠️ No pude armar el carrusel: {e}')
-            return
-        if not os.environ.get('IG_TOKEN'):
-            reply(mid, 'Instagram no está conectado todavía.')
-            return
-        if NOFOTO.get(nid):
-            reply(mid, '⚠️ Esta nota no tiene fotos para el carrusel. Respóndele con 1 o 2 fotos y vuelve a escribir "instagram".')
-            return
-        queue_instagram(n)
-        reply(mid, '📲 Va. Armé el carrusel y lo subo a Instagram en unos minutos. Te aviso aquí cuando esté publicado.')
+    ig_word = len(text) < 40 and re.search(r'\b(instagram|ig)\b', text, re.I)
+    if not nid and (is_photo or ig_word):
+        nid = last_note()   # en iPhone a veces no se puede responder: se usa la última nota
+    if nid:
+        set_last(nid)
+    if nid and not is_photo and ig_word:
+        ig_command(nid, mid)
         return
     if text.strip().lower() in ('/start', '/help', '/ayuda'):
         reply(mid, 'Hola. Aquí te llegan las notas para aprobar.\n\n'
@@ -304,6 +331,9 @@ def handle_message(u, msg):
         if nid:
             dest = f'assets/work/nota-{nid}-foto{u["update_id"]}.webp'
             orig = get_photo(msg, dest)
+            if re.search(r'\b(instagram|ig)\b', text, re.I):
+                IGNOW[nid] = mid
+                text = ''
             r = add_photo(nid, dest, text if mg is None else '')
             if r:
                 borrador = os.path.exists(f'drafts/{nid}.json')
@@ -315,6 +345,11 @@ def handle_message(u, msg):
                     'galeria': '🖼 Listo, foto agregada a la galería de la nota en la web.',
                     'dup': '👌 Esa foto ya la tenía, no la repetí.',
                 }[r]
+                if not rto:
+                    nn, _ = note_get(nid)
+                    txt = f'(Nota: {nn["t"][:70]})\n' + txt
+                if nid in IGNOW and not borrador:
+                    extra = ''
                 reply(mid, txt + ('' if r in ('galeria', 'dup') else extra))
                 if borrador and r in ('portada', 'ig1', 'ig2'):
                     PREVIEW.add(nid)
@@ -416,6 +451,7 @@ def send_pending():
         if r.get('ok'):
             n['tg'] = r['result']['message_id']
             remember(n['tg'], n['id'])
+            set_last(n['id'])
             save(path, n)
             changed = True
             print('Enviada a Telegram:', n['id'])
@@ -524,6 +560,7 @@ def poll():
         n = load(path)
         if accion in ('pub', 'pig'):
             publish(n)
+            set_last(nid)
             os.remove(path)
             if accion == 'pig' and n.get('ig'):
                 try:
@@ -700,6 +737,13 @@ def listen(hours=5.6):
             changed = False
             send_pending()
             poll()
+            for pid, pmid in list(IGNOW.items()):
+                IGNOW.pop(pid, None)
+                if os.path.exists(f'drafts/{pid}.json'):
+                    PREVIEW.add(pid)
+                else:
+                    ig_command(pid, pmid)
+                changed = True
             for pid in list(PREVIEW):
                 PREVIEW.discard(pid)
                 if os.path.exists(f'drafts/{pid}.json'):
