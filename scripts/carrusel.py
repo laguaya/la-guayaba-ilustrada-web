@@ -192,7 +192,7 @@ def slide2(data, out):
     foot_h = 64
     ph_top = int(y + 40)
     ph_bottom = H - M - foot_h
-    ph = ImageOps.fit(Image.open(data['img']).convert('RGB'), (W - 2 * M, ph_bottom - ph_top), Image.LANCZOS, centering=(0.5, 0.45))
+    ph = ImageOps.fit(Image.open(data.get('img2') or data['img']).convert('RGB'), (W - 2 * M, ph_bottom - ph_top), Image.LANCZOS, centering=(0.5, 0.45))
     can.paste(ph, (M, ph_top))
     ft = font('lg-black.woff2', 30)
     label = data.get('marca', '')

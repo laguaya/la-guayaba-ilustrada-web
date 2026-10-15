@@ -171,6 +171,11 @@ def add_photo(nid, dest, caption=''):
     n, put = note_get(nid)
     if not n:
         return None
+    c = caption.lower().strip()
+    if c in ('2', 'segunda', 'lámina 2', 'lamina 2') or 'carrusel' in c or 'segunda foto' in c:
+        n['ig2'] = dest
+        put(n)
+        return 'ig2'
     cur = n.get('img', '').split('?')[0]
     if '-foto' not in cur or 'portada' in caption.lower() or mejor(dest, cur):
         if 'galer' not in caption.lower():
@@ -217,6 +222,7 @@ def handle_message(u, msg):
               '• Mándame un link o un texto con lo que quieres que se publique y lo redacto en mi próxima vuelta.\n'
               '• Para cambiar la portada de una nota, responde a su mensaje con la foto.\n'
               '• Para poner un video de YouTube como portada, responde a la nota con el link del video.\n'
+              '• Para la segunda foto del carrusel de Instagram, responde a la nota con la foto y escribe "2" en el texto.\n'
               '• Una foto suelta se guarda para usarla en la siguiente nota.')
         return
     mg = msg.get('media_group_id')
@@ -235,6 +241,12 @@ def handle_message(u, msg):
                 return
             if r == 'galeria':
                 reply(mid, '🖼 Listo, foto agregada a la galería de la nota.' + tip(orig))
+                return
+            if r == 'ig2':
+                reply(mid, '📲 Listo, esta foto va en la segunda lámina del carrusel de Instagram. Te mando cómo queda.')
+                n2, _ = note_get(nid)
+                if n2 and n2.get('ig') and os.path.exists(f'drafts/{nid}.json'):
+                    send_carousel(n2)
                 return
         dest = f'inbox/foto-{u["update_id"]}.webp'
         get_photo(msg, dest)
@@ -259,6 +271,11 @@ def build_carousel(n):
     data.setdefault('img', n['img'])
     if not os.path.exists(data['img']):
         data['img'] = n['img']
+    g = [x['s'] if isinstance(x, dict) else x for x in n.get('g', [])]
+    for cand in [n.get('ig2')] + g:
+        if cand and os.path.exists(cand.split('?')[0]):
+            data['img2'] = cand.split('?')[0]
+            break
     if '-foto' not in data['img']:
         # sin foto real: fondo de marca limpio en vez de la portada con texto
         import portada
@@ -431,6 +448,10 @@ def poll():
             publish(n)
             os.remove(path)
             if accion == 'pig' and n.get('ig'):
+                try:
+                    build_carousel(n)  # rehace las láminas con las fotos más recientes
+                except Exception as e:
+                    print('Carrusel:', e, file=sys.stderr)
                 queue_instagram(n)
                 if os.environ.get('IG_TOKEN'):
                     mark(cq, '✅ Publicada en la web. En unos minutos sale el carrusel en Instagram.')
