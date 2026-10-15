@@ -163,9 +163,9 @@ def from_template(tpl, meta, main_html, base=True, keep_scripts=True, note_id=No
         s = s.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n<base href="/">', 1)
     s = s.replace('<main id="view"></main>', f'<main id="view">{main_html}</main>', 1)
     if note_id:
-        s = s.replace('<script src="posts.js', f'<script>window.NOTE_ID={json.dumps(note_id)}</script>\n<script src="posts.js', 1)
+        s = s.replace('<script>document.write(\'<script src="/posts.js', f'<script>window.NOTE_ID={json.dumps(note_id)}</script>\n<script>document.write(\'<script src="/posts.js', 1)
     if not keep_scripts:
-        s = re.sub(r'<script src="posts\.js[^\n]*\n', '', s)
+        s = re.sub(r'<script>document\.write\(\'<script src="/posts\.js[^\n]*\n', '', s)
         s = re.sub(r'<script>\nconst P=window\.POSTS.*?\nroute\(\);\n</script>\n', '', s, flags=re.S)
     return s
 
