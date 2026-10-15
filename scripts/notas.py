@@ -173,8 +173,12 @@ def add_photo(nid, dest, caption=''):
         return None
     c = caption.lower().strip()
     if c in ('2', 'segunda', 'lámina 2', 'lamina 2') or 'carrusel' in c or 'segunda foto' in c:
-        n['ig2'] = dest
-        put(n)
+        igp = f'drafts/ig/{nid}.json'
+        if not os.path.exists(f'drafts/{nid}.json') and os.path.exists(igp):
+            ig = load(igp); ig['ig2'] = dest; save(igp, ig)
+        else:
+            n['ig2'] = dest
+            put(n)
         return 'ig2'
     cur = n.get('img', '').split('?')[0]
     if '-foto' not in cur or 'portada' in caption.lower() or mejor(dest, cur):
@@ -217,11 +221,36 @@ def handle_message(u, msg):
             put(n)
             reply(mid, '🎬 Listo, ese video de YouTube queda como portada de la nota.')
             return
+    if nid and not is_photo and len(text) < 40 and re.search(r'\b(instagram|ig)\b', text, re.I):
+        if os.path.exists(f'drafts/{nid}.json'):
+            reply(mid, 'Esa nota todavía no está publicada. Usa el botón 📲 Web + Instagram de la nota.')
+            return
+        n, _ = note_get(nid)
+        igp = f'drafts/ig/{nid}.json'
+        if not n or not os.path.exists(igp):
+            reply(mid, '⚠️ Esa nota no tiene textos de carrusel guardados, no puedo armarlo.')
+            return
+        n['ig'] = load(igp)
+        if n['ig'].get('ig2'):
+            n['ig2'] = n['ig']['ig2']
+        n['tg'] = mid
+        try:
+            build_carousel(n)
+        except Exception as e:
+            reply(mid, f'⚠️ No pude armar el carrusel: {e}')
+            return
+        if not os.environ.get('IG_TOKEN'):
+            reply(mid, 'Instagram no está conectado todavía.')
+            return
+        queue_instagram(n)
+        reply(mid, '📲 Va. Armé el carrusel y lo subo a Instagram en unos minutos. Te aviso aquí cuando esté publicado.')
+        return
     if text.strip().lower() in ('/start', '/help', '/ayuda'):
         reply(mid, 'Hola. Aquí te llegan las notas para aprobar.\n\n'
               '• Mándame un link o un texto con lo que quieres que se publique y lo redacto en mi próxima vuelta.\n'
               '• Para cambiar la portada de una nota, responde a su mensaje con la foto.\n'
               '• Para poner un video de YouTube como portada, responde a la nota con el link del video.\n'
+              '• Para subir a Instagram una nota que ya está en la web, responde a la nota con la palabra "instagram".\n'
               '• Para la segunda foto del carrusel de Instagram, responde a la nota con la foto y escribe "2" en el texto.\n'
               '• Una foto suelta se guarda para usarla en la siguiente nota.')
         return
@@ -362,6 +391,13 @@ def publish(n):
         post['src'] = n['src']
         if n.get('sn'):
             post['sn'] = n['sn']
+    if n.get('ig'):
+        os.makedirs('drafts/ig', exist_ok=True)
+        ig = dict(n['ig'])
+        for k in ('ig2',):
+            if n.get(k):
+                ig[k] = n[k]
+        save(f'drafts/ig/{n["id"]}.json', ig)
     js = open('posts.js', encoding='utf-8').read()
     if f"'{n['id']}'" in js or f'"{n["id"]}"' in js:
         return
@@ -493,10 +529,18 @@ def instagram():
     rest = []
     for item in q:
         urls = [f'{site}/assets/ig/{item["id"]}/{i}.jpg' for i in (1, 2, 3)]
-        for _ in range(30):  # espera a que la web publique las imágenes
-            if all(requests.head(u, timeout=20).status_code == 200 for u in urls):
-                break
+        import hashlib
+        local = [hashlib.md5(open(f'assets/ig/{item["id"]}/{i}.jpg', 'rb').read()).hexdigest()
+                 if os.path.exists(f'assets/ig/{item["id"]}/{i}.jpg') else None for i in (1, 2, 3)]
+        for _ in range(40):  # espera a que la web publique las láminas nuevas (no las de antes)
+            try:
+                live = [hashlib.md5(requests.get(u + f'?t={time.time():.0f}', timeout=30).content).hexdigest() for u in urls]
+                if all(l is None or l == v for l, v in zip(local, live)):
+                    break
+            except Exception:
+                pass
             time.sleep(10)
+        urls = [u + f'?v={(l or "")[:8]}' for u, l in zip(urls, local)]
         try:
             kids = []
             for u in urls:
@@ -519,7 +563,7 @@ def instagram():
             if item['intentos'] < 3:
                 rest.append(item)
             else:
-                tg('sendMessage', chat_id=CHAT, text='⚠️ No pude publicar el carrusel en Instagram. Súbelo a mano con las imágenes de arriba.', reply_to_message_id=item.get('reply'))
+                tg('sendMessage', chat_id=CHAT, text=f'⚠️ No pude publicar el carrusel en Instagram ({str(e)[:300]}). Súbelo a mano con las imágenes de arriba.', reply_to_message_id=item.get('reply'))
     if rest:
         save(IGQ, rest)
     else:
