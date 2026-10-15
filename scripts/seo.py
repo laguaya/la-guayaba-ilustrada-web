@@ -177,8 +177,8 @@ def static_article(n):
     return (f'<article class="article"><a class="cta light sm back" href="blog">Volver a Noticias</a>'
             f'<span class="kind" style="background:{e(n.get("c"))}">{e(n.get("k"))}</span><time datetime="{iso(n.get("d"))[:10]}">{e(n.get("d"))}</time>'
             f'<h1>{n["t"]}</h1><p class="dek">{n.get("x", "")}</p><span class="by">Por La Guayaba Ilustrada</span>'
-            f'<div class="cover"><img src="{e(n["img"])}" alt="{e(n.get("alt"))}"></div>'
-            f'<div class="body">{body}</div>{("<div class=gal>" + g + "</div>") if g else ""}{src}</article>')
+            + (f'<div class="cover video"><iframe src="https://www.youtube-nocookie.com/embed/{e(n["yt"])}?rel=0" title="{e(strip(n["t"]))}" loading="lazy" allowfullscreen></iframe></div>' if n.get('yt') else f'<div class="cover"><img src="{e(n["img"])}" alt="{e(n.get("alt"))}"></div>')
+            + f'<div class="body">{body}</div>{("<div class=gal>" + g + "</div>") if g else ""}{src}</article>')
 
 
 def main():

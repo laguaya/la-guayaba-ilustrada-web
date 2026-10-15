@@ -204,10 +204,19 @@ def handle_message(u, msg):
     nid = msgs().get(str(rto)) if rto else None
     text = msg.get('text') or msg.get('caption') or ''
     is_photo = 'photo' in msg or (msg.get('document', {}).get('mime_type', '').startswith('image/'))
+    yt = re.search(r'(?:youtu\.be/|youtube\.com/(?:watch\?(?:.*&)?v=|shorts/|embed/|live/))([A-Za-z0-9_-]{11})', text)
+    if yt and nid and not is_photo:
+        n, put = note_get(nid)
+        if n:
+            n['yt'] = yt.group(1)
+            put(n)
+            reply(mid, '🎬 Listo, ese video de YouTube queda como portada de la nota.')
+            return
     if text.strip().lower() in ('/start', '/help', '/ayuda'):
         reply(mid, 'Hola. Aquí te llegan las notas para aprobar.\n\n'
               '• Mándame un link o un texto con lo que quieres que se publique y lo redacto en mi próxima vuelta.\n'
               '• Para cambiar la portada de una nota, responde a su mensaje con la foto.\n'
+              '• Para poner un video de YouTube como portada, responde a la nota con el link del video.\n'
               '• Una foto suelta se guarda para usarla en la siguiente nota.')
         return
     mg = msg.get('media_group_id')
@@ -329,6 +338,9 @@ def publish(n):
     post = {'id': n['id'], 'k': n['k'], 'c': n.get('c') or COLORS.get(n['k'], '#FF3674'),
             'd': f'{now.day} {MESES[now.month - 1]} {now.year}', 'img': n['img'],
             'alt': n.get('alt', ''), 'cr': n.get('cr', ''), 't': n['t'], 'x': n['x'], 'b': n['b']}
+    for k in ('g', 'yt'):
+        if n.get(k):
+            post[k] = n[k]
     if n.get('src'):
         post['src'] = n['src']
         if n.get('sn'):
