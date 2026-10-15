@@ -5,7 +5,7 @@
 
 Corre dentro de GitHub Actions. Necesita el secreto TELEGRAM_TOKEN.
 """
-import glob, io, json, os, re, sys
+import glob, io, json, os, re, sys, time
 from datetime import datetime, timezone, timedelta
 import requests
 
@@ -361,6 +361,36 @@ def mark(cq, texto):
         tg('sendMessage', chat_id=CHAT, text=texto, reply_to_message_id=m['message_id'])
 
 
+VERIFY = 'drafts/.verify.json'
+
+
+def verify_live():
+    """Revisa en la página real que las notas recién publicadas ya se vean y avisa por Telegram con el link."""
+    global changed
+    if not os.path.exists(VERIFY):
+        return
+    site = os.environ.get('SITE', 'https://guayabailustrada.com.mx')
+    try:
+        live = requests.get(f'{site}/posts.js', params={'t': int(time.time())}, headers={'Cache-Control': 'no-cache'}, timeout=20).text
+    except Exception:
+        return
+    rest = []
+    for v in load(VERIFY):
+        if f'"{v["id"]}"' in live:
+            tg('sendMessage', chat_id=CHAT, reply_to_message_id=v.get('reply'),
+               text=f'🌐 Ya está en línea en la página:\n{site}/notas/{v["id"]}\n\nSi en tu celular no la ves, cierra la pestaña y ábrela de nuevo.')
+        elif time.time() - v['t'] > 900:
+            tg('sendMessage', chat_id=CHAT, reply_to_message_id=v.get('reply'),
+               text='⚠️ Pasaron 15 minutos y la nota todavía no aparece en la página. Avísale a Claude para revisarlo.')
+        else:
+            rest.append(v)
+    if rest:
+        save(VERIFY, rest)
+    else:
+        os.remove(VERIFY)
+    changed = True
+
+
 def poll():
     global changed
     off = int(open(OFFSET).read().strip() or 0) if os.path.exists(OFFSET) else 0
@@ -407,7 +437,10 @@ def poll():
                 else:
                     mark(cq, '✅ Publicada en la web. Instagram todavía no está conectado: descarga el carrusel de arriba y súbelo tú.')
             else:
-                mark(cq, '✅ Publicada. Aparece en el blog en uno o dos minutos.')
+                mark(cq, '✅ Publicada. Te aviso aquí con el link en cuanto ya se vea en la página (1 a 3 minutos).')
+            pend = load(VERIFY) if os.path.exists(VERIFY) else []
+            pend.append({'id': nid, 'reply': (cq.get('message') or {}).get('message_id'), 't': time.time()})
+            save(VERIFY, pend)
             print('Publicada:', nid)
         elif accion == 'del':
             os.remove(path)
@@ -513,6 +546,11 @@ def listen(hours=5.6):
             poll()
             if changed:
                 commit('Notas: actualización desde Telegram')
+            if os.path.exists(VERIFY):
+                changed = False
+                verify_live()
+                if changed:
+                    commit('Notas: verificación en línea')
             if os.path.exists(IGQ) and os.environ.get('IG_TOKEN'):
                 changed = False
                 instagram()
