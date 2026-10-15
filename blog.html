@@ -83,6 +83,7 @@ body::before{content:"";position:fixed;z-index:89;top:-120px;left:0;right:0;heig
 .grid .post{flex:0 1 calc((100% - 32px) / 3);min-width:260px}
 .post{border:1.5px solid var(--line);border-radius:28px;overflow:hidden;display:flex;flex-direction:column;align-items:center;text-align:center;transition:transform .25s}
 .post:hover{transform:scale(1.02)}
+.pic{position:relative}.pic .play{position:absolute;left:50%;top:50%;width:68px;height:68px;margin:-34px 0 0 -34px;border-radius:50%;background:rgba(0,0,0,.72);display:grid;place-items:center;pointer-events:none;transition:transform .4s var(--ease)}.pic .play::after{content:"";margin-left:5px;border-left:20px solid #fff;border-top:12px solid transparent;border-bottom:12px solid transparent}a:hover .pic .play{transform:scale(1.08)}
 .post .pic{width:100%;aspect-ratio:4/3;overflow:hidden;background:var(--pink-wash)}
 .post .pic img,.feature .pic img{transition:transform .6s var(--ease)}
 .post .pic img{width:100%;height:100%;object-fit:cover}
@@ -236,7 +237,8 @@ footer small{font-size:13px;color:var(--gray)}
 <script>
 const P=window.POSTS||[];
 const view=document.getElementById('view');
-const card=p=>`<a class="post" href="notas/${p.id}"><div class="pic"><img src="${p.img}" alt="${p.alt}" loading="lazy"></div><div class="in"><span class="kind" style="background:${p.c}">${p.k}</span><time>${p.d}</time><h3>${p.t}</h3><p>${p.x}</p><span class="cta sm">Leer nota</span></div></a>`;
+const thumb=p=>p.yt?`<img src="https://i.ytimg.com/vi/${p.yt}/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${p.yt}/hqdefault.jpg'" alt="${p.alt||p.t}" loading="lazy"><span class="play"></span>`:`<img src="${p.img}" alt="${p.alt}" loading="lazy">`;
+const card=p=>`<a class="post" href="notas/${p.id}"><div class="pic">${thumb(p)}</div><div class="in"><span class="kind" style="background:${p.c}">${p.k}</span><time>${p.d}</time><h3>${p.t}</h3><p>${p.x}</p><span class="cta sm">Leer nota</span></div></a>`;
 let filter='todo',shown=13;
 const host=u=>{try{return new URL(u).hostname.replace(/^www\./,'')}catch(e){return 'Ver fuente'}};
 
@@ -253,7 +255,7 @@ function list(){
       <div class="clock"><b id="ctime"></b><span><span id="cdate"></span> · Ciudad de México</span></div>
       <div class="tabs" role="group" aria-label="Filtrar notas">${['todo','Noticias','Tendencias','Inspiración'].map(k=>`<button type="button" data-k="${k}" aria-pressed="${k===filter}">${k==='todo'?'Todo':k}</button>`).join('')}</div>
     </section>
-    ${first?`<a class="feature" href="notas/${first.id}"><div class="pic"><img src="${first.img}" alt="${first.alt}"></div><div class="in"><span class="kind" style="background:${first.c}">${first.k}</span><time>${first.d}</time><h2>${first.t}</h2><p>${first.x}</p><span class="cta">Leer nota</span></div></a>`:'<p class="empty">Todavía no hay notas en esta categoría.</p>'}
+    ${first?`<a class="feature" href="notas/${first.id}"><div class="pic">${thumb(first)}</div><div class="in"><span class="kind" style="background:${first.c}">${first.k}</span><time>${first.d}</time><h2>${first.t}</h2><p>${first.x}</p><span class="cta">Leer nota</span></div></a>`:'<p class="empty">Todavía no hay notas en esta categoría.</p>'}
     ${rest.length?`<div class="grid">${rest.map(card).join('')}</div>`:''}
     ${all.length>rest.length?`<div class="loadmore"><button type="button" class="cta" id="more">Cargar más notas</button></div>`:''}
   </div>`;

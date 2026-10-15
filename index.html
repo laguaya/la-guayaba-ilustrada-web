@@ -354,6 +354,7 @@ section{scroll-margin-top:20px}
 .post .cta{margin-top:auto}
 .post .by{font-size:13.5px;color:var(--gray)}
 .post{padding:0;overflow:hidden;color:inherit}
+.pic{position:relative}.pic .play{position:absolute;left:50%;top:50%;width:68px;height:68px;margin:-34px 0 0 -34px;border-radius:50%;background:rgba(0,0,0,.72);display:grid;place-items:center;pointer-events:none;transition:transform .4s var(--ease)}.pic .play::after{content:"";margin-left:5px;border-left:20px solid #fff;border-top:12px solid transparent;border-bottom:12px solid transparent}a:hover .pic .play{transform:scale(1.08)}
 .post .pic{width:100%;aspect-ratio:4/3;overflow:hidden;background:var(--pink-wash)}
 .post .pic img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
 .post:hover .pic img{transform:scale(1.04)}
@@ -834,7 +835,8 @@ document.getElementById('tform').addEventListener('submit',e=>{
 });
 
 /* ---------- BLOG (encabezados) ---------- */
-document.getElementById('posts').innerHTML=(window.POSTS||[]).slice(0,3).map(p=>`<a class="post" href="notas/${p.id}"><div class="pic"><img src="${p.img}" alt="${p.alt}" loading="lazy"></div><div class="in"><span class="kind" style="background:${p.c}">${p.k}</span><time>${p.d}</time><h3>${p.t}</h3><p>${p.x}</p><span class="cta sm">Leer nota</span></div></a>`).join('');
+const thumb=p=>p.yt?`<img src="https://i.ytimg.com/vi/${p.yt}/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${p.yt}/hqdefault.jpg'" alt="${p.alt||p.t}" loading="lazy"><span class="play"></span>`:`<img src="${p.img}" alt="${p.alt}" loading="lazy">`;
+document.getElementById('posts').innerHTML=(window.POSTS||[]).slice(0,3).map(p=>`<a class="post" href="notas/${p.id}"><div class="pic">${thumb(p)}</div><div class="in"><span class="kind" style="background:${p.c}">${p.k}</span><time>${p.d}</time><h3>${p.t}</h3><p>${p.x}</p><span class="cta sm">Leer nota</span></div></a>`).join('');
 
 /* ---------- INTRO CON GRAVEDAD ---------- */
 (function(){
