@@ -212,10 +212,10 @@ def add_photo(nid, dest, caption=''):
     if c in ('2', 'segunda', 'lámina 2', 'lamina 2') or 'carrusel' in c or 'segunda foto' in c:
         st['ig2'] = dest; sput(st)
         return 'ig2'
-    if 'portada' in c and not n.get('yt'):
+    if 'portada' in c and not (n.get('yt') or n.get('vm')):
         set_cover(nid, dest)
         return 'portada'
-    if n.get('yt'):
+    if n.get('yt') or n.get('vm'):
         r = 'ig1' if not st.get('ig1') else 'ig2'
         st[r] = dest; sput(st)
         return r
@@ -297,10 +297,18 @@ def handle_message(u, msg):
     text = msg.get('text') or msg.get('caption') or ''
     is_photo = 'photo' in msg or (msg.get('document', {}).get('mime_type', '').startswith('image/'))
     yt = re.search(r'(?:youtu\.be/|youtube\.com/(?:watch\?(?:.*&)?v=|shorts/|embed/|live/))([A-Za-z0-9_-]{11})', text)
+    vm = re.search(r'vimeo\.com/(?:video/)?(\d{5,})', text)
+    if vm and nid and not is_photo:
+        n, put = note_get(nid)
+        if n:
+            n['vm'] = vm.group(1); n.pop('yt', None)
+            put(n)
+            reply(mid, '🎬 Listo, ese video de Vimeo queda en la nota de la web. En Instagram van las fotos que me mandes.')
+            return
     if yt and nid and not is_photo:
         n, put = note_get(nid)
         if n:
-            n['yt'] = yt.group(1)
+            n['yt'] = yt.group(1); n.pop('vm', None)
             put(n)
             reply(mid, '🎬 Listo, ese video de YouTube queda como portada de la nota.')
             return
@@ -462,7 +470,7 @@ def publish(n):
     post = {'id': n['id'], 'k': n['k'], 'c': n.get('c') or COLORS.get(n['k'], '#FF3674'),
             'd': f'{now.day} {MESES[now.month - 1]} {now.year}', 'img': n['img'],
             'alt': n.get('alt', ''), 'cr': n.get('cr', ''), 't': n['t'], 'x': n['x'], 'b': n['b']}
-    for k in ('g', 'yt'):
+    for k in ('g', 'yt', 'vm'):
         if n.get(k):
             post[k] = n[k]
     if n.get('src'):
