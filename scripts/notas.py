@@ -526,12 +526,58 @@ def commit(msg):
         import time; time.sleep(4)
 
 
+IGSTAT = 'drafts/.ig_status.json'
+
+
+def ig_check():
+    """Confirma por Telegram que Instagram está conectado y avisa antes de que venza el token (60 días)."""
+    import hashlib
+    tok = os.environ.get('IG_TOKEN')
+    if not tok:
+        return False
+    api = os.environ.get('IG_API', 'https://graph.instagram.com/v21.0')
+    h = hashlib.sha256(tok.encode()).hexdigest()[:10]
+    st = load(IGSTAT) if os.path.exists(IGSTAT) else {}
+    try:
+        r = requests.get(f'{api}/me', params={'fields': 'username', 'access_token': tok}, timeout=30).json()
+    except Exception as e:
+        print('IG check:', e, file=sys.stderr)
+        return False
+    if 'username' not in r:
+        if st.get('bad') != h:
+            tg('sendMessage', chat_id=CHAT, text='⚠️ Instagram no aceptó el token guardado en GitHub '
+               f'({(r.get("error") or {}).get("message", "sin detalle")}). Genera uno nuevo en Meta y actualiza IG_TOKEN.')
+            st['bad'] = h
+            save(IGSTAT, st)
+            return True
+        return False
+    if st.get('tok') != h:
+        st = {'tok': h, 'user': r['username'], 'since': time.time()}
+        tg('sendMessage', chat_id=CHAT, text=f'📸 Instagram conectado: @{r["username"]}.\n\n'
+           'Desde ahora, cuando elijas publicar también en Instagram, el carrusel sale solo. '
+           'El permiso dura 60 días; te aviso aquí unos días antes para renovarlo.')
+    elif time.time() - st.get('since', time.time()) > 50 * 86400 and not st.get('warned'):
+        st['warned'] = True
+        tg('sendMessage', chat_id=CHAT, text='⏰ El permiso de Instagram vence en unos 10 días. '
+           'Entra a developers.facebook.com → LGI Newsbrand → Generar identificador (con sesión solo en @lgi.newsbrand) '
+           'y actualiza IG_TOKEN en GitHub.')
+    else:
+        return False
+    save(IGSTAT, st)
+    return True
+
+
 def listen(hours=5.6):
     """Escucha Telegram sin parar (hasta ~6 h) y luego se vuelve a lanzar solo."""
     import time
     global changed
     sh('git', 'config', 'user.name', 'La Guayaba Ilustrada')
     sh('git', 'config', 'user.email', 'laguayabailustrada@gmail.com')
+    try:
+        if ig_check():
+            commit('Notas: estado de Instagram')
+    except Exception as e:
+        print('IG check:', e, file=sys.stderr)
     os.environ['LONGPOLL'], os.environ['ROUNDS'] = '25', '1'
     code = sh('git', 'rev-parse', 'HEAD:scripts').stdout.strip()
     t0 = time.time()
