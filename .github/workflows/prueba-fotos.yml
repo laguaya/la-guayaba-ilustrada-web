@@ -13,24 +13,20 @@ jobs:
       - run: |
           mkdir -p prueba
           python - <<'PY' > prueba/resultado.txt 2>&1
-          import json, sys, os, shutil
+          import requests, sys
           sys.path.insert(0, 'scripts')
           import fuentes
-          from PIL import Image
-          posts = [json.loads(l.strip().rstrip(',')) for l in open('posts.js', encoding='utf-8') if l.strip().startswith('{"id"')][:8]
-          thumbs = []
-          for p in posts:
-              print('==', p['id'], p.get('src'))
-              print('   urls:', fuentes.urls_de_pagina(p.get('src', ''))[:10])
-              r = fuentes.candidatas(p, '/tmp/c')
-              for f in r:
-                  print('   ', f, Image.open(f).size); thumbs.append(f)
-          if thumbs:
-              W = 6; s = 300
-              c = Image.new('RGB', (W * s, ((len(thumbs) + W - 1) // W) * s), 'white')
-              for i, f in enumerate(thumbs):
-                  im = Image.open(f); im.thumbnail((s - 6, s - 6)); c.paste(im, ((i % W) * s, (i // W) * s))
-              c.save('prueba/hoja.jpg', quality=80)
+          for u in ['https://www.merca20.com/starbucks-mexico-lanza-su-primera-colaboracion-con-owala-y-asi-renueva-su-estrategia-de-merchandising/',
+                    'https://www.merca20.com/wp-json/wp/v2/posts?slug=starbucks-mexico-lanza-su-primera-colaboracion-con-owala-y-asi-renueva-su-estrategia-de-merchandising&_embed=wp:featuredmedia',
+                    'https://wersm.com/uno-turns-its-iconic-card-game-into-a-limited-edition-sneaker-drop/',
+                    'https://wersm.com/wp-json/wp/v2/posts?slug=uno-turns-its-iconic-card-game-into-a-limited-edition-sneaker-drop&_embed=wp:featuredmedia']:
+              try:
+                  r = requests.get(u, headers=fuentes.UA, timeout=25)
+                  print('==', r.status_code, len(r.text), u[:90]); print(r.text[:400].replace('\n', ' ')); 
+                  import re
+                  print('og', re.findall(r'og:image[^>]{0,200}', r.text)[:2]); print('src_url', re.findall(r'"source_url":"([^"]+)"', r.text)[:2])
+              except Exception as e:
+                  print('ERR', u, e)
           PY
           git config user.name bot; git config user.email bot@x
           git checkout -b prueba-fotos
