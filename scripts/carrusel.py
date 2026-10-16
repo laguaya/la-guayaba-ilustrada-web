@@ -23,6 +23,37 @@ W, H = 1080, 1350
 PINK, INK, WHITE, WASH = '#FF3674', '#0B0B0B', '#FFFFFF', '#FFF2F6'
 M = 64
 TOTAL = 4
+# Animación (la usa carrusel_video.py). None = imagen fija.
+# A = {'t': segundos, 'i': contador de palabras, 'step': s entre palabras, 'start': s, 'dur': s, 'kb': zoom}
+A = None
+
+
+def _p(k, extra=0.0):
+    """Progreso 0..1 de la palabra k (1 si no hay animación)."""
+    if A is None:
+        return 1.0
+    x = (A['t'] - A['start'] - k * A['step'] - extra) / A['dur']
+    return max(0.0, min(1.0, x))
+
+
+def _eo(x): return 1 - (1 - x) ** 3
+
+
+def _kb(im, size, centering):
+    """Foto ajustada al tamaño, con zoom lento (Ken Burns) si hay animación."""
+    z = 1.0 if A is None else 1.0 + A.get('kb', 0.0) * min(1.0, A['t'] / A.get('total', 6.0))
+    w, h = size
+    big = ImageOps.fit(im, (int(w * z), int(h * z)), Image.LANCZOS, centering=centering)
+    if z == 1.0:
+        return big
+    x, y = (big.width - w) // 2, int((big.height - h) * centering[1])
+    return big.crop((x, y, x + w, y + h))
+
+
+def _line(d, x0, y0, x1, y1, fill, width):
+    k = 1.0 if A is None else _eo(max(0.0, min(1.0, (A['t'] - 0.1) / 0.7)))
+    if k > 0:
+        d.line((x0, y0, x0 + (x1 - x0) * k, y1), fill=fill, width=width)
 
 
 # ---------- texto enriquecido ----------
@@ -93,18 +124,29 @@ def render(d, x, y, lines, fonts, lh, color, hl_bg=PINK, hl_fg=INK, pk=PINK, ali
                 while j < len(ln) and ln[j][1] == 'hl':
                     run += ln[j][2] + (ln[j][3] if j > i else 0); j += 1
                 cx += g
-                d.rectangle((cx - pad, y + size * 0.06, cx + run + pad, y + size * 1.06), fill=hl_bg)
+                k0 = A['i'] if A is not None else 0
+                pr = _eo(_p(k0))
+                if pr > 0:
+                    d.rectangle((cx - pad, y + size * 0.06, cx - pad + (run + 2 * pad) * pr, y + size * 1.06), fill=hl_bg)
                 for k in range(i, j):
                     if k > i:
                         cx += ln[k][3]
-                    dt(d, (cx, y), ln[k][0], fonts['hl'], hl_fg, track); cx += ln[k][2]
+                    q = _p(A['i']) if A is not None else 1.0
+                    if A is not None: A['i'] += 1
+                    if q > 0:
+                        dt(d, (cx, y + (1 - _eo(q)) * size * 0.3), ln[k][0], fonts['hl'], hl_fg, track)
+                    cx += ln[k][2]
                 i = j
                 continue
             cx += g
-            if s == 'it':
-                dt(d, (cx, y), w, fonts['it'], it_color or color, track)
-            else:
-                dt(d, (cx, y), w, fonts[s], pk if s == 'pk' else color, track)
+            q = _p(A['i']) if A is not None else 1.0
+            if A is not None: A['i'] += 1
+            if q > 0:
+                yy = y + (1 - _eo(q)) * size * 0.3
+                if s == 'it':
+                    dt(d, (cx, yy), w, fonts['it'], it_color or color, track)
+                else:
+                    dt(d, (cx, yy), w, fonts[s], pk if s == 'pk' else color, track)
             cx += ww; i += 1
         y += lh
     return y
@@ -134,11 +176,11 @@ def header(d, color, n, dark_counter=True):
     f = font('lg-bold.woff2', 22)
     d.text((M, M + 17), 'LA GUAYABA ILUSTRADA', font=f, fill=color, anchor='lm')
     counter(d, n, dark_counter)
-    d.line((M, M + 64, W - M, M + 64), fill=color, width=2)
+    _line(d, M, M + 64, W - M, M + 64, color, 2)
 
 
 def slide1(data, out):
-    can = ImageOps.fit(Image.open(data['img']).convert('RGB'), (W, H), Image.LANCZOS, centering=(0.5, 0.35))
+    can = _kb(_abrir(data['img']), (W, H), (0.5, 0.35))
     g = Image.new('L', (1, H))
     for y in range(H):
         t = max(0.0, (y - H * 0.28) / (H * 0.45))
@@ -168,12 +210,31 @@ def slide1(data, out):
     can.save(out, 'JPEG', quality=92, optimize=True)
 
 
+_CACHE = {}
+
+
+def _abrir(ruta):
+    if ruta not in _CACHE:
+        _CACHE[ruta] = Image.open(ruta).convert('RGB')
+    return _CACHE[ruta]
+
+
+def _fondo(arriba):
+    """Fondo rosa claro con luz arriba o abajo (se calcula una sola vez)."""
+    key = ('fondo', arriba)
+    if key not in _CACHE:
+        can = Image.new('RGB', (W, H), WASH)
+        glow = Image.new('L', (W, H), 0)
+        box = (-200, -520, W + 200, 520) if arriba else (-200, H - 520, W + 200, H + 520)
+        ImageDraw.Draw(glow).ellipse(box, fill=150)
+        glow = glow.filter(ImageFilter.GaussianBlur(160))
+        can.paste(Image.new('RGB', (W, H), '#FFC2D4'), (0, 0), glow)
+        _CACHE[key] = can
+    return _CACHE[key].copy()
+
+
 def slide2(data, out):
-    can = Image.new('RGB', (W, H), WASH)
-    glow = Image.new('L', (W, H), 0)
-    ImageDraw.Draw(glow).ellipse((-200, -520, W + 200, 520), fill=150)
-    glow = glow.filter(ImageFilter.GaussianBlur(160))
-    can.paste(Image.new('RGB', (W, H), '#FFC2D4'), (0, 0), glow)
+    can = _fondo(True)
     d = ImageDraw.Draw(can)
     header(d, INK, 2, dark_counter=True)
 
@@ -192,7 +253,7 @@ def slide2(data, out):
     foot_h = 64
     ph_top = int(y + 40)
     ph_bottom = H - M - foot_h
-    ph = ImageOps.fit(Image.open(data.get('img2') or data['img']).convert('RGB'), (W - 2 * M, ph_bottom - ph_top), Image.LANCZOS, centering=(0.5, 0.45))
+    ph = _kb(_abrir(data.get('img2') or data['img']), (W - 2 * M, ph_bottom - ph_top), (0.5, 0.45))
     can.paste(ph, (M, ph_top))
     ft = font('lg-black.woff2', 30)
     label = data.get('marca', '')
@@ -217,11 +278,7 @@ def info_de(data):
 
 def slide_info(data, out, n):
     """Lámina de pura información en párrafos, con el mismo diseño de la lámina 2."""
-    can = Image.new('RGB', (W, H), WASH)
-    glow = Image.new('L', (W, H), 0)
-    ImageDraw.Draw(glow).ellipse((-200, H - 520, W + 200, H + 520), fill=150)
-    glow = glow.filter(ImageFilter.GaussianBlur(160))
-    can.paste(Image.new('RGB', (W, H), '#FFC2D4'), (0, 0), glow)
+    can = _fondo(False)
     d = ImageDraw.Draw(can)
     header(d, INK, n, dark_counter=True)
     maxw = W - 2 * M
@@ -265,8 +322,11 @@ def slide3(data, out, n=3):
     y = render(d, M, y, rl, fb, 56, INK)
     # botón
     by = y + 70
-    d.rounded_rectangle((M, by, M + 520, by + 110), radius=55, fill=INK)
-    d.text((M + 260, by + 57), 'LINK EN BIO  →', font=font('lg-black.woff2', 40), fill=PINK, anchor='mm')
+    bk = 1.0 if A is None else _eo(_p(A['i'], 0.15))
+    if bk > 0:
+        d.rounded_rectangle((M, by, M + max(110, 520 * bk), by + 110), radius=55, fill=INK)
+    if bk > 0.85:
+        d.text((M + 260, by + 57), 'LINK EN BIO  →', font=font('lg-black.woff2', 40), fill=PINK, anchor='mm')
     # firma
     dt(d, (M, H - M - 70 - 42), 'LG.I', font('lg-bold.woff2', 84), INK, -0.05)
     d.text((M + 196, H - M - 88), 'La Guayaba', font=font('lg-regular.woff2', 30), fill=INK, anchor='lm')
