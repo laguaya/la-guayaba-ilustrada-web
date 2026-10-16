@@ -230,6 +230,73 @@ def palabras(im):
     return n
 
 
+def mp4s_de_pagina(src):
+    """Videos MP4 directos que trae la nota (por ejemplo Ads of the World los sirve así)."""
+    if not src or REDES.search(src):
+        return []
+    html = pagina(src)
+    out = []
+    for u in re.findall(r'https?://[^"\'\s<>()]+?\.mp4(?:\?[^"\'\s<>()]*)?', html):
+        u = u.replace('&amp;', '&')
+        if u not in out:
+            out.append(u)
+    return out[:2]
+
+
+def fotogramas(url, cuantos=14):
+    """Saca cuadros nítidos y sin letras del video de la campaña. Regresa imágenes PIL, la mejor primero."""
+    import shutil, subprocess, tempfile
+    if not shutil.which('ffmpeg'):
+        return []
+    try:
+        import numpy as np
+    except Exception:
+        np = None
+    with tempfile.TemporaryDirectory() as tmp:
+        vid = f'{tmp}/v.mp4'
+        try:
+            r = requests.get(url, headers=UA, timeout=90, stream=True)
+            if r.status_code != 200:
+                return []
+            tam = 0
+            with open(vid, 'wb') as f:
+                for ch in r.iter_content(1 << 16):
+                    tam += len(ch)
+                    if tam > 150 * 1024 * 1024:
+                        break
+                    f.write(ch)
+            dur = float(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', vid],
+                                       capture_output=True, text=True, timeout=60).stdout.strip() or 0)
+        except Exception as e:
+            print('Video:', e, file=sys.stderr)
+            return []
+        if dur <= 1:
+            return []
+        res = []
+        for k in range(cuantos):
+            t = dur * (0.06 + 0.88 * k / max(1, cuantos - 1))
+            out = f'{tmp}/f{k}.png'
+            subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{t:.2f}', '-i', vid, '-frames:v', '1', out],
+                           capture_output=True, timeout=60)
+            if not os.path.exists(out):
+                continue
+            im = _sin_franjas(Image.open(out).convert('RGB'))
+            g = im.convert('L').resize((320, int(320 * im.height / im.width)))
+            if np is not None:
+                a = np.asarray(g, dtype=np.float32)
+                nitidez = float(np.abs(np.diff(a, axis=0)).mean() + np.abs(np.diff(a, axis=1)).mean())
+                brillo = float(a.mean())
+            else:
+                nitidez, brillo = 10.0, 128.0
+            if brillo < 28 or brillo > 235 or es_captura_o_grafico(im):
+                continue                                   # negros, blancos, placas de logo
+            if palabras(im) >= 2:
+                continue                                   # cuadros con letras (supers, cierres)
+            res.append((nitidez, im))
+        res.sort(key=lambda x: -x[0])
+        return [im for _, im in res]
+
+
 def candidatas(n, carpeta='assets/work', maximo=4, solo_video=False, registro=None):
     """registro: {huella_hex: id_de_nota} de fotos ya usadas en otras notas (anuncios que se repiten)."""
     nid = n['id']
@@ -239,13 +306,12 @@ def candidatas(n, carpeta='assets/work', maximo=4, solo_video=False, registro=No
     pag = [] if solo_video else urls_de_pagina(n.get('src', ''))
     excluir = set() if solo_video else urls_de_portada(n.get('src', ''))
     lista = vids + [u for u in pag if u.split('?')[0] not in excluir]
+    lista = [u for u in lista if not CAPTURA.search(u)] + [u for u in lista if CAPTURA.search(u)]   # "Screenshot..." al final
     og = pag[0] if pag else None
     rutas, huellas, respaldo, segunda = [], [], None, []
     for u in lista:
         if len(rutas) >= maximo:
             break
-        if CAPTURA.search(u):
-            continue
         try:
             r = requests.get(u, headers=UA, timeout=25)
             if r.status_code != 200 or len(r.content) < 15000:
@@ -281,6 +347,21 @@ def candidatas(n, carpeta='assets/work', maximo=4, solo_video=False, registro=No
                 continue
             rutas.append(_guardar(im, f'{carpeta}/nota-{nid}-foto-src{len(rutas) + 1}{"v" if solo_video else ""}.webp'))
             huellas.append(hu); registro[format(hu, 'x')] = nid
+    if len(rutas) < 2 and not solo_video:              # pocas fotos: saca cuadros del video de la campaña
+        for mp4 in mp4s_de_pagina(n.get('src', '')):
+            for im in fotogramas(mp4):
+                if len(rutas) >= maximo:
+                    break
+                w, h = im.size
+                if w < 1200 or h < 480:
+                    continue
+                hu = _huella(im)
+                if any(_parecidas(hu, x) for x in huellas):
+                    continue
+                rutas.append(_guardar(im, f'{carpeta}/nota-{nid}-foto-src{len(rutas) + 1}.webp'))
+                huellas.append(hu); registro[format(hu, 'x')] = nid
+            if len(rutas) >= 2:
+                break
     for im, hu in segunda:                            # solo si faltan fotos limpias
         if rutas:                                     # mejor repetir una foto limpia que usar una con letras
             break

@@ -9,30 +9,17 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: '3.12'}
-      - run: (sudo apt-get update -qq && sudo apt-get install -y -qq tesseract-ocr) >/dev/null 2>&1 || true
+      - run: (sudo apt-get update -qq && sudo apt-get install -y -qq tesseract-ocr ffmpeg) >/dev/null 2>&1 || true
       - run: pip install -q requests pillow "opencv-contrib-python-headless<5"
       - run: |
           mkdir -p out
           python3 - <<'PY' > out/reporte.txt 2>&1
-          import sys, re, json, requests, io
+          import sys, json
           sys.path.insert(0, 'scripts')
           import fuentes as F
-          from PIL import Image
           src = 'https://www.adsoftheworld.com/campaigns/twin-snakes'
-          html = F.pagina(src)
-          print('HTML len', len(html))
-          open('out/pagina.html', 'w').write(html)
-          print('URLS de pagina:')
-          for u in F.urls_de_pagina(src): print(' ', u)
-          print('Todas las imgs/urls de imagen en html:')
-          for u in sorted(set(re.findall(r'https?://[^"\'\s)]+\.(?:jpe?g|png|webp|avif)[^"\'\s)]*', html)))[:80]: print(' ', u)
-          print('video:', F.video_de_pagina(src))
-          for u in F.urls_de_pagina(src):
-              try:
-                  r = requests.get(u, headers=F.UA, timeout=25); im = Image.open(io.BytesIO(r.content)); print(u, r.status_code, len(r.content), im.size)
-              except Exception as e: print(u, 'ERR', e)
-          n = {'id': 'prueba-haribo', 'src': src}
-          print('candidatas:', F.candidatas(n, 'out', registro={}))
+          print('mp4:', F.mp4s_de_pagina(src))
+          print('candidatas:', F.candidatas({'id': 'prueba-haribo', 'src': src}, 'out', registro={}))
           PY
       - run: |
           git config user.name bot; git config user.email bot@x
