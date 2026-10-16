@@ -438,8 +438,22 @@ def build_carousel(n):
     now = datetime.now(timezone(timedelta(hours=-6)))
     meses = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE']
     data.setdefault('fecha', f'{now.day} {meses[now.month - 1]} {now.year}')
+    if not data.get('puntos'):
+        data['puntos'] = puntos_auto(n)
     carrusel.make(data, out)
-    return [f'{out}/{i}.jpg' for i in (1, 2, 3)]
+    return [f'{out}/{i}.jpg' for i in (1, 2, 3, 4) if os.path.exists(f'{out}/{i}.jpg')]
+
+
+def puntos_auto(n):
+    """Si el redactor no mandó 'puntos', saca 3 datos de los párrafos de la nota (primera frase de cada uno)."""
+    out = []
+    for p in n.get('b', [])[:-1]:
+        f = re.split(r'(?<=[.!?])\s+', p.strip())[0]
+        if 40 <= len(f) <= 170:
+            out.append(f)
+        if len(out) == 3:
+            break
+    return out
 
 
 def build_reel(n):
@@ -915,10 +929,10 @@ def instagram():
                 else:
                     tg('sendMessage', chat_id=CHAT, text=f'⚠️ No pude publicar el Reel en Instagram ({str(e)[:300]}).', reply_to_message_id=item.get('reply'))
             continue
-        urls = [f'{site}/assets/ig/{item["id"]}/{i}.jpg' for i in (1, 2, 3)]
+        nums = [i for i in (1, 2, 3, 4) if os.path.exists(f'assets/ig/{item["id"]}/{i}.jpg')]
+        urls = [f'{site}/assets/ig/{item["id"]}/{i}.jpg' for i in nums]
         import hashlib
-        local = [hashlib.md5(open(f'assets/ig/{item["id"]}/{i}.jpg', 'rb').read()).hexdigest()
-                 if os.path.exists(f'assets/ig/{item["id"]}/{i}.jpg') else None for i in (1, 2, 3)]
+        local = [hashlib.md5(open(f'assets/ig/{item["id"]}/{i}.jpg', 'rb').read()).hexdigest() for i in nums]
         for _ in range(40):  # espera a que la web publique las láminas nuevas (no las de antes)
             try:
                 live = [hashlib.md5(requests.get(u + f'?t={time.time():.0f}', timeout=30).content).hexdigest() for u in urls]

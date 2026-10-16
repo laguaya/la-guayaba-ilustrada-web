@@ -22,7 +22,7 @@ from portada import font
 W, H = 1080, 1350
 PINK, INK, WHITE, WASH = '#FF3674', '#0B0B0B', '#FFFFFF', '#FFF2F6'
 M = 64
-TOTAL = 3
+TOTAL = 4
 
 
 # ---------- texto enriquecido ----------
@@ -207,10 +207,55 @@ def slide2(data, out):
     can.save(out, 'JPEG', quality=92, optimize=True)
 
 
-def slide3(data, out):
+def puntos_de(data):
+    p = [x for x in (data.get('puntos') or []) if x and x.strip()]
+    return p[:4]
+
+
+def slide_info(data, out, n):
+    """Lámina de pura información: los datos clave numerados, con el mismo diseño de la lámina 2."""
+    can = Image.new('RGB', (W, H), WASH)
+    glow = Image.new('L', (W, H), 0)
+    ImageDraw.Draw(glow).ellipse((-200, H - 520, W + 200, H + 520), fill=150)
+    glow = glow.filter(ImageFilter.GaussianBlur(160))
+    can.paste(Image.new('RGB', (W, H), '#FFC2D4'), (0, 0), glow)
+    d = ImageDraw.Draw(can)
+    header(d, INK, n, dark_counter=True)
+    maxw = W - 2 * M
+    TR = -0.035
+    fonts, ls, size = fitted(d, data.get('info_titulo') or 'Lo que tienes que _saber_', maxw, 2, 'lg-black.woff2', 84, 56, track=TR)
+    y = M + 108
+    y = render(d, M, y, ls, fonts, size * 1.0, INK, it_color=PINK, track=TR) + 30
+    pts = puntos_de(data)
+    fnum = font('lg-black.woff2', 72)
+    numw = 128
+    # tamaño de letra que quepa en el espacio disponible
+    disponible = H - M - 70 - y
+    for fs in range(50, 28, -2):
+        fr = {'n': font('lg-regular.woff2', fs), 'pk': font('lg-bold.woff2', fs),
+              'hl': font('lg-regular.woff2', fs), 'it': font('lg-italic.woff2', fs)}
+        bloques = [layout(d, t, fr, maxw - numw)[:5] for t in pts]
+        alto = sum(max(len(b), 1) * fs * 1.32 + 64 for b in bloques)
+        if alto <= disponible:
+            break
+    gap = max(0, (disponible - alto) / max(1, len(pts)))
+    for i, (t, b) in enumerate(zip(pts, bloques)):
+        d.line((M, y, W - M, y), fill=INK, width=2)
+        y += 30
+        d.text((M, y - 6), f'{i + 1:02d}', font=fnum, fill=PINK)
+        render(d, M + numw, y, b, fr, fs * 1.32, INK, pk=PINK)
+        y += max(len(b), 1) * fs * 1.32 + 34 + min(gap, 120)
+    d.line((M, H - M - 30, W - M, H - M - 30), fill=INK, width=2)
+    fm = font('lg-medium.woff2', 22)
+    d.text((M, H - M), 'la guayaba ilustrada', font=fm, fill=INK, anchor='ls')
+    d.text((W - M, H - M), 'noticias de marketing, diseño y branding', font=fm, fill=INK, anchor='rs')
+    can.save(out, 'JPEG', quality=92, optimize=True)
+
+
+def slide3(data, out, n=3):
     can = Image.new('RGB', (W, H), PINK)
     d = ImageDraw.Draw(can)
-    header(d, INK, 3, dark_counter=True)
+    header(d, INK, n, dark_counter=True)
     maxw = W - 2 * M
     TR = -0.035
     fonts, ls, size = fitted(d, '¿Quieres saber _más_ de esta nota?', maxw, 3, 'lg-black.woff2', 124, 70, track=TR)
@@ -236,10 +281,18 @@ def slide3(data, out):
 
 
 def make(data, outdir):
+    global TOTAL
     os.makedirs(outdir, exist_ok=True)
+    con_info = len(puntos_de(data)) >= 2
+    TOTAL = 4 if con_info else 3
+    for f in ('3.jpg', '4.jpg'):
+        if os.path.exists(os.path.join(outdir, f)):
+            os.remove(os.path.join(outdir, f))
     slide1(data, os.path.join(outdir, '1.jpg'))
     slide2(data, os.path.join(outdir, '2.jpg'))
-    slide3(data, os.path.join(outdir, '3.jpg'))
+    if con_info:
+        slide_info(data, os.path.join(outdir, '3.jpg'), 3)
+    slide3(data, os.path.join(outdir, f'{TOTAL}.jpg'), TOTAL)
     print(outdir)
 
 
