@@ -1,0 +1,24 @@
+name: Prueba fotos de la fuente
+on: workflow_dispatch
+jobs:
+  t:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: pip install -q requests pillow
+      - run: |
+          python - <<'PY'
+          import json, sys, os
+          sys.path.insert(0, 'scripts')
+          import fuentes
+          from PIL import Image
+          posts = [json.loads(l.strip().rstrip(',')) for l in open('posts.js', encoding='utf-8') if l.strip().startswith('{"id"')][:8]
+          for p in posts:
+              print('==', p['id'], p.get('src'))
+              print('   urls:', len(fuentes.urls_de_pagina(p.get('src', ''))))
+              r = fuentes.candidatas(p, '/tmp/c')
+              for f in r:
+                  print('   ', f, Image.open(f).size)
+          PY
