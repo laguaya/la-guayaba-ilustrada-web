@@ -329,6 +329,19 @@ def handle_message(u, msg):
         nid = last_note()   # en iPhone a veces no se puede responder: se usa la última nota
     if nid:
         set_last(nid)
+    if not is_photo and re.fullmatch(r'\s*sin\s+video\s*[.!]*\s*', text, re.I):
+        nid = nid or last_note()
+        n, put = note_get(nid) if nid else (None, None)
+        if not n:
+            reply(mid, 'No encuentro la nota. Respóndele "sin video" a la nota.'); return
+        for k in ('yt', 'vm', 'vt', 'th', 'auto_video'):
+            n.pop(k, None)
+        n['sin_video'] = True
+        if n.get('ig1') and os.path.exists(f'drafts/{nid}.json') and '-foto-src' in n['ig1'] and n['ig1'].endswith('v.webp'):
+            n.pop('ig1', None)
+        put(n)
+        reply(mid, '👌 Quité el video. La nota usa la foto de portada.')
+        return
     if not is_photo and re.fullmatch(r'\s*(busca\s+)?fotos?\s*[.!?]*\s*', text, re.I):
         nid = nid or last_note()
         path = f'drafts/{nid}.json' if nid else ''
@@ -497,6 +510,15 @@ def poner_candidatas(n, solo_video=False):
     """Busca fotos reales (fuente y/o video) y deja puestas la 1 y la 2 por defecto."""
     sys.path.insert(0, 'scripts')
     import fuentes
+    if not solo_video and not es_video(n) and not n.get('sin_video'):
+        try:
+            v = fuentes.video_de_pagina(n.get('src', ''))
+        except Exception as e:
+            v = None; print('Video de la fuente:', e, file=sys.stderr)
+        if v:
+            n['yt' if v[0] == 'yt' else 'vm'] = v[1]; n['auto_video'] = True
+            if v[0] == 'vm':
+                n['vt'] = vimeo_thumb(v[1]) or ''
     try:
         nuevas = fuentes.candidatas(n, solo_video=solo_video)
     except Exception as e:
@@ -542,7 +564,9 @@ def send_selector(n):
         fh[f'c{i}'] = open(f, 'rb')
         it = {'type': 'photo', 'media': f'attach://c{i}'}
         if i == 0:
-            it['caption'] = (f'🖼 Fotos reales de la nota (1 a {len(c)}).\n'
+            it['caption'] = (('🎬 Encontré el video en la nota original y ya quedó como portada en la web '
+                              '(si no lo quieres, responde "sin video").\n\n' if n.get('auto_video') else '')
+                             + f'🖼 Fotos reales de la nota (1 a {len(c)}).\n'
                              + ('Puse la 1 en la portada del carrusel' if es_video(n) else 'Puse la 1 de portada')
                              + (' y la 2 en la segunda lámina.' if len(c) > 1 else '.'))
         media.append(it)
@@ -599,6 +623,8 @@ def send_pending():
             poner_candidatas(n)
             save(path, n)
         cap = f'<b>Nota nueva para revisar</b> · {esc(n["k"])}\n\n<b>{esc(n["t"])}</b>\n<i>{esc(n["x"])}</i>'
+        if n.get('auto_video'):
+            cap += '\n\n🎬 Lleva el video de la nota original en la web. Si no lo quieres, responde "sin video".'
         img = n.get('img', '')
         if img and os.path.exists(img):
             with open(img, 'rb') as f:
@@ -612,12 +638,13 @@ def send_pending():
             body += f'\n\nFuente: {esc(n["src"])}'
         kb = [[{'text': '✅ Publicar en la web', 'callback_data': 'pub:' + n['id']}]]
         if n.get('ig'):
-            send_selector(n)
             if send_carousel(n):
-                kb.append([{'text': '📲 Web + Carrusel', 'callback_data': 'pig:' + n['id']}])
-                if send_reel(n):
+                kb.append([{'text': '📲 Web + Instagram', 'callback_data': 'pig:' + n['id']}])
+                if os.environ.get('REELS') == '1' and send_reel(n):   # Reels: listos para más adelante
                     kb.append([{'text': '🎬 Web + Reel', 'callback_data': 'prl:' + n['id']}])
                     kb.append([{'text': '🔥 Web + Carrusel + Reel', 'callback_data': 'pall:' + n['id']}])
+            if len(n.get('cands', [])) > 1:
+                kb.append([{'text': '🔄 Otras fotos', 'callback_data': 'alt:' + n['id']}])
         kb.append([{'text': '🗑 Descartar', 'callback_data': 'del:' + n['id']}])
         r = tg('sendMessage', chat_id=CHAT, text=body[:3900], parse_mode='HTML',
                disable_web_page_preview='true', reply_markup={'inline_keyboard': kb})
@@ -734,6 +761,10 @@ def poll():
             tg('answerCallbackQuery', callback_query_id=cq['id'], text='Esa nota ya se había procesado.')
             continue
         n = load(path)
+        if accion == 'alt':
+            tg('answerCallbackQuery', callback_query_id=cq['id'], text='Te mando las fotos que encontré.')
+            send_selector(n)
+            continue
         if accion in ('pub', 'pig', 'prl', 'pall'):
             publish(n)
             set_last(nid)
@@ -992,6 +1023,12 @@ def listen(hours=5.6):
             pass
         while thumb_backfill():
             pass
+        migrar = [f for f in sorted(glob.glob('drafts/*.json')) if 'cands' not in load(f)]
+        if migrar:
+            tg('sendMessage', chat_id=CHAT, text=f'🔄 Actualicé tus {len(migrar)} notas pendientes: ahora traen las fotos reales '
+               'de la nota original (y el video, si la fuente lo tiene). Te las vuelvo a mandar para que solo las apruebes.')
+            for f in migrar:
+                n = load(f); poner_candidatas(n); n.pop('tg', None); save(f, n)
         commit('Notas: miniaturas de Vimeo')
         if ig_check():
             commit('Notas: estado de Instagram')
