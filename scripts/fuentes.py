@@ -10,7 +10,7 @@ from PIL import Image
 
 UA = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) '
                     'Chrome/126.0 Safari/537.36', 'Accept-Language': 'es-MX,es;q=0.9,en;q=0.8'}
-MALAS = re.compile(r'logo|icon|avatar|sprite|favicon|banner|ads?[_/-]|publicidad|placeholder|blank|pixel|emoji|gravatar|'
+MALAS = re.compile(r'logo|icon|avatar|sprite|favicon|banner|(?<![a-z])ads?[_/-]|publicidad|placeholder|blank|pixel|emoji|gravatar|'
                    r'author|autor|newsletter|badge|button|share|social', re.I)
 REDES = re.compile(r'(instagram\.com|facebook\.com|fb\.watch|tiktok\.com|x\.com/|twitter\.com)', re.I)
 
@@ -54,6 +54,11 @@ def urls_de_pagina(src):
     m = re.search(r'<article[\s\S]+?</article>', html, re.I)
     if m and len(m.group(0)) > 2000:
         body = m.group(0)
+    # corta antes de "relacionadas", "lo más leído", etc. para no traer fotos de otras notas
+    cut = re.search(r'relacionad|related|te puede interesar|te recomendamos|más noticias|lo más leído|most read|'
+                    r'you may also like|read more|lee también|newsletter', body, re.I)
+    if cut and cut.start() > 1500:
+        body = body[:cut.start()]
     for tag in re.findall(r'<(?:img|source)\b[^>]*>', body, re.I):
         u = None
         for a in ('data-srcset', 'srcset'):
