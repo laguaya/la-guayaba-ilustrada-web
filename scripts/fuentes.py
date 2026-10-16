@@ -282,7 +282,7 @@ def candidatas(n, carpeta='assets/work', maximo=4, solo_video=False, registro=No
             rutas.append(_guardar(im, f'{carpeta}/nota-{nid}-foto-src{len(rutas) + 1}{"v" if solo_video else ""}.webp'))
             huellas.append(hu); registro[format(hu, 'x')] = nid
     for im, hu in segunda:                            # solo si faltan fotos limpias
-        if len(rutas) >= 2 or len(rutas) >= maximo:
+        if rutas:                                     # mejor repetir una foto limpia que usar una con letras
             break
         rutas.append(_guardar(im, f'{carpeta}/nota-{nid}-foto-src{len(rutas) + 1}{"v" if solo_video else ""}.webp'))
         huellas.append(hu); registro[format(hu, 'x')] = nid

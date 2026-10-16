@@ -88,7 +88,7 @@ def recorte(im, size, f=None, zoom=1.0, destino=(0.5, 0.5)):
     f = f or (0.5, 0.5)
     s = max(W / im.width, H / im.height) * zoom
     sw, sh = im.width * s, im.height * s
-    x = min(max(f[0] * sw - destino[0] * W, 0), sw - W)
-    y = min(max(f[1] * sh - destino[1] * H, 0), sh - H)
-    box = (x / s, y / s, (x + W) / s, (y + H) / s)
+    x = max(0.0, min(f[0] * sw - destino[0] * W, sw - W))
+    y = max(0.0, min(f[1] * sh - destino[1] * H, sh - H))
+    box = (x / s, y / s, min(im.width, (x + W) / s), min(im.height, (y + H) / s))
     return im.resize((W, H), Image.LANCZOS, box=box)

@@ -24,13 +24,11 @@
   "caption": "Mitsubishi sacó a pasear una camioneta con su propia nube de lluvia encima, y la gente la está persiguiendo ☁️\nEs Xforce Roving Cloud, una acción de publicidad en la calle en Malasia para presumir el Wet Mode, su modo de manejo para piso mojado.\nEn vez de explicar el producto, lo pusieron a la vista de todos y lo volvieron contenido para redes sociales con un concurso de fotos.\n¿Esto es marketing brillante o puro show? Te leemos.\nCompártelo con tu equipo de marketing.\nNota completa en el link de la bio.\nSíguenos para las noticias de marcas, diseño y publicidad que sí importan, todos los días.\n#Mitsubishi #publicidad #marketingdigital #marketingexperiencial"
  },
  "cands": [
-  "assets/work/nota-mitsubishi-xforce-nube-lluvia-foto-src1.webp",
-  "assets/work/nota-mitsubishi-xforce-nube-lluvia-foto-src2.webp"
+  "assets/work/nota-mitsubishi-xforce-nube-lluvia-foto-src1.webp"
  ],
  "ig1": "assets/work/nota-mitsubishi-xforce-nube-lluvia-foto-src1.webp",
- "ig2": "assets/work/nota-mitsubishi-xforce-nube-lluvia-foto-src2.webp",
- "animado": false,
+ "ig2": "assets/work/nota-mitsubishi-xforce-nube-lluvia-foto-src1.webp",
+ "animado": true,
  "destacada": true,
- "cands_v": 2,
- "tg": 348
+ "cands_v": 2
 }
