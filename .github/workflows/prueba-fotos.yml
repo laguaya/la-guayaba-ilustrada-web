@@ -14,11 +14,7 @@ jobs:
           mkdir -p prueba
           python - <<'PY' > prueba/resultado.txt 2>&1 || true
           import sys, os, re, requests
-          src = open('scripts/notas.py').read()
-          a = src.index('def video_embebible'); b = src.index('def revisar_videos')
-          class N: pass
-          notas = N(); g = {'os': os, 're': re, 'requests': requests, 'sys': sys}
-          exec(src[a:b], g); notas.video_embebible = g['video_embebible']
+          import prueba_ve as notas
           for k, v in [('vm','1236223840'),('vm','1235335985'),('vm','1235313537'),('vm','1236466924'),('yt','K_QpJs5y9ZI'),('yt','iUr53gDq380'),('yt','xTkrKqbsDec'),('yt','r7p1uQGWBM0'),('yt','szmzlH_AaFU')]:
               print(k, v, notas.video_embebible(k, v))
           r = requests.get('https://player.vimeo.com/video/1235335985', headers={'Referer':'https://guayabailustrada.com.mx/','User-Agent':'Mozilla/5.0'})
