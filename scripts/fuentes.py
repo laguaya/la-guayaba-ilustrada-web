@@ -10,8 +10,7 @@ from PIL import Image
 
 UA = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) '
                     'Chrome/126.0 Safari/537.36', 'Accept-Language': 'es-MX,es;q=0.9,en;q=0.8'}
-MALAS = re.compile(r'logo|icon|avatar|sprite|favicon|banner|(?<![a-z])ads?[_/-]|publicidad|placeholder|blank|pixel|emoji|gravatar|'
-                   r'author|autor|newsletter|badge|button|share|social', re.I)
+MALAS = re.compile(r'logo|icon|avatar|favicon|placeholder|blank\.|pixel|emoji|gravatar|badge|(?<![a-z])ads?[_/-]', re.I)
 REDES = re.compile(r'(instagram\.com|facebook\.com|fb\.watch|tiktok\.com|x\.com/|twitter\.com)', re.I)
 
 
@@ -86,6 +85,17 @@ def urls_de_video(n):
     return out
 
 
+def _sin_franjas(im):
+    """Quita franjas negras o blancas (letterbox) alrededor de la imagen."""
+    from PIL import ImageChops
+    for fondo in ((0, 0, 0), (255, 255, 255)):
+        diff = ImageChops.difference(im, Image.new('RGB', im.size, fondo)).convert('L').point(lambda v: 255 if v > 24 else 0)
+        box = diff.getbbox()
+        if box and (box[2] - box[0]) * (box[3] - box[1]) < im.size[0] * im.size[1] * 0.93:
+            im = im.crop(box)
+    return im
+
+
 def _huella(im):
     g = im.convert('L').resize((9, 8))
     p = list(g.getdata())
@@ -93,7 +103,7 @@ def _huella(im):
 
 
 def _parecidas(a, b):
-    return bin(a ^ b).count('1') <= 8
+    return bin(a ^ b).count('1') <= 12
 
 
 def candidatas(n, carpeta='assets/work', maximo=4, solo_video=False):
@@ -110,7 +120,7 @@ def candidatas(n, carpeta='assets/work', maximo=4, solo_video=False):
                 continue
             im = Image.open(io.BytesIO(r.content))
             im.load()
-            im = im.convert('RGB')
+            im = _sin_franjas(im.convert('RGB'))
         except Exception:
             continue
         w, h = im.size
