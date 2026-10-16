@@ -1,0 +1,26 @@
+name: Prueba video de la fuente
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  t:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: pip install -q requests pillow
+      - run: |
+          mkdir -p prueba
+          python - <<'PY' > prueba/resultado.txt 2>&1
+          import json, sys, glob
+          sys.path.insert(0, 'scripts')
+          import fuentes
+          srcs = [json.load(open(f)).get('src', '') for f in glob.glob('drafts/*.json')]
+          srcs += [json.loads(l.strip().rstrip(',')).get('src', '') for l in open('posts.js', encoding='utf-8') if l.strip().startswith('{"id"')][:10]
+          for s in srcs:
+              print(fuentes.video_de_pagina(s), s)
+          PY
+          git config user.name bot; git config user.email bot@x
+          git checkout -b prueba-fotos
+          git add -f prueba && git commit -qm prueba && git push -f origin prueba-fotos

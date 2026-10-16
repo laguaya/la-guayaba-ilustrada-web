@@ -34,30 +34,63 @@ def _mejor_srcset(ss):
     return best
 
 
+_CACHE = {}
+
+
+def pagina(src):
+    if src not in _CACHE:
+        try:
+            _CACHE[src] = requests.get(src, headers=UA, timeout=25).text
+        except Exception as e:
+            print('Fuente:', e, file=sys.stderr)
+            _CACHE[src] = ''
+    return _CACHE[src]
+
+
+def cuerpo(html):
+    body = html
+    m = re.search(r'<article[\s\S]+?</article>', html, re.I)
+    if m and len(m.group(0)) > 2000:
+        body = m.group(0)
+    cut = re.search(r'relacionad|related|te puede interesar|te recomendamos|más noticias|lo más leído|most read|'
+                    r'you may also like|read more|lee también|newsletter', body, re.I)
+    if cut and cut.start() > 1500:
+        body = body[:cut.start()]
+    return body
+
+
+def video_de_pagina(src):
+    """Busca el video (YouTube o Vimeo) que trae la nota original. Regresa ('yt'|'vm', id) o None."""
+    if not src or REDES.search(src):
+        return None
+    html = pagina(src)
+    if not html:
+        return None
+    for zona in (cuerpo(html), html):
+        m = re.search(r'(?:youtube(?:-nocookie)?\.com/(?:embed/|watch\?v=|shorts/)|youtu\.be/)([A-Za-z0-9_-]{11})', zona)
+        v = re.search(r'(?:player\.vimeo\.com/video/|vimeo\.com/)(\d{6,})', zona)
+        if m and (not v or m.start() < v.start()):
+            return ('yt', m.group(1))
+        if v:
+            return ('vm', v.group(1))
+        if zona is not html and len(zona) < len(html):
+            continue
+    return None
+
+
 def urls_de_pagina(src):
     """Imagen principal (og:image) primero y luego las del cuerpo de la nota."""
     if not src or REDES.search(src):
         return []
-    try:
-        html = requests.get(src, headers=UA, timeout=25).text
-    except Exception as e:
-        print('Fuente:', e, file=sys.stderr)
+    html = pagina(src)
+    if not html:
         return []
     out = []
     for prop in ('og:image', 'og:image:secure_url', 'twitter:image', 'twitter:image:src'):
         for m in re.finditer(r'<meta[^>]+(?:property|name)\s*=\s*["\']' + re.escape(prop) + r'["\'][^>]*>', html, re.I):
             c = _attr(m.group(0), 'content')
             if c: out.append(c)
-    # solo el cuerpo de la nota si se puede ubicar
-    body = html
-    m = re.search(r'<article[\s\S]+?</article>', html, re.I)
-    if m and len(m.group(0)) > 2000:
-        body = m.group(0)
-    # corta antes de "relacionadas", "lo más leído", etc. para no traer fotos de otras notas
-    cut = re.search(r'relacionad|related|te puede interesar|te recomendamos|más noticias|lo más leído|most read|'
-                    r'you may also like|read more|lee también|newsletter', body, re.I)
-    if cut and cut.start() > 1500:
-        body = body[:cut.start()]
+    body = cuerpo(html)
     for tag in re.findall(r'<(?:img|source)\b[^>]*>', body, re.I):
         u = None
         for a in ('data-srcset', 'srcset'):
