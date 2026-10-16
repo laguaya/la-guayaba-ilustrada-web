@@ -48,14 +48,16 @@ def _video(fn, data, n, ruta):
 
 def make(data, outdir, color='naranja'):
     C.tema(color)                              # el animado va en naranja; el fijo se queda en rosa
-    C.make(data, outdir)
-    total = C.TOTAL
-    out = [_video(C.slide1, data, 0, os.path.join(outdir, '1.mp4')),
-           _video(C.slide2, data, 0, os.path.join(outdir, '2.mp4'))]
-    if total == 4:
-        out.append(_video(C.slide_info, data, 3, os.path.join(outdir, '3.mp4')))
-    out.append(_video(C.slide3, data, total, os.path.join(outdir, f'{total}.mp4')))
-    C.tema('rosa')
+    try:
+        C.make(data, outdir)
+        total = C.TOTAL
+        out = [_video(C.slide1, data, 0, os.path.join(outdir, '1.mp4')),
+               _video(C.slide2, data, 0, os.path.join(outdir, '2.mp4'))]
+        if total == 4:
+            out.append(_video(C.slide_info, data, 3, os.path.join(outdir, '3.mp4')))
+        out.append(_video(C.slide3, data, total, os.path.join(outdir, f'{total}.mp4')))
+    finally:
+        C.tema('rosa'); C.A = None
     return out
 
 

@@ -441,7 +441,57 @@ def build_carousel(n):
     if not data.get('info'):
         data['info'] = info_auto(n)
     carrusel.make(data, out)
+    n['_data'] = data
     return [f'{out}/{i}.jpg' for i in (1, 2, 3, 4) if os.path.exists(f'{out}/{i}.jpg')]
+
+
+ANIM = 'drafts/ig/.animado.json'   # {'ultimo': 'AAAA-MM-DD', 'id': nota, 'previo': ...}
+
+
+def build_anim(n):
+    """Carrusel animado (naranja) en assets/ig/<id>/anim/1.mp4 ... ; el fijo rosa queda de respaldo."""
+    sys.path.insert(0, 'scripts')
+    import carrusel_video
+    build_carousel(n)
+    out = f'assets/ig/{n["id"]}/anim'
+    import shutil
+    shutil.rmtree(out, ignore_errors=True)
+    vids = carrusel_video.make(n['_data'], out)
+    for f in glob.glob(f'{out}/*.jpg'):
+        os.remove(f)
+    return vids
+
+
+def toca_animado(n):
+    """Una vez por semana (mínimo) va un carrusel animado. Se elige la nota que más vale la pena:
+    la que el redactor marcó como 'destacada', de lunes a jueves (mejores días de alcance),
+    y si pasan 7 días sin animado, la siguiente nota con foto real."""
+    if 'animado' in n:
+        return bool(n['animado'])
+    if not n.get('ig') or '-foto' not in (n.get('ig1') or n.get('img') or ''):
+        return False
+    st = load(ANIM) if os.path.exists(ANIM) else {}
+    hoy = datetime.now(timezone(timedelta(hours=-6)))
+    try:
+        dias = (hoy.date() - datetime.strptime(st['ultimo'], '%Y-%m-%d').date()).days
+    except Exception:
+        dias = 99
+    if dias >= 7:
+        return True
+    return dias >= 3 and bool(n.get('destacada')) and hoy.weekday() <= 3
+
+
+def reservar_animado(nid, si=True):
+    """Apunta (o devuelve) el turno semanal del carrusel animado."""
+    os.makedirs('drafts/ig', exist_ok=True)
+    st = load(ANIM) if os.path.exists(ANIM) else {}
+    if si:
+        if st.get('id') != nid:
+            st = {'ultimo': datetime.now(timezone(timedelta(hours=-6))).strftime('%Y-%m-%d'), 'id': nid,
+                  'previo': st.get('ultimo')}
+    elif st.get('id') == nid:
+        st = {'ultimo': st.get('previo'), 'id': None} if st.get('previo') else {}
+    save(ANIM, st)
 
 
 def info_auto(n):
@@ -493,19 +543,33 @@ def send_reel(n):
 
 
 def send_carousel(n):
+    animado = bool(n.get('animado'))
     try:
-        files = build_carousel(n)
+        files = build_anim(n) if animado else build_carousel(n)
     except Exception as e:
-        tg('sendMessage', chat_id=CHAT, text=f'⚠️ No pude armar el carrusel de Instagram: {e}')
-        return False
+        if animado:
+            print('Animado:', e, file=sys.stderr)
+            n['animado'] = False; animado = False
+            try:
+                files = build_carousel(n)
+            except Exception as e2:
+                tg('sendMessage', chat_id=CHAT, text=f'⚠️ No pude armar el carrusel de Instagram: {e2}')
+                return False
+        else:
+            tg('sendMessage', chat_id=CHAT, text=f'⚠️ No pude armar el carrusel de Instagram: {e}')
+            return False
     media, fh = [], {}
     for i, f in enumerate(files):
         fh[f'f{i}'] = open(f, 'rb')
-        item = {'type': 'photo', 'media': f'attach://f{i}'}
+        item = {'type': 'video' if animado else 'photo', 'media': f'attach://f{i}'}
+        if animado:
+            item.update({'width': 1080, 'height': 1350, 'supports_streaming': True})
         if i == 0:
             aviso = ('⚠️ Este carrusel no tiene foto. Respóndele a la nota con 1 o 2 fotos antes de publicar.\n\n'
                      if NOFOTO.get(n['id']) else '')
-            item['caption'] = (aviso + '📲 Carrusel para Instagram\n\n' + n['ig'].get('caption', ''))[:1000]
+            titulo = ('🎬 Carrusel ANIMADO para Instagram (el de esta semana)' if animado
+                      else '📲 Carrusel para Instagram')
+            item['caption'] = (aviso + titulo + '\n\n' + n['ig'].get('caption', ''))[:1000]
         media.append(item)
     r = tg('sendMediaGroup', files=fh, chat_id=CHAT, media=media)
     for f in fh.values():
@@ -520,7 +584,10 @@ def send_carousel(n):
 
 def queue_instagram(n, kind='carousel'):
     q = load(IGQ) if os.path.exists(IGQ) else []
-    q.append({'id': n['id'], 'caption': n['ig'].get('caption', ''), 'reply': n.get('tg'), 'kind': kind})
+    item = {'id': n['id'], 'caption': n['ig'].get('caption', ''), 'reply': n.get('tg'), 'kind': kind}
+    if kind == 'carousel' and n.get('animado') and os.path.exists(f'assets/ig/{n["id"]}/anim/1.mp4'):
+        item['animado'] = True
+    q.append(item)
     save(IGQ, q)
 
 
@@ -707,8 +774,13 @@ def send_pending():
             body += f'\n\nFuente: {esc(n["src"])}'
         kb = [[{'text': '✅ Publicar en la web', 'callback_data': 'pub:' + n['id']}]]
         if n.get('ig'):
+            if 'animado' not in n and toca_animado(n):
+                n['animado'] = True
+                reservar_animado(n['id'])
             if send_carousel(n):
                 kb.append([{'text': '📲 Web + Instagram', 'callback_data': 'pig:' + n['id']}])
+                kb.append([{'text': '🖼 Mejor fijo (rosa)' if n.get('animado') else '🎬 Hacerlo animado',
+                            'callback_data': 'anim:' + n['id']}])
                 if os.environ.get('REELS') == '1' and send_reel(n):   # Reels: listos para más adelante
                     kb.append([{'text': '🎬 Web + Reel', 'callback_data': 'prl:' + n['id']}])
                     kb.append([{'text': '🔥 Web + Carrusel + Reel', 'callback_data': 'pall:' + n['id']}])
@@ -830,6 +902,15 @@ def poll():
             tg('answerCallbackQuery', callback_query_id=cq['id'], text='Esa nota ya se había procesado.')
             continue
         n = load(path)
+        if accion == 'anim':
+            n['animado'] = not n.get('animado')
+            reservar_animado(nid, n['animado'])
+            n.pop('tg', None)
+            save(path, n)
+            mark(cq, '🎬 Va animado. Te mando la nota otra vez con el carrusel en movimiento.' if n['animado']
+                 else '🖼 Va fijo en rosa. Te mando la nota otra vez.')
+            changed = True
+            continue
         if accion == 'alt':
             tg('answerCallbackQuery', callback_query_id=cq['id'], text='Te mando las fotos que encontré.')
             send_selector(n)
@@ -842,6 +923,11 @@ def poll():
             if kinds and n.get('ig'):
                 try:
                     build_carousel(n)  # rehace las láminas con las fotos más recientes
+                    if n.get('animado') and 'carousel' in kinds:
+                        try:
+                            build_anim(n)
+                        except Exception as e:
+                            print('Animado:', e, file=sys.stderr); n['animado'] = False
                     if 'reel' in kinds:
                         build_reel(n)
                 except Exception as e:
@@ -864,6 +950,8 @@ def poll():
             print('Publicada:', nid)
         elif accion == 'del':
             os.remove(path)
+            if n.get('animado'):
+                reservar_animado(nid, False)
             if n.get('img', '').startswith('assets/work/nota-') and os.path.exists(n['img']):
                 os.remove(n['img'])
             import shutil
@@ -905,6 +993,54 @@ def publish_reel(item, api, uid, tok, site):
         raise RuntimeError(pub)
 
 
+def publish_anim(item, api, uid, tok, site):
+    """Carrusel con láminas en video (MP4 1080x1350) desde la web."""
+    import hashlib
+    base = f'assets/ig/{item["id"]}/anim'
+    nums = [i for i in (1, 2, 3, 4) if os.path.exists(f'{base}/{i}.mp4')]
+    local = [hashlib.md5(open(f'{base}/{i}.mp4', 'rb').read()).hexdigest() for i in nums]
+    urls = [f'{site}/{base}/{i}.mp4' for i in nums]
+    for _ in range(40):  # espera a que la página tenga los videos nuevos
+        try:
+            if all(hashlib.md5(requests.get(u + f'?t={time.time():.0f}', timeout=60).content).hexdigest() == l
+                   for u, l in zip(urls, local)):
+                break
+        except Exception:
+            pass
+        time.sleep(10)
+    kids = []
+    for u, l in zip(urls, local):
+        c = requests.post(f'{api}/{uid}/media', data={'media_type': 'VIDEO', 'video_url': f'{u}?v={l[:8]}',
+                          'is_carousel_item': 'true', 'access_token': tok}, timeout=60).json()
+        if 'id' not in c:
+            raise RuntimeError(c)
+        kids.append(c['id'])
+    for k in kids:  # cada video tiene que terminar de procesarse
+        for _ in range(60):
+            st = requests.get(f'{api}/{k}', params={'fields': 'status_code,status', 'access_token': tok}, timeout=30).json()
+            if st.get('status_code') == 'FINISHED':
+                break
+            if st.get('status_code') == 'ERROR':
+                raise RuntimeError(st)
+            time.sleep(6)
+        else:
+            raise RuntimeError('Instagram tardó demasiado en procesar un video')
+    car = requests.post(f'{api}/{uid}/media', data={'media_type': 'CAROUSEL', 'children': ','.join(kids),
+                        'caption': item['caption'], 'access_token': tok}, timeout=60).json()
+    if 'id' not in car:
+        raise RuntimeError(car)
+    for _ in range(40):
+        st = requests.get(f'{api}/{car["id"]}', params={'fields': 'status_code', 'access_token': tok}, timeout=30).json()
+        if st.get('status_code') == 'FINISHED':
+            break
+        if st.get('status_code') == 'ERROR':
+            raise RuntimeError(st)
+        time.sleep(6)
+    pub = requests.post(f'{api}/{uid}/media_publish', data={'creation_id': car['id'], 'access_token': tok}, timeout=60).json()
+    if 'id' not in pub:
+        raise RuntimeError(pub)
+
+
 def instagram():
     """Publica los carruseles en cola usando la API oficial de Instagram."""
     import time
@@ -931,6 +1067,16 @@ def instagram():
                 else:
                     tg('sendMessage', chat_id=CHAT, text=f'⚠️ No pude publicar el Reel en Instagram ({str(e)[:300]}).', reply_to_message_id=item.get('reply'))
             continue
+        if item.get('animado'):
+            try:
+                publish_anim(item, api, uid, tok, site)
+                reservar_animado(item['id'])
+                tg('sendMessage', chat_id=CHAT, text='🎬 Listo, el carrusel animado ya está publicado en Instagram.', reply_to_message_id=item.get('reply'))
+                continue
+            except Exception as e:
+                print('Carrusel animado falló, va el fijo:', e, file=sys.stderr)
+                tg('sendMessage', chat_id=CHAT, text=f'⚠️ Instagram no aceptó los videos ({str(e)[:200]}). Subo el carrusel fijo en rosa.', reply_to_message_id=item.get('reply'))
+                item.pop('animado', None)
         nums = [i for i in (1, 2, 3, 4) if os.path.exists(f'assets/ig/{item["id"]}/{i}.jpg')]
         urls = [f'{site}/assets/ig/{item["id"]}/{i}.jpg' for i in nums]
         import hashlib

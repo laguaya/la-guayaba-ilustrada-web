@@ -6,7 +6,7 @@ name: Notas por Telegram
 on:
   push:
     branches: [main]
-    paths: ['scripts/notas.py', 'scripts/carrusel.py', 'scripts/portada.py', 'scripts/fuentes.py', 'scripts/reel.py', '.github/workflows/notas.yml']
+    paths: ['scripts/notas.py', 'scripts/carrusel.py', 'scripts/portada.py', 'scripts/fuentes.py', 'scripts/reel.py', 'scripts/carrusel_video.py', 'scripts/encuadre.py', '.github/workflows/notas.yml']
   schedule:
     - cron: '*/15 * * * *'
   workflow_dispatch:
