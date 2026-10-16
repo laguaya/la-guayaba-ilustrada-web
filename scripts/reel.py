@@ -190,7 +190,9 @@ def cuadro_fondo(f, t):
 def grupos(palabras):
     """Junta las palabras de la voz en bloques cortos (máx. 3 palabras o 20 letras) para los subtítulos."""
     out, cur = [], []
-    for p in palabras:
+    for i, p in enumerate(palabras):
+        if cur and p[0] - cur[-1][1] > 0.22:          # pausa de la voz = fin de frase
+            out.append(cur); cur = []
         cur.append(p)
         txt = ' '.join(x[2] for x in cur)
         if len(cur) >= 3 or len(txt) >= 20 or p[2][-1:] in '.,;:?!':

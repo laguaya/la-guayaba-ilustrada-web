@@ -509,22 +509,41 @@ def info_auto(n):
 
 
 def build_reel(n):
-    """Reel vertical con las mismas fotos y textos del carrusel -> assets/ig/<id>/reel.mp4"""
+    """Reel vertical con voz, subtítulos, fotos y clips del video de la campaña -> assets/ig/<id>/reel.mp4"""
     sys.path.insert(0, 'scripts')
     import reel
-    build_carousel(n)  # deja listas las fotos y NOFOTO
-    data = dict(n['ig'])
-    ig1 = n.get('ig1') or n['ig'].get('ig1'); ig2 = n.get('ig2') or n['ig'].get('ig2')
-    data['img'] = ig1 if ig1 and os.path.exists(ig1) else n['img'].split('?')[0]
-    if ig2 and os.path.exists(ig2):
-        data['img2'] = ig2
-    if '-foto' not in data['img']:
-        import portada
-        data['img'] = portada.fondo(n['id'], n['k'], f'/tmp/fondo-{n["id"]}.jpg')
+    build_carousel(n)  # deja listas las fotos y los textos
+    data = dict(n['_data'])
+    data['src'] = n.get('src', '')
+    data['guion'] = n.get('guion') or n['ig'].get('guion', '')
+    data['fotos'] = [c for c in n.get('cands', []) if os.path.exists(c)]
     out = f'assets/ig/{n["id"]}/reel.mp4'
     os.makedirs(os.path.dirname(out), exist_ok=True)
     reel.make(data, out)
     return out
+
+
+REEL = 'drafts/ig/.reel.json'   # {'fecha': 'AAAA-MM-DD', 'id': nota}
+
+
+def toca_reel(n):
+    """Un Reel al día: la primera nota del día con foto real (Sergio lo puede quitar o poner con el botón)."""
+    if 'reel' in n:
+        return bool(n['reel'])
+    if not n.get('ig') or NOFOTO.get(n['id']) or '-foto' not in (n.get('ig1') or n.get('img') or ''):
+        return False
+    st = load(REEL) if os.path.exists(REEL) else {}
+    return st.get('fecha') != datetime.now(timezone(timedelta(hours=-6))).strftime('%Y-%m-%d')
+
+
+def reservar_reel(nid, si=True):
+    os.makedirs('drafts/ig', exist_ok=True)
+    st = load(REEL) if os.path.exists(REEL) else {}
+    if si:
+        st = {'fecha': datetime.now(timezone(timedelta(hours=-6))).strftime('%Y-%m-%d'), 'id': nid, 'previo': st.get('fecha')}
+    elif st.get('id') == nid:
+        st = {'fecha': st.get('previo'), 'id': None}
+    save(REEL, st)
 
 
 def send_reel(n):
@@ -536,7 +555,7 @@ def send_reel(n):
         return False
     with open(out, 'rb') as f:
         r = tg('sendVideo', files={'video': f}, chat_id=CHAT, supports_streaming='true', width=1080, height=1920,
-               caption='🎬 Reel para Instagram (usa las mismas fotos que el carrusel)')
+               caption='🎬 Reel del día para Instagram (sale junto con el carrusel al publicar)')
     if r.get('ok'):
         remember(r['result']['message_id'], n['id'])
     return bool(r.get('ok'))
@@ -784,9 +803,13 @@ def send_pending():
                 kb.append([{'text': '📲 Web + Instagram', 'callback_data': 'pig:' + n['id']}])
                 kb.append([{'text': '🖼 Mejor fijo (rosa)' if n.get('animado') else '🎬 Hacerlo animado',
                             'callback_data': 'anim:' + n['id']}])
-                if os.environ.get('REELS') == '1' and send_reel(n):   # Reels: listos para más adelante
-                    kb.append([{'text': '🎬 Web + Reel', 'callback_data': 'prl:' + n['id']}])
-                    kb.append([{'text': '🔥 Web + Carrusel + Reel', 'callback_data': 'pall:' + n['id']}])
+                if 'reel' not in n and toca_reel(n):
+                    n['reel'] = True
+                    reservar_reel(n['id'])
+                if n.get('reel') and not send_reel(n):
+                    n['reel'] = False
+                kb.append([{'text': '🎞 Quitar el Reel' if n.get('reel') else '🎞 Agregar Reel',
+                            'callback_data': 'reel:' + n['id']}])
             if len(n.get('cands', [])) > 1:
                 kb.append([{'text': '🔄 Otras fotos', 'callback_data': 'alt:' + n['id']}])
         kb.append([{'text': '🗑 Descartar', 'callback_data': 'del:' + n['id']}])
@@ -914,6 +937,18 @@ def poll():
                  else '🖼 Va fijo en rosa. Te mando la nota otra vez.')
             changed = True
             continue
+        if accion == 'reel':
+            n['reel'] = not n.get('reel')
+            reservar_reel(nid, n['reel'])
+            if n['reel']:
+                n.pop('tg', None)
+                save(path, n)
+                mark(cq, '🎞 Va con Reel. Te mando la nota otra vez con el video (tarda 1 o 2 minutos).')
+            else:
+                save(path, n)
+                tg('answerCallbackQuery', callback_query_id=cq['id'], text='🎞 Listo, esta nota sale sin Reel.')
+            changed = True
+            continue
         if accion == 'alt':
             tg('answerCallbackQuery', callback_query_id=cq['id'], text='Te mando las fotos que encontré.')
             send_selector(n)
@@ -923,6 +958,8 @@ def poll():
             set_last(nid)
             os.remove(path)
             kinds = {'pig': ['carousel'], 'prl': ['reel'], 'pall': ['carousel', 'reel']}.get(accion, [])
+            if accion == 'pig' and n.get('reel'):
+                kinds = ['carousel', 'reel']
             if kinds and n.get('ig'):
                 try:
                     build_carousel(n)  # rehace las láminas con las fotos más recientes
@@ -931,8 +968,11 @@ def poll():
                             build_anim(n)
                         except Exception as e:
                             print('Animado:', e, file=sys.stderr); n['animado'] = False
-                    if 'reel' in kinds:
-                        build_reel(n)
+                    if 'reel' in kinds and not os.path.exists(f'assets/ig/{n["id"]}/reel.mp4'):
+                        try:
+                            build_reel(n)
+                        except Exception as e:
+                            print('Reel:', e, file=sys.stderr); kinds.remove('reel')
                 except Exception as e:
                     print('Carrusel/Reel:', e, file=sys.stderr)
                 nombre = ' y '.join({'carousel': 'el carrusel', 'reel': 'el Reel'}[k] for k in kinds)
@@ -955,6 +995,8 @@ def poll():
             os.remove(path)
             if n.get('animado'):
                 reservar_animado(nid, False)
+            if n.get('reel'):
+                reservar_reel(nid, False)
             if n.get('img', '').startswith('assets/work/nota-') and os.path.exists(n['img']):
                 os.remove(n['img'])
             import shutil
@@ -981,7 +1023,7 @@ def publish_reel(item, api, uid, tok, site):
             pass
         time.sleep(10)
     c = requests.post(f'{api}/{uid}/media', data={'media_type': 'REELS', 'video_url': f'{url}?v={local[:8]}',
-                      'caption': item['caption'], 'share_to_feed': 'true', 'access_token': tok}, timeout=60).json()
+                      'caption': item['caption'], 'share_to_feed': 'true', 'thumb_offset': 2500, 'access_token': tok}, timeout=60).json()
     if 'id' not in c:
         raise RuntimeError(c)
     for _ in range(60):
