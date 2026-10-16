@@ -40,20 +40,51 @@ def tema(nombre='rosa'):
 M = 64
 TOTAL = 4
 # Animación (la usa carrusel_video.py). None = imagen fija.
-# A = {'t': segundos}. Cada lámina mueve UNA sola cosa: un golpe rápido, pausa y otra vez.
+# A = {'t': segundos}. Cada lámina mueve UNA sola cosa, lento y en bucle (DUR segundos, sin brincos al repetirse).
 A = None
-PERIODO, GOLPE, INICIO = 3.0, 1.6, 0.4
+DUR = 6.0
 
 
-def golpe():
-    """0 en reposo; sube y baja a 1 durante GOLPE segundos, cada PERIODO segundos."""
-    if A is None or A['t'] < INICIO:
-        return 0.0
-    f = (A['t'] - INICIO) % PERIODO
-    if f >= GOLPE:
-        return 0.0
+def _fase(periodo=None):
+    """Ángulo 0..2π del bucle (0 si no hay animación)."""
     import math
-    return (1 - math.cos(2 * math.pi * f / GOLPE)) / 2      # entra y sale suave, sin tirones
+    if A is None:
+        return 0.0
+    return 2 * math.pi * (A['t'] % (periodo or DUR)) / (periodo or DUR)
+
+
+def zoom_lento():
+    """Lámina 1: la foto crece suave de menor a mayor durante todo el video."""
+    if A is None:
+        return 1.0
+    x = min(1.0, A['t'] / DUR)
+    return 1.0 + 0.09 * (x * x * (3 - 2 * x))
+
+
+def infinito(ax=7.0, ay=6.0):
+    """Lámina 2: la frase destacada dibuja un infinito horizontal (∞), lento."""
+    import math
+    th = _fase()
+    return ax * math.sin(th), ay * math.sin(th) * math.cos(th) * 2
+
+
+def flotar(amp=9.0):
+    """Lámina 3: "saber" flota arriba y abajo todo el tiempo."""
+    import math
+    return -amp * math.sin(_fase(DUR / 2))
+
+
+def picado():
+    """Lámina 4: 0 = botón arriba, 1 = botón presionado. Un clic cada 2 s (baja rápido, sube suave)."""
+    if A is None:
+        return 0.0
+    f = (A['t'] - 0.8) % 2.0
+    if f < 0.09:
+        return f / 0.09
+    if f < 0.45:
+        x = (f - 0.09) / 0.36
+        return 1 - x * x * (3 - 2 * x)
+    return 0.0
 
 
 def _foto(ruta, size, destino, zoom=1.0):
@@ -118,7 +149,7 @@ def layout(d, text, fonts, maxw, track=0.0):
     return lines
 
 
-def render(d, x, y, lines, fonts, lh, color, hl_bg=None, hl_fg=INK, pk=None, align='left', maxw=None, pad=10, it_color=None, track=0.0, hop_it=0.0):
+def render(d, x, y, lines, fonts, lh, color, hl_bg=None, hl_fg=INK, pk=None, align='left', maxw=None, pad=10, it_color=None, track=0.0, it_off=(0.0, 0.0)):
     hl_bg = hl_bg or PINK
     pk = pk or PINK
     hl_bg = hl_bg or PINK
@@ -144,7 +175,7 @@ def render(d, x, y, lines, fonts, lh, color, hl_bg=None, hl_fg=INK, pk=None, ali
                 continue
             cx += g
             if s == 'it':
-                dt(d, (cx, y + hop_it), w, fonts['it'], it_color or color, track)
+                dt(d, (cx + it_off[0], y + it_off[1]), w, fonts['it'], it_color or color, track)
             else:
                 dt(d, (cx, y), w, fonts[s], pk if s == 'pk' else color, track)
             cx += ww; i += 1
@@ -180,7 +211,7 @@ def header(d, color, n, dark_counter=True):
 
 
 def slide1(data, out):
-    can = _foto(data['img'], (W, H), (0.5, 0.36), zoom=1.0 + 0.025 * golpe())
+    can = _foto(data['img'], (W, H), (0.5, 0.36), zoom=zoom_lento())
     g = Image.new('L', (1, H))
     for y in range(H):
         t = max(0.0, (y - H * 0.28) / (H * 0.45))
@@ -242,7 +273,7 @@ def slide2(data, out):
     TR = -0.035
     fonts, ls, size = fitted(d, data['titulo'], maxw, 3, 'lg-black.woff2', 80, 48, track=TR)
     y = M + 108
-    y = render(d, M, y - 7 * golpe(), ls, fonts, size * 1.0, INK, hl_bg=PINK, hl_fg=INK, it_color=PINK, track=TR) + 7 * golpe()
+    y = render(d, M, y, ls, fonts, size * 1.0, INK, hl_bg=PINK, hl_fg=INK, it_color=PINK, track=TR, it_off=infinito())
     # resumen
     y += 38
     fr = {'n': font('lg-regular.woff2', 36), 'pk': font('lg-bold.woff2', 36),
@@ -285,7 +316,7 @@ def slide_info(data, out, n):
     TR = -0.035
     fonts, ls, size = fitted(d, data.get('info_titulo') or 'Lo que tienes que _saber_', maxw, 2, 'lg-black.woff2', 84, 56, track=TR)
     y = M + 108
-    y = render(d, M, y, ls, fonts, size * 1.0, INK, it_color=PINK, track=TR, hop_it=-9 * golpe()) + 36
+    y = render(d, M, y, ls, fonts, size * 1.0, INK, it_color=PINK, track=TR, it_off=(0.0, flotar())) + 36
     pars = info_de(data)
     disponible = H - M - 70 - y
     for fs in range(46, 26, -2):
@@ -322,11 +353,13 @@ def slide3(data, out, n=3):
     y = render(d, M, y, rl, fb, 56, INK)
     # botón
     by = y + 70
-    k = 1.0 + 0.035 * golpe()
-    bw, bh = 520 * k, 110 * k
-    cx, cy = M + 260, by + 55
+    cx, cy, bw, bh = M + 260, by + 55, 520, 110
+    if A is not None:                          # botón con sombra dura que se "pica"
+        p = picado(); sh = 10
+        d.rounded_rectangle((cx - bw / 2, cy - bh / 2 + sh, cx + bw / 2, cy + bh / 2 + sh), radius=bh / 2, fill='#7A2B00' if PINK != '#FF3674' else '#8A0F35')
+        cy += sh * p
     d.rounded_rectangle((cx - bw / 2, cy - bh / 2, cx + bw / 2, cy + bh / 2), radius=bh / 2, fill=INK)
-    d.text((cx, cy + 2), 'LINK EN BIO  →', font=font('lg-black.woff2', int(40 * k)), fill=PINK, anchor='mm')
+    d.text((cx, cy + 2), 'LINK EN BIO  →', font=font('lg-black.woff2', 40), fill=PINK, anchor='mm')
     # firma
     dt(d, (M, H - M - 70 - 42), 'LG.I', font('lg-bold.woff2', 84), INK, -0.05)
     d.text((M + 196, H - M - 88), 'La Guayaba', font=font('lg-regular.woff2', 30), fill=INK, anchor='lm')

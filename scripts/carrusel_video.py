@@ -2,15 +2,16 @@
 
 Uso: python scripts/carrusel_video.py datos.json carpeta_salida
 Genera 1.mp4 ... N.mp4 (y también los .jpg fijos, que sirven de miniatura y de respaldo).
-Va en naranja (el fijo, en rosa). Cada lámina mueve UNA sola cosa, suave, descansa y vuelve:
-  1) la foto  2) el titular  3) la palabra "saber"  4) el botón "link en bio".
+Va en naranja (el fijo, en rosa). Cada lámina mueve UNA sola cosa, lento:
+  1) la foto crece suave con lo importante al centro  2) la frase destacada dibuja un infinito horizontal
+  3) "saber" flota arriba y abajo  4) el botón "link en bio" se pica cada 2 s.
 """
 import functools, io, json, os, subprocess, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import portada
 import carrusel as C
 
-FPS, DUR = 30, 6.0          # 2 respiros por lámina; el video se repite sin brincos
+FPS, DUR = 30, C.DUR
 
 
 @functools.lru_cache(maxsize=None)
@@ -30,7 +31,7 @@ def _video(fn, data, n, ruta):
     quieto = None
     for f in range(int(DUR * FPS)):
         C.A = {'t': f / FPS}
-        g = C.golpe()
+        g = C.picado() if fn is C.slide3 else 1
         if g == 0 and quieto:
             pr.stdin.write(quieto); continue
         buf = io.BytesIO()
