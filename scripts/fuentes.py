@@ -1,7 +1,7 @@
 """Saca las fotos reales de la nota original (y las miniaturas del video, si la nota tiene uno).
 
 candidatas(nota) -> lista de rutas locales (máximo 4), la mejor primero.
-Filtra logos, íconos, anuncios, imágenes chicas y repetidas.
+Filtra logos, íconos, anuncios, imágenes chicas y repetidas; separa collages y deja al final las fotos con texto.
 """
 import io, os, re, sys
 from urllib.parse import urljoin, urlparse
