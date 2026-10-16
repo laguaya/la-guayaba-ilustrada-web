@@ -515,6 +515,8 @@ def poner_candidatas(n, solo_video=False):
             v = fuentes.video_de_pagina(n.get('src', ''))
         except Exception as e:
             v = None; print('Video de la fuente:', e, file=sys.stderr)
+        if v and not video_embebible(*v):
+            v = None   # el video solo se puede ver en su sitio original: mejor no ponerlo
         if v:
             n['yt' if v[0] == 'yt' else 'vm'] = v[1]; n['auto_video'] = True
             if v[0] == 'vm':
@@ -983,6 +985,51 @@ def vimeo_thumb(vid):
         return None
 
 
+def video_embebible(kind, vid):
+    """True si el video se puede reproducir dentro de nuestra página (algunos solo dejan verse en su sitio)."""
+    site = os.environ.get('SITE', 'https://guayabailustrada.com.mx') + '/'
+    try:
+        if kind == 'vm':
+            r = requests.get(f'https://player.vimeo.com/video/{vid}', headers={'Referer': site, 'User-Agent': 'Mozilla/5.0'}, timeout=20)
+            t = r.text.lower()
+            if r.status_code == 403 or 'privacy settings' in t or 'configuración de privacidad' in t:
+                return False          # Vimeo: solo se deja ver en el sitio del dueño
+            return True               # 200, o 401 (verificación anti-robots): sí se ve en navegadores
+        r = requests.get('https://www.youtube.com/oembed', params={'url': f'https://www.youtube.com/watch?v={vid}', 'format': 'json'}, timeout=20)
+        if r.status_code != 200:
+            return False
+        e = requests.get(f'https://www.youtube.com/embed/{vid}', headers={'Referer': site, 'User-Agent': 'Mozilla/5.0'}, timeout=20).text
+        return 'playabilityStatus' not in e or '"status":"OK"' in e or 'UNPLAYABLE' not in e
+    except Exception as ex:
+        print('Revisión de video:', ex, file=sys.stderr)
+        return True   # si no se pudo revisar, no lo quitamos
+
+
+def revisar_videos():
+    """Quita de notas y borradores los videos que no se pueden ver fuera de su sitio original."""
+    quitados = []
+    js = open('posts.js', encoding='utf-8').read()
+    ids = re.findall(r'\{"id": "([^"]+)"', js) + [os.path.basename(f)[:-5] for f in glob.glob('drafts/*.json')]
+    rev = load('drafts/.videos_ok.json') if os.path.exists('drafts/.videos_ok.json') else {}
+    for nid in ids:
+        n, put = note_get(nid)
+        if not n:
+            continue
+        kind = 'vm' if n.get('vm') else 'yt' if n.get('yt') else None
+        if not kind:
+            continue
+        key = f'{kind}:{n[kind]}'
+        if key not in rev:
+            rev[key] = video_embebible(kind, n[kind])
+        if not rev[key]:
+            for k in ('yt', 'vm', 'vt', 'th', 'auto_video'):
+                n.pop(k, None)
+            n['sin_video'] = True
+            put(n); quitados.append(n.get('t', nid))
+    save('drafts/.videos_ok.json', rev)
+    return quitados
+
+
 def vimeo_backfill():
     """Notas publicadas con video de Vimeo que todavía no tienen miniatura."""
     js = open('posts.js', encoding='utf-8').read()
@@ -1066,6 +1113,11 @@ def listen(hours=5.6):
     try:
         while vimeo_backfill():
             pass
+        quitados = revisar_videos()
+        if quitados:
+            commit('Notas: quitar videos que no se pueden ver fuera de su sitio')
+            tg('sendMessage', chat_id=CHAT, text='🎬 Quité el video de ' + ', '.join(f'«{q[:60]}»' for q in quitados)
+               + ': su dueño no deja que se vea fuera de su página. La nota queda con su foto de portada.')
         while thumb_backfill():
             pass
         migrar = [f for f in sorted(glob.glob('drafts/*.json')) if load(f).get('cands_v') != 2]
