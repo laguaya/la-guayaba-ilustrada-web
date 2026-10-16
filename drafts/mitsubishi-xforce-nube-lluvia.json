@@ -28,6 +28,7 @@
  ],
  "ig1": "assets/work/nota-mitsubishi-xforce-nube-lluvia-foto-src1.webp",
  "ig2": "assets/work/nota-mitsubishi-xforce-nube-lluvia-foto-src1.webp",
- "cands_v": 2,
- "tg": 338
+ "tg": 338,
+ "animado": true,
+ "destacada": true
 }
