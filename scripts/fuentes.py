@@ -139,35 +139,89 @@ def _parecidas(a, b):
     return bin(a ^ b).count('1') <= 12
 
 
-def candidatas(n, carpeta='assets/work', maximo=4, solo_video=False):
+MIN_W, MIN_H = 1200, 650          # súper alta calidad: nada que se pixelee en PC
+CAPTURA = re.compile(r'screen.?shot|captura|pantallazo|screen-?cap', re.I)
+_PORTADAS = {}
+
+
+def urls_de_portada(src):
+    """Imágenes que el sitio repite en su página principal (anuncios, banners, logos): no son de la nota."""
+    try:
+        p = urlparse(src); home = f'{p.scheme}://{p.netloc}/'
+    except Exception:
+        return set()
+    if home not in _PORTADAS:
+        html = pagina(home)
+        us = set()
+        for tag in re.findall(r'<(?:img|source)\b[^>]*>', html, re.I):
+            for a in ('src', 'data-src', 'data-lazy-src'):
+                v = _attr(tag, a)
+                if v: us.add(urljoin(home, v).split('?')[0])
+        _PORTADAS[home] = us
+    return _PORTADAS[home]
+
+
+def es_captura_o_grafico(im):
+    """Capturas de pantalla, banners y gráficos planos: mucho color liso (fondos blancos, interfaces)."""
+    sm = im.convert('RGB').resize((160, 90))
+    q = sm.quantize(colors=16, method=Image.Quantize.MEDIANCUT)
+    counts = sorted(q.getcolors() or [], reverse=True)
+    total = 160 * 90
+    return bool(counts) and counts[0][0] / total > 0.38
+
+
+def candidatas(n, carpeta='assets/work', maximo=4, solo_video=False, registro=None):
+    """registro: {huella_hex: id_de_nota} de fotos ya usadas en otras notas (anuncios que se repiten)."""
     nid = n['id']
+    registro = registro if registro is not None else {}
     os.makedirs(carpeta, exist_ok=True)
-    lista = urls_de_video(n) + ([] if solo_video else urls_de_pagina(n.get('src', '')))
-    rutas, huellas = [], []
-    for k, u in enumerate(lista):
+    vids = urls_de_video(n)
+    pag = [] if solo_video else urls_de_pagina(n.get('src', ''))
+    excluir = set() if solo_video else urls_de_portada(n.get('src', ''))
+    lista = vids + [u for u in pag if u.split('?')[0] not in excluir]
+    og = pag[0] if pag else None
+    rutas, huellas, respaldo = [], [], None
+    for u in lista:
         if len(rutas) >= maximo:
             break
+        if CAPTURA.search(u):
+            continue
         try:
             r = requests.get(u, headers=UA, timeout=25)
-            if r.status_code != 200 or len(r.content) < 8000:
+            if r.status_code != 200 or len(r.content) < 15000:
                 continue
-            im = Image.open(io.BytesIO(r.content))
-            im.load()
+            im = Image.open(io.BytesIO(r.content)); im.load()
             im = _sin_franjas(im.convert('RGB'))
         except Exception:
             continue
         w, h = im.size
-        if w < 600 or h < 380 or not (0.5 <= w / h <= 2.6):
+        if not (0.5 <= w / h <= 2.4):
             continue
         hu = _huella(im)
         if any(_parecidas(hu, x) for x in huellas):
             continue
-        if w > 2400:
-            im = im.resize((2400, int(h * 2400 / w)), Image.LANCZOS)
-        dest = f'{carpeta}/nota-{nid}-foto-src{len(rutas) + 1}{"v" if solo_video else ""}.webp'
-        im.save(dest, 'WEBP', quality=88)
-        rutas.append(dest); huellas.append(hu)
+        if any(_parecidas(hu, int(k, 16)) for k, v in registro.items() if v != nid):
+            continue                                  # la misma foto en otra nota = anuncio del sitio
+        buena = w >= MIN_W and h >= MIN_H
+        plana = es_captura_o_grafico(im)
+        if not buena or plana:
+            if u == og and w >= 1000 and respaldo is None:
+                respaldo = (im, hu)                   # la imagen principal de la nota, por si no hay otra
+            continue
+        rutas.append(_guardar(im, f'{carpeta}/nota-{nid}-foto-src{len(rutas) + 1}{"v" if solo_video else ""}.webp'))
+        huellas.append(hu); registro[format(hu, 'x')] = nid
+    if not rutas and respaldo:
+        im, hu = respaldo
+        rutas.append(_guardar(im, f'{carpeta}/nota-{nid}-foto-src1.webp')); registro[format(hu, 'x')] = nid
     return rutas
+
+
+def _guardar(im, dest):
+    w, h = im.size
+    if w > 2600:
+        im = im.resize((2600, int(h * 2600 / w)), Image.LANCZOS)
+    im.save(dest, 'WEBP', quality=92, method=5)
+    return dest
 
 
 def credito(src):

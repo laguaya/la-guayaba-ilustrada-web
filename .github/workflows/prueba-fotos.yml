@@ -1,0 +1,42 @@
+name: Prueba fotos v2
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  t:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: pip install -q requests pillow
+      - run: |
+          mkdir -p prueba
+          python - <<'PY' > prueba/resultado.txt 2>&1
+          import json, sys, glob, os
+          sys.path.insert(0, 'scripts')
+          import fuentes
+          from PIL import Image, ImageDraw
+          reg = {}
+          rows = []
+          for f in sorted(glob.glob('drafts/*.json')):
+              n = json.load(open(f))
+              for k in ('yt','vm'):
+                  pass
+              v = fuentes.video_de_pagina(n.get('src',''))
+              if v and not (n.get('yt') or n.get('vm')):
+                  n['yt' if v[0]=='yt' else 'vm'] = v[1]
+              r = fuentes.candidatas(n, '/tmp/c', registro=reg)
+              print(n['id'], v, [(x, Image.open(x).size) for x in r])
+              rows.append((n['id'], r))
+          s = 260
+          c = Image.new('RGB', (4 * s + 260, len(rows) * s), 'white'); d = ImageDraw.Draw(c)
+          for i, (nid, r) in enumerate(rows):
+              d.text((5, i * s + 10), nid[:30], fill='black')
+              for j, f in enumerate(r):
+                  im = Image.open(f); im.thumbnail((s - 6, s - 6)); c.paste(im, (260 + j * s, i * s))
+          c.save('prueba/hoja.jpg', quality=80)
+          PY
+          git config user.name bot; git config user.email bot@x
+          git checkout -b prueba-fotos
+          git add -f prueba && git commit -qm prueba && git push -f origin prueba-fotos
