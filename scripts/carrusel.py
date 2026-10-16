@@ -24,36 +24,27 @@ PINK, INK, WHITE, WASH = '#FF3674', '#0B0B0B', '#FFFFFF', '#FFF2F6'
 M = 64
 TOTAL = 4
 # Animación (la usa carrusel_video.py). None = imagen fija.
-# A = {'t': segundos, 'i': contador de palabras, 'step': s entre palabras, 'start': s, 'dur': s, 'kb': zoom}
+# A = {'t': segundos}. Cada lámina mueve UNA sola cosa: un golpe rápido, pausa y otra vez.
 A = None
+PERIODO, GOLPE, INICIO = 2.0, 0.45, 0.6
 
 
-def _p(k, extra=0.0):
-    """Progreso 0..1 de la palabra k (1 si no hay animación)."""
-    if A is None:
-        return 1.0
-    x = (A['t'] - A['start'] - k * A['step'] - extra) / A['dur']
-    return max(0.0, min(1.0, x))
+def golpe():
+    """0 en reposo; sube y baja a 1 durante GOLPE segundos, cada PERIODO segundos."""
+    if A is None or A['t'] < INICIO:
+        return 0.0
+    f = (A['t'] - INICIO) % PERIODO
+    if f >= GOLPE:
+        return 0.0
+    import math
+    return math.sin(math.pi * f / GOLPE)
 
 
-def _eo(x): return 1 - (1 - x) ** 3
-
-
-def _kb(im, size, centering):
-    """Foto ajustada al tamaño, con zoom lento (Ken Burns) si hay animación."""
-    z = 1.0 if A is None else 1.0 + A.get('kb', 0.0) * min(1.0, A['t'] / A.get('total', 6.0))
-    w, h = size
-    big = ImageOps.fit(im, (int(w * z), int(h * z)), Image.LANCZOS, centering=centering)
-    if z == 1.0:
-        return big
-    x, y = (big.width - w) // 2, int((big.height - h) * centering[1])
-    return big.crop((x, y, x + w, y + h))
-
-
-def _line(d, x0, y0, x1, y1, fill, width):
-    k = 1.0 if A is None else _eo(max(0.0, min(1.0, (A['t'] - 0.1) / 0.7)))
-    if k > 0:
-        d.line((x0, y0, x0 + (x1 - x0) * k, y1), fill=fill, width=width)
+def _foto(ruta, size, destino, zoom=1.0):
+    """Foto recortada para que lo importante quede centrado en 'destino' (fracción del recuadro)."""
+    import encuadre
+    im = _abrir(ruta)
+    return encuadre.recorte(im, size, encuadre.foco(ruta), zoom=zoom, destino=destino)
 
 
 # ---------- texto enriquecido ----------
@@ -111,7 +102,7 @@ def layout(d, text, fonts, maxw, track=0.0):
     return lines
 
 
-def render(d, x, y, lines, fonts, lh, color, hl_bg=PINK, hl_fg=INK, pk=PINK, align='left', maxw=None, pad=10, it_color=None, track=0.0):
+def render(d, x, y, lines, fonts, lh, color, hl_bg=PINK, hl_fg=INK, pk=PINK, align='left', maxw=None, pad=10, it_color=None, track=0.0, hop_it=0.0):
     for ln in lines:
         lw = sum(w + g for _, _, w, g in ln)
         cx = x + ((maxw - lw) / 2 if align == 'center' and maxw else 0)
@@ -124,29 +115,18 @@ def render(d, x, y, lines, fonts, lh, color, hl_bg=PINK, hl_fg=INK, pk=PINK, ali
                 while j < len(ln) and ln[j][1] == 'hl':
                     run += ln[j][2] + (ln[j][3] if j > i else 0); j += 1
                 cx += g
-                k0 = A['i'] if A is not None else 0
-                pr = _eo(_p(k0))
-                if pr > 0:
-                    d.rectangle((cx - pad, y + size * 0.06, cx - pad + (run + 2 * pad) * pr, y + size * 1.06), fill=hl_bg)
+                d.rectangle((cx - pad, y + size * 0.06, cx + run + pad, y + size * 1.06), fill=hl_bg)
                 for k in range(i, j):
                     if k > i:
                         cx += ln[k][3]
-                    q = _p(A['i']) if A is not None else 1.0
-                    if A is not None: A['i'] += 1
-                    if q > 0:
-                        dt(d, (cx, y + (1 - _eo(q)) * size * 0.3), ln[k][0], fonts['hl'], hl_fg, track)
-                    cx += ln[k][2]
+                    dt(d, (cx, y), ln[k][0], fonts['hl'], hl_fg, track); cx += ln[k][2]
                 i = j
                 continue
             cx += g
-            q = _p(A['i']) if A is not None else 1.0
-            if A is not None: A['i'] += 1
-            if q > 0:
-                yy = y + (1 - _eo(q)) * size * 0.3
-                if s == 'it':
-                    dt(d, (cx, yy), w, fonts['it'], it_color or color, track)
-                else:
-                    dt(d, (cx, yy), w, fonts[s], pk if s == 'pk' else color, track)
+            if s == 'it':
+                dt(d, (cx, y + hop_it), w, fonts['it'], it_color or color, track)
+            else:
+                dt(d, (cx, y), w, fonts[s], pk if s == 'pk' else color, track)
             cx += ww; i += 1
         y += lh
     return y
@@ -176,11 +156,11 @@ def header(d, color, n, dark_counter=True):
     f = font('lg-bold.woff2', 22)
     d.text((M, M + 17), 'LA GUAYABA ILUSTRADA', font=f, fill=color, anchor='lm')
     counter(d, n, dark_counter)
-    _line(d, M, M + 64, W - M, M + 64, color, 2)
+    d.line((M, M + 64, W - M, M + 64), fill=color, width=2)
 
 
 def slide1(data, out):
-    can = _kb(_abrir(data['img']), (W, H), (0.5, 0.35))
+    can = _foto(data['img'], (W, H), (0.5, 0.36), zoom=1.0 + 0.045 * golpe())
     g = Image.new('L', (1, H))
     for y in range(H):
         t = max(0.0, (y - H * 0.28) / (H * 0.45))
@@ -242,7 +222,7 @@ def slide2(data, out):
     TR = -0.035
     fonts, ls, size = fitted(d, data['titulo'], maxw, 3, 'lg-black.woff2', 80, 48, track=TR)
     y = M + 108
-    y = render(d, M, y, ls, fonts, size * 1.0, INK, hl_bg=PINK, hl_fg=INK, it_color=PINK, track=TR)
+    y = render(d, M, y - 18 * golpe(), ls, fonts, size * 1.0, INK, hl_bg=PINK, hl_fg=INK, it_color=PINK, track=TR) + 18 * golpe()
     # resumen
     y += 38
     fr = {'n': font('lg-regular.woff2', 36), 'pk': font('lg-bold.woff2', 36),
@@ -253,7 +233,7 @@ def slide2(data, out):
     foot_h = 64
     ph_top = int(y + 40)
     ph_bottom = H - M - foot_h
-    ph = _kb(_abrir(data.get('img2') or data['img']), (W - 2 * M, ph_bottom - ph_top), (0.5, 0.45))
+    ph = _foto(data.get('img2') or data['img'], (W - 2 * M, ph_bottom - ph_top), (0.5, 0.5))
     can.paste(ph, (M, ph_top))
     ft = font('lg-black.woff2', 30)
     label = data.get('marca', '')
@@ -285,7 +265,7 @@ def slide_info(data, out, n):
     TR = -0.035
     fonts, ls, size = fitted(d, data.get('info_titulo') or 'Lo que tienes que _saber_', maxw, 2, 'lg-black.woff2', 84, 56, track=TR)
     y = M + 108
-    y = render(d, M, y, ls, fonts, size * 1.0, INK, it_color=PINK, track=TR) + 36
+    y = render(d, M, y, ls, fonts, size * 1.0, INK, it_color=PINK, track=TR, hop_it=-20 * golpe()) + 36
     pars = info_de(data)
     disponible = H - M - 70 - y
     for fs in range(46, 26, -2):
@@ -322,11 +302,11 @@ def slide3(data, out, n=3):
     y = render(d, M, y, rl, fb, 56, INK)
     # botón
     by = y + 70
-    bk = 1.0 if A is None else _eo(_p(A['i'], 0.15))
-    if bk > 0:
-        d.rounded_rectangle((M, by, M + max(110, 520 * bk), by + 110), radius=55, fill=INK)
-    if bk > 0.85:
-        d.text((M + 260, by + 57), 'LINK EN BIO  →', font=font('lg-black.woff2', 40), fill=PINK, anchor='mm')
+    k = 1.0 + 0.07 * golpe()
+    bw, bh = 520 * k, 110 * k
+    cx, cy = M + 260, by + 55
+    d.rounded_rectangle((cx - bw / 2, cy - bh / 2, cx + bw / 2, cy + bh / 2), radius=bh / 2, fill=INK)
+    d.text((cx, cy + 2), 'LINK EN BIO  →', font=font('lg-black.woff2', int(40 * k)), fill=PINK, anchor='mm')
     # firma
     dt(d, (M, H - M - 70 - 42), 'LG.I', font('lg-bold.woff2', 84), INK, -0.05)
     d.text((M + 196, H - M - 88), 'La Guayaba', font=font('lg-regular.woff2', 30), fill=INK, anchor='lm')

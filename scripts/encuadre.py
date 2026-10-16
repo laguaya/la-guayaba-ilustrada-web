@@ -1,0 +1,94 @@
+"""Encuadre inteligente: encuentra lo importante de una foto (caras, producto, logotipo) y recorta
+para que quede centrado y visible.
+
+foco(ruta_o_imagen) -> (fx, fy) entre 0 y 1
+recorte(im, (w, h), foco, zoom=1.0, destino=(0.5, 0.5)) -> imagen de w x h con el foco en 'destino'
+"""
+import numpy as np
+from PIL import Image
+
+try:
+    import cv2
+except Exception:                       # sin OpenCV: centro de la imagen
+    cv2 = None
+
+_CACHE = {}
+
+
+def _caras(g):
+    if cv2 is None:
+        return []
+    out = []
+    for nombre in ('haarcascade_frontalface_default.xml', 'haarcascade_profileface.xml'):
+        try:
+            cas = cv2.CascadeClassifier(cv2.data.haarcascades + nombre)
+        except Exception:
+            continue
+        if cas.empty():
+            continue
+        m = min(g.shape[:2])
+        for (x, y, w, h) in cas.detectMultiScale(g, 1.1, 6, minSize=(max(24, m // 14),) * 2):
+            out.append((x, y, w, h))
+    return out
+
+
+def _mapa(rgb):
+    """Qué tan llamativa es cada zona: colores poco comunes en la foto + detalle fino (saliencia)."""
+    h, w = rgb.shape[:2]
+    lab = cv2.cvtColor(rgb, cv2.COLOR_RGB2LAB).astype(np.int32)
+    q = (lab[..., 0] // 32) * 64 + (lab[..., 1] // 32) * 8 + lab[..., 2] // 32
+    freq = np.bincount(q.ravel(), minlength=512).astype(np.float64) / q.size
+    rareza = -np.log(freq[q] + 1e-6)
+    rareza = cv2.GaussianBlur(rareza.astype(np.float32), (0, 0), max(2, w / 60))
+    sal = cv2.saliency.StaticSaliencySpectralResidual_create() if hasattr(cv2, 'saliency') else None
+    if sal is not None:
+        ok, s = sal.computeSaliency(rgb)
+        s = cv2.GaussianBlur(s.astype(np.float32), (0, 0), max(2, w / 40)) if ok else np.ones((h, w), np.float32)
+    else:
+        s = np.ones((h, w), np.float32)
+    def norm(a):
+        a = a - a.min(); return a / (a.max() + 1e-6)
+    m = norm(rareza) * 0.65 + norm(s) * 0.35
+    # un poco de preferencia por el centro (los fotógrafos suelen centrar)
+    yy, xx = np.mgrid[0:h, 0:w]
+    m *= 1 - 0.25 * (((xx / w - .5) ** 2 + (yy / h - .5) ** 2) / .5)
+    return m
+
+
+def foco(src):
+    key = src if isinstance(src, str) else id(src)
+    if key in _CACHE:
+        return _CACHE[key]
+    im = Image.open(src) if isinstance(src, str) else src
+    im = im.convert('RGB')
+    if cv2 is None:
+        _CACHE[key] = (0.5, 0.5); return _CACHE[key]
+    k = 480 / max(im.size)
+    small = np.array(im.resize((max(1, int(im.width * k)), max(1, int(im.height * k)))))
+    h, w = small.shape[:2]
+    caras = _caras(cv2.cvtColor(small, cv2.COLOR_RGB2GRAY))
+    if caras:
+        tot = sum(cw * ch for _, _, cw, ch in caras)
+        fx = sum((x + cw / 2) * cw * ch for x, y, cw, ch in caras) / tot / w
+        fy = sum((y + ch * 0.55) * cw * ch for x, y, cw, ch in caras) / tot / h   # un poco abajo de la cara
+    else:
+        m = _mapa(small)
+        top = m >= np.quantile(m, 0.93)
+        ys, xs = np.nonzero(top)
+        wts = m[top]
+        fx = float((xs * wts).sum() / wts.sum() / w)
+        fy = float((ys * wts).sum() / wts.sum() / h)
+    _CACHE[key] = (min(max(fx, 0.0), 1.0), min(max(fy, 0.0), 1.0))
+    return _CACHE[key]
+
+
+def recorte(im, size, f=None, zoom=1.0, destino=(0.5, 0.5)):
+    """Escala para cubrir 'size' y mueve el recorte para que el foco quede en 'destino' (sin salirse de la foto)."""
+    W, H = size
+    f = f or (0.5, 0.5)
+    s = max(W / im.width, H / im.height) * zoom
+    sw, sh = im.width * s, im.height * s
+    x = min(max(f[0] * sw - destino[0] * W, 0), sw - W)
+    y = min(max(f[1] * sh - destino[1] * H, 0), sh - H)
+    box = (x / s, y / s, (x + W) / s, (y + H) / s)
+    return im.resize((W, H), Image.LANCZOS, box=box)
