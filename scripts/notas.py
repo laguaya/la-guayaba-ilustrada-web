@@ -519,26 +519,69 @@ def poner_candidatas(n, solo_video=False):
             n['yt' if v[0] == 'yt' else 'vm'] = v[1]; n['auto_video'] = True
             if v[0] == 'vm':
                 n['vt'] = vimeo_thumb(v[1]) or ''
+    reg_path = 'drafts/.huellas.json'
+    reg = load(reg_path) if os.path.exists(reg_path) else {}
+    reg = {k: v for k, v in reg.items() if v != n['id']}
     try:
-        nuevas = fuentes.candidatas(n, solo_video=solo_video)
+        nuevas = fuentes.candidatas(n, solo_video=solo_video, registro=reg)
     except Exception as e:
         print('Fotos de la fuente:', e, file=sys.stderr)
         nuevas = []
+    save(reg_path, dict(list(reg.items())[-600:]))
     c = nuevas + [x for x in n.get('cands', []) if x not in nuevas] if solo_video else nuevas
     propia = n.get('img', '').split('?')[0]
     if not solo_video and '-foto' in propia and '-foto-src' not in propia and os.path.exists(propia):
         c = [propia] + c   # una foto que ya mandó Sergio va primero
     c = [x for x in c if os.path.exists(x)][:6]
     n['cands'] = c
+    aplicar_fotos(n)
+    return c
+
+
+def aplicar_fotos(n):
+    """Pone la foto 1 de portada (web y carrusel) y la 2 en la lámina 2; si solo hay una, se repite."""
+    sys.path.insert(0, 'scripts')
+    import fuentes
+    c = n.get('cands', [])
     if c:
         cr = 'Foto: ' + (fuentes.credito(n.get('src', '')) or 'cortesía')
-        if es_video(n):
-            n['ig1'] = c[0]
-        elif c[0] != n.get('img', '').split('?')[0]:
+        n['ig1'] = c[0]
+        if c[0] != n.get('img', '').split('?')[0]:
             n['img'] = c[0]; n['cr'] = cr
-        if len(c) > 1:
-            n['ig2'] = c[1]
-    return c
+        n['ig2'] = c[1] if len(c) > 1 else c[0]   # si no hay otra buena, se repite (mejor que una mala)
+
+
+def limpiar_repetidas():
+    """Una foto que aparece en varias notas es publicidad o adorno del sitio: se quita de todas."""
+    sys.path.insert(0, 'scripts')
+    import fuentes
+    from PIL import Image
+    hs = []
+    for f in glob.glob('drafts/*.json'):
+        n = load(f)
+        for c in n.get('cands', []):
+            try:
+                hs.append((f, c, fuentes._huella(Image.open(c).convert('RGB'))))
+            except Exception:
+                pass
+    malas = set()
+    for i, (f1, c1, h1) in enumerate(hs):
+        for f2, c2, h2 in hs[i + 1:]:
+            if f1 != f2 and fuentes._parecidas(h1, h2):
+                malas.update({c1, c2})
+    cambiadas = []
+    for f in glob.glob('drafts/*.json'):
+        n = load(f)
+        if any(c in malas for c in n.get('cands', [])):
+            viejas = n['cands']
+            n['cands'] = [c for c in viejas if c not in malas]
+            for k in ('ig1', 'ig2'):
+                if n.get(k) in malas: n.pop(k)
+            if n.get('img') in malas:
+                base = f'assets/work/nota-{n["id"]}.webp'
+                n['img'] = n['cands'][0] if n['cands'] else (base if os.path.exists(base) else n['img'])
+            aplicar_fotos(n); save(f, n); cambiadas.append(n['id'])
+    return cambiadas
 
 
 def video_cands(nid):
@@ -600,11 +643,8 @@ def elegir(cq, data):
         return
     f = c[k - 1]
     if tipo == 'cp':
-        if es_video(n):
-            n['ig1'] = f
-        else:
-            sys.path.insert(0, 'scripts'); import fuentes
-            n['img'] = f; n['cr'] = 'Foto: ' + (fuentes.credito(n.get('src', '')) or 'cortesía')
+        sys.path.insert(0, 'scripts'); import fuentes
+        n['ig1'] = f; n['img'] = f; n['cr'] = 'Foto: ' + (fuentes.credito(n.get('src', '')) or 'cortesía')
         txt = f'✅ Foto {k} de portada'
     else:
         n['ig2'] = f; txt = f'✅ Foto {k} en la lámina 2'
@@ -620,9 +660,14 @@ def send_pending():
         if n.get('tg'):
             continue
         if 'cands' not in n:
-            poner_candidatas(n)
+            poner_candidatas(n); n['cands_v'] = 2
             save(path, n)
-        cap = f'<b>Nota nueva para revisar</b> · {esc(n["k"])}\n\n<b>{esc(n["t"])}</b>\n<i>{esc(n["x"])}</i>'
+            for otra in limpiar_repetidas():
+                if otra != n['id']:
+                    PREVIEW.add(otra)
+            n = load(path)
+        cap = (f'<b>Nota nueva para revisar</b> · {esc(n["k"])}\n🖼 <i>Esta es la portada que tendrá en la web.</i>\n\n'
+               f'<b>{esc(n["t"])}</b>\n<i>{esc(n["x"])}</i>')
         if n.get('auto_video'):
             cap += '\n\n🎬 Lleva el video de la nota original en la web. Si no lo quieres, responde "sin video".'
         img = n.get('img', '')
@@ -1023,12 +1068,13 @@ def listen(hours=5.6):
             pass
         while thumb_backfill():
             pass
-        migrar = [f for f in sorted(glob.glob('drafts/*.json')) if 'cands' not in load(f)]
+        migrar = [f for f in sorted(glob.glob('drafts/*.json')) if load(f).get('cands_v') != 2]
         if migrar:
-            tg('sendMessage', chat_id=CHAT, text=f'🔄 Actualicé tus {len(migrar)} notas pendientes: ahora traen las fotos reales '
-               'de la nota original (y el video, si la fuente lo tiene). Te las vuelvo a mandar para que solo las apruebes.')
+            tg('sendMessage', chat_id=CHAT, text=f'🔄 Mejoré las fotos de tus {len(migrar)} notas pendientes: solo fotos reales en alta calidad, sin anuncios '
+               'ni capturas; si no hay otra buena, se repite la misma. Te las vuelvo a mandar para que solo las apruebes.')
             for f in migrar:
-                n = load(f); poner_candidatas(n); n.pop('tg', None); save(f, n)
+                n = load(f); poner_candidatas(n); n['cands_v'] = 2; n.pop('tg', None); save(f, n)
+            limpiar_repetidas()
         commit('Notas: miniaturas de Vimeo')
         if ig_check():
             commit('Notas: estado de Instagram')

@@ -139,7 +139,7 @@ def _parecidas(a, b):
     return bin(a ^ b).count('1') <= 12
 
 
-MIN_W, MIN_H = 1200, 650          # súper alta calidad: nada que se pixelee en PC
+MIN_W, MIN_H = 1200, 480          # súper alta calidad: nada que se pixelee en PC
 CAPTURA = re.compile(r'screen.?shot|captura|pantallazo|screen-?cap', re.I)
 _PORTADAS = {}
 
