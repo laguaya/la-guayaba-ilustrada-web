@@ -305,6 +305,12 @@ def handle_message(u, msg):
     is_photo = 'photo' in msg or (msg.get('document', {}).get('mime_type', '').startswith('image/'))
     yt = re.search(r'(?:youtu\.be/|youtube\.com/(?:watch\?(?:.*&)?v=|shorts/|embed/|live/))([A-Za-z0-9_-]{11})', text)
     vm = re.search(r'vimeo\.com/(?:video/)?(\d{5,})', text)
+    if (vm or yt) and nid and not is_photo:
+        kind, vid = ('vm', vm.group(1)) if vm else ('yt', yt.group(1))
+        if not video_embebible(kind, vid):
+            reply(mid, '⚠️ Ese video no se puede ver fuera de su página original (su dueño lo bloqueó), '
+                       'así que no lo pongo en la nota. Si tienes el mismo video en YouTube, mándame ese link.')
+            return
     if vm and nid and not is_photo:
         n, put = note_get(nid)
         if n:
