@@ -473,7 +473,7 @@ def publish(n):
     post = {'id': n['id'], 'k': n['k'], 'c': n.get('c') or COLORS.get(n['k'], '#FF3674'),
             'd': f'{now.day} {MESES[now.month - 1]} {now.year}', 'img': n['img'],
             'alt': n.get('alt', ''), 'cr': n.get('cr', ''), 't': n['t'], 'x': n['x'], 'b': n['b']}
-    for k in ('g', 'yt', 'vm', 'vt'):
+    for k in ('g', 'yt', 'vm', 'vt', 'th'):
         if n.get(k):
             post[k] = n[k]
     if n.get('src'):
@@ -710,6 +710,29 @@ def vimeo_backfill():
     return False
 
 
+def thumb_backfill():
+    """Guarda en el sitio la miniatura de los videos (YouTube o Vimeo) para que la tarjeta no dependa de otros servidores."""
+    from PIL import Image
+    js = open('posts.js', encoding='utf-8').read()
+    for nid in re.findall(r'\{"id": "([^"]+)"', js):
+        n, put = note_get(nid)
+        if not n or n.get('th') or not (n.get('yt') or n.get('vm')):
+            continue
+        urls = ([f'https://i.ytimg.com/vi/{n["yt"]}/maxresdefault.jpg', f'https://i.ytimg.com/vi/{n["yt"]}/hqdefault.jpg']
+                if n.get('yt') else [n.get('vt') or vimeo_thumb(n['vm']) or ''])
+        for u in urls:
+            try:
+                r = requests.get(u, timeout=30)
+                if r.status_code == 200 and len(r.content) > 5000:
+                    dest = f'assets/work/nota-{nid}-video.webp'
+                    Image.open(io.BytesIO(r.content)).convert('RGB').save(dest, 'WEBP', quality=86)
+                    n['th'] = dest; put(n)
+                    return True
+            except Exception as e:
+                print('Miniatura:', e, file=sys.stderr)
+    return False
+
+
 def ig_check():
     """Confirma por Telegram que Instagram está conectado y avisa antes de que venza el token (60 días)."""
     import hashlib
@@ -756,6 +779,8 @@ def listen(hours=5.6):
     sh('git', 'config', 'user.email', 'laguayabailustrada@gmail.com')
     try:
         while vimeo_backfill():
+            pass
+        while thumb_backfill():
             pass
         commit('Notas: miniaturas de Vimeo')
         if ig_check():
