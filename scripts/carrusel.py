@@ -74,6 +74,25 @@ def flotar(amp=9.0):
     return -amp * math.sin(_fase(DUR / 2))
 
 
+def aparece(t0, dur):
+    """0 -> 1 suave entre t0 y t0+dur; después se queda en 1 (no es bucle)."""
+    if A is None:
+        return 1.0
+    x = max(0.0, min(1.0, (A['t'] - t0) / dur))
+    return x * x * (3 - 2 * x)
+
+
+def _capa(can, p, dy, dibujar, y):
+    """Dibuja algo en una capa aparte que entra desde abajo (dy px) con opacidad p."""
+    if p <= 0:
+        return
+    capa = Image.new('RGBA', can.size, (0, 0, 0, 0))
+    dibujar(ImageDraw.Draw(capa), y + (1 - p) * dy)
+    if p < 1:
+        capa.putalpha(capa.getchannel('A').point(lambda v: int(v * p)))
+    can.paste(capa, (0, 0), capa)
+
+
 def picado():
     """Lámina 4: 0 = botón arriba, 1 = botón presionado. Un clic cada 2 s (baja rápido, sube suave)."""
     if A is None:
@@ -276,7 +295,7 @@ def _titulo_animado(can, ls, fonts, lh, y, size):
     t = A['t']
     def ease(x):
         x = max(0.0, min(1.0, x)); return x * x * (3 - 2 * x)
-    salida = 1 - ease((t - (DUR - 0.5)) / 0.45)
+    salida = 1.0                       # aparece una vez y se queda
     inicio_m = 0.35 + len(ls) * 0.22 + 0.35
     n_run = [0]
     def marca():
@@ -383,8 +402,14 @@ def slide_info(data, out, n):
         alto = sum(len(b) * lh for b in bloques) + (len(bloques) - 1) * fs * 0.9
         if alto <= disponible:
             break
-    for b in bloques:
-        y = render(d, M, y, b, fr, lh, INK, pk=PINK) + fs * 0.9
+    for k, b in enumerate(bloques):
+        if A is None:
+            y = render(d, M, y, b, fr, lh, INK, pk=PINK) + fs * 0.9
+        else:                              # cada párrafo sube suave con opacidad, uno tras otro, y se queda
+            p = aparece(0.6 + k * 1.3, 1.1)
+            _capa(can, p, 34, lambda dd, yy, b=b: render(dd, M, yy, b, fr, lh, INK, pk=PINK), y)
+            y += len(b) * lh + fs * 0.9
+    d = ImageDraw.Draw(can)
     d.line((M, H - M - 30, W - M, H - M - 30), fill=INK, width=2)
     fm = font('lg-medium.woff2', 22)
     d.text((M, H - M), 'la guayaba ilustrada', font=fm, fill=INK, anchor='ls')
@@ -404,18 +429,24 @@ def slide3(data, out, n=3):
     rl = layout(d, 'Léela completa en nuestra página web. Ahí te contamos todo y lo que significa para tu marca.', fb, maxw)
     block = len(ls) * size * 0.98 + 40 + len(rl) * 56 + 70 + 110
     y = (M + 64 + (H - M - 140)) / 2 - block / 2
-    y = render(d, M, y, ls, fonts, size * 0.98, INK, it_color=WHITE, track=TR)
+    if A is None:
+        y = render(d, M, y, ls, fonts, size * 0.98, INK, it_color=WHITE, track=TR)
+    else:                                  # la pregunta sube suave y se queda
+        _capa(can, aparece(0.3, 1.1), 34, lambda dd, yy: render(dd, M, yy, ls, fonts, size * 0.98, INK, it_color=WHITE, track=TR), y)
+        y += len(ls) * size * 0.98
+        d = ImageDraw.Draw(can)
     y += 40
     y = render(d, M, y, rl, fb, 56, INK)
     # botón
     by = y + 70
     cx, cy, bw, bh = M + 260, by + 55, 520, 110
-    if A is not None:                          # botón con sombra dura que se "pica"
-        p = picado(); sh = 10
-        d.rounded_rectangle((cx - bw / 2, cy - bh / 2 + sh, cx + bw / 2, cy + bh / 2 + sh), radius=bh / 2, fill='#7A2B00' if PINK != '#FF3674' else '#8A0F35')
-        cy += sh * p
+    fb_ = 40
+    if A is not None:                          # botón que se "pica": se hunde un poco y regresa
+        p = picado()
+        k = 1 - 0.04 * p
+        bw, bh, cy, fb_ = bw * k, bh * k, cy + 5 * p, 40 * k
     d.rounded_rectangle((cx - bw / 2, cy - bh / 2, cx + bw / 2, cy + bh / 2), radius=bh / 2, fill=INK)
-    d.text((cx, cy + 2), 'LINK EN BIO  →', font=font('lg-black.woff2', 40), fill=PINK, anchor='mm')
+    d.text((cx, cy + 2), 'LINK EN BIO  →', font=font('lg-black.woff2', int(round(fb_))), fill=PINK, anchor='mm')
     # firma
     dt(d, (M, H - M - 70 - 42), 'LG.I', font('lg-bold.woff2', 84), INK, -0.05)
     d.text((M + 196, H - M - 88), 'La Guayaba', font=font('lg-regular.woff2', 30), fill=INK, anchor='lm')
