@@ -1,0 +1,27 @@
+name: Prueba videos
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  t:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: pip install -q requests pillow
+      - run: |
+          mkdir -p prueba
+          TELEGRAM_TOKEN=x TELEGRAM_CHAT_ID=1 python - <<'PY' > prueba/resultado.txt 2>&1
+          import sys; sys.path.insert(0, 'scripts')
+          import notas, requests
+          for k, v in [('vm','1236223840'),('vm','1235335985'),('vm','1235313537'),('vm','1236466924'),('yt','K_QpJs5y9ZI'),('yt','iUr53gDq380'),('yt','xTkrKqbsDec'),('yt','r7p1uQGWBM0'),('yt','szmzlH_AaFU')]:
+              print(k, v, notas.video_embebible(k, v))
+          r = requests.get('https://player.vimeo.com/video/1235335985', headers={'Referer':'https://guayabailustrada.com.mx/','User-Agent':'Mozilla/5.0'})
+          print(r.status_code, r.text[:1500])
+          r = requests.get('https://player.vimeo.com/video/1236223840', headers={'Referer':'https://guayabailustrada.com.mx/','User-Agent':'Mozilla/5.0'})
+          print(r.status_code, r.text[:600])
+          PY
+          git config user.name bot; git config user.email bot@x
+          git checkout -b prueba-fotos
+          git add -f prueba && git commit -qm prueba && git push -f origin prueba-fotos
