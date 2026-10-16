@@ -799,6 +799,11 @@ def listen(hours=5.6):
             changed = False
             send_pending()
             poll()
+            try:
+                if thumb_backfill():
+                    changed = True
+            except Exception as e:
+                print('Miniatura:', e, file=sys.stderr)
             for pid, pmid in list(IGNOW.items()):
                 IGNOW.pop(pid, None)
                 if os.path.exists(f'drafts/{pid}.json'):
