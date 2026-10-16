@@ -21,12 +21,28 @@ from portada import font
 
 W, H = 1080, 1350
 PINK, INK, WHITE, WASH = '#FF3674', '#0B0B0B', '#FFFFFF', '#FFF2F6'
+GLOW = '#FFC2D4'
+# Paletas de la marca: rosa = carrusel fijo; naranja = carrusel animado (colores de guayabailustrada.com.mx)
+TEMAS = {'rosa': ('#FF3674', '#FFF2F6', '#FFC2D4'), 'naranja': ('#FF5B00', '#FFF3EA', '#FFC9A3')}
+
+
+def tema(nombre='rosa'):
+    global PINK, WASH, GLOW
+    PINK, WASH, GLOW = TEMAS[nombre]
+GLOW = '#FFC2D4'
+# Paletas de la marca: rosa = carrusel fijo; naranja = carrusel animado (colores de guayabailustrada.com.mx)
+TEMAS = {'rosa': ('#FF3674', '#FFF2F6', '#FFC2D4'), 'naranja': ('#FF5B00', '#FFF3EA', '#FFC9A3')}
+
+
+def tema(nombre='rosa'):
+    global PINK, WASH, GLOW
+    PINK, WASH, GLOW = TEMAS[nombre]
 M = 64
 TOTAL = 4
 # Animación (la usa carrusel_video.py). None = imagen fija.
 # A = {'t': segundos}. Cada lámina mueve UNA sola cosa: un golpe rápido, pausa y otra vez.
 A = None
-PERIODO, GOLPE, INICIO = 2.0, 0.45, 0.6
+PERIODO, GOLPE, INICIO = 3.0, 1.6, 0.4
 
 
 def golpe():
@@ -37,7 +53,7 @@ def golpe():
     if f >= GOLPE:
         return 0.0
     import math
-    return math.sin(math.pi * f / GOLPE)
+    return (1 - math.cos(2 * math.pi * f / GOLPE)) / 2      # entra y sale suave, sin tirones
 
 
 def _foto(ruta, size, destino, zoom=1.0):
@@ -102,7 +118,11 @@ def layout(d, text, fonts, maxw, track=0.0):
     return lines
 
 
-def render(d, x, y, lines, fonts, lh, color, hl_bg=PINK, hl_fg=INK, pk=PINK, align='left', maxw=None, pad=10, it_color=None, track=0.0, hop_it=0.0):
+def render(d, x, y, lines, fonts, lh, color, hl_bg=None, hl_fg=INK, pk=None, align='left', maxw=None, pad=10, it_color=None, track=0.0, hop_it=0.0):
+    hl_bg = hl_bg or PINK
+    pk = pk or PINK
+    hl_bg = hl_bg or PINK
+    pk = pk or PINK
     for ln in lines:
         lw = sum(w + g for _, _, w, g in ln)
         cx = x + ((maxw - lw) / 2 if align == 'center' and maxw else 0)
@@ -160,7 +180,7 @@ def header(d, color, n, dark_counter=True):
 
 
 def slide1(data, out):
-    can = _foto(data['img'], (W, H), (0.5, 0.36), zoom=1.0 + 0.045 * golpe())
+    can = _foto(data['img'], (W, H), (0.5, 0.36), zoom=1.0 + 0.025 * golpe())
     g = Image.new('L', (1, H))
     for y in range(H):
         t = max(0.0, (y - H * 0.28) / (H * 0.45))
@@ -201,14 +221,14 @@ def _abrir(ruta):
 
 def _fondo(arriba):
     """Fondo rosa claro con luz arriba o abajo (se calcula una sola vez)."""
-    key = ('fondo', arriba)
+    key = ('fondo', arriba, WASH)
     if key not in _CACHE:
         can = Image.new('RGB', (W, H), WASH)
         glow = Image.new('L', (W, H), 0)
         box = (-200, -520, W + 200, 520) if arriba else (-200, H - 520, W + 200, H + 520)
         ImageDraw.Draw(glow).ellipse(box, fill=150)
         glow = glow.filter(ImageFilter.GaussianBlur(160))
-        can.paste(Image.new('RGB', (W, H), '#FFC2D4'), (0, 0), glow)
+        can.paste(Image.new('RGB', (W, H), GLOW), (0, 0), glow)
         _CACHE[key] = can
     return _CACHE[key].copy()
 
@@ -222,7 +242,7 @@ def slide2(data, out):
     TR = -0.035
     fonts, ls, size = fitted(d, data['titulo'], maxw, 3, 'lg-black.woff2', 80, 48, track=TR)
     y = M + 108
-    y = render(d, M, y - 18 * golpe(), ls, fonts, size * 1.0, INK, hl_bg=PINK, hl_fg=INK, it_color=PINK, track=TR) + 18 * golpe()
+    y = render(d, M, y - 7 * golpe(), ls, fonts, size * 1.0, INK, hl_bg=PINK, hl_fg=INK, it_color=PINK, track=TR) + 7 * golpe()
     # resumen
     y += 38
     fr = {'n': font('lg-regular.woff2', 36), 'pk': font('lg-bold.woff2', 36),
@@ -265,7 +285,7 @@ def slide_info(data, out, n):
     TR = -0.035
     fonts, ls, size = fitted(d, data.get('info_titulo') or 'Lo que tienes que _saber_', maxw, 2, 'lg-black.woff2', 84, 56, track=TR)
     y = M + 108
-    y = render(d, M, y, ls, fonts, size * 1.0, INK, it_color=PINK, track=TR, hop_it=-20 * golpe()) + 36
+    y = render(d, M, y, ls, fonts, size * 1.0, INK, it_color=PINK, track=TR, hop_it=-9 * golpe()) + 36
     pars = info_de(data)
     disponible = H - M - 70 - y
     for fs in range(46, 26, -2):
@@ -302,7 +322,7 @@ def slide3(data, out, n=3):
     y = render(d, M, y, rl, fb, 56, INK)
     # botón
     by = y + 70
-    k = 1.0 + 0.07 * golpe()
+    k = 1.0 + 0.035 * golpe()
     bw, bh = 520 * k, 110 * k
     cx, cy = M + 260, by + 55
     d.rounded_rectangle((cx - bw / 2, cy - bh / 2, cx + bw / 2, cy + bh / 2), radius=bh / 2, fill=INK)
