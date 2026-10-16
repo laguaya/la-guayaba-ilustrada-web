@@ -89,7 +89,7 @@ def _sin_franjas(im):
     """Quita franjas negras o blancas (letterbox) alrededor de la imagen."""
     from PIL import ImageChops
     for fondo in ((0, 0, 0),):
-        diff = ImageChops.difference(im, Image.new('RGB', im.size, fondo)).convert('L').point(lambda v: 255 if v > 24 else 0)
+        diff = ImageChops.difference(im, Image.new('RGB', im.size, fondo)).convert('L').point(lambda v: 255 if v > 12 else 0)
         box = diff.getbbox()
         if box and (box[2] - box[0]) * (box[3] - box[1]) < im.size[0] * im.size[1] * 0.93:
             im = im.crop(box)

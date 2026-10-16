@@ -113,12 +113,12 @@ def tip(orig):
     return ''
 
 
-def set_cover(nid, src_img):
+def set_cover(nid, src_img, cr='Foto: La Guayaba Ilustrada'):
     """Pone la foto como portada de un borrador o de una nota ya publicada."""
     path = f'drafts/{nid}.json'
     if os.path.exists(path):
         n = load(path); old = n.get('img', '')
-        n['img'] = src_img; n['cr'] = 'Foto: La Guayaba Ilustrada'
+        n['img'] = src_img; n['cr'] = cr
         save(path, n)
     else:
         js = open('posts.js', encoding='utf-8').read()
@@ -128,13 +128,13 @@ def set_cover(nid, src_img):
                 m = re.search(r'("img": "|img:\')([^"\']+)', ln)
                 old = m.group(2) if m else ''
                 ln = ln.replace(old, src_img, 1) if old else ln
-                ln = re.sub(r'"cr": "[^"]*"', '"cr": "Foto: La Guayaba Ilustrada"', ln)
-                lines[i] = re.sub(r"cr:'[^']*'", "cr:'Foto: La Guayaba Ilustrada'", ln)
+                ln = re.sub(r'"cr": "[^"]*"', '"cr": "' + cr + '"', ln)
+                lines[i] = re.sub(r"cr:'[^']*'", "cr:'" + cr + "'", ln)
                 break
         else:
             return False
         open('posts.js', 'w', encoding='utf-8').write('\n'.join(lines))
-    if old.startswith('assets/work/nota-') and old != src_img and os.path.exists(old):
+    if old.startswith('assets/work/nota-') and '-foto-src' not in old and old != src_img and os.path.exists(old):
         os.remove(old)
     return True
 
@@ -242,8 +242,8 @@ def siguiente_vuelta():
     return f"{h}:52 {'am' if t.hour < 12 else 'pm'}" + ('' if t.date() == now.date() else ' de mañana')
 
 
-def ig_command(nid, mid):
-    """Sube a Instagram el carrusel de una nota ya publicada."""
+def ig_command(nid, mid, kind='carousel'):
+    """Sube a Instagram el carrusel (o el Reel) de una nota ya publicada."""
     if os.path.exists(f'drafts/{nid}.json'):
         reply(mid, 'Esa nota todavía no está publicada. Usa el botón 📲 Web + Instagram de la nota.')
         return
@@ -267,8 +267,15 @@ def ig_command(nid, mid):
     if NOFOTO.get(nid):
         reply(mid, '⚠️ Esta nota no tiene fotos para el carrusel. Respóndele con 1 o 2 fotos y vuelve a escribir "instagram".')
         return
-    queue_instagram(n)
-    reply(mid, '📲 Va. Armé el carrusel y lo subo a Instagram en unos minutos. Te aviso aquí cuando esté publicado.')
+    if kind == 'reel':
+        try:
+            build_reel(n)
+        except Exception as e:
+            reply(mid, f'⚠️ No pude armar el Reel: {e}')
+            return
+    queue_instagram(n, kind)
+    reply(mid, ('🎬 Va. Armé el Reel' if kind == 'reel' else '📲 Va. Armé el carrusel')
+          + ' y lo subo a Instagram en unos minutos. Te aviso aquí cuando esté publicado.')
     return
 
 
@@ -306,29 +313,42 @@ def handle_message(u, msg):
             if vt:
                 n['vt'] = vt
             put(n)
-            reply(mid, '🎬 Listo, ese video de Vimeo queda en la nota de la web. En Instagram van las fotos que me mandes.')
+            reply(mid, '🎬 Listo, ese video de Vimeo queda en la nota de la web. Te mando imágenes del video para Instagram.')
+            video_cands(nid)
             return
     if yt and nid and not is_photo:
         n, put = note_get(nid)
         if n:
             n['yt'] = yt.group(1); n.pop('vm', None)
             put(n)
-            reply(mid, '🎬 Listo, ese video de YouTube queda como portada de la nota.')
+            reply(mid, '🎬 Listo, ese video de YouTube queda como portada de la nota. Te mando imágenes del video para Instagram.')
+            video_cands(nid)
             return
-    ig_word = len(text) < 40 and re.search(r'\b(instagram|ig)\b', text, re.I)
+    ig_word = len(text) < 40 and re.search(r'\b(instagram|ig|reel)\b', text, re.I)
     if not nid and (is_photo or ig_word):
         nid = last_note()   # en iPhone a veces no se puede responder: se usa la última nota
     if nid:
         set_last(nid)
+    if not is_photo and re.fullmatch(r'\s*(busca\s+)?fotos?\s*[.!?]*\s*', text, re.I):
+        nid = nid or last_note()
+        path = f'drafts/{nid}.json' if nid else ''
+        if not nid or not os.path.exists(path):
+            reply(mid, 'Esa nota ya está publicada o no la encuentro. Respóndele "fotos" a una nota pendiente.')
+            return
+        reply(mid, '🔎 Buscando fotos reales en la fuente…')
+        n = load(path); poner_candidatas(n); save(path, n)
+        send_selector(n); PREVIEW.add(nid)
+        return
     if nid and not is_photo and ig_word:
-        ig_command(nid, mid)
+        ig_command(nid, mid, 'reel' if re.search(r'\breel\b', text, re.I) else 'carousel')
         return
     if text.strip().lower() in ('/start', '/help', '/ayuda'):
         reply(mid, 'Hola. Aquí te llegan las notas para aprobar.\n\n'
               '• Mándame un link o un texto con lo que quieres que se publique y lo redacto en mi próxima vuelta.\n'
               '• Fotos para el carrusel: responde a la nota con 1 o 2 fotos. Si la nota es video, las fotos son solo para Instagram; si no, la primera también es la portada de la web.\n'
               '• Para poner un video de YouTube como portada, responde a la nota con el link del video.\n'
-              '• Para subir a Instagram una nota que ya está en la web, responde a la nota con la palabra "instagram".\n'
+              '• Para subir a Instagram una nota que ya está en la web, responde a la nota con "instagram" (carrusel) o "reel".\n'
+              '• Las fotos de la nota original te llegan numeradas: usa los botones para escoger portada y lámina 2. Para buscarlas otra vez, responde "fotos".\n'
               '• Para forzar la segunda lámina escribe "2" en el texto de la foto; para mandarla a la galería de la web escribe "galería".\n'
               '• Una foto suelta se guarda para usarla en la siguiente nota.')
         return
@@ -403,6 +423,40 @@ def build_carousel(n):
     return [f'{out}/{i}.jpg' for i in (1, 2, 3)]
 
 
+def build_reel(n):
+    """Reel vertical con las mismas fotos y textos del carrusel -> assets/ig/<id>/reel.mp4"""
+    sys.path.insert(0, 'scripts')
+    import reel
+    build_carousel(n)  # deja listas las fotos y NOFOTO
+    data = dict(n['ig'])
+    ig1 = n.get('ig1') or n['ig'].get('ig1'); ig2 = n.get('ig2') or n['ig'].get('ig2')
+    data['img'] = ig1 if ig1 and os.path.exists(ig1) else n['img'].split('?')[0]
+    if ig2 and os.path.exists(ig2):
+        data['img2'] = ig2
+    if '-foto' not in data['img']:
+        import portada
+        data['img'] = portada.fondo(n['id'], n['k'], f'/tmp/fondo-{n["id"]}.jpg')
+    out = f'assets/ig/{n["id"]}/reel.mp4'
+    os.makedirs(os.path.dirname(out), exist_ok=True)
+    reel.make(data, out)
+    return out
+
+
+def send_reel(n):
+    try:
+        out = build_reel(n)
+    except Exception as e:
+        print('Reel:', e, file=sys.stderr)
+        tg('sendMessage', chat_id=CHAT, text=f'⚠️ No pude armar el Reel: {str(e)[:200]}')
+        return False
+    with open(out, 'rb') as f:
+        r = tg('sendVideo', files={'video': f}, chat_id=CHAT, supports_streaming='true', width=1080, height=1920,
+               caption='🎬 Reel para Instagram (usa las mismas fotos que el carrusel)')
+    if r.get('ok'):
+        remember(r['result']['message_id'], n['id'])
+    return bool(r.get('ok'))
+
+
 def send_carousel(n):
     try:
         files = build_carousel(n)
@@ -429,10 +483,110 @@ def send_carousel(n):
     return bool(r.get('ok'))
 
 
-def queue_instagram(n):
+def queue_instagram(n, kind='carousel'):
     q = load(IGQ) if os.path.exists(IGQ) else []
-    q.append({'id': n['id'], 'caption': n['ig'].get('caption', ''), 'reply': n.get('tg')})
+    q.append({'id': n['id'], 'caption': n['ig'].get('caption', ''), 'reply': n.get('tg'), 'kind': kind})
     save(IGQ, q)
+
+
+def es_video(n):
+    return bool(n.get('yt') or n.get('vm'))
+
+
+def poner_candidatas(n, solo_video=False):
+    """Busca fotos reales (fuente y/o video) y deja puestas la 1 y la 2 por defecto."""
+    sys.path.insert(0, 'scripts')
+    import fuentes
+    try:
+        nuevas = fuentes.candidatas(n, solo_video=solo_video)
+    except Exception as e:
+        print('Fotos de la fuente:', e, file=sys.stderr)
+        nuevas = []
+    c = nuevas + [x for x in n.get('cands', []) if x not in nuevas] if solo_video else nuevas
+    propia = n.get('img', '').split('?')[0]
+    if not solo_video and '-foto' in propia and '-foto-src' not in propia and os.path.exists(propia):
+        c = [propia] + c   # una foto que ya mandó Sergio va primero
+    c = [x for x in c if os.path.exists(x)][:6]
+    n['cands'] = c
+    if c:
+        cr = 'Foto: ' + (fuentes.credito(n.get('src', '')) or 'cortesía')
+        if es_video(n):
+            n['ig1'] = c[0]
+        elif c[0] != n.get('img', '').split('?')[0]:
+            n['img'] = c[0]; n['cr'] = cr
+        if len(c) > 1:
+            n['ig2'] = c[1]
+    return c
+
+
+def video_cands(nid):
+    """Al agregar un video a un borrador: suma sus imágenes a las opciones y las pone en el carrusel."""
+    path = f'drafts/{nid}.json'
+    if not os.path.exists(path):
+        return
+    n = load(path)
+    poner_candidatas(n, solo_video=True)
+    save(path, n)
+    send_selector(n)
+    PREVIEW.add(nid)
+
+
+def send_selector(n):
+    """Manda las fotos encontradas numeradas y los botones para escoger portada y lámina 2."""
+    c = [x for x in n.get('cands', []) if os.path.exists(x)]
+    if not c:
+        tg('sendMessage', chat_id=CHAT, text='🔎 No encontré fotos buenas en la fuente de esta nota. Mándame 1 o 2 tuyas.')
+        return
+    media, fh = [], {}
+    for i, f in enumerate(c):
+        fh[f'c{i}'] = open(f, 'rb')
+        it = {'type': 'photo', 'media': f'attach://c{i}'}
+        if i == 0:
+            it['caption'] = (f'🖼 Fotos reales de la nota (1 a {len(c)}).\n'
+                             + ('Puse la 1 en la portada del carrusel' if es_video(n) else 'Puse la 1 de portada')
+                             + (' y la 2 en la segunda lámina.' if len(c) > 1 else '.'))
+        media.append(it)
+    if len(media) == 1:
+        with open(c[0], 'rb') as f:
+            r = tg('sendPhoto', files={'photo': f}, chat_id=CHAT, caption=media[0].get('caption', ''))
+        r = {'ok': r.get('ok'), 'result': [r['result']] if r.get('ok') else []}
+    else:
+        r = tg('sendMediaGroup', files=fh, chat_id=CHAT, media=media)
+    for f in fh.values():
+        f.close()
+    for m in r.get('result', []):
+        remember(m['message_id'], n['id'])
+    nums = range(1, len(c) + 1)
+    kb = [[{'text': f'Portada {k}', 'callback_data': f'cp:{n["id"]}:{k}'} for k in nums],
+          [{'text': f'Lámina 2 · {k}', 'callback_data': f'c2:{n["id"]}:{k}'} for k in nums]]
+    r2 = tg('sendMessage', chat_id=CHAT, text='¿Quieres otras? Elige aquí:', reply_markup={'inline_keyboard': kb})
+    if r2.get('ok'):
+        remember(r2['result']['message_id'], n['id'])
+
+
+def elegir(cq, data):
+    """Botones Portada k / Lámina 2 · k."""
+    tipo, nid, k = data.split(':')
+    path = f'drafts/{nid}.json'
+    if not re.fullmatch(r'[a-z0-9-]+', nid) or not os.path.exists(path):
+        tg('answerCallbackQuery', callback_query_id=cq['id'], text='Esa nota ya se publicó.')
+        return
+    n = load(path); c = n.get('cands', []); k = int(k)
+    if not (1 <= k <= len(c)):
+        return
+    f = c[k - 1]
+    if tipo == 'cp':
+        if es_video(n):
+            n['ig1'] = f
+        else:
+            sys.path.insert(0, 'scripts'); import fuentes
+            n['img'] = f; n['cr'] = 'Foto: ' + (fuentes.credito(n.get('src', '')) or 'cortesía')
+        txt = f'✅ Foto {k} de portada'
+    else:
+        n['ig2'] = f; txt = f'✅ Foto {k} en la lámina 2'
+    save(path, n)
+    tg('answerCallbackQuery', callback_query_id=cq['id'], text=txt + '. Te mando el carrusel.')
+    PREVIEW.add(nid)
 
 
 def send_pending():
@@ -441,6 +595,9 @@ def send_pending():
         n = load(path)
         if n.get('tg'):
             continue
+        if 'cands' not in n:
+            poner_candidatas(n)
+            save(path, n)
         cap = f'<b>Nota nueva para revisar</b> · {esc(n["k"])}\n\n<b>{esc(n["t"])}</b>\n<i>{esc(n["x"])}</i>'
         img = n.get('img', '')
         if img and os.path.exists(img):
@@ -454,8 +611,13 @@ def send_pending():
         if n.get('src'):
             body += f'\n\nFuente: {esc(n["src"])}'
         kb = [[{'text': '✅ Publicar en la web', 'callback_data': 'pub:' + n['id']}]]
-        if n.get('ig') and send_carousel(n):
-            kb.append([{'text': '📲 Web + Instagram', 'callback_data': 'pig:' + n['id']}])
+        if n.get('ig'):
+            send_selector(n)
+            if send_carousel(n):
+                kb.append([{'text': '📲 Web + Carrusel', 'callback_data': 'pig:' + n['id']}])
+                if send_reel(n):
+                    kb.append([{'text': '🎬 Web + Reel', 'callback_data': 'prl:' + n['id']}])
+                    kb.append([{'text': '🔥 Web + Carrusel + Reel', 'callback_data': 'pall:' + n['id']}])
         kb.append([{'text': '🗑 Descartar', 'callback_data': 'del:' + n['id']}])
         r = tg('sendMessage', chat_id=CHAT, text=body[:3900], parse_mode='HTML',
                disable_web_page_preview='true', reply_markup={'inline_keyboard': kb})
@@ -483,7 +645,7 @@ def publish(n):
     if n.get('ig'):
         os.makedirs('drafts/ig', exist_ok=True)
         ig = dict(n['ig'])
-        for k in ('ig2',):
+        for k in ('ig1', 'ig2'):
             if n.get(k):
                 ig[k] = n[k]
         save(f'drafts/ig/{n["id"]}.json', ig)
@@ -561,6 +723,9 @@ def poll():
         cq = u.get('callback_query')
         if not cq or cq['from']['id'] != CHAT:
             continue
+        if re.fullmatch(r'(cp|c2):[a-z0-9-]+:\d', cq.get('data') or ''):
+            elegir(cq, cq['data']); changed = True
+            continue
         accion, _, nid = (cq.get('data') or '').partition(':')
         if not re.fullmatch(r'[a-z0-9-]+', nid or ''):
             continue
@@ -569,23 +734,28 @@ def poll():
             tg('answerCallbackQuery', callback_query_id=cq['id'], text='Esa nota ya se había procesado.')
             continue
         n = load(path)
-        if accion in ('pub', 'pig'):
+        if accion in ('pub', 'pig', 'prl', 'pall'):
             publish(n)
             set_last(nid)
             os.remove(path)
-            if accion == 'pig' and n.get('ig'):
+            kinds = {'pig': ['carousel'], 'prl': ['reel'], 'pall': ['carousel', 'reel']}.get(accion, [])
+            if kinds and n.get('ig'):
                 try:
                     build_carousel(n)  # rehace las láminas con las fotos más recientes
+                    if 'reel' in kinds:
+                        build_reel(n)
                 except Exception as e:
-                    print('Carrusel:', e, file=sys.stderr)
+                    print('Carrusel/Reel:', e, file=sys.stderr)
+                nombre = ' y '.join({'carousel': 'el carrusel', 'reel': 'el Reel'}[k] for k in kinds)
                 if NOFOTO.get(n['id']):
-                    mark(cq, '✅ Publicada en la web. El carrusel no tenía foto, así que NO lo subí a Instagram. '
-                             'Respóndele a la nota con 1 o 2 fotos y después escribe "instagram".')
+                    mark(cq, f'✅ Publicada en la web. No había fotos, así que NO subí {nombre} a Instagram. '
+                             'Mándame 1 o 2 fotos y después escribe "instagram".')
                 elif os.environ.get('IG_TOKEN'):
-                    queue_instagram(n)
-                    mark(cq, '✅ Publicada en la web. En unos minutos sale el carrusel en Instagram.')
+                    for k in kinds:
+                        queue_instagram(n, k)
+                    mark(cq, f'✅ Publicada en la web. En unos minutos sale {nombre} en Instagram.')
                 else:
-                    mark(cq, '✅ Publicada en la web. Instagram todavía no está conectado: descarga el carrusel de arriba y súbelo tú.')
+                    mark(cq, '✅ Publicada en la web. Instagram todavía no está conectado.')
             else:
                 mark(cq, '✅ Publicada. Te aviso aquí con el link en cuanto ya se vea en la página (1 a 3 minutos).')
             pend = load(VERIFY) if os.path.exists(VERIFY) else []
@@ -607,6 +777,34 @@ def poll():
         changed = True
 
 
+def publish_reel(item, api, uid, tok, site):
+    import hashlib
+    path = f'assets/ig/{item["id"]}/reel.mp4'
+    local = hashlib.md5(open(path, 'rb').read()).hexdigest()
+    url = f'{site}/{path}'
+    for _ in range(40):  # espera a que la página tenga el video nuevo
+        try:
+            if hashlib.md5(requests.get(url + f'?t={time.time():.0f}', timeout=60).content).hexdigest() == local:
+                break
+        except Exception:
+            pass
+        time.sleep(10)
+    c = requests.post(f'{api}/{uid}/media', data={'media_type': 'REELS', 'video_url': f'{url}?v={local[:8]}',
+                      'caption': item['caption'], 'share_to_feed': 'true', 'access_token': tok}, timeout=60).json()
+    if 'id' not in c:
+        raise RuntimeError(c)
+    for _ in range(60):
+        st = requests.get(f'{api}/{c["id"]}', params={'fields': 'status_code,status', 'access_token': tok}, timeout=30).json()
+        if st.get('status_code') == 'FINISHED':
+            break
+        if st.get('status_code') == 'ERROR':
+            raise RuntimeError(st)
+        time.sleep(8)
+    pub = requests.post(f'{api}/{uid}/media_publish', data={'creation_id': c['id'], 'access_token': tok}, timeout=60).json()
+    if 'id' not in pub:
+        raise RuntimeError(pub)
+
+
 def instagram():
     """Publica los carruseles en cola usando la API oficial de Instagram."""
     import time
@@ -621,6 +819,18 @@ def instagram():
     site = os.environ.get('SITE', 'https://guayabailustrada.com.mx')
     rest = []
     for item in q:
+        if item.get('kind') == 'reel':
+            try:
+                publish_reel(item, api, uid, tok, site)
+                tg('sendMessage', chat_id=CHAT, text='🎬 Listo, el Reel ya está publicado en Instagram.', reply_to_message_id=item.get('reply'))
+            except Exception as e:
+                print('Reel falló:', e, file=sys.stderr)
+                item['intentos'] = item.get('intentos', 0) + 1
+                if item['intentos'] < 3:
+                    rest.append(item)
+                else:
+                    tg('sendMessage', chat_id=CHAT, text=f'⚠️ No pude publicar el Reel en Instagram ({str(e)[:300]}).', reply_to_message_id=item.get('reply'))
+            continue
         urls = [f'{site}/assets/ig/{item["id"]}/{i}.jpg' for i in (1, 2, 3)]
         import hashlib
         local = [hashlib.md5(open(f'assets/ig/{item["id"]}/{i}.jpg', 'rb').read()).hexdigest()
