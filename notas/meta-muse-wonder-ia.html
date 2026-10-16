@@ -243,7 +243,7 @@ footer small{font-size:13px;color:var(--gray)}
 <script>
 const P=window.POSTS||[];
 const view=document.getElementById('view');
-const thumb=p=>p.vm?`<img src="${p.vt||p.img}" alt="${p.alt||p.t}" loading="lazy"><span class="play"></span>`:p.yt?`<img src="https://i.ytimg.com/vi/${p.yt}/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${p.yt}/hqdefault.jpg'" alt="${p.alt||p.t}" loading="lazy"><span class="play"></span>`:`<img src="${p.img}" alt="${p.alt}" loading="lazy">`;
+const thumb=p=>p.th&&(p.yt||p.vm)?`<img src="${p.th}" alt="${p.alt||p.t}" loading="lazy"><span class="play"></span>`:p.vm?`<img src="${p.vt||p.img}" alt="${p.alt||p.t}" loading="lazy"><span class="play"></span>`:p.yt?`<img src="https://i.ytimg.com/vi/${p.yt}/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${p.yt}/hqdefault.jpg'" alt="${p.alt||p.t}" loading="lazy"><span class="play"></span>`:`<img src="${p.img}" alt="${p.alt}" loading="lazy">`;
 const card=p=>`<a class="post" href="notas/${p.id}"><div class="pic">${thumb(p)}</div><div class="in"><span class="kind" style="background:${p.c}">${p.k}</span><time>${p.d}</time><h3>${p.t}</h3><p>${p.x}</p><span class="cta sm">Leer nota</span></div></a>`;
 let filter='todo',shown=13;
 const host=u=>{try{return new URL(u).hostname.replace(/^www\./,'')}catch(e){return 'Ver fuente'}};
