@@ -1011,7 +1011,7 @@ def publish_anim(item, api, uid, tok, site):
     kids = []
     for u, l in zip(urls, local):
         c = requests.post(f'{api}/{uid}/media', data={'media_type': 'VIDEO', 'video_url': f'{u}?v={l[:8]}',
-                          'is_carousel_item': 'true', 'access_token': tok}, timeout=60).json()
+                          'is_carousel_item': 'true', 'thumb_offset': 4000, 'access_token': tok}, timeout=60).json()
         if 'id' not in c:
             raise RuntimeError(c)
         kids.append(c['id'])

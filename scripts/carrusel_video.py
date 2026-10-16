@@ -3,7 +3,7 @@
 Uso: python scripts/carrusel_video.py datos.json carpeta_salida
 Genera 1.mp4 ... N.mp4 (y también los .jpg fijos, que sirven de miniatura y de respaldo).
 Va en naranja (el fijo, en rosa). Cada lámina mueve UNA sola cosa, lento:
-  1) la foto crece suave con lo importante al centro  2) la frase destacada dibuja un infinito horizontal
+  1) foto fija y centrada; el titular aparece suave y el marcatextos pinta las franjas  2) la frase destacada dibuja un infinito horizontal
   3) "saber" flota arriba y abajo  4) el botón "link en bio" se pica cada 2 s.
 """
 import functools, io, json, os, subprocess, sys

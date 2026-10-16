@@ -149,7 +149,7 @@ def layout(d, text, fonts, maxw, track=0.0):
     return lines
 
 
-def render(d, x, y, lines, fonts, lh, color, hl_bg=None, hl_fg=INK, pk=None, align='left', maxw=None, pad=10, it_color=None, track=0.0, it_off=(0.0, 0.0)):
+def render(d, x, y, lines, fonts, lh, color, hl_bg=None, hl_fg=INK, pk=None, align='left', maxw=None, pad=10, it_color=None, track=0.0, it_off=(0.0, 0.0), marca=None):
     hl_bg = hl_bg or PINK
     pk = pk or PINK
     hl_bg = hl_bg or PINK
@@ -166,6 +166,31 @@ def render(d, x, y, lines, fonts, lh, color, hl_bg=None, hl_fg=INK, pk=None, ali
                 while j < len(ln) and ln[j][1] == 'hl':
                     run += ln[j][2] + (ln[j][3] if j > i else 0); j += 1
                 cx += g
+                if marca is not None:              # marcatextos: la franja entra de izquierda a derecha
+                    pr = marca()
+                    x0, ww_ = cx, 0
+                    for k in range(i, j):
+                        if k > i:
+                            ww_ += ln[k][3]
+                        dt(d, (x0 + ww_, y), ln[k][0], fonts['hl'], color, track); ww_ += ln[k][2]
+                    if pr > 0:
+                        bw_ = (run + 2 * pad) * pr
+                        bh_ = size * 1.0
+                        capa = Image.new('RGBA', (int(run + 2 * pad) + 2, int(bh_) + 2), (0, 0, 0, 0))
+                        dc = ImageDraw.Draw(capa)
+                        dc.rectangle((0, 0, bw_, bh_), fill=hl_bg)
+                        tx = pad
+                        for k in range(i, j):
+                            if k > i:
+                                tx += ln[k][3]
+                            dt(dc, (tx, -size * 0.06), ln[k][0], fonts['hl'], hl_fg, track); tx += ln[k][2]
+                        m_ = Image.new('L', capa.size, 0)
+                        ImageDraw.Draw(m_).rectangle((0, 0, bw_, bh_), fill=255)
+                        capa.putalpha(Image.composite(capa.getchannel('A'), m_, m_).point(lambda v: v))
+                        d._image.paste(capa, (int(cx - pad), int(y + size * 0.06)), capa)
+                    cx += run
+                    i = j
+                    continue
                 d.rectangle((cx - pad, y + size * 0.06, cx + run + pad, y + size * 1.06), fill=hl_bg)
                 for k in range(i, j):
                     if k > i:
@@ -211,7 +236,7 @@ def header(d, color, n, dark_counter=True):
 
 
 def slide1(data, out):
-    can = _foto(data['img'], (W, H), (0.5, 0.36), zoom=zoom_lento())
+    can = _foto(data['img'], (W, H), (0.5, 0.36))
     g = Image.new('L', (1, H))
     for y in range(H):
         t = max(0.0, (y - H * 0.28) / (H * 0.45))
@@ -233,12 +258,43 @@ def slide1(data, out):
     ew = d.textlength(et, font=fe) + 44
     d.rounded_rectangle((M, y - 84, M + ew, y - 30), radius=27, fill=PINK)
     d.text((M + ew / 2, y - 56), et, font=fe, fill=INK, anchor='mm')
-    render(d, M, y, ls, fonts, lh, WHITE, hl_bg=PINK, hl_fg=INK, pad=12)
+    if A is None:
+        render(d, M, y, ls, fonts, lh, WHITE, hl_bg=PINK, hl_fg=INK, pad=12)
+    else:
+        _titulo_animado(can, ls, fonts, lh, y, size)
+        d = ImageDraw.Draw(can)
     d.line((M, foot - 34, W - M, foot - 34), fill=WHITE, width=2)
     fm = font('lg-bold.woff2', 24)
     d.text((M, foot), data.get('fecha', ''), font=fm, fill=WHITE, anchor='lm')
     d.text((W - M, foot), 'DESLIZA PARA SABER MÁS  →', font=fm, fill=WHITE, anchor='rm')
     can.save(out, 'JPEG', quality=92, optimize=True)
+
+
+def _titulo_animado(can, ls, fonts, lh, y, size):
+    """Lámina 1 animada: el titular aparece suave renglón por renglón y después el marcatextos
+    pinta cada franja de izquierda a derecha. Al final del bucle se desvanece para repetir sin brinco."""
+    t = A['t']
+    def ease(x):
+        x = max(0.0, min(1.0, x)); return x * x * (3 - 2 * x)
+    salida = 1 - ease((t - (DUR - 0.5)) / 0.45)
+    inicio_m = 0.35 + len(ls) * 0.22 + 0.35
+    n_run = [0]
+    def marca():
+        k = n_run[0]; n_run[0] += 1
+        return ease((t - inicio_m - k * 0.5) / 0.6)
+    for i, ln in enumerate(ls):
+        p = ease((t - 0.35 - i * 0.22) / 0.55) * salida
+        if p <= 0:
+            for w, s, *_ in ln:            # cuenta las franjas aunque el renglón aún no se vea
+                pass
+            n_run[0] += sum(1 for k, x in enumerate(ln) if x[1] == 'hl' and (k == 0 or ln[k - 1][1] != 'hl'))
+            continue
+        capa = Image.new('RGBA', can.size, (0, 0, 0, 0))
+        render(ImageDraw.Draw(capa), M, y + i * lh + (1 - p) * 14, [ln], fonts, lh, WHITE,
+               hl_bg=PINK, hl_fg=INK, pad=12, marca=marca)
+        if p < 1:
+            capa.putalpha(capa.getchannel('A').point(lambda v: int(v * p)))
+        can.paste(capa, (0, 0), capa)
 
 
 _CACHE = {}
