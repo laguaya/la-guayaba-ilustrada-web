@@ -438,21 +438,23 @@ def build_carousel(n):
     now = datetime.now(timezone(timedelta(hours=-6)))
     meses = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE']
     data.setdefault('fecha', f'{now.day} {meses[now.month - 1]} {now.year}')
-    if not data.get('puntos'):
-        data['puntos'] = puntos_auto(n)
+    if not data.get('info'):
+        data['info'] = info_auto(n)
     carrusel.make(data, out)
     return [f'{out}/{i}.jpg' for i in (1, 2, 3, 4) if os.path.exists(f'{out}/{i}.jpg')]
 
 
-def puntos_auto(n):
-    """Si el redactor no mandó 'puntos', saca 3 datos de los párrafos de la nota (primera frase de cada uno)."""
-    out = []
-    for p in n.get('b', [])[:-1]:
-        f = re.split(r'(?<=[.!?])\s+', p.strip())[0]
-        if 40 <= len(f) <= 170:
-            out.append(f)
-        if len(out) == 3:
-            break
+def info_auto(n):
+    """Si el redactor no mandó 'info', usa el contexto de la nota (párrafos 2 y 3) recortado en frases completas."""
+    out, total = [], 0
+    for p in n.get('b', [])[1:3]:
+        frases, txt = re.split(r'(?<=[.!?])\s+', p.strip()), ''
+        for f in frases:
+            if total + len(txt) + len(f) > 520:
+                break
+            txt += (' ' if txt else '') + f
+        if txt:
+            out.append(txt); total += len(txt)
     return out
 
 

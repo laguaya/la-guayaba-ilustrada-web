@@ -207,13 +207,16 @@ def slide2(data, out):
     can.save(out, 'JPEG', quality=92, optimize=True)
 
 
-def puntos_de(data):
-    p = [x for x in (data.get('puntos') or []) if x and x.strip()]
-    return p[:4]
+def info_de(data):
+    """Texto de la lámina de información: lista de párrafos (campo 'info'; acepta también los viejos 'puntos')."""
+    t = data.get('info') or data.get('puntos') or []
+    if isinstance(t, str):
+        t = [x for x in re.split(r'\n\s*\n|\n', t) if x.strip()]
+    return [x.strip() for x in t if x and x.strip()][:4]
 
 
 def slide_info(data, out, n):
-    """Lámina de pura información: los datos clave numerados, con el mismo diseño de la lámina 2."""
+    """Lámina de pura información en párrafos, con el mismo diseño de la lámina 2."""
     can = Image.new('RGB', (W, H), WASH)
     glow = Image.new('L', (W, H), 0)
     ImageDraw.Draw(glow).ellipse((-200, H - 520, W + 200, H + 520), fill=150)
@@ -225,26 +228,19 @@ def slide_info(data, out, n):
     TR = -0.035
     fonts, ls, size = fitted(d, data.get('info_titulo') or 'Lo que tienes que _saber_', maxw, 2, 'lg-black.woff2', 84, 56, track=TR)
     y = M + 108
-    y = render(d, M, y, ls, fonts, size * 1.0, INK, it_color=PINK, track=TR) + 30
-    pts = puntos_de(data)
-    fnum = font('lg-black.woff2', 72)
-    numw = 128
-    # tamaño de letra que quepa en el espacio disponible
+    y = render(d, M, y, ls, fonts, size * 1.0, INK, it_color=PINK, track=TR) + 36
+    pars = info_de(data)
     disponible = H - M - 70 - y
-    for fs in range(50, 28, -2):
+    for fs in range(46, 26, -2):
         fr = {'n': font('lg-regular.woff2', fs), 'pk': font('lg-bold.woff2', fs),
               'hl': font('lg-regular.woff2', fs), 'it': font('lg-italic.woff2', fs)}
-        bloques = [layout(d, t, fr, maxw - numw)[:5] for t in pts]
-        alto = sum(max(len(b), 1) * fs * 1.32 + 64 for b in bloques)
+        bloques = [layout(d, t, fr, maxw) for t in pars]
+        lh = fs * 1.38
+        alto = sum(len(b) * lh for b in bloques) + (len(bloques) - 1) * fs * 0.9
         if alto <= disponible:
             break
-    gap = max(0, (disponible - alto) / max(1, len(pts)))
-    for i, (t, b) in enumerate(zip(pts, bloques)):
-        d.line((M, y, W - M, y), fill=INK, width=2)
-        y += 30
-        d.text((M, y - 6), f'{i + 1:02d}', font=fnum, fill=PINK)
-        render(d, M + numw, y, b, fr, fs * 1.32, INK, pk=PINK)
-        y += max(len(b), 1) * fs * 1.32 + 34 + min(gap, 120)
+    for b in bloques:
+        y = render(d, M, y, b, fr, lh, INK, pk=PINK) + fs * 0.9
     d.line((M, H - M - 30, W - M, H - M - 30), fill=INK, width=2)
     fm = font('lg-medium.woff2', 22)
     d.text((M, H - M), 'la guayaba ilustrada', font=fm, fill=INK, anchor='ls')
@@ -283,7 +279,7 @@ def slide3(data, out, n=3):
 def make(data, outdir):
     global TOTAL
     os.makedirs(outdir, exist_ok=True)
-    con_info = len(puntos_de(data)) >= 2
+    con_info = len(info_de(data)) >= 1
     TOTAL = 4 if con_info else 3
     for f in ('3.jpg', '4.jpg'):
         if os.path.exists(os.path.join(outdir, f)):
