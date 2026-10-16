@@ -1,0 +1,37 @@
+name: Prueba reel
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  p:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: (sudo apt-get update -qq && sudo apt-get install -y -qq tesseract-ocr ffmpeg) >/dev/null 2>&1 || true
+      - run: pip install -q requests pillow fonttools brotli "opencv-contrib-python-headless<5" edge-tts
+      - run: |
+          mkdir -p out
+          python3 - <<'PY' > out/reporte.txt 2>&1
+          import json, sys, glob
+          sys.path.insert(0, 'scripts')
+          import reel
+          d = json.load(open('drafts/ig/haribo-twin-snakes-dulce-o-acido.json'))
+          d['img'] = 'assets/work/nota-haribo-twin-snakes-dulce-o-acido-foto-src1.webp'
+          d['img2'] = 'assets/work/nota-haribo-twin-snakes-dulce-o-acido-foto-src2.webp'
+          d['fotos'] = sorted(glob.glob('assets/work/nota-haribo-twin-snakes-dulce-o-acido-foto-src*.webp'))
+          d['src'] = 'https://www.adsoftheworld.com/campaigns/twin-snakes'
+          d['guion'] = ('¿Tú por qué lado empiezas una Twin Snake? HARIBO convirtió esa duda en un comercial. '
+                        'Twin Snakes es una gomita con forma de dos víboras: una mitad es dulce y la otra ácida. '
+                        'La agencia Quiet Storm la llevó a Kids Voices, la campaña donde se oyen voces reales de niños, '
+                        'y el spot ya corre en Disney+ y Hulu. Es el segundo dulce más vendido de HARIBO en Estados Unidos. '
+                        'La lección: tu mejor contenido puede ser una discusión que tus clientes ya tienen. '
+                        'La nota completa está en el link de la bio.')
+          print(reel.make(d, 'out/reel-haribo.mp4'))
+          PY
+          cat out/reporte.txt
+      - run: |
+          git config user.name bot; git config user.email bot@x
+          git checkout -b prueba-reel
+          git add -f out && git commit -qm prueba && git push -f origin prueba-reel
