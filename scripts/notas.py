@@ -548,7 +548,10 @@ def send_carousel(n):
         files = build_anim(n) if animado else build_carousel(n)
     except Exception as e:
         if animado:
+            import traceback, shutil
             print('Animado:', e, file=sys.stderr)
+            with open('drafts/.errores.log', 'a') as f:
+                f.write(f'{datetime.now().isoformat()} animado {n["id"]} ffmpeg={shutil.which("ffmpeg")}\n{traceback.format_exc()}\n')
             n['animado'] = False; animado = False
             try:
                 files = build_carousel(n)
