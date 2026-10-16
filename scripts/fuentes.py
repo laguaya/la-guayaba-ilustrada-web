@@ -170,6 +170,66 @@ def es_captura_o_grafico(im):
     return bool(counts) and counts[0][0] / total > 0.38
 
 
+def paneles(im, prof=0):
+    """Si la imagen es un collage (2 o más fotos pegadas con una línea recta), regresa cada foto por separado."""
+    try:
+        import numpy as np
+    except Exception:
+        return [im]
+    g = np.asarray(im.convert('L').resize((min(im.width, 900), int(im.height * min(im.width, 900) / im.width))), dtype=np.int16)
+    h, w = g.shape
+    def corte(a, n):
+        d = np.abs(np.diff(a, axis=1)) > 28              # salto fuerte entre columnas vecinas
+        frac = d.mean(axis=0)
+        lo, hi = int(n * .22), int(n * .78)
+        if hi <= lo:
+            return None
+        k = lo + int(np.argmax(frac[lo:hi]))
+        return k + 1 if frac[k] > .72 else None
+    x = corte(g, w)
+    if x:
+        X = int(x * im.width / w)
+        izq, der = im.crop((0, 0, X, im.height)), im.crop((X, 0, im.width, im.height))
+        return [q for p in (izq, der) for q in (paneles(_recorta_borde(p), prof + 1) if prof < 2 else [_recorta_borde(p)])]
+    y = corte(g.T, h)
+    if y:
+        Y = int(y * im.height / h)
+        return [q for p in (im.crop((0, 0, im.width, Y)), im.crop((0, Y, im.width, im.height)))
+                for q in (paneles(_recorta_borde(p), prof + 1) if prof < 2 else [_recorta_borde(p)])]
+    return [im]
+
+
+def _recorta_borde(p):
+    """Quita la línea separadora del collage (unos pixeles en cada orilla)."""
+    m = max(2, int(min(p.size) * .012))
+    return p.crop((m, m, p.width - m, p.height - m))
+
+
+def palabras(im):
+    """Cuántas palabras legibles trae la foto (texto encimado, capturas, anuncios). Usa tesseract si está."""
+    import shutil, subprocess, tempfile
+    if not shutil.which('tesseract'):
+        return 0
+    k = min(1.0, 1400 / im.width)
+    with tempfile.NamedTemporaryFile(suffix='.png') as f:
+        im.convert('L').resize((int(im.width * k), int(im.height * k))).save(f.name)
+        try:
+            out = subprocess.run(['tesseract', f.name, '-', '--psm', '11', 'tsv'], capture_output=True, text=True, timeout=60).stdout
+        except Exception:
+            return 0
+    n = 0
+    for ln in out.splitlines()[1:]:
+        c = ln.split('\t')
+        if len(c) >= 12:
+            try:
+                conf = float(c[10])
+            except ValueError:
+                continue
+            if conf >= 70 and sum(ch.isalpha() for ch in c[11]) >= 3:
+                n += 1
+    return n
+
+
 def candidatas(n, carpeta='assets/work', maximo=4, solo_video=False, registro=None):
     """registro: {huella_hex: id_de_nota} de fotos ya usadas en otras notas (anuncios que se repiten)."""
     nid = n['id']
@@ -180,7 +240,7 @@ def candidatas(n, carpeta='assets/work', maximo=4, solo_video=False, registro=No
     excluir = set() if solo_video else urls_de_portada(n.get('src', ''))
     lista = vids + [u for u in pag if u.split('?')[0] not in excluir]
     og = pag[0] if pag else None
-    rutas, huellas, respaldo = [], [], None
+    rutas, huellas, respaldo, segunda = [], [], None, []
     for u in lista:
         if len(rutas) >= maximo:
             break
@@ -194,24 +254,40 @@ def candidatas(n, carpeta='assets/work', maximo=4, solo_video=False, registro=No
             im = _sin_franjas(im.convert('RGB'))
         except Exception:
             continue
-        w, h = im.size
-        if not (0.5 <= w / h <= 2.4):
-            continue
-        hu = _huella(im)
-        if any(_parecidas(hu, x) for x in huellas):
-            continue
-        if any(_parecidas(hu, int(k, 16)) for k, v in registro.items() if v != nid):
-            continue                                  # la misma foto en otra nota = anuncio del sitio
-        buena = w >= MIN_W and h >= MIN_H
-        plana = es_captura_o_grafico(im)
-        if not buena or plana:
-            if u == og and w >= 1000 and respaldo is None:
-                respaldo = (im, hu)                   # la imagen principal de la nota, por si no hay otra
-            continue
+        piezas = paneles(im)
+        if len(piezas) > 1 and im.width >= 1000 and respaldo is None and not es_captura_o_grafico(im):
+            respaldo = (im, _huella(im), 1)               # el collage completo, si ningún panel sirve
+        for im in piezas:
+            if len(rutas) >= maximo:
+                break
+            w, h = im.size
+            panel = len(piezas) > 1
+            if not (0.5 <= w / h <= 2.4) and not panel:
+                continue
+            hu = _huella(im)
+            if any(_parecidas(hu, x) for x in huellas):
+                continue
+            if any(_parecidas(hu, int(k, 16)) for k, v in registro.items() if v != nid):
+                continue                                  # la misma foto en otra nota = anuncio del sitio
+            buena = (w >= MIN_W and h >= MIN_H) or (panel and w >= 860 and h >= 1000)
+            plana = es_captura_o_grafico(im)
+            if buena and not plana and palabras(im) >= 2:
+                segunda.append((im, hu))                  # trae letras (encimadas o del empaque): va después de las limpias
+                continue
+            if not buena or plana:
+                prio = 2 if panel else 1
+                if (u == og or panel) and w >= 860 and not plana and (respaldo is None or respaldo[2] < prio):
+                    respaldo = (im, hu, prio)             # por si no hay otra mejor
+                continue
+            rutas.append(_guardar(im, f'{carpeta}/nota-{nid}-foto-src{len(rutas) + 1}{"v" if solo_video else ""}.webp'))
+            huellas.append(hu); registro[format(hu, 'x')] = nid
+    for im, hu in segunda:                            # solo si faltan fotos limpias
+        if len(rutas) >= 2 or len(rutas) >= maximo:
+            break
         rutas.append(_guardar(im, f'{carpeta}/nota-{nid}-foto-src{len(rutas) + 1}{"v" if solo_video else ""}.webp'))
         huellas.append(hu); registro[format(hu, 'x')] = nid
     if not rutas and respaldo:
-        im, hu = respaldo
+        im, hu, _ = respaldo
         rutas.append(_guardar(im, f'{carpeta}/nota-{nid}-foto-src1.webp')); registro[format(hu, 'x')] = nid
     return rutas
 
