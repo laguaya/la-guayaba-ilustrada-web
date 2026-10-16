@@ -21,7 +21,11 @@
   "titulo": "La tienda de la esquina se vuelve marca de _estilo de vida_",
   "resumen": "El set cuesta [315 dólares] y lo hizo con [Bam Bird], una marca de Dallas experta en mahjong. Es parte de una estrategia de merch que ya pasó por [Hot Wheels] y Pac-Man.",
   "marca": "7-Eleven",
-  "caption": "¿Pagarías 315 dólares por un mahjong de 7-Eleven? Ya existe y salió hoy 🀄\n\n7-Eleven lanzó un set de mahjong con Bam Bird, una marca de Dallas que vende fichas de diseño.\nLo anunció con un teaser misterioso en redes y lo vende en 7Collection, su tienda de merch.\nBranding y marketing de colaboración: así una tienda de conveniencia se vuelve marca de estilo de vida.\n\n¿Comprarías merch de una tienda de conveniencia, sí o no?\n\nCompártelo con tu equipo de marketing.\nNota completa en el link de la bio.\nSíguenos para las noticias de marcas, diseño y publicidad que sí importan, todos los días.\n\n#7Eleven #branding #marketingdigital #colaboraciones"
+  "caption": "¿Pagarías 315 dólares por un mahjong de 7-Eleven? Ya existe y salió hoy 🀄\n\n7-Eleven lanzó un set de mahjong con Bam Bird, una marca de Dallas que vende fichas de diseño.\nLo anunció con un teaser misterioso en redes y lo vende en 7Collection, su tienda de merch.\nBranding y marketing de colaboración: así una tienda de conveniencia se vuelve marca de estilo de vida.\n\n¿Comprarías merch de una tienda de conveniencia, sí o no?\n\nCompártelo con tu equipo de marketing.\nNota completa en el link de la bio.\nSíguenos para las noticias de marcas, diseño y publicidad que sí importan, todos los días.\n\n#7Eleven #branding #marketingdigital #colaboraciones",
+  "info": [
+   "El [mahjong] es un juego de mesa chino para 4 personas que se juega con fichas, parecido al rummy de cartas: gana quien arma primero combinaciones con sus fichas. En Estados Unidos se volvió moda entre jóvenes.",
+   "7-Eleven se unió a [Bam Bird], una marca de Dallas que vende sets de lujo, para lanzar el suyo en [315 dólares]. Es su forma de convertir el merch de la tienda en objeto de colección."
+  ]
  },
  "cands": [
   "assets/work/nota-7-eleven-mahjong-bam-bird-foto-src1.webp"
@@ -29,5 +33,5 @@
  "ig1": "assets/work/nota-7-eleven-mahjong-bam-bird-foto-src1.webp",
  "ig2": "assets/work/nota-7-eleven-mahjong-bam-bird-foto-src1.webp",
  "cands_v": 2,
- "tg": 282
+ "animado": true
 }
