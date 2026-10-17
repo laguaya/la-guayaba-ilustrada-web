@@ -11,5 +11,87 @@
  "caption": "McCain convirtió las manos de creadores en papas fritas y sin usar IA 🍟\nSu campaña Fryjack Your Senses, hecha por Rethink en Canadá, secuestra videos normales con un antojo absurdo.\nTodo es utilería real animada en stop motion: una lección de publicidad y marketing con creadores que se nota en el feed.\n¿Te detendrías a ver un anuncio así o lo pasarías de largo?\nGuárdalo para tu próxima lluvia de ideas.\nNota completa en el link de la bio.\nSíguenos para las noticias de marcas, diseño y publicidad que sí importan, todos los días.\n#McCain #MarketingConCreadores #StopMotion #PublicidadCreativa #Branding",
  "guion": "Imagina que estás grabando un video normal… y de repente tus manos se convierten en papas fritas. Eso es lo que está haciendo McCain en Canadá con su campaña Fryjack Your Senses. El nombre juega con hijack, que en inglés significa secuestrar: cada video empieza como una publicación cualquiera de un creador, y de pronto un antojo de papas lo toma por asalto. Las manos se vuelven papas, la freidora empieza a hablar y hasta hay quien termina imitando a una gaviota, el ave que roba papas en la playa. Y aquí viene lo bueno: nada de esto es inteligencia artificial. Son objetos reales, construidos por Impossible Studios y animados en stop motion, foto por foto. Detrás está la agencia Rethink, y el objetivo es clarísimo: venderle a la Generación Z sus nuevas papas para freidora de aire. Y no es cualquier marca: una de cada cuatro papas fritas del mundo es de McCain. La lección para tu negocio: no interrumpas el contenido de tu cliente… vuélvete parte de él. ¿Tú comprarías después de ver esto? Te leo en comentarios, y síguenos para más campañas así todos los días.",
  "ig1": "assets/work/nota-mccain-fryjack-papas-stop-motion-foto-src1.webp",
- "ig2": "assets/work/nota-mccain-fryjack-papas-stop-motion-foto-src1.webp"
+ "ig2": "assets/work/nota-mccain-fryjack-papas-stop-motion-foto-src1.webp",
+ "escenas": [
+  {
+   "voz": "Imagina que estás grabando tu podcast, todo normal, y de repente…",
+   "ver": "video",
+   "desde": 0.0,
+   "hasta": 4.55
+  },
+  {
+   "voz": "aparecen papas fritas entre tus dedos.",
+   "ver": "video",
+   "desde": 4.55,
+   "hasta": 6.97
+  },
+  {
+   "voz": "Te las comes sin poder parar.",
+   "ver": "video",
+   "desde": 6.97,
+   "hasta": 9.57
+  },
+  {
+   "voz": "De la nada sale una freidora de aire.",
+   "ver": "video",
+   "desde": 12.18,
+   "hasta": 13.43
+  },
+  {
+   "voz": "Te llueven papas y tus manos se vuelven gaviotas, las que roban papas en la playa.",
+   "ver": "video",
+   "desde": 13.43,
+   "hasta": 15.72
+  },
+  {
+   "voz": "Es Fryjack Your Senses, la nueva campaña de McCain en Canadá.",
+   "ver": "video",
+   "desde": 17.87,
+   "hasta": 20.02
+  },
+  {
+   "voz": "El nombre juega con hijack, que en inglés significa secuestrar: el antojo secuestra el video.",
+   "ver": "frase",
+   "frase": "Hijack = *secuestrar*: el antojo se roba el video"
+  },
+  {
+   "voz": "Y aquí viene lo bueno: nada de esto es inteligencia artificial.",
+   "ver": "video",
+   "desde": 15.72,
+   "hasta": 17.87
+  },
+  {
+   "voz": "Todo es real, hecho a mano por Impossible Studios y animado en stop motion, foto por foto.",
+   "ver": "video",
+   "desde": 9.57,
+   "hasta": 12.18
+  },
+  {
+   "voz": "Detrás está la agencia canadiense Rethink.",
+   "ver": "dato",
+   "dato": "Rethink",
+   "texto": "la agencia canadiense detrás de la campaña"
+  },
+  {
+   "voz": "El objetivo es venderle a la Generación Z sus nuevas papas para freidora de aire, con creadores que ya sigue.",
+   "ver": "foto",
+   "foto": "img"
+  },
+  {
+   "voz": "Y ojo, no es cualquier marca: una de cada cuatro papas fritas del mundo es de McCain.",
+   "ver": "dato",
+   "dato": "1 de cada 4",
+   "texto": "papas fritas del mundo es de McCain"
+  },
+  {
+   "voz": "La lección para tu negocio: no interrumpas el contenido de tu cliente… vuélvete parte de él.",
+   "ver": "frase",
+   "frase": "No interrumpas el contenido: *vuélvete parte de él*"
+  },
+  {
+   "voz": "¿Tú comprarías después de ver esto? Te leo en comentarios, y síguenos para más campañas así todos los días.",
+   "ver": "frase",
+   "frase": "¿Tú lo *comprarías*?"
+  }
+ ]
 }

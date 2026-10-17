@@ -405,13 +405,11 @@ def plan(escenas, ini, fin_cuerpo, vid, tomas, vdur, data, tmp):
         if vid and desde is not None and desde < vdur - 0.6:
             desde = float(desde)
             vel = 1.0
-            if e.get('hasta') is not None:                # toma justa para la frase: se alarga en cámara lenta (máx. 30 %)
-                tramo = float(e['hasta']) - desde
-                if 0.4 < tramo < d:
-                    vel = max(0.7, tramo / d)
             hay = vdur - desde                             # segundos de video disponibles desde ahí
-            if hay < d * vel and hay >= d * 0.7:          # casi alcanza: cámara lenta suave en vez de cortar
-                vel = hay / d
+            if e.get('hasta') is not None and float(e['hasta']) > desde + 0.3:
+                hay = min(hay, float(e['hasta']) - desde)  # nunca se pasa de la toma elegida (no se repiten tomas)
+            if hay < d:                                    # no alcanza: cámara lenta suave (máx. 30 %)
+                vel = max(0.7, hay / d)
             largo = min(d, hay / vel)
             cuadros = clip(vid, tmp, k, desde, largo * vel); k += 1
             if len(cuadros) >= 3:
@@ -420,7 +418,7 @@ def plan(escenas, ini, fin_cuerpo, vid, tomas, vdur, data, tmp):
                 usados.append((desde, desde + largo * vel))
             else:
                 largo = 0.0
-        if largo < d - 0.6:                               # no hubo (o no alcanzó) el video: foto de la nota o tarjeta
+        if largo < d - 1.2:                               # no hubo (o no alcanzó) el video: foto de la nota o tarjeta
             a2 = a + largo
             im = foto_libre()
             tramos.append(dict(a=a2, b=b, tipo='foto', im=im, foco=encuadre.foco(im)) if im else dict(a=a2, b=b, **tarjeta(e)))
