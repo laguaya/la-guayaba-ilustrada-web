@@ -34,25 +34,18 @@ def _caras(g):
 
 
 def _mapa(rgb):
-    """Qué tan llamativa es cada zona: colores poco comunes en la foto + detalle fino (saliencia)."""
+    """Qué tan llamativa es cada zona: colores poco comunes en la foto, sobre todo si son vivos
+    (el producto, el empaque, el logo), con una ligera preferencia por el centro."""
     h, w = rgb.shape[:2]
     lab = cv2.cvtColor(rgb, cv2.COLOR_RGB2LAB).astype(np.int32)
-    q = (lab[..., 0] // 32) * 64 + (lab[..., 1] // 32) * 8 + lab[..., 2] // 32
-    freq = np.bincount(q.ravel(), minlength=512).astype(np.float64) / q.size
+    b = 16
+    q = (lab[..., 0] // (b * 2)) * 256 + (lab[..., 1] // b) * 16 + lab[..., 2] // b
+    freq = np.bincount(q.ravel(), minlength=16 ** 3).astype(np.float64) / q.size
     rareza = -np.log(freq[q] + 1e-6)
-    rareza = cv2.GaussianBlur(rareza.astype(np.float32), (0, 0), max(2, w / 60))
-    sal = cv2.saliency.StaticSaliencySpectralResidual_create() if hasattr(cv2, 'saliency') else None
-    if sal is not None:
-        ok, s = sal.computeSaliency(rgb)
-        s = cv2.GaussianBlur(s.astype(np.float32), (0, 0), max(2, w / 40)) if ok else np.ones((h, w), np.float32)
-    else:
-        s = np.ones((h, w), np.float32)
-    def norm(a):
-        a = a - a.min(); return a / (a.max() + 1e-6)
-    m = norm(rareza) * 0.65 + norm(s) * 0.35
-    # un poco de preferencia por el centro (los fotógrafos suelen centrar)
+    sat = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)[..., 1] / 255.0
+    m = cv2.GaussianBlur((rareza * (0.5 + sat)).astype(np.float32), (0, 0), max(2, w / 80))
     yy, xx = np.mgrid[0:h, 0:w]
-    m *= 1 - 0.25 * (((xx / w - .5) ** 2 + (yy / h - .5) ** 2) / .5)
+    m *= 1 - 0.35 * (((xx / w - .5) ** 2 + (yy / h - .5) ** 2) / .5)
     return m
 
 
@@ -100,25 +93,8 @@ def _mapa_de(src):
 
 
 def foco_ventana(src, aspecto):
-    """Foco pensado para un recorte de cierta proporción (ancho/alto): busca la ventana de esa proporción
-    que encierra más 'cosas importantes' y regresa su centro. Más estable que el promedio simple."""
-    fx, fy = foco(src)
-    if cv2 is None:
-        return fx, fy
-    m = _mapa_de(src) ** 2
-    h, w = m.shape
-    if w / h > aspecto:                                   # se recorta a los lados
-        ww = max(1, int(round(h * aspecto)))
-        col = np.concatenate([[0], np.cumsum(m.sum(axis=0))])
-        sumas = col[ww:] - col[:-ww]
-        x0 = int(np.argmax(sumas))
-        caras = _caras_cache.get(src if isinstance(src, str) else id(src))
-        return ((x0 + ww / 2) / w if not caras else fx), fy
-    hh = max(1, int(round(w / aspecto)))                  # se recorta arriba y abajo
-    fil = np.concatenate([[0], np.cumsum(m.sum(axis=1))])
-    sumas = fil[hh:] - fil[:-hh]
-    y0 = int(np.argmax(sumas))
-    return fx, (y0 + hh / 2) / h
+    """Compatibilidad: el foco ya apunta al objeto principal (o a la cara, si hay)."""
+    return foco(src)
 
 
 def recorte(im, size, f=None, zoom=1.0, destino=(0.5, 0.5), zoom_max=1.0):
