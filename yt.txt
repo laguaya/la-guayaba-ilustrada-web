@@ -1,0 +1,6 @@
+[youtube] Extracting URL: https://www.youtube.com/watch?v=yBkvQbCuQYE
+[youtube] yBkvQbCuQYE: Downloading webpage
+WARNING: [youtube] No supported JavaScript runtime could be found. Only deno is enabled by default; to use another runtime add  --js-runtimes RUNTIME[:PATH]  to your command/config. YouTube extraction without a JS runtime has been deprecated, and some formats may be missing. See  https://github.com/yt-dlp/yt-dlp/wiki/EJS  for details on installing one
+[youtube] yBkvQbCuQYE: Downloading visionos player API JSON
+ERROR: [youtube] yBkvQbCuQYE: Private video
+ls: cannot access '/tmp/v1.mp4': No such file or directory
