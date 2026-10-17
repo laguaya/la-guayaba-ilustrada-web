@@ -340,7 +340,7 @@ def handle_message(u, msg):
         n, put = note_get(nid) if nid else (None, None)
         if not n:
             reply(mid, 'No encuentro la nota. Respóndele "sin video" a la nota.'); return
-        for k in ('yt', 'vm', 'vt', 'th', 'auto_video'):
+        for k in ('yt', 'vm', 'vt', 'th', 'mp4', 'auto_video'):
             n.pop(k, None)
         n['sin_video'] = True
         if n.get('ig1') and os.path.exists(f'drafts/{nid}.json') and '-foto-src' in n['ig1'] and n['ig1'].endswith('v.webp'):
@@ -516,33 +516,34 @@ def build_reel(n):
     data = dict(n['_data'])
     data['src'] = n.get('src', '')
     data['guion'] = n.get('guion') or n['ig'].get('guion', '')
-    data['fotos'] = [c for c in n.get('cands', []) if os.path.exists(c)]
+    data['mp4'] = n.get('mp4', '')
     out = f'assets/ig/{n["id"]}/reel.mp4'
     os.makedirs(os.path.dirname(out), exist_ok=True)
     reel.make(data, out)
     return out
 
 
-REEL = 'drafts/ig/.reel.json'   # {'fecha': 'AAAA-MM-DD', 'id': nota}
+REEL = 'drafts/ig/.reel.json'   # {'ts': segundos, 'id': nota, 'previo': ts}
+CADA_REEL = 2 * 3600 - 600         # un Reel cada 2 horas (con 10 min de holgura)
 
 
 def toca_reel(n):
-    """Un Reel al día: la primera nota del día con foto real (Sergio lo puede quitar o poner con el botón)."""
+    """Reel cada 2 horas: la siguiente nota que traiga video de la campaña (sin video no hay Reel)."""
     if 'reel' in n:
         return bool(n['reel'])
-    if not n.get('ig') or NOFOTO.get(n['id']) or '-foto' not in (n.get('ig1') or n.get('img') or ''):
+    if not n.get('ig') or not n.get('mp4'):
         return False
     st = load(REEL) if os.path.exists(REEL) else {}
-    return st.get('fecha') != datetime.now(timezone(timedelta(hours=-6))).strftime('%Y-%m-%d')
+    return time.time() - float(st.get('ts') or 0) >= CADA_REEL
 
 
 def reservar_reel(nid, si=True):
     os.makedirs('drafts/ig', exist_ok=True)
     st = load(REEL) if os.path.exists(REEL) else {}
     if si:
-        st = {'fecha': datetime.now(timezone(timedelta(hours=-6))).strftime('%Y-%m-%d'), 'id': nid, 'previo': st.get('fecha')}
+        st = {'ts': time.time(), 'id': nid, 'previo': st.get('ts')}
     elif st.get('id') == nid:
-        st = {'fecha': st.get('previo'), 'id': None}
+        st = {'ts': st.get('previo') or 0, 'id': None}
     save(REEL, st)
 
 
@@ -617,6 +618,20 @@ def es_video(n):
     return bool(n.get('yt') or n.get('vm'))
 
 
+def mp4_de_fuente(src):
+    """Video MP4 directo de la campaña (Ads of the World lo trae así). Se usa en la web y en el Reel."""
+    sys.path.insert(0, 'scripts')
+    import fuentes
+    try:
+        for u in fuentes.mp4s_de_pagina(src):
+            r = requests.head(u, headers=fuentes.UA, timeout=20, allow_redirects=True)
+            if r.status_code == 200 and 'video' in r.headers.get('content-type', 'video'):
+                return u
+    except Exception as e:
+        print('MP4 de la fuente:', e, file=sys.stderr)
+    return None
+
+
 def poner_candidatas(n, solo_video=False):
     """Busca fotos reales (fuente y/o video) y deja puestas la 1 y la 2 por defecto."""
     sys.path.insert(0, 'scripts')
@@ -632,6 +647,10 @@ def poner_candidatas(n, solo_video=False):
             n['yt' if v[0] == 'yt' else 'vm'] = v[1]; n['auto_video'] = True
             if v[0] == 'vm':
                 n['vt'] = vimeo_thumb(v[1]) or ''
+        elif not n.get('mp4'):
+            m = mp4_de_fuente(n.get('src', ''))
+            if m:
+                n['mp4'] = m; n['auto_video'] = True
     reg_path = 'drafts/.huellas.json'
     reg = load(reg_path) if os.path.exists(reg_path) else {}
     reg = {k: v for k, v in reg.items() if v != n['id']}
@@ -808,8 +827,9 @@ def send_pending():
                     reservar_reel(n['id'])
                 if n.get('reel') and not send_reel(n):
                     n['reel'] = False
-                kb.append([{'text': '🎞 Quitar el Reel' if n.get('reel') else '🎞 Agregar Reel',
-                            'callback_data': 'reel:' + n['id']}])
+                if n.get('mp4'):
+                    kb.append([{'text': '🎞 Quitar el Reel' if n.get('reel') else '🎞 Agregar Reel',
+                                'callback_data': 'reel:' + n['id']}])
             if len(n.get('cands', [])) > 1:
                 kb.append([{'text': '🔄 Otras fotos', 'callback_data': 'alt:' + n['id']}])
         kb.append([{'text': '🗑 Descartar', 'callback_data': 'del:' + n['id']}])
@@ -829,7 +849,7 @@ def publish(n):
     post = {'id': n['id'], 'k': n['k'], 'c': n.get('c') or COLORS.get(n['k'], '#FF3674'),
             'd': f'{now.day} {MESES[now.month - 1]} {now.year}', 'img': n['img'],
             'alt': n.get('alt', ''), 'cr': n.get('cr', ''), 't': n['t'], 'x': n['x'], 'b': n['b']}
-    for k in ('g', 'yt', 'vm', 'vt', 'th'):
+    for k in ('g', 'yt', 'vm', 'vt', 'th', 'mp4'):
         if n.get(k):
             post[k] = n[k]
     if n.get('src'):
@@ -938,6 +958,10 @@ def poll():
             changed = True
             continue
         if accion == 'reel':
+            if not n.get('reel') and not n.get('mp4'):
+                tg('answerCallbackQuery', callback_query_id=cq['id'], show_alert='true',
+                   text='Esta nota no trae video de la campaña, y el Reel solo se arma con video.')
+                continue
             n['reel'] = not n.get('reel')
             reservar_reel(nid, n['reel'])
             if n['reel']:
@@ -1235,7 +1259,7 @@ def revisar_videos():
         if key not in rev:
             rev[key] = video_embebible(kind, n[kind])
         if not rev[key]:
-            for k in ('yt', 'vm', 'vt', 'th', 'auto_video'):
+            for k in ('yt', 'vm', 'vt', 'th', 'mp4', 'auto_video'):
                 n.pop(k, None)
             n['sin_video'] = True
             put(n); quitados.append(n.get('t', nid))
