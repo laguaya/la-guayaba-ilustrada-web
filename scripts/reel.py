@@ -29,7 +29,7 @@ UVA, ROSA = '#6E1F5E', '#FFC6DD'
 PINK = ROSA
 R = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MUSIC = os.path.join(R, 'assets', 'audio', 'reel.m4a')
-GANCHO, CIERRE, INICIO_VOZ, SEG = 3.2, 3.0, 0.35, 2.6
+GANCHO, CIERRE, INICIO_VOZ = 3.2, 3.0, 0.35
 
 
 @functools.lru_cache(maxsize=None)
@@ -104,36 +104,132 @@ def vertical(im, foco=(0.5, 0.45), zoom=1.0):
     return fondo
 
 
-def bajar_video(data, tmp):
-    if data.get('video') and os.path.exists(data['video']):
-        return data['video']
+TOTAL = 60.0          # todos los Reels duran exactamente un minuto
+CIERRE_MIN = 2.6      # segundos mínimos del cierre con el CTA
+TOMA_MIN = 1.0        # ningún clip dura menos de esto (los clips cortitos se ven como glitch)
+ESCALA = 'scale=min(1920\\,iw):-2'
+UA_VID = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36'}
+
+
+def fps_de(vid):
+    """Cuadros por segundo del video (24, 25 o 30). Si se arma a otra velocidad, se repiten cuadros y hay brincos."""
     try:
-        import fuentes, requests
-        urls = [data['mp4']] if data.get('mp4') else (fuentes.mp4s_de_pagina(data['src']) if data.get('src') else [])
-        for u in urls:
-            r = requests.get(u, headers=fuentes.UA, timeout=90, stream=True)
-            if r.status_code != 200:
-                continue
-            ruta = f'{tmp}/campana.mp4'; tam = 0
-            with open(ruta, 'wb') as f:
-                for ch in r.iter_content(1 << 16):
-                    tam += len(ch)
-                    if tam > 150 * 1024 * 1024:
-                        break
-                    f.write(ch)
-            return ruta
+        r = subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=r_frame_rate',
+                            '-of', 'csv=p=0', vid], capture_output=True, text=True, timeout=60).stdout.strip()
+        a, b = (r.split('/') + ['1'])[:2]
+        f = float(a) / float(b)
+        return min((24, 25, 30), key=lambda x: abs(x - f)) if 20 < f < 61 else 30
+    except Exception:
+        return 30
+
+
+def _descargar(url, ruta):
+    import requests
+    r = requests.get(url, headers=UA_VID, timeout=90, stream=True)
+    if r.status_code != 200 or 'html' in r.headers.get('content-type', ''):
+        return False
+    tam = 0
+    with open(ruta, 'wb') as f:
+        for ch in r.iter_content(1 << 16):
+            tam += len(ch)
+            if tam > 150 * 1024 * 1024:
+                break
+            f.write(ch)
+    return tam > 50000
+
+
+def _ytdlp(url, ruta):
+    """YouTube, Vimeo y otros reproductores (si yt-dlp está instalado)."""
+    if not shutil.which('yt-dlp'):
+        return False
+    try:
+        subprocess.run(['yt-dlp', '-q', '--no-playlist', '--max-filesize', '150M', '-f',
+                        'bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[height<=1080][ext=mp4]/bv*[height<=1080]+ba/b',
+                        '--merge-output-format', 'mp4', '-o', ruta, url], capture_output=True, timeout=300)
+    except Exception:
+        return False
+    return os.path.exists(ruta) and os.path.getsize(ruta) > 50000
+
+
+def bajar_url(url, ruta):
+    """Baja un video: MP4 directo, página con MP4 (Ads of the World), o YouTube/Vimeo con yt-dlp."""
+    try:
+        if re.search(r'\.(mp4|mov|m4v|webm)(\?|$)', url, re.I):
+            return _descargar(url, ruta)
+        if re.search(r'youtube\.com|youtu\.be|vimeo\.com', url, re.I):
+            return _ytdlp(url, ruta)
+        import fuentes
+        for u in fuentes.mp4s_de_pagina(url):
+            if _descargar(u, ruta):
+                return True
+        return _ytdlp(url, ruta)
     except Exception as e:
-        print('Video de campaña:', e, file=sys.stderr)
+        print('Video extra:', url, e, file=sys.stderr)
+        return False
+
+
+def bajar_video(data, tmp):
+    """Video principal de la campaña."""
+    if data.get('video') and os.path.exists(str(data['video'])):
+        return data['video']
+    urls = [data['mp4']] if data.get('mp4') else []
+    if not urls and data.get('src'):
+        try:
+            import fuentes
+            urls = fuentes.mp4s_de_pagina(data['src'])
+        except Exception:
+            urls = []
+    for u in urls:
+        if bajar_url(u, f'{tmp}/campana.mp4'):
+            return f'{tmp}/campana.mp4'
     return None
 
 
-TRANS = 0.16   # cambio de escena: fundido muy corto, sin zoom (corte suave al ritmo de la voz)
-CORTE = [None]   # caja sin franjas negras del video (si el video vertical viene dentro de un cuadro horizontal)
-ESCALA = 'scale=min(1920\\,iw):-2'
+class Fuente:
+    """Un video (la campaña o uno extra) con sus tomas reales, su recorte sin franjas y su encuadre fijo."""
+    n = 0
+
+    def __init__(self, ruta, tmp, nombre=''):
+        import tomas as TM, encuadre
+        Fuente.n += 1
+        self.id, self.ruta, self.tmp, self.nombre = Fuente.n, ruta, tmp, nombre
+        self.tomas, self.dur = TM.cortes(ruta, maximo=10 ** 6)       # solo cortes reales: nunca saltos dentro de una toma
+        self.usados = []
+        m = self._muestras()
+        self.crop = sin_bordes(m) if m else None
+        self.foco = encuadre.foco(self.abrir(m[len(m) // 2]).convert('RGB')) if m else (0.5, 0.45)
+
+    def _muestras(self, n=7):
+        carpeta = f'{self.tmp}/muestras{self.id}'; os.makedirs(carpeta, exist_ok=True)
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', self.ruta, '-vf', f'fps={n / max(1.0, self.dur):.4f},{ESCALA}',
+                        '-q:v', '3', f'{carpeta}/%03d.jpg'], capture_output=True, timeout=600)
+        return sorted(glob.glob(f'{carpeta}/*.jpg'))
+
+    def abrir(self, ruta):
+        im = Image.open(ruta)
+        return im.crop(self.crop) if self.crop else im
+
+    def cuadros(self, k, desde, seg):
+        carpeta = f'{self.tmp}/clip{self.id}_{k}'; os.makedirs(carpeta, exist_ok=True)
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{desde:.3f}', '-i', self.ruta, '-t', f'{seg + 0.08:.3f}',
+                        '-vf', f'fps={FPS},{ESCALA}', '-q:v', '2', f'{carpeta}/%05d.jpg'], capture_output=True, timeout=600)
+        return sorted(glob.glob(f'{carpeta}/*.jpg'))
+
+    def toma_libre(self, minimo=TOMA_MIN):
+        """Primer pedazo sin usar de alguna toma (se puede seguir una toma donde se quedó, nunca repetir)."""
+        for t0, t1 in self.tomas:
+            x = t0
+            for a, b in sorted(self.usados):
+                if a <= x + 0.05 < b:
+                    x = b
+            fin = min([t1] + [a for a, b in self.usados if a > x + 0.05])
+            if fin - x >= minimo:
+                return x, fin
+        return None
 
 
 def sin_bordes(cuadros):
-    """Detecta franjas negras fijas (arriba/abajo o a los lados) en el video y regresa la caja útil."""
+    """Detecta franjas negras fijas (arriba/abajo o a los lados) y regresa la caja útil."""
     caja = None
     for c in cuadros:
         im = Image.open(c).convert('L')
@@ -148,38 +244,6 @@ def sin_bordes(cuadros):
         return caja
     return None
 
-
-def abrir(ruta):
-    im = Image.open(ruta)
-    return im.crop(CORTE[0]) if CORTE[0] else im
-
-
-def fps_de(vid):
-    """Cuadros por segundo del video de la campaña (24, 25 o 30). Si se arma a otra velocidad, ffmpeg repite
-    cuadros cada tanto y el movimiento se ve a brincos."""
-    try:
-        r = subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=r_frame_rate',
-                            '-of', 'csv=p=0', vid], capture_output=True, text=True, timeout=60).stdout.strip()
-        a, b = (r.split('/') + ['1'])[:2]
-        f = float(a) / float(b)
-        return min((24, 25, 30), key=lambda x: abs(x - f)) if 20 < f < 61 else 30
-    except Exception:
-        return 30
-
-
-def muestras(vid, tmp, vdur, n=9):
-    carpeta = f'{tmp}/muestras'; os.makedirs(carpeta, exist_ok=True)
-    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', vid, '-vf', f'fps={n / max(1.0, vdur):.4f},{ESCALA}',
-                    '-q:v', '3', f'{carpeta}/%03d.jpg'], capture_output=True, timeout=600)
-    return sorted(glob.glob(f'{carpeta}/*.jpg'))
-
-
-def clip(vid, tmp, k, desde, segundos):
-    """Cuadros de un tramo del video de la campaña (solo el tramo que se va a usar)."""
-    carpeta = f'{tmp}/clip{k}'; os.makedirs(carpeta, exist_ok=True)
-    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{desde:.2f}', '-i', vid, '-t', f'{segundos + 0.1:.2f}',
-                    '-vf', f'fps={FPS},{ESCALA}', '-q:v', '2', f'{carpeta}/%05d.jpg'], capture_output=True, timeout=600)
-    return sorted(glob.glob(f'{carpeta}/*.jpg'))
 
 
 # ---------------------------------------------------------------- subtítulos karaoke
@@ -359,25 +423,19 @@ def bajar_foto(ref, tmp, k):
     return None
 
 
-def plan(escenas, ini, fin_cuerpo, total, vid, tomas, vdur, data, tmp):
-    """Convierte las escenas en tramos de imagen: [{'a','b','tipo': 'video'|'foto', ...}].
-    Siempre hay video o foto en pantalla. Las tomas no se repiten mientras haya material nuevo:
-    una frase larga encadena varias tomas; si se acaba el video, siguen las fotos; solo al final,
-    si no queda nada, se vuelve a una toma con otro encuadre (más cerrado) y en cámara lenta."""
+def plan(escenas, ini, fin_cuerpo, total, principal, extras, data, tmp):
+    """Convierte las escenas en tramos: [{'a','b','tipo': 'video'|'foto', ...}]. Siempre hay video o foto.
+    Orden para cubrir cada frase: la toma que pidió el redactor -> tomas nuevas de la campaña -> tomas nuevas de
+    los videos extra (otras campañas, la marca, el producto) -> fotos -> y solo si ya no hay nada, la toma menos usada."""
     import encuadre
     pedidas = {data.get(e['foto']) if e.get('foto') in ('img', 'img2') else e.get('foto')
                for e in escenas if e.get('foto')}
     fotos_nota = [p for p in (data.get('img'), data.get('img2')) if p and os.path.exists(p)]
     fotos_nota += [p for p in (data.get('fotos') or []) if p and os.path.exists(p) and p not in fotos_nota]
-    fotos_nota = [p for p in fotos_nota if p not in pedidas]   # las fotos que pide una escena no se usan de relleno
-    fi = [0]
-    usos = [0] * len(tomas)
-    tramos, usados, k = [], [], [0]
-    foco_video = [(0.5, 0.45)]                          # un solo encuadre para todo el video: las tomas no "brincan" de lugar
-    if vid:
-        m = muestras(vid, tmp, vdur, n=5)
-        if m:
-            foco_video[0] = encuadre.foco(abrir(m[len(m) // 2]).convert('RGB'))
+    fotos_nota = [p for p in fotos_nota if p not in pedidas]
+    fi, k, tramos = [0], [0], []
+    fuentes_todas = ([principal] if principal else []) + extras
+    por_url = {f.nombre: f for f in extras}
 
     def foto_libre():
         while fi[0] < len(fotos_nota):
@@ -387,74 +445,73 @@ def plan(escenas, ini, fin_cuerpo, total, vid, tomas, vdur, data, tmp):
                 return im
         return None
 
-    def libre(t0, t1):
-        return all(t1 <= a + 0.05 or t0 >= b - 0.05 for a, b in usados)
-
     def poner_foto(a, b, im):
         tramos.append(dict(a=a, b=b, tipo='foto', im=im, foco=encuadre.foco(im)))
 
-    def poner_video(a, d, desde, hasta=None, zoom=1.0, vel_min=0.88):
-        """Pone un tramo de video desde `desde`; regresa los segundos que cubrió.
-        Deja 1 cuadro de margen en cada orilla de la toma para que nunca se cuele un cuadro de la toma vecina."""
-        margen = 1.0 / FPS
-        desde = desde + margen
-        fin = vdur - margen
+    def poner_video(F, a, d, desde, hasta=None):
+        """Pone un clip de la fuente F desde `desde` (sin pasarse de `hasta`). Regresa los segundos que cubrió."""
+        margen = 1.0 / FPS                               # 1 cuadro de margen: nunca se cuela la toma vecina
+        desde = max(0.0, desde) + margen
+        fin = F.dur - margen
         if hasta is not None and hasta > desde + 0.3:
-            fin = min(fin, hasta - margen)             # nunca se pasa de la toma elegida
+            fin = min(fin, hasta - margen)
         hay = fin - desde
-        vel = 1.0 if hay >= d else max(vel_min, hay / d)   # a lo mucho un 12 % más lento: no se notan brincos
-        largo = min(d, hay / vel)
-        if largo < 0.5:
+        if hay < min(TOMA_MIN, d) - 0.01:
             return 0.0
-        extra = max(0.0, min(TRANS + 0.05, fin - desde - largo * vel))   # cola para el fundido de salida
-        cuadros = clip(vid, tmp, k[0], desde, largo * vel + extra); k[0] += 1
-        if len(cuadros) < 3:
+        largo = min(d, hay)
+        if d - largo < TOMA_MIN and d - largo > 0.05:     # lo que sobraría es muy cortito: mejor cámara un poco lenta
+            vel = max(0.8, hay / d)
+            largo = min(d, hay / vel)
+        else:
+            vel = 1.0
+        cs = F.cuadros(k[0], desde, largo * vel); k[0] += 1
+        if len(cs) < 3:
             return 0.0
-        tramos.append(dict(a=a, b=a + largo, tipo='video', cuadros=cuadros, vel=vel, foco=foco_video[0], zoom=zoom))
-        usados.append((desde, desde + largo * vel))
-        for i, (t0, t1) in enumerate(tomas):
-            if t0 < desde + largo * vel and t1 > desde:
-                usos[i] += 1
+        tramos.append(dict(a=a, b=a + largo, tipo='video', cuadros=cs, vel=vel, F=F))
+        F.usados.append((desde - margen, desde + largo * vel + margen))
         return largo
 
-    def toma_libre():
-        return next(((t0, t1) for t0, t1 in tomas if libre(t0, min(t1, t0 + 1.0))), None)
-
-    def rellenar(a, b, e=None, primera=True):
-        """Cubre de a a b con video nuevo, luego fotos y, si ya no hay nada, otro encuadre de una toma."""
+    def rellenar(a, b, e=None):
+        primera = True
         while b - a > 0.05:
-            d = b - a
-            cubierto = 0.0
-            if primera and e and e.get('desde') is not None and float(e['desde']) < vdur - 0.4:
-                h = e.get('hasta')
-                cubierto = poner_video(a, d, float(e['desde']), float(h) if h is not None else None)
-            else:
-                tl = toma_libre() if vid else None
+            d, cubierto = b - a, 0.0
+            if primera and e and e.get('desde') is not None:
+                F = por_url.get(e.get('video'), principal) if isinstance(e.get('video'), str) else principal
+                if F:
+                    h = e.get('hasta')
+                    cubierto = poner_video(F, a, d, float(e['desde']), float(h) if h is not None else None)
+            elif primera and e and isinstance(e.get('video'), str) and e['video'] in por_url:
+                F = por_url[e['video']]
+                tl = F.toma_libre(min(TOMA_MIN, d))
                 if tl:
-                    cubierto = poner_video(a, d, tl[0], tl[1])
-                    if not cubierto:
-                        usados.append(tl)
-                        continue
-                else:
-                    im = foto_libre()
-                    if im:
-                        poner_foto(a, min(b, a + max(2.5, min(d, 4.5))), im)
-                        cubierto = tramos[-1]['b'] - a
-                    elif tomas:
-                        i = min(range(len(tomas)), key=lambda j: (usos[j], -(tomas[j][1] - tomas[j][0])))
-                        cubierto = poner_video(a, d, tomas[i][0], tomas[i][1])
-                        usos[i] += 1
+                    cubierto = poner_video(F, a, d, *tl)
             primera = False
-            if cubierto <= 0:
+            if not cubierto:
+                for F in fuentes_todas:                  # toma nueva: primero la campaña, luego los videos extra
+                    tl = F.toma_libre(min(TOMA_MIN, d))
+                    if tl:
+                        cubierto = poner_video(F, a, d, *tl)
+                        if cubierto:
+                            break
+            if not cubierto:
+                im = foto_libre()
+                if im:
+                    poner_foto(a, min(b, a + max(2.5, min(d, 4.5))), im)
+                    cubierto = tramos[-1]['b'] - a
+            if not cubierto and fuentes_todas:          # ya no queda nada nuevo: la toma más larga menos usada
+                opciones = [(F, t0, t1) for F in fuentes_todas for t0, t1 in F.tomas if t1 - t0 >= min(TOMA_MIN, d)]
+                if opciones:
+                    F, t0, t1 = max(opciones, key=lambda o: (-sum(1 for x, y in o[0].usados if x < o[2] and y > o[1]), o[2] - o[1]))
+                    cubierto = poner_video(F, a, d, t0, t1)
+            if not cubierto:
                 estirar(b)
                 break
             a += cubierto
-            if b - a < 0.35 and tramos:                 # sobra casi nada: se alarga la toma actual
+            if b - a < 0.3:
                 estirar(b)
                 break
 
     def estirar(b):
-        """Alarga el último tramo hasta b. Si es video, lo hace un poco más lento (con cuadros mezclados) en vez de congelarlo."""
         if not tramos:
             return
         L = tramos[-1]
@@ -463,8 +520,8 @@ def plan(escenas, ini, fin_cuerpo, total, vid, tomas, vdur, data, tmp):
         L['b'] = max(L['b'], b)
 
     for i, e in enumerate(escenas):
-        a = 0.0 if i == 0 else max(0.0, ini[i] - 0.12)
-        b = fin_cuerpo if i == len(escenas) - 1 else max(a + 0.3, ini[i + 1] - 0.12)
+        a = 0.0 if i == 0 else max(0.0, ini[i] - 0.08)
+        b = fin_cuerpo if i == len(escenas) - 1 else max(a + 0.3, ini[i + 1] - 0.08)
         if (e.get('ver') or '').lower() == 'foto' or e.get('foto'):
             ref = e.get('foto')
             im = bajar_foto(data.get(ref) if ref in ('img', 'img2') else ref, tmp, i)
@@ -472,13 +529,13 @@ def plan(escenas, ini, fin_cuerpo, total, vid, tomas, vdur, data, tmp):
                 poner_foto(a, b, im)
                 continue
         rellenar(a, b, e)
-    # cierre: la última toma del video (normalmente el producto o el logo) detrás del CTA
-    if vid and tomas:
-        t0, t1 = toma_libre() or tomas[-1]
-        if not poner_video(fin_cuerpo, total - fin_cuerpo, t0, t1, vel_min=0.5):
-            rellenar(fin_cuerpo, total, primera=False)
-    else:
-        rellenar(fin_cuerpo, total, primera=False)
+    # cierre: la última toma de la campaña (normalmente el producto o el logo) detrás del CTA
+    hecho = 0.0
+    if principal and principal.tomas:
+        t0, t1 = principal.tomas[-1]
+        hecho = poner_video(principal, fin_cuerpo, total - fin_cuerpo, t0, t1)
+    if not hecho:
+        rellenar(fin_cuerpo, total)
     estirar(total)
     return tramos
 
@@ -486,62 +543,83 @@ def plan(escenas, ini, fin_cuerpo, total, vid, tomas, vdur, data, tmp):
 def imagen_tramo(tr, tl):
     """Imagen del tramo en su segundo local tl (siempre video o foto)."""
     if tr['tipo'] == 'video':
-        cs = tr['cuadros']
+        F, cs = tr['F'], tr['cuadros']
         pos = tl * tr['vel'] * FPS + 1e-6
         i0 = min(len(cs) - 1, int(pos))
-        im = vertical(abrir(cs[i0]), tr['foco'], zoom=tr.get('zoom', 1.0))
+        im = vertical(F.abrir(cs[i0]), F.foco)
         f = pos - int(pos)
-        if tr['vel'] < 1 and f > 0.08 and i0 + 1 < len(cs):     # cámara lenta: mezcla los dos cuadros vecinos (sin tirones)
-            im = Image.blend(im, vertical(abrir(cs[i0 + 1]), tr['foco'], zoom=tr.get('zoom', 1.0)), f)
+        if tr['vel'] < 1 and f > 0.08 and i0 + 1 < len(cs):     # cámara lenta: mezcla los dos cuadros vecinos
+            im = Image.blend(im, vertical(F.abrir(cs[i0 + 1]), F.foco), f)
         return im.convert('RGBA')
     if 'base' not in tr:
         tr['base'] = vertical(tr['im'], tr['foco'])
     d = max(0.5, tr['b'] - tr['a'])
-    z = 1.0 + 0.04 * cl(tl / d)                        # acercamiento muy lento y continuo (sub-pixel: sin temblor)
+    z = 1.0 + 0.04 * cl(tl / d)                        # acercamiento muy lento y continuo
     w, h = W / z, H / z
     x0, y0 = (W - w) / 2, (H - h) * 0.45
     return tr['base'].resize((W, H), Image.BICUBIC, box=(x0, y0, x0 + w, y0 + h)).convert('RGBA')
 
 
+def videos_extra(data, escenas, tmp):
+    """Videos de apoyo: los que puso el redactor ("videos" y los "video" de cada escena)."""
+    urls = []
+    for u in list(data.get('videos') or []) + [e.get('video') for e in escenas]:
+        if isinstance(u, str) and (u.startswith('http') or os.path.exists(u)) and u not in urls:
+            urls.append(u)
+    out = []
+    for i, u in enumerate(urls[:8]):
+        ruta = u if os.path.exists(u) else f'{tmp}/extra{i}.mp4'
+        if ruta == u or bajar_url(u, ruta):
+            try:
+                F = Fuente(ruta, tmp, u)
+                if F.dur >= 1.5:
+                    out.append(F)
+            except Exception as e:
+                print('Video extra:', u, e, file=sys.stderr)
+    return out
+
+
 def make(data, out):
-    import voz, tomas as TM
+    import voz
     tmp = tempfile.mkdtemp()
+    global FPS
     try:
         escenas = escenas_de(data)
         (palabras, dvoz), mp3 = voz.sintetizar(guion_de(data), f'{tmp}/voz.mp3')
+        total = TOTAL
+        # la voz tiene que caber en el minuto: si se pasa, se acelera un poco (máx. 25 %) sin cambiar el tono
+        cabe = total - CIERRE_MIN - INICIO_VOZ - 0.4
+        tempo = 1.0
+        if mp3 and dvoz > cabe:
+            tempo = min(1.25, dvoz / cabe)
+            palabras = [(a / tempo, b / tempo, w) for a, b, w in palabras]
+            dvoz /= tempo
         palabras = [(a + INICIO_VOZ, b + INICIO_VOZ, w) for a, b, w in palabras]
-        total = max(15.0, min(75.0, INICIO_VOZ + dvoz + 0.5 + CIERRE))   # hasta ~1 minuto de voz; nunca se corta
-        fin_cuerpo = total - CIERRE
+        fin_cuerpo = min(total - CIERRE_MIN, INICIO_VOZ + dvoz + 0.5)
         L = preparar(data)
         vid = bajar_video(data, tmp)
         if not vid:
             raise RuntimeError('La nota no tiene video de la campaña para el Reel')
-        global FPS
-        FPS = fps_de(vid)                                   # se arma a los cuadros por segundo del video original: sin cuadros repetidos
-        tms, vdur = TM.cortes(vid)
-        if vdur < 2:
+        FPS = fps_de(vid)                                   # se arma a los cuadros por segundo del video original
+        principal = Fuente(vid, tmp, 'campana')
+        if principal.dur < 2:
             raise RuntimeError('No pude sacar el video de la campaña')
-        CORTE[0] = sin_bordes(muestras(vid, tmp, vdur))   # un video vertical metido en cuadro horizontal sale a pantalla completa
+        extras = videos_extra(data, escenas, tmp)
         ini = tiempos(escenas, palabras, voz.limpiar)
-        tramos = plan(escenas, ini, fin_cuerpo, total, vid, tms, vdur, data, tmp)
-        print('Reel:', [(round(x['a'], 1), round(x['b'], 1), x['tipo']) for x in tramos], file=sys.stderr)
+        tramos = plan(escenas, ini, fin_cuerpo, total, principal, extras, data, tmp)
+        print('Reel:', [(round(x['a'], 1), round(x['b'], 1), x['tipo'] + ('' if x['tipo'] == 'foto' else str(x['F'].id))) for x in tramos],
+              file=sys.stderr)
         G = [g for g in grupos(palabras)]
         cmd = ['ffmpeg', '-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', str(FPS), '-c:v', 'mjpeg', '-i', '-']
         pr = subprocess.Popen(cmd + ['-c:v', 'libx264', '-preset', 'medium', '-crf', '20', '-pix_fmt', 'yuv420p',
                                      '-r', str(FPS), f'{tmp}/video.mp4'], stdin=subprocess.PIPE)
         ti = 0
-        for i in range(int(total * FPS)):
+        for i in range(int(round(total * FPS))):
             t = i / FPS
-            while ti < len(tramos) - 1 and t >= tramos[ti]['b']:
+            while ti < len(tramos) - 1 and t >= tramos[ti]['b'] - 1e-6:
                 ti += 1
             tr = tramos[ti]
-            tl = max(0.0, t - tr['a'])
-            im = imagen_tramo(tr, tl)
-            if ti > 0 and tl < TRANS:                       # corte suave: fundido muy corto, sin zoom
-                pv = tramos[ti - 1]
-                prev = imagen_tramo(pv, t - pv['a'])       # la toma anterior sigue corriendo durante el fundido
-                a = tl / TRANS
-                im = Image.blend(prev, im, a * a * (3 - 2 * a))
+            im = imagen_tramo(tr, max(0.0, t - tr['a']))      # corte directo, limpio, al ritmo de la voz
             im.alpha_composite(L['abajo']); im.alpha_composite(L['arriba'], (0, 0))
             paste(im, L['brand'], M, 150)
             if t < GANCHO:
@@ -566,20 +644,19 @@ def make(data, out):
         cmd = ['ffmpeg', '-y', '-loglevel', 'error', '-i', f'{tmp}/video.mp4']
         filtros, entradas = [], 1
         if mp3:
-            cmd += ['-i', mp3]; filtros.append(f'[{entradas}:a]adelay={int(INICIO_VOZ * 1000)}|{int(INICIO_VOZ * 1000)},volume=1.0[v]'); entradas += 1
+            ms = int(INICIO_VOZ * 1000)
+            cmd += ['-i', mp3]
+            filtros.append(f'[{entradas}:a]atempo={tempo:.4f},adelay={ms}|{ms},volume=1.0[v]'); entradas += 1
         if os.path.exists(MUSIC):
             cmd += ['-stream_loop', '-1', '-i', MUSIC]
             vol = 0.14 if mp3 else 0.9
             filtros.append(f'[{entradas}:a]volume={vol},afade=t=out:st={total - 1.5:.2f}:d=1.5[m]'); entradas += 1
         if filtros:
-            mez = ''.join(x for x in ('[v]' if mp3 else '', '[m]' if os.path.exists(MUSIC) else ''))
+            mez = ('[v]' if mp3 else '') + ('[m]' if os.path.exists(MUSIC) else '')
             n_in = mez.count('[')
-            if n_in > 1:
-                filtros.append(f'{mez}amix=inputs={n_in}:duration=longest:normalize=0[a]')
-            else:
-                filtros.append(f'{mez}anull[a]')
+            filtros.append(f'{mez}amix=inputs={n_in}:duration=longest:normalize=0[a]' if n_in > 1 else f'{mez}anull[a]')
             cmd += ['-filter_complex', ';'.join(filtros), '-map', '0:v', '-map', '[a]', '-c:a', 'aac', '-b:a', '160k']
-        cmd += ['-c:v', 'copy', '-t', f'{total:.2f}', '-movflags', '+faststart', out]
+        cmd += ['-c:v', 'copy', '-t', f'{total:.3f}', '-movflags', '+faststart', out]
         subprocess.run(cmd, check=True)
         return out
     finally:

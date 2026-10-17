@@ -557,6 +557,7 @@ def build_reel(n):
     data['src'] = n.get('src', '')
     data['guion'] = n.get('guion') or n['ig'].get('guion', '')
     data['mp4'] = n.get('mp4', '')
+    data['videos'] = n.get('videos') or n['ig'].get('videos') or []   # videos de apoyo (otras campañas, la marca, el producto)
     out = f'assets/ig/{n["id"]}/reel.mp4'
     os.makedirs(os.path.dirname(out), exist_ok=True)
     reel.make(data, out)
