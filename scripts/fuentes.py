@@ -297,15 +297,47 @@ def fotogramas(url, cuantos=14):
         return [im for _, im in res]
 
 
+def buscar_fuentes(consulta, excluir=(), maximo=5):
+    """Busca en la web otras notas de la misma noticia (para tener más fotos). Regresa URLs de artículos."""
+    from urllib.parse import quote, unquote, parse_qs
+    out = []
+    try:
+        r = requests.get('https://html.duckduckgo.com/html/?q=' + quote(consulta), headers=UA, timeout=25)
+        for href in re.findall(r'class="result__a"[^>]*href="([^"]+)"', r.text):
+            href = href.replace('&amp;', '&')
+            if 'uddg=' in href:
+                href = unquote(parse_qs(urlparse(href).query).get('uddg', [''])[0])
+            host = (urlparse(href).hostname or '').replace('www.', '')
+            if not href.startswith('http') or REDES.search(href) or any(e in host for e in excluir):
+                continue
+            if re.search(r'youtube|wikipedia|pinterest|amazon\.|mercadolibre', host):
+                continue
+            if href not in out:
+                out.append(href)
+            if len(out) >= maximo:
+                break
+    except Exception as e:
+        print('Búsqueda:', e, file=sys.stderr)
+    return out
+
+
 def candidatas(n, carpeta='assets/work', maximo=4, solo_video=False, registro=None):
     """registro: {huella_hex: id_de_nota} de fotos ya usadas en otras notas (anuncios que se repiten)."""
     nid = n['id']
     registro = registro if registro is not None else {}
     os.makedirs(carpeta, exist_ok=True)
     vids = urls_de_video(n)
-    pag = [] if solo_video else urls_de_pagina(n.get('src', ''))
-    excluir = set() if solo_video else urls_de_portada(n.get('src', ''))
+    pag, excluir = [], set()
+    if not solo_video:
+        for fuente in [n.get('src', '')] + list(n.get('fuentes') or []):   # la nota original y otras notas del mismo tema
+            if not fuente:
+                continue
+            ex = urls_de_portada(fuente)
+            excluir |= ex
+            pag += [u for u in urls_de_pagina(fuente) if u not in pag]
     lista = vids + [u for u in pag if u.split('?')[0] not in excluir]
+    evitar = set(n.get('evitar') or [])                 # fotos que Sergio ya no quiere ver
+    lista = [u for u in lista if u not in evitar]
     lista = [u for u in lista if not CAPTURA.search(u)] + [u for u in lista if CAPTURA.search(u)]   # "Screenshot..." al final
     og = pag[0] if pag else None
     rutas, huellas, respaldo, segunda = [], [], None, []

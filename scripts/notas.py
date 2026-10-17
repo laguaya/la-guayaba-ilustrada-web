@@ -8,6 +8,7 @@ Corre dentro de GitHub Actions. Necesita el secreto TELEGRAM_TOKEN.
 import glob, io, json, os, re, sys, time
 from datetime import datetime, timezone, timedelta
 import requests
+from urllib.parse import urlparse
 
 TOKEN = os.environ['TELEGRAM_TOKEN']
 CHAT = int(os.environ['TELEGRAM_CHAT_ID'])
@@ -358,6 +359,16 @@ def handle_message(u, msg):
         n = load(path); poner_candidatas(n); save(path, n)
         send_selector(n); PREVIEW.add(nid)
         return
+    if not is_photo and re.search(r'\b(otras?|otros?|nuevas?|diferentes?|mejor(es)?)\s+(fotos?|im[aá]gen(es)?)\b|'
+                                  r'\bcambia(r|le)?\s+(la\s+)?(foto|imagen)\b|\bbusca\s+(otra|otras|más|mas)\b', text, re.I):
+        nid = nid or last_note()
+        path = f'drafts/{nid}.json' if nid else ''
+        if not nid or not os.path.exists(path):
+            reply(mid, 'Esa nota ya está publicada o no la encuentro. Respóndele "otra foto" a una nota pendiente.')
+            return
+        reply(mid, '🔎 Va. Busco fotos en otros medios que publicaron la misma noticia…')
+        otra_foto(nid, mid)
+        return
     if nid and not is_photo and ig_word:
         ig_command(nid, mid, 'reel' if re.search(r'\breel\b', text, re.I) else 'carousel')
         return
@@ -634,6 +645,43 @@ def mp4_de_fuente(src):
     return None
 
 
+def otra_foto(nid, mid):
+    """Sergio pide otra imagen: se buscan otras notas del mismo tema en la web y se juntan sus fotos."""
+    sys.path.insert(0, 'scripts')
+    import fuentes
+    path = f'drafts/{nid}.json'
+    n = load(path)
+    antes = set(n.get('cands', []))
+    host = (urlparse(n.get('src', '')).hostname or '').replace('www.', '')
+    titulo = re.sub(r'[*_\[\]]', '', n.get('t', ''))
+    nuevas_fuentes = []
+    for q in (titulo, f"{n['ig'].get('marca', '')} {titulo.split(' ', 6)[-1] if titulo else ''}"):
+        for u in fuentes.buscar_fuentes(q, excluir=(host,)):
+            if u not in nuevas_fuentes and u not in (n.get('fuentes') or []):
+                nuevas_fuentes.append(u)
+        if len(nuevas_fuentes) >= 4:
+            break
+    n['fuentes'] = (list(n.get('fuentes') or []) + nuevas_fuentes)[:8]
+    # la foto actual va a "evitar" para que salgan otras primero
+    poner_candidatas(n)
+    nuevas = [c for c in n.get('cands', []) if c not in antes]
+    save(path, n)
+    if nuevas:
+        n['cands'] = nuevas + [c for c in n['cands'] if c not in nuevas]
+        aplicar_fotos(n); save(path, n)
+        reply(mid, f'✅ Encontré {len(nuevas)} foto(s) nueva(s) en otros medios. Puse la mejor de portada; '
+                   'abajo te mando todas para que escojas.')
+        send_selector(n); PREVIEW.add(nid)
+    else:
+        save(f'inbox/otra-foto-{nid}.json', {'tipo': 'texto', 'nota': nid, 'urgente': True, 'fecha': int(time.time()),
+             'texto': 'Sergio pide OTRA IMAGEN para esta nota. Busca 2 o 3 notas de otros medios sobre la misma noticia '
+                      'que traigan fotos reales del producto o la campaña y agrégalas al campo "fuentes" del borrador '
+                      '(lista de URLs). Luego quita "cands" y "tg" del borrador para que el bot vuelva a buscar fotos.'})
+        reply(mid, '😕 No encontré fotos nuevas que sirvan (en alta calidad y sin letras). Ya le pedí al redactor que busque '
+                   'otras notas de esta noticia; en su siguiente vuelta (máx. 1 hora) te llega con fotos nuevas. '
+                   'Si tienes una foto, respóndele aquí a la nota y la uso de inmediato.')
+
+
 def poner_candidatas(n, solo_video=False):
     """Busca fotos reales (fuente y/o video) y deja puestas la 1 y la 2 por defecto."""
     sys.path.insert(0, 'scripts')
@@ -877,8 +925,7 @@ def send_pending():
                     kb.append([{'text': '🎞 Quitar el Reel' if n.get('reel') else '🎞 Agregar Reel',
                                 'callback_data': 'reel:' + n['id']}])
             kb.append([{'text': '🎯 Ajustar encuadre de la portada', 'callback_data': 'aj:' + n['id']}])
-            if len(n.get('cands', [])) > 1:
-                kb.append([{'text': '🔄 Otras fotos', 'callback_data': 'alt:' + n['id']}])
+            kb.append([{'text': '🔄 Otras fotos', 'callback_data': 'alt:' + n['id']}])
         kb.append([{'text': '🗑 Descartar', 'callback_data': 'del:' + n['id']}])
         r = tg('sendMessage', chat_id=CHAT, text=body[:3900], parse_mode='HTML',
                disable_web_page_preview='true', reply_markup={'inline_keyboard': kb})
@@ -1034,8 +1081,13 @@ def poll():
             changed = True
             continue
         if accion == 'alt':
-            tg('answerCallbackQuery', callback_query_id=cq['id'], text='Te mando las fotos que encontré.')
-            send_selector(n)
+            if len(n.get('cands', [])) > 1:
+                tg('answerCallbackQuery', callback_query_id=cq['id'], text='Te mando las fotos que encontré.')
+                send_selector(n)
+            else:
+                tg('answerCallbackQuery', callback_query_id=cq['id'], text='Busco fotos en otros medios…')
+                otra_foto(nid, (cq.get('message') or {}).get('message_id'))
+            changed = True
             continue
         if accion in ('pub', 'pig', 'prl', 'pall'):
             publish(n)
