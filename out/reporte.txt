@@ -1,0 +1,2 @@
+fuentes: ['https://www.zigwheels.my/car-news/mitsubishi-xforce-roving-cloud-campaign-starts-october-16-with-test-drives-and-photo-contest', 'https://mediacat.com/mitsubishi-kendi-bulutunu-yaninda-gezdiriyor/']
+candidatas: ['out/nota-prueba-mc-foto-src1.webp']
