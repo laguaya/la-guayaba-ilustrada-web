@@ -853,22 +853,35 @@ def ajuste_portada(cq, data):
             PREVIEW.add(nid)
         return
     a = dict(n.get('ajuste') or {'dx': 0, 'dy': 0, 'z': 1.0})
+    antes = dict(a)
     # la flecha mueve la FOTO hacia ese lado (⬅️ = lo que se ve se recorre a la izquierda)
-    if mov == 'l': a['dx'] = round(a['dx'] - AJ_PASO, 3)
-    if mov == 'r': a['dx'] = round(a['dx'] + AJ_PASO, 3)
-    if mov == 'u': a['dy'] = round(a['dy'] - AJ_PASO, 3)
-    if mov == 'd': a['dy'] = round(a['dy'] + AJ_PASO, 3)
-    if mov == 'zi': a['z'] = round(min(2.0, a['z'] * 1.1), 3)
-    if mov == 'zo': a['z'] = round(max(1.0, a['z'] / 1.1), 3)
+    if mov == 'l': a['dx'] = round(max(-0.5, a['dx'] - AJ_PASO), 3)
+    if mov == 'r': a['dx'] = round(min(0.5, a['dx'] + AJ_PASO), 3)
+    if mov == 'u': a['dy'] = round(max(-0.5, a['dy'] - AJ_PASO), 3)
+    if mov == 'd': a['dy'] = round(min(0.5, a['dy'] + AJ_PASO), 3)
+    if mov == 'zi': a['z'] = round(min(2.0, a['z'] * 1.08), 3)
+    if mov == 'zo': a['z'] = round(max(0.8, a['z'] / 1.08), 3)
     if mov == 'x': a = {'dx': 0, 'dy': 0, 'z': 1.0}
     n['ajuste'] = a
     save(path, n)
-    tg('answerCallbackQuery', callback_query_id=cq['id'])
     files = build_carousel(n)
+    pasos = lambda v: int(round(v / AJ_PASO))
+    estado = (f"↔️ {pasos(a['dx']):+d}   ↕️ {pasos(a['dy']):+d}   🔍 {int(round(a['z'] * 100))}%"
+              if a != {'dx': 0, 'dy': 0, 'z': 1.0} else 'Encuadre automático')
+    cap = f'🎯 Mueve la foto hasta que lo importante quede al centro.\n{estado}'
     with open(files[0], 'rb') as f:
-        tg('editMessageMedia', files={'p': f}, chat_id=CHAT, message_id=m.get('message_id'),
-           media={'type': 'photo', 'media': 'attach://p', 'caption': '🎯 Mueve la foto hasta que lo importante quede al centro.'},
-           reply_markup=teclado_ajuste(nid))
+        r = tg('editMessageMedia', files={'p': f}, chat_id=CHAT, message_id=m.get('message_id'),
+               media={'type': 'photo', 'media': 'attach://p', 'caption': cap}, reply_markup=teclado_ajuste(nid))
+    if r.get('ok'):
+        tg('answerCallbackQuery', callback_query_id=cq['id'], text=estado)
+    elif a == antes:
+        tg('answerCallbackQuery', callback_query_id=cq['id'], text='Ya está al límite en esa dirección.')
+    else:   # si no se pudo cambiar la imagen del mensaje, se manda una nueva
+        tg('answerCallbackQuery', callback_query_id=cq['id'], text=estado)
+        with open(files[0], 'rb') as f:
+            r = tg('sendPhoto', files={'photo': f}, chat_id=CHAT, caption=cap, reply_markup=teclado_ajuste(nid))
+        if r.get('ok'):
+            remember(r['result']['message_id'], nid)
 
 
 def send_pending():

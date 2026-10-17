@@ -102,6 +102,7 @@ def recorte(im, size, f=None, zoom=1.0, destino=(0.5, 0.5), zoom_max=1.0, mover=
     Si con el tamaño justo no se puede llevar el foco a 'destino', acerca la foto hasta zoom_max."""
     W, H = size
     f = f or (0.5, 0.5)
+    zoom = max(1.0, zoom)                                 # nunca más chica que el cuadro
     base = max(W / im.width, H / im.height)
     if zoom_max > zoom:
         for eje, (fv, dv, lado, total) in enumerate(((f[0], destino[0], W, im.width), (f[1], destino[1], H, im.height))):
