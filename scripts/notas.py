@@ -705,6 +705,19 @@ def otra_foto(nid, mid):
                    'Si tienes una foto, respóndele aquí a la nota y la uso de inmediato.')
 
 
+def hacer_tomas(n):
+    """Hoja de tomas del video de la campaña (drafts/tomas/<id>.jpg + .json): el redactor la mira para decir
+    qué toma va con cada frase de la voz del Reel."""
+    if os.path.exists(f'drafts/tomas/{n["id"]}.json'):
+        return
+    sys.path.insert(0, 'scripts')
+    try:
+        import tomas
+        tomas.de_url(n['mp4'], n['id'])
+    except Exception as e:
+        print('Tomas del video:', e, file=sys.stderr)
+
+
 def poner_candidatas(n, solo_video=False):
     """Busca fotos reales (fuente y/o video) y deja puestas la 1 y la 2 por defecto."""
     sys.path.insert(0, 'scripts')
@@ -724,6 +737,8 @@ def poner_candidatas(n, solo_video=False):
             m = mp4_de_fuente(n.get('src', ''))
             if m:
                 n['mp4'] = m; n['auto_video'] = True
+    if n.get('mp4') and not solo_video:
+        hacer_tomas(n)
     reg_path = 'drafts/.huellas.json'
     reg = load(reg_path) if os.path.exists(reg_path) else {}
     reg = {k: v for k, v in reg.items() if v != n['id']}

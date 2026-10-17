@@ -1,0 +1,18 @@
+name: prueba-tomas
+on:
+  push:
+    paths: ['.github/workflows/prueba-tomas.yml']
+permissions:
+  contents: write
+jobs:
+  t:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg) >/dev/null 2>&1 || true
+          pip install -q pillow requests fonttools brotli
+          python scripts/tomas.py https://video.adsoftheworld.com/lay8iw9zutpzajvgitjtezefbrjk.mp4 mccain-fryjack-papas-stop-motion
+          mkdir -p /tmp/o && cp drafts/tomas/* /tmp/o/
+          git config user.name "La Guayaba Ilustrada"; git config user.email "laguayabailustrada@gmail.com"
+          git checkout --orphan prueba-reel && git rm -rqf . && cp /tmp/o/* . && git add . && git commit -qm tomas && git push -f origin prueba-reel
