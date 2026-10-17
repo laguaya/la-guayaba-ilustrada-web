@@ -270,8 +270,9 @@ def slide1(data, out):
     foto = _abrir(data['img'])
     aj = data.get('ajuste') or {}
     ajustada = bool(aj) and (aj.get('dx', 0), aj.get('dy', 0), aj.get('z', 1.0)) != (0, 0, 1.0)
-    if foto.width / foto.height >= 1.15 and not ajustada and data.get('entera', True):
-        # foto horizontal: va ENTERA a todo lo ancho, justo arriba del titular (sobra espacio arriba, no se recorta)
+    cabe = W * foto.height / foto.width <= (texto_arriba + 70) - (M + 80)   # entera a todo lo ancho, arriba del titular
+    if cabe and not ajustada and data.get('entera', True):
+        # siempre que se pueda, la foto va ENTERA a todo lo ancho, justo arriba del titular (sobra espacio arriba)
         ph = int(W * foto.height / foto.width)
         y0 = int(max(M + 80, texto_arriba + 70 - ph))
         can = Image.new('RGB', (W, H), INK)
