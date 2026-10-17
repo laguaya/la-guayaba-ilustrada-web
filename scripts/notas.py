@@ -834,6 +834,7 @@ def teclado_ajuste(nid):
     b = lambda t, m: {'text': t, 'callback_data': f'ajm:{nid}:{m}'}
     return {'inline_keyboard': [[b('⬅️', 'l'), b('⬆️', 'u'), b('⬇️', 'd'), b('➡️', 'r')],
                                 [b('🔍 Acercar', 'zi'), b('🔎 Alejar', 'zo'), b('↺ Original', 'x')],
+                                [{'text': '🔄 Buscar otra foto', 'callback_data': f'alt:{nid}'}],
                                 [b('✅ Listo', 'ok')]]}
 
 
