@@ -93,6 +93,7 @@
 - [RSS](https://guayabailustrada.com.mx/feed.xml)
 
 ## Notas recientes
+- [Bacardí lanza una botella fantasma que brilla en la oscuridad y revive al Crypt Keeper](https://guayabailustrada.com.mx/notas/bacardi-ghost-bottle-crypt-keeper): La marca de ron arma su Halloween con cinco videos dirigidos por Greg Nicotero, el patrocinio del maratón FearFest de AMC y una fiesta con Janelle Monáe.
 - [Jack in the Box convierte el Halloween de Los Simpson en un menú con Krusty Burgers](https://guayabailustrada.com.mx/notas/jack-in-the-box-simpsons-munchie-meal-horror): La cadena de hamburguesas lanzó su primera colaboración con la serie: hamburguesas de Krusty, donas "prohibidas" y seis vasos que brillan en la oscuridad.
 - [Microsoft convierte la letra de Miguel Ángel en una tipografía para Word y PowerPoint](https://guayabailustrada.com.mx/notas/microsoft-michelangelus-tipografia-miguel-angel): Se llama Michelangelus, la diseñó el estudio italiano Studiogusto para la basílica de San Pedro y llegará a Microsoft 365 a finales de 2026.
 - [McDonald's convierte la caja de la Cajita Feliz en un examen de la vista para niños](https://guayabailustrada.com.mx/notas/mcdonalds-happy-view-caja-examen-vista): En Brasil, la agencia GALERIA y el Hospital CEMA metieron cinco lentes de prueba en la caja para detectar a tiempo problemas visuales en niños de 3 a 13 años.
@@ -112,4 +113,3 @@
 - [UNO convierte sus cartas en tenis de edición limitada con la marca india COMET](https://guayabailustrada.com.mx/notas/uno-comet-tenis-edicion-limitada): El juego de Mattel se pasó al streetwear con 800 pares que se agotaron en minutos y una caja que parece un mazo gigante.
 - [Deezer dejará a sus usuarios ocultar la música hecha con IA](https://guayabailustrada.com.mx/notas/deezer-filtro-musica-ia): La plataforma de streaming prepara un interruptor para quitar de su catálogo las canciones creadas por inteligencia artificial, una señal de que el público quiere saber qué es real.
 - [Meta lanza Muse Wonder, su IA más potente, y apuesta por una que te recuerde](https://guayabailustrada.com.mx/notas/meta-muse-wonder-ia): La empresa de Instagram y WhatsApp presentó dos modelos nuevos que prometen resolver tareas largas y acordarse de lo que le importa a cada usuario.
-- [Apple lanza HomeView, su pantalla para el hogar, pero no llega a México](https://guayabailustrada.com.mx/notas/apple-homeview-mexico): Es la respuesta de Apple a Alexa: una pantalla de 7 pulgadas con Siri renovada por IA que controla la casa.
