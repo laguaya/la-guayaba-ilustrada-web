@@ -236,11 +236,11 @@ def preparar(data):
         'brand': pill('NEWSBRAND · LA GUAYABA ILUSTRADA', font('lg-bold.woff2', 26), (255, 255, 255, 46), WHITE, 26, 14),
         'tag': pill((data.get('etiqueta') or 'NOTICIAS').upper(), font('lg-black.woff2', 34), ROSA, UVA, 30, 16),
         'marca': pill((data.get('marca') or '').upper(), font('lg-black.woff2', 30), ROSA, UVA, 24, 13) if data.get('marca') else None,
-        'cta': text_block('¿Quieres saber _más_ de esta nota?', W - 2 * M, 3, 'lg-black.woff2', 128, 80, WHITE, it_color=ROSA),
-        'cta2': body_block('Léela completa en guayabailustrada.com.mx', W - 2 * M, 44, WHITE, 2),
-        'bio': pill('LINK EN LA BIO  →', font('lg-black.woff2', 46), ROSA, UVA, 54, 30),
+        'cta': text_block('Síguenos para no perderte la _próxima_', W - 2 * M, 3, 'lg-black.woff2', 128, 80, WHITE, it_color=ROSA),
+        'cta2': body_block('Noticias de marcas, diseño y publicidad que sí importan. Todos los días.', W - 2 * M, 44, WHITE, 3),
+        'bio': pill('SEGUIR  @lgi.newsbrand', font('lg-black.woff2', 46), ROSA, UVA, 54, 30),
         'firma': text_block('LG.I', 400, 1, 'lg-bold.woff2', 110, 100, WHITE, track=-0.05),
-        'sigue': pill('@lgi.newsbrand', font('lg-bold.woff2', 36), WHITE, UVA, 30, 16),
+        'sigue': pill('Comenta · Guarda · Comparte', font('lg-bold.woff2', 34), WHITE, UVA, 30, 16),
     }
     d0 = ImageDraw.Draw(Image.new('RGB', (4, 4)))
     fonts, ls, size = C.fitted(d0, data['portada'], W - 2 * M, 4, 'lg-black.woff2', 112, 64)
@@ -297,7 +297,7 @@ def guion_de(data):
     info = data.get('info') or []
     if info:
         partes.append(re.sub(r'[\[\]]', '', info[0]))
-    partes.append('La nota completa está en el link de la bio.')
+    partes.append('Síguenos para más noticias de marcas todos los días.')
     return ' '.join(partes)
 
 
@@ -307,7 +307,7 @@ def make(data, out):
     try:
         (palabras, dvoz), mp3 = voz.sintetizar(guion_de(data), f'{tmp}/voz.mp3')
         palabras = [(a + INICIO_VOZ, b + INICIO_VOZ, w) for a, b, w in palabras]
-        total = max(15.0, min(48.0, INICIO_VOZ + dvoz + 0.5 + CIERRE))   # nunca se corta la voz
+        total = max(15.0, min(75.0, INICIO_VOZ + dvoz + 0.5 + CIERRE))   # hasta ~1 minuto de voz; nunca se corta
         fin_cuerpo = total - CIERRE
         L = preparar(data)
         vid = bajar_video(data, tmp)
