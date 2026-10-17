@@ -243,6 +243,33 @@ def siguiente_vuelta():
     return f"{h}:52 {'am' if t.hour < 12 else 'pm'}" + ('' if t.date() == now.date() else ' de mañana')
 
 
+REHACER = 'drafts/.rehacer_reel.json'   # notas publicadas a las que hay que rehacerles el Reel (lo pide Claude)
+
+
+def rehacer_reel(nid):
+    """Vuelve a armar el Reel de una nota ya publicada y lo manda a Telegram con botón para subirlo."""
+    n, _ = note_get(nid)
+    igp = f'drafts/ig/{nid}.json'
+    if not n or not os.path.exists(igp):
+        tg('sendMessage', chat_id=CHAT, text=f'⚠️ No encontré la nota {nid} para rehacer su Reel.')
+        return
+    n['ig'] = load(igp)
+    for k in ('ig1', 'ig2'):
+        if n['ig'].get(k):
+            n[k] = n['ig'][k]
+    try:
+        out = build_reel(n)
+    except Exception as e:
+        tg('sendMessage', chat_id=CHAT, text=f'⚠️ No pude rehacer el Reel de {nid}: {str(e)[:200]}')
+        return
+    with open(out, 'rb') as f:
+        r = tg('sendVideo', files={'video': f}, chat_id=CHAT, supports_streaming='true', width=1080, height=1920,
+               caption=f'🎬 Reel nuevo: {n.get("t", nid)[:120]}\nSi te gusta, súbelo con el botón (el anterior lo borras tú en Instagram).',
+               reply_markup={'inline_keyboard': [[{'text': '📲 Subir este Reel a Instagram', 'callback_data': f'subreel:{nid}'}]]})
+    if r.get('ok'):
+        remember(r['result']['message_id'], nid)
+
+
 def ig_command(nid, mid, kind='carousel'):
     """Sube a Instagram el carrusel (o el Reel) de una nota ya publicada."""
     if os.path.exists(f'drafts/{nid}.json'):
@@ -1041,6 +1068,18 @@ def poll():
         cq = u.get('callback_query')
         if not cq or cq['from']['id'] != CHAT:
             continue
+        if (cq.get('data') or '').startswith('subreel:'):
+            sid = cq['data'].split(':', 1)[1]
+            n, _ = note_get(sid)
+            if n and os.path.exists(f'assets/ig/{sid}/reel.mp4') and os.path.exists(f'drafts/ig/{sid}.json'):
+                n['ig'] = load(f'drafts/ig/{sid}.json')
+                n['tg'] = (cq.get('message') or {}).get('message_id')
+                queue_instagram(n, 'reel')
+                mark(cq, '📲 Va. En unos minutos sale el Reel en Instagram; te aviso aquí.')
+            else:
+                tg('answerCallbackQuery', callback_query_id=cq['id'], text='No encontré ese Reel.')
+            changed = True
+            continue
         if re.fullmatch(r'ajm:[a-z0-9-]+:(l|r|u|d|zi|zo|x|ok)', cq.get('data') or ''):
             ajuste_portada(cq, cq['data']); changed = True
             continue
@@ -1501,6 +1540,11 @@ def listen(hours=5.6):
                 print('Hay una versión nueva del bot; reinicio.')
                 break
             changed = False
+            if os.path.exists(REHACER):
+                ids = load(REHACER); os.remove(REHACER)
+                for rid in ids:
+                    rehacer_reel(rid)
+                changed = True
             send_pending()
             poll()
             try:
