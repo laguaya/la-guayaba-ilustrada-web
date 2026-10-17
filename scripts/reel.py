@@ -154,6 +154,19 @@ def abrir(ruta):
     return im.crop(CORTE[0]) if CORTE[0] else im
 
 
+def fps_de(vid):
+    """Cuadros por segundo del video de la campaña (24, 25 o 30). Si se arma a otra velocidad, ffmpeg repite
+    cuadros cada tanto y el movimiento se ve a brincos."""
+    try:
+        r = subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=r_frame_rate',
+                            '-of', 'csv=p=0', vid], capture_output=True, text=True, timeout=60).stdout.strip()
+        a, b = (r.split('/') + ['1'])[:2]
+        f = float(a) / float(b)
+        return min((24, 25, 30), key=lambda x: abs(x - f)) if 20 < f < 61 else 30
+    except Exception:
+        return 30
+
+
 def muestras(vid, tmp, vdur, n=9):
     carpeta = f'{tmp}/muestras'; os.makedirs(carpeta, exist_ok=True)
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', vid, '-vf', f'fps={n / max(1.0, vdur):.4f},{ESCALA}',
@@ -359,7 +372,12 @@ def plan(escenas, ini, fin_cuerpo, total, vid, tomas, vdur, data, tmp):
     fotos_nota = [p for p in fotos_nota if p not in pedidas]   # las fotos que pide una escena no se usan de relleno
     fi = [0]
     usos = [0] * len(tomas)
-    tramos, usados, k, mitad = [], [], [0], [0]
+    tramos, usados, k = [], [], [0]
+    foco_video = [(0.5, 0.45)]                          # un solo encuadre para todo el video: las tomas no "brincan" de lugar
+    if vid:
+        m = muestras(vid, tmp, vdur, n=5)
+        if m:
+            foco_video[0] = encuadre.foco(abrir(m[len(m) // 2]).convert('RGB'))
 
     def foto_libre():
         while fi[0] < len(fotos_nota):
@@ -375,22 +393,24 @@ def plan(escenas, ini, fin_cuerpo, total, vid, tomas, vdur, data, tmp):
     def poner_foto(a, b, im):
         tramos.append(dict(a=a, b=b, tipo='foto', im=im, foco=encuadre.foco(im)))
 
-    def poner_video(a, d, desde, hasta=None, zoom=1.0, vel_min=0.7):
-        """Pone un tramo de video desde `desde`; regresa los segundos que cubrió."""
-        hay = vdur - desde
+    def poner_video(a, d, desde, hasta=None, zoom=1.0, vel_min=0.88):
+        """Pone un tramo de video desde `desde`; regresa los segundos que cubrió.
+        Deja 1 cuadro de margen en cada orilla de la toma para que nunca se cuele un cuadro de la toma vecina."""
+        margen = 1.0 / FPS
+        desde = desde + margen
+        fin = vdur - margen
         if hasta is not None and hasta > desde + 0.3:
-            hay = min(hay, hasta - desde)              # nunca se pasa de la toma elegida
-        vel = 1.0 if hay >= d else max(vel_min, hay / d)
+            fin = min(fin, hasta - margen)             # nunca se pasa de la toma elegida
+        hay = fin - desde
+        vel = 1.0 if hay >= d else max(vel_min, hay / d)   # a lo mucho un 12 % más lento: no se notan brincos
         largo = min(d, hay / vel)
-        if largo < 0.4:
+        if largo < 0.5:
             return 0.0
-        cuadros = clip(vid, tmp, k[0], desde, largo * vel); k[0] += 1
+        extra = max(0.0, min(TRANS + 0.05, fin - desde - largo * vel))   # cola para el fundido de salida
+        cuadros = clip(vid, tmp, k[0], desde, largo * vel + extra); k[0] += 1
         if len(cuadros) < 3:
             return 0.0
-        foco = encuadre.foco(abrir(cuadros[len(cuadros) // 2]).convert('RGB'))
-        if zoom > 1:                                    # otro encuadre: mitad de arriba o de abajo de la toma
-            foco = (foco[0], 0.27 if mitad[0] % 2 == 0 else 0.73); mitad[0] += 1
-        tramos.append(dict(a=a, b=a + largo, tipo='video', cuadros=cuadros, vel=vel, foco=foco, zoom=zoom))
+        tramos.append(dict(a=a, b=a + largo, tipo='video', cuadros=cuadros, vel=vel, foco=foco_video[0], zoom=zoom))
         usados.append((desde, desde + largo * vel))
         for i, (t0, t1) in enumerate(tomas):
             if t0 < desde + largo * vel and t1 > desde:
@@ -422,17 +442,25 @@ def plan(escenas, ini, fin_cuerpo, total, vid, tomas, vdur, data, tmp):
                         cubierto = tramos[-1]['b'] - a
                     elif tomas:
                         i = min(range(len(tomas)), key=lambda j: (usos[j], -(tomas[j][1] - tomas[j][0])))
-                        cubierto = poner_video(a, d, tomas[i][0], tomas[i][1], zoom=1.35, vel_min=0.6)
+                        cubierto = poner_video(a, d, tomas[i][0], tomas[i][1])
                         usos[i] += 1
             primera = False
             if cubierto <= 0:
-                if tramos:
-                    tramos[-1]['b'] = b
+                estirar(b)
                 break
             a += cubierto
-            if b - a < 0.9 and tramos:                  # sobra muy poquito: se alarga la toma actual
-                tramos[-1]['b'] = b
+            if b - a < 0.35 and tramos:                 # sobra casi nada: se alarga la toma actual
+                estirar(b)
                 break
+
+    def estirar(b):
+        """Alarga el último tramo hasta b. Si es video, lo hace un poco más lento (con cuadros mezclados) en vez de congelarlo."""
+        if not tramos:
+            return
+        L = tramos[-1]
+        if L['tipo'] == 'video' and b > L['b']:
+            L['vel'] *= (L['b'] - L['a']) / (b - L['a'])
+        L['b'] = max(L['b'], b)
 
     for i, e in enumerate(escenas):
         a = 0.0 if i == 0 else max(0.0, ini[i] - 0.12)
@@ -451,8 +479,7 @@ def plan(escenas, ini, fin_cuerpo, total, vid, tomas, vdur, data, tmp):
             rellenar(fin_cuerpo, total, primera=False)
     else:
         rellenar(fin_cuerpo, total, primera=False)
-    if tramos:
-        tramos[-1]['b'] = max(tramos[-1]['b'], total)
+    estirar(total)
     return tramos
 
 
@@ -460,10 +487,20 @@ def imagen_tramo(tr, tl):
     """Imagen del tramo en su segundo local tl (siempre video o foto)."""
     if tr['tipo'] == 'video':
         cs = tr['cuadros']
-        return vertical(abrir(cs[min(len(cs) - 1, int(tl * tr['vel'] * FPS))]), tr['foco'], zoom=tr.get('zoom', 1.0)).convert('RGBA')
+        pos = tl * tr['vel'] * FPS + 1e-6
+        i0 = min(len(cs) - 1, int(pos))
+        im = vertical(abrir(cs[i0]), tr['foco'], zoom=tr.get('zoom', 1.0))
+        f = pos - int(pos)
+        if tr['vel'] < 1 and f > 0.08 and i0 + 1 < len(cs):     # cámara lenta: mezcla los dos cuadros vecinos (sin tirones)
+            im = Image.blend(im, vertical(abrir(cs[i0 + 1]), tr['foco'], zoom=tr.get('zoom', 1.0)), f)
+        return im.convert('RGBA')
+    if 'base' not in tr:
+        tr['base'] = vertical(tr['im'], tr['foco'])
     d = max(0.5, tr['b'] - tr['a'])
-    z = 1.0 + 0.045 * (tl / d)                         # deriva muy lenta sobre la foto
-    return vertical(tr['im'], tr['foco'], zoom=z).convert('RGBA')
+    z = 1.0 + 0.04 * cl(tl / d)                        # acercamiento muy lento y continuo (sub-pixel: sin temblor)
+    w, h = W / z, H / z
+    x0, y0 = (W - w) / 2, (H - h) * 0.45
+    return tr['base'].resize((W, H), Image.BICUBIC, box=(x0, y0, x0 + w, y0 + h)).convert('RGBA')
 
 
 def make(data, out):
@@ -479,6 +516,8 @@ def make(data, out):
         vid = bajar_video(data, tmp)
         if not vid:
             raise RuntimeError('La nota no tiene video de la campaña para el Reel')
+        global FPS
+        FPS = fps_de(vid)                                   # se arma a los cuadros por segundo del video original: sin cuadros repetidos
         tms, vdur = TM.cortes(vid)
         if vdur < 2:
             raise RuntimeError('No pude sacar el video de la campaña')
@@ -500,7 +539,7 @@ def make(data, out):
             im = imagen_tramo(tr, tl)
             if ti > 0 and tl < TRANS:                       # corte suave: fundido muy corto, sin zoom
                 pv = tramos[ti - 1]
-                prev = imagen_tramo(pv, max(0.0, pv['b'] - pv['a'] - 1 / FPS))
+                prev = imagen_tramo(pv, t - pv['a'])       # la toma anterior sigue corriendo durante el fundido
                 a = tl / TRANS
                 im = Image.blend(prev, im, a * a * (3 - 2 * a))
             im.alpha_composite(L['abajo']); im.alpha_composite(L['arriba'], (0, 0))
