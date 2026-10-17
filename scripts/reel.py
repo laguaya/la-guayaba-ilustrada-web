@@ -105,6 +105,7 @@ def vertical(im, foco=(0.5, 0.45), zoom=1.0):
 
 
 TOTAL = 60.0          # todos los Reels duran exactamente un minuto
+SONIDO_ORIGINAL = False   # Sergio no quiere el audio de fondo de los clips: solo voz y música
 CIERRE_MIN = 2.6      # segundos mínimos del cierre con el CTA
 TOMA_MIN = 1.0        # ningún clip dura menos de esto (los clips cortitos se ven como glitch)
 ESCALA = 'scale=min(1920\\,iw):-2'
@@ -684,7 +685,7 @@ def make(data, out):
             cmd += ['-i', mp3]
             filtros.append(f'[{entradas}:a]atempo={tempo:.4f},adelay={ms}|{ms},volume=1.0,asplit=2[v][vsc]'); entradas += 1
         for tr in tramos:
-            if tr['tipo'] != 'video' or not tr['F'].audio:
+            if not SONIDO_ORIGINAL or tr['tipo'] != 'video' or not tr['F'].audio:
                 continue
             ini = tr['desde'] + tr.get('off', 0.0) * tr['vel']
             dur = tr['b'] - tr['a']
