@@ -229,6 +229,8 @@ class Fuente:
         self.id, self.ruta, self.tmp, self.nombre = Fuente.n, ruta, tmp, nombre
         self.tomas, self.dur = TM.cortes(ruta, maximo=10 ** 6)       # solo cortes reales: nunca saltos dentro de una toma
         self.usados = []
+        self.audio = bool(subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'a', '-show_entries', 'stream=index',
+                                          '-of', 'csv=p=0', ruta], capture_output=True, text=True, timeout=60).stdout.strip())
         m = self._muestras()
         self.crop = sin_bordes(m) if m else None
         self.foco = encuadre.foco(self.abrir(m[len(m) // 2]).convert('RGB')) if m else (0.5, 0.45)
@@ -498,11 +500,15 @@ def plan(escenas, ini, fin_cuerpo, total, principal, extras, data, tmp):
             largo = min(d, hay / vel)
         else:
             vel = 1.0
-        cs = F.cuadros(k[0], desde, largo * vel); k[0] += 1
+        # fin natural de la toma (donde cortó el editor original) para poder acomodar el corte ahí
+        fin_toma = next((t1 for t0, t1 in F.tomas if t0 - 0.05 <= desde < t1), F.dur) - margen
+        fin_toma = min(fin_toma, fin) if hasta is not None else fin_toma
+        cola = max(0.0, min(0.6, fin_toma - (desde + largo * vel)))
+        cs = F.cuadros(k[0], desde, largo * vel + cola); k[0] += 1
         if len(cs) < 3:
             return 0.0
-        tramos.append(dict(a=a, b=a + largo, tipo='video', cuadros=cs, vel=vel, F=F))
-        F.usados.append((desde - margen, desde + largo * vel + margen))
+        tramos.append(dict(a=a, b=a + largo, tipo='video', cuadros=cs, vel=vel, F=F, desde=desde, fin_toma=fin_toma, off=0.0))
+        F.usados.append((desde - margen, desde + largo * vel + cola + margen))
         return largo
 
     def rellenar(a, b, e=None):
@@ -571,14 +577,36 @@ def plan(escenas, ini, fin_cuerpo, total, principal, extras, data, tmp):
     if not hecho:
         rellenar(fin_cuerpo, total)
     estirar(total)
+    ajustar_cortes(tramos)
     return tramos
+
+
+def ajustar_cortes(tramos):
+    """Mueve cada corte (máx. 0.5 s) al punto donde el editor original cambió de toma: así los cortes caen
+    en movimientos naturales y no a media acción."""
+    for i in range(len(tramos) - 1):
+        L, N = tramos[i], tramos[i + 1]
+        if L['tipo'] != 'video' or L.get('fin_toma') is None:
+            continue
+        c = L['a'] + (L['fin_toma'] - L['desde']) / L['vel'] - L['off']
+        ultimo = L['a'] + (len(L['cuadros']) - 1) / FPS / L['vel'] - L['off']
+        if L['b'] < c <= min(L['b'] + 0.5, ultimo) and N['b'] - c >= 1.0:
+            d = c - L['b']
+            L['b'] = c; N['a'] = c; N['off'] = N.get('off', 0.0) + d
+        elif L['b'] - 0.45 <= c < L['b'] and c - L['a'] >= 1.0:
+            d = L['b'] - c
+            if N['tipo'] == 'video':
+                cabe = (len(N['cuadros']) - 1) / FPS / N['vel'] - N.get('off', 0.0)
+                if cabe < (N['b'] - N['a']) + d:
+                    continue
+            L['b'] = c; N['a'] = c
 
 
 def imagen_tramo(tr, tl):
     """Imagen del tramo en su segundo local tl (siempre video o foto)."""
     if tr['tipo'] == 'video':
         F, cs = tr['F'], tr['cuadros']
-        pos = tl * tr['vel'] * FPS + 1e-6
+        pos = (tl + tr.get('off', 0.0)) * tr['vel'] * FPS + 1e-6
         i0 = min(len(cs) - 1, int(pos))
         im = vertical(F.abrir(cs[i0]), F.foco)
         f = pos - int(pos)
@@ -675,22 +703,42 @@ def make(data, out):
         pr.stdin.close(); pr.wait()
         if pr.returncode:
             raise RuntimeError('ffmpeg falló armando el video del Reel')
-        # audio: voz + música bajita (y si no hubo voz, solo música)
+        # audio: voz + sonido original de cada clip (se baja solo mientras habla la voz) + música bajita
         cmd = ['ffmpeg', '-y', '-loglevel', 'error', '-i', f'{tmp}/video.mp4']
-        filtros, entradas = [], 1
+        filtros, entradas, bus = [], 1, []
         if mp3:
             ms = int(INICIO_VOZ * 1000)
             cmd += ['-i', mp3]
-            filtros.append(f'[{entradas}:a]atempo={tempo:.4f},adelay={ms}|{ms},volume=1.0[v]'); entradas += 1
+            filtros.append(f'[{entradas}:a]atempo={tempo:.4f},adelay={ms}|{ms},volume=1.0,asplit=2[v][vsc]'); entradas += 1
+        for tr in tramos:
+            if tr['tipo'] != 'video' or not tr['F'].audio:
+                continue
+            ini = tr['desde'] + tr.get('off', 0.0) * tr['vel']
+            dur = tr['b'] - tr['a']
+            cmd += ['-ss', f'{ini:.3f}', '-t', f'{dur * tr["vel"] + 0.05:.3f}', '-i', tr['F'].ruta]
+            ms = int(tr['a'] * 1000)
+            vel = f'atempo={max(0.5, tr["vel"]):.4f},' if tr['vel'] < 0.999 else ''
+            filtros.append(f'[{entradas}:a]aformat=sample_rates=44100:channel_layouts=stereo,{vel}'
+                           f'afade=t=in:d=0.03,afade=t=out:st={max(0.0, dur - 0.05):.3f}:d=0.05,'
+                           f'adelay={ms}|{ms}[s{entradas}]')
+            bus.append(f'[s{entradas}]'); entradas += 1
+        if bus:
+            filtros.append(f'{"".join(bus)}amix=inputs={len(bus)}:duration=longest:normalize=0,volume=0.9[clips]')
+            if mp3:   # cuando habla la voz, el sonido del video baja; en las pausas vuelve a escucharse
+                filtros.append('[clips][vsc]sidechaincompress=threshold=0.02:ratio=6:attack=15:release=350[orig]')
+            else:
+                filtros.append('[clips]anull[orig]')
+        elif mp3:
+            filtros.append('[vsc]anullsink')
         if os.path.exists(MUSIC):
             cmd += ['-stream_loop', '-1', '-i', MUSIC]
-            vol = 0.14 if mp3 else 0.9
+            vol = (0.08 if bus else 0.14) if mp3 else (0.3 if bus else 0.9)
             filtros.append(f'[{entradas}:a]volume={vol},afade=t=out:st={total - 1.5:.2f}:d=1.5[m]'); entradas += 1
-        if filtros:
-            mez = ('[v]' if mp3 else '') + ('[m]' if os.path.exists(MUSIC) else '')
-            n_in = mez.count('[')
-            filtros.append(f'{mez}amix=inputs={n_in}:duration=longest:normalize=0[a]' if n_in > 1 else f'{mez}anull[a]')
-            cmd += ['-filter_complex', ';'.join(filtros), '-map', '0:v', '-map', '[a]', '-c:a', 'aac', '-b:a', '160k']
+        mez = ('[v]' if mp3 else '') + ('[orig]' if bus else '') + ('[m]' if os.path.exists(MUSIC) else '')
+        n_in = mez.count('[')
+        if n_in:
+            filtros.append(f'{mez}amix=inputs={n_in}:duration=longest:normalize=0,alimiter=limit=0.95[a]' if n_in > 1 else f'{mez}anull[a]')
+            cmd += ['-filter_complex', ';'.join(filtros), '-map', '0:v', '-map', '[a]', '-c:a', 'aac', '-b:a', '192k']
         cmd += ['-c:v', 'copy', '-t', f'{total:.3f}', '-movflags', '+faststart', out]
         subprocess.run(cmd, check=True)
         return out
