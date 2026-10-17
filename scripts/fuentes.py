@@ -335,7 +335,7 @@ def buscar_fuentes(consulta, excluir=(), maximo=5):
     return out
 
 
-VACIAS = set('para por con una uno unos unas los las del que como sus más mas este esta estos estas pero sobre entre desde hasta '
+VACIAS = set('la el los las un una para por con una uno unos unas los las del que como sus más mas este esta estos estas pero sobre entre desde hasta '
              'tras ante bajo cada todo toda todos todas otra otro hace hizo convierte lanza nueva nuevo nuevas nuevos '
              'marca marcas campaña ahora también sin cuando donde porque the and for with from into'.split())
 
@@ -345,35 +345,50 @@ def palabras_clave(texto):
     return [w for w in t.split() if len(w) > 3 and w not in VACIAS]
 
 
-def habla_de_lo_mismo(url, claves, minimo=0.85):
-    """La otra nota debe mencionar casi todas las palabras clave del titular (si no, es otra noticia)."""
+def nombres_propios(n):
+    """Nombres que identifican la noticia en cualquier idioma: marca, producto, campaña, lugar."""
+    titulo = re.sub(r'[*_\[\]"“”«»]', '', n.get('t', ''))
+    ws = re.findall(r"[A-ZÁÉÍÓÚÑ0-9][\w'’&.-]*(?:\s+[A-ZÁÉÍÓÚÑ0-9][\w'’&.-]*)*", titulo)
+    nombres = [w.strip() for w in ws if len(w.strip()) > 2]
+    if nombres and titulo.startswith(nombres[0]) and len(nombres[0].split()) == 1 and nombres[0].lower() in VACIAS:
+        nombres = nombres[1:]
+    extra = [x.strip() for x in re.split(r'[,;]', n.get('buscar') or '') if x.strip()]
+    marca = ((n.get('ig') or {}).get('marca') or '').strip()
+    out = []
+    for x in extra + ([marca] if marca else []) + nombres:
+        if x.lower() not in [o.lower() for o in out]:
+            out.append(x)
+    return out[:5]
+
+
+def habla_de_lo_mismo(url, nombres):
+    """La otra nota debe ser reciente y mencionar todos los nombres propios de la noticia."""
     import datetime
     m = re.search(r'/(20\d\d)/', url)
-    if m and int(m.group(1)) < datetime.date.today().year - (1 if datetime.date.today().month <= 1 else 0):
-        return False                                     # nota vieja: es otra noticia
-    texto = re.sub(r'<[^>]+>', ' ', cuerpo(pagina(url))).lower()
-    if not texto or not claves:
+    hoy = datetime.date.today()
+    if m and int(m.group(1)) < hoy.year - (1 if hoy.month <= 1 else 0):
+        return False                                     # nota de años pasados: es otra noticia
+    texto = re.sub(r'<[^>]+>', ' ', pagina(url)).lower()
+    if not texto or len(nombres) < 2:
         return False
-    hay = sum(1 for c in claves if re.search(r'(?<![\wáéíóúñ])' + re.escape(c) + r'(?![\wáéíóúñ])', texto))
-    return hay >= max(2, int(len(claves) * minimo + 0.5))
+    return all(re.search(r'(?<![\wáéíóúñ])' + re.escape(x.lower().replace('’', "'")) + r'(?![\wáéíóúñ])',
+                         texto.replace('’', "'")) for x in nombres)
 
 
 def otras_fuentes(n, maximo=4):
-    """Otras notas de la misma noticia, verificadas, para sacar más fotos."""
+    """Otras notas de la misma noticia (en cualquier idioma), verificadas, para sacar más fotos."""
     host = (urlparse(n.get('src', '')).hostname or '').replace('www.', '')
-    titulo = re.sub(r'[*_\[\]]', '', n.get('t', ''))
-    claves = palabras_clave(titulo)
-    marca = (n.get('ig') or {}).get('marca', '')
-    consultas = [n.get('buscar') or '', f'{marca} ' + ' '.join(claves[:6]), titulo]
+    nombres = nombres_propios(n)
+    if len(nombres) < 2:
+        return []
+    consultas = [' '.join(nombres), ' '.join(nombres[:3])]
     vistas, buenas = set(), []
     for q in consultas:
-        if not q.strip():
-            continue
-        for u in buscar_fuentes(q, excluir=(host,), maximo=8):
+        for u in buscar_fuentes(q, excluir=(host,), maximo=10):
             if u in vistas:
                 continue
             vistas.add(u)
-            if habla_de_lo_mismo(u, claves):
+            if habla_de_lo_mismo(u, nombres):
                 buenas.append(u)
             if len(buenas) >= maximo:
                 return buenas
