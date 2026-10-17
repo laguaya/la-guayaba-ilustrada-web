@@ -51,5 +51,10 @@
   "img2": "assets/work/nota-microsoft-michelangelus-tipografia-miguel-angel-foto-src1.webp",
   "fecha": "16 OCTUBRE 2026"
  },
- "tg": 431
+ "tg": 431,
+ "ajuste": {
+  "dx": 0,
+  "dy": 0,
+  "z": 1.0
+ }
 }
