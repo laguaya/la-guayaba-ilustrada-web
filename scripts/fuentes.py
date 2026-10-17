@@ -335,6 +335,47 @@ def buscar_fuentes(consulta, excluir=(), maximo=5):
     return out
 
 
+VACIAS = set('para por con una uno unos unas los las del que como sus más mas este esta estos estas pero sobre entre desde hasta '
+             'tras ante bajo cada todo toda todos todas otra otro hace hizo convierte lanza nueva nuevo nuevas nuevos '
+             'marca marcas campaña ahora también sin cuando donde porque the and for with from into'.split())
+
+
+def palabras_clave(texto):
+    t = re.sub(r'[*_\[\]"“”«».,:;!?¿¡()]', ' ', texto.lower())
+    return [w for w in t.split() if len(w) > 3 and w not in VACIAS]
+
+
+def habla_de_lo_mismo(url, claves, minimo=0.6):
+    """La otra nota debe mencionar casi todas las palabras clave del titular (si no, es otra noticia)."""
+    texto = re.sub(r'<[^>]+>', ' ', cuerpo(pagina(url))).lower()
+    if not texto or not claves:
+        return False
+    hay = sum(1 for c in claves if c in texto)
+    return hay >= max(2, int(len(claves) * minimo + 0.5))
+
+
+def otras_fuentes(n, maximo=4):
+    """Otras notas de la misma noticia, verificadas, para sacar más fotos."""
+    host = (urlparse(n.get('src', '')).hostname or '').replace('www.', '')
+    titulo = re.sub(r'[*_\[\]]', '', n.get('t', ''))
+    claves = palabras_clave(titulo)
+    marca = (n.get('ig') or {}).get('marca', '')
+    consultas = [n.get('buscar') or '', f'{marca} ' + ' '.join(claves[:6]), titulo]
+    vistas, buenas = set(), []
+    for q in consultas:
+        if not q.strip():
+            continue
+        for u in buscar_fuentes(q, excluir=(host,), maximo=8):
+            if u in vistas:
+                continue
+            vistas.add(u)
+            if habla_de_lo_mismo(u, claves):
+                buenas.append(u)
+            if len(buenas) >= maximo:
+                return buenas
+    return buenas
+
+
 def candidatas(n, carpeta='assets/work', maximo=4, solo_video=False, registro=None):
     """registro: {huella_hex: id_de_nota} de fotos ya usadas en otras notas (anuncios que se repiten)."""
     nid = n['id']

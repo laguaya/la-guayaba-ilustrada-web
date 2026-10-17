@@ -652,15 +652,7 @@ def otra_foto(nid, mid):
     path = f'drafts/{nid}.json'
     n = load(path)
     antes = set(n.get('cands', []))
-    host = (urlparse(n.get('src', '')).hostname or '').replace('www.', '')
-    titulo = re.sub(r'[*_\[\]]', '', n.get('t', ''))
-    nuevas_fuentes = []
-    for q in (titulo, f"{n['ig'].get('marca', '')} {titulo.split(' ', 6)[-1] if titulo else ''}"):
-        for u in fuentes.buscar_fuentes(q, excluir=(host,)):
-            if u not in nuevas_fuentes and u not in (n.get('fuentes') or []):
-                nuevas_fuentes.append(u)
-        if len(nuevas_fuentes) >= 4:
-            break
+    nuevas_fuentes = [u for u in fuentes.otras_fuentes(n) if u not in (n.get('fuentes') or [])]
     n['fuentes'] = (list(n.get('fuentes') or []) + nuevas_fuentes)[:8]
     # la foto actual va a "evitar" para que salgan otras primero
     poner_candidatas(n)
