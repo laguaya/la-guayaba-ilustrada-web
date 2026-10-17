@@ -307,7 +307,7 @@ def make(data, out):
     try:
         (palabras, dvoz), mp3 = voz.sintetizar(guion_de(data), f'{tmp}/voz.mp3')
         palabras = [(a + INICIO_VOZ, b + INICIO_VOZ, w) for a, b, w in palabras]
-        total = max(15.0, min(40.0, INICIO_VOZ + dvoz + 0.5 + CIERRE))
+        total = max(15.0, min(48.0, INICIO_VOZ + dvoz + 0.5 + CIERRE))   # nunca se corta la voz
         fin_cuerpo = total - CIERRE
         L = preparar(data)
         vid = bajar_video(data, tmp)
