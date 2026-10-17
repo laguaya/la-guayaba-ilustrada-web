@@ -267,14 +267,30 @@ def slide1(data, out):
     _f, _ls, _size = fitted(d0, data['portada'], W - 2 * M, 4, 'lg-black.woff2', 104, 56)
     texto_arriba = (H - M - 26) - 74 - len(_ls) * _size * 1.08 - 90      # donde empieza la etiqueta
     libre = ((M + 70) + texto_arriba) / 2 / H                            # centro de la zona sin texto
-    can = _foto(data['img'], (W, H), (0.5, max(0.22, min(0.5, libre))), zoom_max=1.18, ajuste=data.get('ajuste'))
-    g = Image.new('L', (1, H))
-    for y in range(H):
-        t = max(0.0, (y - H * 0.28) / (H * 0.45))
-        g.putpixel((0, y), int(255 * min(1.0, t) ** 0.85 * 0.92))
-    can.paste(Image.new('RGB', (W, H), INK), (0, 0), g.resize((W, H)))
-    top = Image.linear_gradient('L').rotate(180).resize((W, 320)).point(lambda v: int(v * 0.7))
-    can.paste(Image.new('RGB', (W, 320), INK), (0, 0), top)
+    foto = _abrir(data['img'])
+    aj = data.get('ajuste') or {}
+    ajustada = bool(aj) and (aj.get('dx', 0), aj.get('dy', 0), aj.get('z', 1.0)) != (0, 0, 1.0)
+    if foto.width / foto.height >= 1.15 and not ajustada and data.get('entera', True):
+        # foto horizontal: va ENTERA a todo lo ancho, justo arriba del titular (sobra espacio arriba, no se recorta)
+        ph = int(W * foto.height / foto.width)
+        y0 = int(max(M + 80, texto_arriba + 70 - ph))
+        can = Image.new('RGB', (W, H), INK)
+        can.paste(foto.resize((W, ph), Image.LANCZOS), (0, y0))
+        fade = 220                                                       # se funde con el negro hacia el texto
+        g = Image.new('L', (1, H), 0)
+        for y in range(H):
+            t = (y - (y0 + ph - fade)) / fade
+            g.putpixel((0, y), int(255 * min(1.0, max(0.0, t)) ** 1.2 * 0.95) if y < y0 + ph else 255)
+        can.paste(Image.new('RGB', (W, H), INK), (0, 0), g.resize((W, H)))
+    else:
+        can = _foto(data['img'], (W, H), (0.5, max(0.22, min(0.5, libre))), zoom_max=1.18, ajuste=data.get('ajuste'))
+        g = Image.new('L', (1, H))
+        for y in range(H):
+            t = max(0.0, (y - H * 0.28) / (H * 0.45))
+            g.putpixel((0, y), int(255 * min(1.0, t) ** 0.85 * 0.92))
+        can.paste(Image.new('RGB', (W, H), INK), (0, 0), g.resize((W, H)))
+        top = Image.linear_gradient('L').rotate(180).resize((W, 320)).point(lambda v: int(v * 0.7))
+        can.paste(Image.new('RGB', (W, 320), INK), (0, 0), top)
     d = ImageDraw.Draw(can)
     header(d, WHITE, 1, dark_counter=True)
 
