@@ -440,6 +440,8 @@ def build_carousel(n):
     data.setdefault('fecha', f'{now.day} {meses[now.month - 1]} {now.year}')
     if not data.get('info'):
         data['info'] = info_auto(n)
+    if n.get('ajuste'):
+        data['ajuste'] = n['ajuste']
     carrusel.make(data, out)
     n['_data'] = data
     return [f'{out}/{i}.jpg' for i in (1, 2, 3, 4) if os.path.exists(f'{out}/{i}.jpg')]
@@ -785,6 +787,50 @@ def elegir(cq, data):
     PREVIEW.add(nid)
 
 
+AJ_PASO = 0.04   # 4% del cuadro por toque
+
+
+def teclado_ajuste(nid):
+    b = lambda t, m: {'text': t, 'callback_data': f'ajm:{nid}:{m}'}
+    return {'inline_keyboard': [[b('⬅️', 'l'), b('⬆️', 'u'), b('⬇️', 'd'), b('➡️', 'r')],
+                                [b('🔍 Acercar', 'zi'), b('🔎 Alejar', 'zo'), b('↺ Original', 'x')],
+                                [b('✅ Listo', 'ok')]]}
+
+
+def ajuste_portada(cq, data):
+    """Botones para mover y acercar la foto de la portada del carrusel hasta que quede perfecta."""
+    _, nid, mov = data.split(':')
+    path = f'drafts/{nid}.json'
+    if not re.fullmatch(r'[a-z0-9-]+', nid) or not os.path.exists(path):
+        tg('answerCallbackQuery', callback_query_id=cq['id'], text='Esa nota ya se publicó.')
+        return
+    n = load(path)
+    m = cq.get('message') or {}
+    if mov == 'ok':
+        tg('answerCallbackQuery', callback_query_id=cq['id'], text='✅ Encuadre guardado. Así sale en Instagram.')
+        tg('editMessageReplyMarkup', chat_id=CHAT, message_id=m.get('message_id'), reply_markup={'inline_keyboard': []})
+        if n.get('animado'):
+            PREVIEW.add(nid)
+        return
+    a = dict(n.get('ajuste') or {'dx': 0, 'dy': 0, 'z': 1.0})
+    # la flecha mueve la FOTO hacia ese lado (⬅️ = lo que se ve se recorre a la izquierda)
+    if mov == 'l': a['dx'] = round(a['dx'] - AJ_PASO, 3)
+    if mov == 'r': a['dx'] = round(a['dx'] + AJ_PASO, 3)
+    if mov == 'u': a['dy'] = round(a['dy'] - AJ_PASO, 3)
+    if mov == 'd': a['dy'] = round(a['dy'] + AJ_PASO, 3)
+    if mov == 'zi': a['z'] = round(min(2.0, a['z'] * 1.1), 3)
+    if mov == 'zo': a['z'] = round(max(1.0, a['z'] / 1.1), 3)
+    if mov == 'x': a = {'dx': 0, 'dy': 0, 'z': 1.0}
+    n['ajuste'] = a
+    save(path, n)
+    tg('answerCallbackQuery', callback_query_id=cq['id'])
+    files = build_carousel(n)
+    with open(files[0], 'rb') as f:
+        tg('editMessageMedia', files={'p': f}, chat_id=CHAT, message_id=m.get('message_id'),
+           media={'type': 'photo', 'media': 'attach://p', 'caption': '🎯 Mueve la foto hasta que lo importante quede al centro.'},
+           reply_markup=teclado_ajuste(nid))
+
+
 def send_pending():
     global changed
     for path in sorted(glob.glob('drafts/*.json')):
@@ -830,6 +876,7 @@ def send_pending():
                 if n.get('mp4'):
                     kb.append([{'text': '🎞 Quitar el Reel' if n.get('reel') else '🎞 Agregar Reel',
                                 'callback_data': 'reel:' + n['id']}])
+            kb.append([{'text': '🎯 Ajustar encuadre de la portada', 'callback_data': 'aj:' + n['id']}])
             if len(n.get('cands', [])) > 1:
                 kb.append([{'text': '🔄 Otras fotos', 'callback_data': 'alt:' + n['id']}])
         kb.append([{'text': '🗑 Descartar', 'callback_data': 'del:' + n['id']}])
@@ -937,6 +984,9 @@ def poll():
         cq = u.get('callback_query')
         if not cq or cq['from']['id'] != CHAT:
             continue
+        if re.fullmatch(r'ajm:[a-z0-9-]+:(l|r|u|d|zi|zo|x|ok)', cq.get('data') or ''):
+            ajuste_portada(cq, cq['data']); changed = True
+            continue
         if re.fullmatch(r'(cp|c2):[a-z0-9-]+:\d', cq.get('data') or ''):
             elegir(cq, cq['data']); changed = True
             continue
@@ -971,6 +1021,16 @@ def poll():
             else:
                 save(path, n)
                 tg('answerCallbackQuery', callback_query_id=cq['id'], text='🎞 Listo, esta nota sale sin Reel.')
+            changed = True
+            continue
+        if accion == 'aj':
+            tg('answerCallbackQuery', callback_query_id=cq['id'])
+            files = build_carousel(n)
+            with open(files[0], 'rb') as f:
+                r = tg('sendPhoto', files={'photo': f}, chat_id=CHAT, reply_markup=teclado_ajuste(nid),
+                       caption='🎯 Mueve la foto hasta que lo importante quede al centro. Cada toque la recorre un poco.')
+            if r.get('ok'):
+                remember(r['result']['message_id'], nid)
             changed = True
             continue
         if accion == 'alt':

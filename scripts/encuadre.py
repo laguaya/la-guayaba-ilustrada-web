@@ -97,7 +97,7 @@ def foco_ventana(src, aspecto):
     return foco(src)
 
 
-def recorte(im, size, f=None, zoom=1.0, destino=(0.5, 0.5), zoom_max=1.0):
+def recorte(im, size, f=None, zoom=1.0, destino=(0.5, 0.5), zoom_max=1.0, mover=(0.0, 0.0)):
     """Escala para cubrir 'size' y mueve el recorte para que el foco quede en 'destino' (sin salirse de la foto).
     Si con el tamaño justo no se puede llevar el foco a 'destino', acerca la foto hasta zoom_max."""
     W, H = size
@@ -117,5 +117,15 @@ def recorte(im, size, f=None, zoom=1.0, destino=(0.5, 0.5), zoom_max=1.0):
     sw, sh = im.width * s, im.height * s
     x = max(0.0, min(f[0] * sw - destino[0] * W, sw - W))
     y = max(0.0, min(f[1] * sh - destino[1] * H, sh - H))
+    if mover[0] or mover[1]:
+        # corrección manual: recorre el recorte; si la foto no alcanza, la acerca lo justo (máx. 2x)
+        cx, cy = (x + W / 2) / sw, (y + H / 2) / sh      # centro del recorte, en fracción de la foto
+        for _ in range(40):
+            tx = cx * sw - W / 2 - mover[0] * W
+            ty = cy * sh - H / 2 - mover[1] * H
+            if (0 <= tx <= sw - W and 0 <= ty <= sh - H) or zoom >= 2.0:
+                break
+            zoom *= 1.03; s = base * zoom; sw, sh = im.width * s, im.height * s
+        x = max(0.0, min(tx, sw - W)); y = max(0.0, min(ty, sh - H))
     box = (x / s, y / s, min(im.width, (x + W) / s), min(im.height, (y + H) / s))
     return im.resize((W, H), Image.LANCZOS, box=box)

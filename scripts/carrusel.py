@@ -106,11 +106,18 @@ def picado():
     return 0.0
 
 
-def _foto(ruta, size, destino, zoom=1.0, zoom_max=1.0):
-    """Foto recortada para que lo importante quede centrado en 'destino' (fracción del recuadro)."""
+def _foto(ruta, size, destino, zoom=1.0, zoom_max=1.0, ajuste=None):
+    """Foto recortada para que lo importante quede centrado en 'destino' (fracción del recuadro).
+    ajuste = {'dx', 'dy', 'z'}: corrección manual de Sergio desde Telegram (mover y acercar)."""
     import encuadre
     im = _abrir(ruta)
-    return encuadre.recorte(im, size, encuadre.foco_ventana(ruta, size[0] / size[1]), zoom=zoom, destino=destino, zoom_max=zoom_max)
+    fx, fy = encuadre.foco_ventana(ruta, size[0] / size[1])
+    mover = (0.0, 0.0)
+    if ajuste:
+        mover = (float(ajuste.get('dx', 0)), float(ajuste.get('dy', 0)))
+        z = float(ajuste.get('z', 1.0))
+        zoom, zoom_max = zoom * z, zoom_max * z
+    return encuadre.recorte(im, size, (fx, fy), zoom=zoom, destino=destino, zoom_max=zoom_max, mover=mover)
 
 
 # ---------- texto enriquecido ----------
@@ -260,7 +267,7 @@ def slide1(data, out):
     _f, _ls, _size = fitted(d0, data['portada'], W - 2 * M, 4, 'lg-black.woff2', 104, 56)
     texto_arriba = (H - M - 26) - 74 - len(_ls) * _size * 1.08 - 90      # donde empieza la etiqueta
     libre = ((M + 70) + texto_arriba) / 2 / H                            # centro de la zona sin texto
-    can = _foto(data['img'], (W, H), (0.5, max(0.22, min(0.5, libre))), zoom_max=1.18)
+    can = _foto(data['img'], (W, H), (0.5, max(0.22, min(0.5, libre))), zoom_max=1.18, ajuste=data.get('ajuste'))
     g = Image.new('L', (1, H))
     for y in range(H):
         t = max(0.0, (y - H * 0.28) / (H * 0.45))
