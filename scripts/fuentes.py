@@ -345,7 +345,7 @@ def palabras_clave(texto):
     return [w for w in t.split() if len(w) > 3 and w not in VACIAS]
 
 
-def habla_de_lo_mismo(url, claves, minimo=0.6):
+def habla_de_lo_mismo(url, claves, minimo=0.85):
     """La otra nota debe mencionar casi todas las palabras clave del titular (si no, es otra noticia)."""
     texto = re.sub(r'<[^>]+>', ' ', cuerpo(pagina(url))).lower()
     if not texto or not claves:
