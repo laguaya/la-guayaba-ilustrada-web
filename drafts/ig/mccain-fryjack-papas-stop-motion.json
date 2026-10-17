@@ -63,34 +63,33 @@
   },
   {
    "voz": "Todo es real, hecho a mano por Impossible Studios y animado en stop motion, foto por foto.",
-   "ver": "video"
+   "ver": "video",
+   "buscar_video": "stop motion animation"
   },
   {
-   "voz": "Detrás está la agencia canadiense Rethink, la misma que le hizo a McCain una máquina que suelta papas cuando tu familia te hace preguntas incómodas.",
+   "voz": "Detrás está la agencia canadiense Rethink.",
    "ver": "video",
-   "video": "https://www.youtube.com/watch?v=yBkvQbCuQYE"
+   "buscar_video": "advertising agency creative team meeting"
   },
   {
    "voz": "El objetivo es venderle a la Generación Z sus nuevas papas para freidora de aire, con creadores que ya sigue.",
-   "foto": "img",
-   "ver": "foto"
+   "ver": "video",
+   "buscar_video": "air fryer french fries"
   },
   {
    "voz": "Y ojo, no es cualquier marca: una de cada cuatro papas fritas del mundo es de McCain.",
    "ver": "video",
-   "video": "https://www.adsoftheworld.com/campaigns/together-is-golden"
+   "buscar_video": "french fries"
   },
   {
    "voz": "La lección para tu negocio: no interrumpas el contenido de tu cliente… vuélvete parte de él.",
-   "ver": "video"
+   "ver": "video",
+   "buscar_video": "content creator filming phone"
   },
   {
    "voz": "¿Tú comprarías después de ver esto? Te leo en comentarios, y síguenos para más campañas así todos los días.",
    "ver": "video"
   }
  ],
- "videos": [
-  "https://www.youtube.com/watch?v=yBkvQbCuQYE",
-  "https://www.adsoftheworld.com/campaigns/together-is-golden"
- ]
+ "videos": []
 }
