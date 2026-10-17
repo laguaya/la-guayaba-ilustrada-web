@@ -17,8 +17,8 @@ jobs:
           import sys, json
           sys.path.insert(0, 'scripts')
           import fuentes as F
-          n = {'t': "McDonald's convierte la Cajita Feliz en un examen de la vista para niños", 'src': 'https://www.reasonwhy.es/actualidad/mcdonalds-caja-happy-meal-detectar-problemas-vision-ninos'}
-          n['ig'] = {'marca': "McDonald's"}
+          n = {'t': 'Mitsubishi le pone su propia nube de lluvia a una camioneta Xforce en Kuala Lumpur', 'src': 'https://www.reasonwhy.es/actualidad/mitsubishi-xforce'}
+          n['ig'] = {'marca': 'Mitsubishi'}
           fs = F.otras_fuentes(n)
           print('fuentes:', fs)
           n['fuentes'] = fs; n['id'] = 'prueba-mc'
