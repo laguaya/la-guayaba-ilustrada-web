@@ -110,7 +110,7 @@ def _foto(ruta, size, destino, zoom=1.0, zoom_max=1.0):
     """Foto recortada para que lo importante quede centrado en 'destino' (fracción del recuadro)."""
     import encuadre
     im = _abrir(ruta)
-    return encuadre.recorte(im, size, encuadre.foco(ruta), zoom=zoom, destino=destino, zoom_max=zoom_max)
+    return encuadre.recorte(im, size, encuadre.foco_ventana(ruta, size[0] / size[1]), zoom=zoom, destino=destino, zoom_max=zoom_max)
 
 
 # ---------- texto enriquecido ----------

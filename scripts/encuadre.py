@@ -13,6 +13,7 @@ except Exception:                       # sin OpenCV: centro de la imagen
     cv2 = None
 
 _CACHE = {}
+_caras_cache = {}
 
 
 def _caras(g):
@@ -67,6 +68,7 @@ def foco(src):
     small = np.array(im.resize((max(1, int(im.width * k)), max(1, int(im.height * k)))))
     h, w = small.shape[:2]
     caras = _caras(cv2.cvtColor(small, cv2.COLOR_RGB2GRAY))
+    _caras_cache[key] = bool(caras)
     if caras:
         tot = sum(cw * ch for _, _, cw, ch in caras)
         fx = sum((x + cw / 2) * cw * ch for x, y, cw, ch in caras) / tot / w
@@ -80,6 +82,43 @@ def foco(src):
         fy = float((ys * wts).sum() / wts.sum() / h)
     _CACHE[key] = (min(max(fx, 0.0), 1.0), min(max(fy, 0.0), 1.0))
     return _CACHE[key]
+
+
+_MAPAS = {}
+
+
+def _mapa_de(src):
+    if src in _MAPAS:
+        return _MAPAS[src]
+    im = Image.open(src).convert('RGB') if isinstance(src, str) else src.convert('RGB')
+    k = 480 / max(im.size)
+    small = np.array(im.resize((max(1, int(im.width * k)), max(1, int(im.height * k)))))
+    m = _mapa(small) if cv2 is not None else np.ones(small.shape[:2])
+    if isinstance(src, str):
+        _MAPAS[src] = m
+    return m
+
+
+def foco_ventana(src, aspecto):
+    """Foco pensado para un recorte de cierta proporción (ancho/alto): busca la ventana de esa proporción
+    que encierra más 'cosas importantes' y regresa su centro. Más estable que el promedio simple."""
+    fx, fy = foco(src)
+    if cv2 is None:
+        return fx, fy
+    m = _mapa_de(src) ** 2
+    h, w = m.shape
+    if w / h > aspecto:                                   # se recorta a los lados
+        ww = max(1, int(round(h * aspecto)))
+        col = np.concatenate([[0], np.cumsum(m.sum(axis=0))])
+        sumas = col[ww:] - col[:-ww]
+        x0 = int(np.argmax(sumas))
+        caras = _caras_cache.get(src if isinstance(src, str) else id(src))
+        return ((x0 + ww / 2) / w if not caras else fx), fy
+    hh = max(1, int(round(w / aspecto)))                  # se recorta arriba y abajo
+    fil = np.concatenate([[0], np.cumsum(m.sum(axis=1))])
+    sumas = fil[hh:] - fil[:-hh]
+    y0 = int(np.argmax(sumas))
+    return fx, (y0 + hh / 2) / h
 
 
 def recorte(im, size, f=None, zoom=1.0, destino=(0.5, 0.5), zoom_max=1.0):

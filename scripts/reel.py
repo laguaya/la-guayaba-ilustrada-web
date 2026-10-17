@@ -102,9 +102,9 @@ def vertical(im, foco=(0.5, 0.45), zoom=1.0):
 
 
 def video_corrido(ruta, tmp, segundos):
-    """Cuadros del video de la campaña de corrido (si es más corto que el Reel, vuelve a empezar)."""
+    """Cuadros del video de la campaña, una sola pasada (máximo lo que dure el Reel)."""
     carpeta = f'{tmp}/video'; os.makedirs(carpeta, exist_ok=True)
-    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-stream_loop', '-1', '-ss', '0.2', '-i', ruta, '-t', f'{segundos:.2f}',
+    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', '0.2', '-i', ruta, '-t', f'{segundos:.2f}',
                     '-vf', f'fps={FPS},scale=1280:-2', '-q:v', '3', f'{carpeta}/%05d.jpg'], capture_output=True, timeout=600)
     return sorted(glob.glob(f'{carpeta}/*.jpg'))
 
@@ -132,9 +132,30 @@ def bajar_video(data, tmp):
     return None
 
 
+TRANS = 0.6   # segundos de la transición cuando el video vuelve a empezar
+
+
 def cuadro_fondo(cuadros, foco, t):
-    im = Image.open(cuadros[min(len(cuadros) - 1, int(t * FPS))])
-    return vertical(im, foco)
+    """Cuadro del video en el segundo t. Si el video es más corto que el Reel, se repite y el cambio
+    del final al inicio se hace con una transición suave (fundido con un leve acercamiento)."""
+    n = len(cuadros)
+    dur = n / FPS
+    ciclo = max(0.5, dur - TRANS)                     # cada vuelta empieza TRANS segundos antes de acabar la anterior
+    k = int(t // ciclo)
+    local = t - k * ciclo                             # tiempo dentro de la vuelta actual
+    actual = vertical(Image.open(cuadros[min(n - 1, int(local * FPS))]), foco)
+    if k > 0 and local < TRANS:                       # mezcla con el final de la vuelta anterior
+        prev_t = local + ciclo
+        prev = vertical(Image.open(cuadros[min(n - 1, int(prev_t * FPS))]), foco)
+        a = local / TRANS
+        a = a * a * (3 - 2 * a)
+        z = 1 + 0.04 * (1 - a)                        # el video nuevo entra con un pequeño acercamiento
+        if z != 1:
+            w, h = actual.size
+            actual = actual.resize((int(w * z), int(h * z)), Image.BILINEAR).crop(
+                (int((w * z - w) / 2), int((h * z - h) / 2), int((w * z - w) / 2) + w, int((h * z - h) / 2) + h))
+        return Image.blend(prev, actual, a)
+    return actual
 
 
 # ---------------------------------------------------------------- subtítulos karaoke
