@@ -5,7 +5,7 @@ hoja(ruta, id)          -> guarda drafts/tomas/<id>.jpg (hoja de contactos con e
                            y drafts/tomas/<id>.json ({"dur": s, "tomas": [[ini, fin], ...]})
 El redactor mira la hoja para decir qué toma va con cada frase de la voz del Reel ("desde"/"hasta").
 """
-import json, os, re, subprocess, sys, tempfile
+import json, math, os, re, subprocess, sys, tempfile
 from PIL import Image, ImageDraw
 
 R = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,25 +20,38 @@ def duracion(ruta):
         return 0.0
 
 
-def cortes(ruta, umbral=0.28, minimo=0.7):
-    """Detecta los cambios de toma. Junta tomas de menos de `minimo` segundos con la anterior."""
+def recorte(ruta):
+    """Caja sin franjas negras (videos verticales metidos en cuadro horizontal) para ffmpeg: 'crop=w:h:x:y,'."""
+    p = subprocess.run(['ffmpeg', '-hide_banner', '-t', '12', '-i', ruta, '-an', '-vf', 'cropdetect=24:2:0',
+                        '-f', 'null', '-'], capture_output=True, text=True, timeout=300)
+    c = re.findall(r'crop=(\d+):(\d+):(\d+):(\d+)', p.stderr)
+    return 'crop={}:{}:{}:{},'.format(*c[-1]) if c else ''
+
+
+def cortes(ruta, umbral=0.25, minimo=0.7, maximo=3.5):
+    """Detecta los cambios de toma. Junta tomas de menos de `minimo` segundos con la anterior y parte
+    las tomas largas en tramos de `maximo` segundos (así cada frase puede usar una parte distinta)."""
     dur = duracion(ruta)
     p = subprocess.run(['ffmpeg', '-hide_banner', '-i', ruta, '-an', '-vf',
-                        f"scale=320:-2,select='gt(scene,{umbral})',showinfo", '-f', 'null', '-'],
+                        f"{recorte(ruta)}scale=320:-2,select='gt(scene,{umbral})',showinfo", '-f', 'null', '-'],
                        capture_output=True, text=True, timeout=600)
     marcas = [float(x) for x in re.findall(r'pts_time:([\d.]+)', p.stderr)]
     inicios = [0.0]
     for m in marcas:
         if m - inicios[-1] >= minimo and dur - m >= minimo:
             inicios.append(m)
-    tomas = [(round(a, 2), round(b, 2)) for a, b in zip(inicios, inicios[1:] + [dur])]
+    tomas = []
+    for a, b in zip(inicios, inicios[1:] + [dur]):
+        n = max(1, math.ceil((b - a) / maximo))
+        for k in range(n):
+            tomas.append((round(a + (b - a) * k / n, 2), round(a + (b - a) * (k + 1) / n, 2)))
     return tomas, dur
 
 
-def _cuadro(ruta, t, tmp, k):
+def _cuadro(ruta, t, tmp, k, crop=''):
     out = f'{tmp}/c{k}.jpg'
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{t:.2f}', '-i', ruta, '-frames:v', '1',
-                    '-vf', 'scale=480:-2', out], capture_output=True, timeout=60)
+                    '-vf', crop + 'scale=480:-2', out], capture_output=True, timeout=60)
     return Image.open(out).convert('RGB') if os.path.exists(out) else None
 
 
@@ -55,15 +68,15 @@ def hoja(ruta, nid, salida=None):
     cols, tw = 4, 300
     f = portada.font('lg-bold.woff2', 22)
     with tempfile.TemporaryDirectory() as tmp:
-        cuadros = []
+        cuadros, crop = [], recorte(ruta)
         for k, (a, b) in enumerate(tomas):
-            im = _cuadro(ruta, a + min(0.5, (b - a) / 2), tmp, k)
+            im = _cuadro(ruta, a + min(0.5, (b - a) / 2), tmp, k, crop)
             cuadros.append(im)
         ref = next((c for c in cuadros if c), None)
         if ref is None:
             return None
         th = int(tw * ref.height / ref.width) if ref.width >= ref.height else int(tw * 16 / 9)
-        th = min(th, 540)
+        th = min(th, 420)
         filas = (len(tomas) + cols - 1) // cols
         lienzo = Image.new('RGB', (cols * (tw + 10) + 10, filas * (th + 44) + 10), '#111')
         d = ImageDraw.Draw(lienzo)
