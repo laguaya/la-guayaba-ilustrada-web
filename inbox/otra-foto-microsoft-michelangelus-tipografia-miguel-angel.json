@@ -1,0 +1,7 @@
+{
+ "tipo": "texto",
+ "nota": "microsoft-michelangelus-tipografia-miguel-angel",
+ "urgente": true,
+ "fecha": 1792209073,
+ "texto": "Sergio pide OTRA IMAGEN para esta nota. Busca 2 o 3 notas de otros medios sobre la misma noticia que traigan fotos reales del producto o la campaña y agrégalas al campo \"fuentes\" del borrador (lista de URLs). Luego quita \"cands\" y \"tg\" del borrador para que el bot vuelva a buscar fotos."
+}
