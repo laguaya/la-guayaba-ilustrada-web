@@ -70,7 +70,7 @@ def hoja(ruta, nid, salida=None):
     with tempfile.TemporaryDirectory() as tmp:
         cuadros, crop = [], recorte(ruta)
         for k, (a, b) in enumerate(tomas):
-            im = _cuadro(ruta, a + min(0.5, (b - a) / 2), tmp, k, crop)
+            im = _cuadro(ruta, a + (b - a) / 2, tmp, k, crop)          # cuadro de en medio de la toma
             cuadros.append(im)
         ref = next((c for c in cuadros if c), None)
         if ref is None:
