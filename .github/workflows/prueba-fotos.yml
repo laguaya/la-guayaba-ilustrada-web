@@ -17,7 +17,7 @@ jobs:
           import sys, json
           sys.path.insert(0, 'scripts')
           import fuentes as F
-          n = json.load(open('drafts/mcdonalds-happy-view-caja-examen-vista.json'))
+          n = {'t': "McDonald's convierte la Cajita Feliz en un examen de la vista para niños", 'src': 'https://www.reasonwhy.es/actualidad/mcdonalds-caja-happy-meal-detectar-problemas-vision-ninos'}
           fs = F.buscar_fuentes(n['t'], excluir=('reasonwhy.es',))
           print('fuentes:', fs)
           n['fuentes'] = fs; n['id'] = 'prueba-mc'
