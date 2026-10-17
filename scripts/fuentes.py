@@ -347,10 +347,14 @@ def palabras_clave(texto):
 
 def habla_de_lo_mismo(url, claves, minimo=0.85):
     """La otra nota debe mencionar casi todas las palabras clave del titular (si no, es otra noticia)."""
+    import datetime
+    m = re.search(r'/(20\d\d)/', url)
+    if m and int(m.group(1)) < datetime.date.today().year - (1 if datetime.date.today().month <= 1 else 0):
+        return False                                     # nota vieja: es otra noticia
     texto = re.sub(r'<[^>]+>', ' ', cuerpo(pagina(url))).lower()
     if not texto or not claves:
         return False
-    hay = sum(1 for c in claves if c in texto)
+    hay = sum(1 for c in claves if re.search(r'(?<![\wáéíóúñ])' + re.escape(c) + r'(?![\wáéíóúñ])', texto))
     return hay >= max(2, int(len(claves) * minimo + 0.5))
 
 
