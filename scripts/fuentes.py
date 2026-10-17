@@ -298,26 +298,40 @@ def fotogramas(url, cuantos=14):
 
 
 def buscar_fuentes(consulta, excluir=(), maximo=5):
-    """Busca en la web otras notas de la misma noticia (para tener más fotos). Regresa URLs de artículos."""
+    """Busca en la web otras notas de la misma noticia (para tener más fotos). Regresa URLs de artículos.
+    Usa Bing Noticias (RSS) y, si no hay, la búsqueda web de Bing y DuckDuckGo."""
     from urllib.parse import quote, unquote, parse_qs
+    import html as H
     out = []
-    try:
-        r = requests.get('https://html.duckduckgo.com/html/?q=' + quote(consulta), headers=UA, timeout=25)
-        for href in re.findall(r'class="result__a"[^>]*href="([^"]+)"', r.text):
-            href = href.replace('&amp;', '&')
-            if 'uddg=' in href:
-                href = unquote(parse_qs(urlparse(href).query).get('uddg', [''])[0])
-            host = (urlparse(href).hostname or '').replace('www.', '')
-            if not href.startswith('http') or REDES.search(href) or any(e in host for e in excluir):
-                continue
-            if re.search(r'youtube|wikipedia|pinterest|amazon\.|mercadolibre', host):
-                continue
-            if href not in out:
-                out.append(href)
-            if len(out) >= maximo:
-                break
-    except Exception as e:
-        print('Búsqueda:', e, file=sys.stderr)
+
+    def agrega(href):
+        href = H.unescape(href)
+        if 'bing.com/news/apiclick' in href or 'uddg=' in href:
+            q = parse_qs(urlparse(href).query)
+            href = unquote((q.get('url') or q.get('uddg') or [''])[0])
+        host = (urlparse(href).hostname or '').replace('www.', '')
+        if (not href.startswith('http') or REDES.search(href) or any(e and e in host for e in excluir)
+                or re.search(r'bing\.|microsoft\.|duckduckgo|youtube|wikipedia|pinterest|amazon\.|mercadolibre|msn\.com', host)):
+            return
+        if href not in out:
+            out.append(href)
+
+    intentos = [
+        ('https://www.bing.com/news/search?format=rss&q=' + quote(consulta), r'<link>([^<]+)</link>'),
+        ('https://www.bing.com/search?format=rss&q=' + quote(consulta), r'<link>([^<]+)</link>'),
+        ('https://html.duckduckgo.com/html/?q=' + quote(consulta), r'class="result__a"[^>]*href="([^"]+)"'),
+    ]
+    for url, patron in intentos:
+        try:
+            r = requests.get(url, headers=UA, timeout=25)
+            for href in re.findall(patron, r.text):
+                agrega(href)
+                if len(out) >= maximo:
+                    return out
+        except Exception as e:
+            print('Búsqueda:', e, file=sys.stderr)
+        if out:
+            break
     return out
 
 
