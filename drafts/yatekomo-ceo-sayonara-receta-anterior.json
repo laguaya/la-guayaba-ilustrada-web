@@ -11,9 +11,9 @@
   "La campaña la firman PS21 en creatividad, True en relaciones públicas y Meme en redes sociales, para España e Italia, de acuerdo con Reason Why. Encaja con una tendencia clara en consumo masivo: las marcas de comida procesada limpian sus etiquetas ante un público que lee ingredientes. Aquí lo distinto es el tono, porque casi nadie se atreve a hablar mal de su propio producto en un comercial.",
   "Para tu marca: si mejoras un producto, no lo escondas en un \"nueva fórmula\" chiquito en el empaque. Cuenta qué no te gustaba y por qué lo cambiaste, de preferencia con la voz del dueño o la dueña. Y si tienes inventario viejo, conviértelo en dinámica: un descuento o premio por traer el empaque anterior genera fotos, comentarios y visitas a tu tienda con muy poco presupuesto."
  ],
- "img": "assets/work/nota-yatekomo-ceo-sayonara-receta-anterior.webp",
+ "img": "assets/work/nota-yatekomo-ceo-sayonara-receta-anterior-foto-src1.webp",
  "alt": "Vasos de noodles instantáneos Yatekomo con la nueva receta y la CEO de GBfoods Europe en el comercial",
- "cr": "",
+ "cr": "Foto: Reason Why",
  "src": "https://www.reasonwhy.es/actualidad/yatekomo-campana-cambio-receta-protagonismo-ceo",
  "sn": "Con información de Reason Why",
  "ig": {
@@ -28,5 +28,28 @@
   "marca": "Yatekomo",
   "caption": "¿Pondrías a tu director a decir en un comercial que no le gustaba tu producto? Yatekomo lo hizo 🍜\n\nLa CEO de GBfoods Europe admite que no estaba orgullosa de la receta anterior y presenta los nuevos noodles sin aceite de palma ni glutamato.\nY convierte el inventario viejo en concurso: 100,000 euros para quien junte más vasos antiguos.\nUna lección de marketing, branding y publicidad honesta.\n\n¿Te daría más confianza o te haría dudar de la marca? Te leemos.\n\nGuárdalo para tu próxima idea de lanzamiento.\nNota completa en el link de la bio.\nSíguenos para las noticias de marcas, diseño y publicidad que sí importan, todos los días.\n\n#Yatekomo #MarketingDeMarca #PublicidadCreativa #BrandingMexico #Packaging",
   "guion": "¿Qué pasa cuando una CEO dice que no le gustaba su propio producto? Eso hizo Yatekomo, la marca española de noodles instantáneos. Su jefa sale a cámara y admite que no estaba orgullosa de la receta vieja. Ahora quitaron el aceite de palma y el glutamato, un saborizante artificial. Y si encuentras vasos de la receta anterior, subes la foto y puedes ganar parte de cien mil euros. La lección para México: si mejoras algo, cuenta qué estaba mal. La nota completa está en el link de la bio."
- }
+ },
+ "cands": [
+  "assets/work/nota-yatekomo-ceo-sayonara-receta-anterior-foto-src1.webp"
+ ],
+ "ig1": "assets/work/nota-yatekomo-ceo-sayonara-receta-anterior-foto-src1.webp",
+ "ig2": "assets/work/nota-yatekomo-ceo-sayonara-receta-anterior-foto-src1.webp",
+ "cands_v": 2,
+ "_data": {
+  "etiqueta": "Noticias",
+  "portada": "Su CEO admite que *no le gustaba* su propio producto",
+  "titulo": "Yatekomo paga por encontrar sus _noodles viejos_",
+  "resumen": "La CEO de GBfoods Europe protagoniza el comercial de la [nueva receta] de Yatekomo. Quien junte más vasos de la versión anterior se reparte [100,000 euros] antes del [31 de octubre].",
+  "info": [
+   "[Yatekomo] es una marca española de noodles instantáneos, fideos que se preparan con agua caliente en minutos, como las sopas de vaso en México. Pertenece a GBfoods, el grupo de alimentos que también vende caldos y salsas en Europa.",
+   "La nueva receta quita el aceite de palma y el [glutamato monosódico], un potenciador de sabor artificial. La campaña \"Sayonara\" pide subir fotos de los vasos viejos a una web: los cinco que junten más ganan. La firman PS21, True y Meme."
+  ],
+  "marca": "Yatekomo",
+  "caption": "¿Pondrías a tu director a decir en un comercial que no le gustaba tu producto? Yatekomo lo hizo 🍜\n\nLa CEO de GBfoods Europe admite que no estaba orgullosa de la receta anterior y presenta los nuevos noodles sin aceite de palma ni glutamato.\nY convierte el inventario viejo en concurso: 100,000 euros para quien junte más vasos antiguos.\nUna lección de marketing, branding y publicidad honesta.\n\n¿Te daría más confianza o te haría dudar de la marca? Te leemos.\n\nGuárdalo para tu próxima idea de lanzamiento.\nNota completa en el link de la bio.\nSíguenos para las noticias de marcas, diseño y publicidad que sí importan, todos los días.\n\n#Yatekomo #MarketingDeMarca #PublicidadCreativa #BrandingMexico #Packaging",
+  "guion": "¿Qué pasa cuando una CEO dice que no le gustaba su propio producto? Eso hizo Yatekomo, la marca española de noodles instantáneos. Su jefa sale a cámara y admite que no estaba orgullosa de la receta vieja. Ahora quitaron el aceite de palma y el glutamato, un saborizante artificial. Y si encuentras vasos de la receta anterior, subes la foto y puedes ganar parte de cien mil euros. La lección para México: si mejoras algo, cuenta qué estaba mal. La nota completa está en el link de la bio.",
+  "img": "assets/work/nota-yatekomo-ceo-sayonara-receta-anterior-foto-src1.webp",
+  "img2": "assets/work/nota-yatekomo-ceo-sayonara-receta-anterior-foto-src1.webp",
+  "fecha": "17 OCTUBRE 2026"
+ },
+ "tg": 484
 }
