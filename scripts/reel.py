@@ -367,6 +367,9 @@ def plan(escenas, ini, fin_cuerpo, vid, tomas, vdur, data, tmp):
     fotos_nota = [p for p in (data.get('img'), data.get('img2')) if p and os.path.exists(p)]
     fotos_nota += [p for p in (data.get('fotos') or []) if p and os.path.exists(p) and p not in fotos_nota]
     fi = [0]
+    pedidas = {data.get(e['foto']) if e.get('foto') in ('img', 'img2') else e.get('foto')
+               for e in escenas if (e.get('ver') or '') == 'foto'}
+    fotos_nota = [p for p in fotos_nota if p not in pedidas]   # las fotos que pide una escena no se usan de relleno
 
     def foto_libre():
         while fi[0] < len(fotos_nota):

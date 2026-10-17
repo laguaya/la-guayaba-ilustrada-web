@@ -38,7 +38,7 @@
    "hasta": 13.43
   },
   {
-   "voz": "Te llueven papas y tus manos se vuelven gaviotas, las que roban papas en la playa.",
+   "voz": "Te llueven papas y tus manos se vuelven gaviotas.",
    "ver": "video",
    "desde": 13.43,
    "hasta": 15.72
@@ -56,9 +56,8 @@
   },
   {
    "voz": "Y aquí viene lo bueno: nada de esto es inteligencia artificial.",
-   "ver": "video",
-   "desde": 15.72,
-   "hasta": 17.87
+   "ver": "frase",
+   "frase": "Cero IA: *todo es real*"
   },
   {
    "voz": "Todo es real, hecho a mano por Impossible Studios y animado en stop motion, foto por foto.",
