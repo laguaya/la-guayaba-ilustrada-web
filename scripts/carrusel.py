@@ -106,11 +106,11 @@ def picado():
     return 0.0
 
 
-def _foto(ruta, size, destino, zoom=1.0):
+def _foto(ruta, size, destino, zoom=1.0, zoom_max=1.0):
     """Foto recortada para que lo importante quede centrado en 'destino' (fracción del recuadro)."""
     import encuadre
     im = _abrir(ruta)
-    return encuadre.recorte(im, size, encuadre.foco(ruta), zoom=zoom, destino=destino)
+    return encuadre.recorte(im, size, encuadre.foco(ruta), zoom=zoom, destino=destino, zoom_max=zoom_max)
 
 
 # ---------- texto enriquecido ----------
@@ -255,7 +255,12 @@ def header(d, color, n, dark_counter=True):
 
 
 def slide1(data, out):
-    can = _foto(data['img'], (W, H), (0.5, 0.36))
+    # primero se mide el titular para saber cuánto espacio libre queda arriba de él
+    d0 = ImageDraw.Draw(Image.new('RGB', (4, 4)))
+    _f, _ls, _size = fitted(d0, data['portada'], W - 2 * M, 4, 'lg-black.woff2', 104, 56)
+    texto_arriba = (H - M - 26) - 74 - len(_ls) * _size * 1.08 - 90      # donde empieza la etiqueta
+    libre = ((M + 70) + texto_arriba) / 2 / H                            # centro de la zona sin texto
+    can = _foto(data['img'], (W, H), (0.5, max(0.22, min(0.5, libre))), zoom_max=1.18)
     g = Image.new('L', (1, H))
     for y in range(H):
         t = max(0.0, (y - H * 0.28) / (H * 0.45))

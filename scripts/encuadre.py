@@ -82,11 +82,23 @@ def foco(src):
     return _CACHE[key]
 
 
-def recorte(im, size, f=None, zoom=1.0, destino=(0.5, 0.5)):
-    """Escala para cubrir 'size' y mueve el recorte para que el foco quede en 'destino' (sin salirse de la foto)."""
+def recorte(im, size, f=None, zoom=1.0, destino=(0.5, 0.5), zoom_max=1.0):
+    """Escala para cubrir 'size' y mueve el recorte para que el foco quede en 'destino' (sin salirse de la foto).
+    Si con el tamaño justo no se puede llevar el foco a 'destino', acerca la foto hasta zoom_max."""
     W, H = size
     f = f or (0.5, 0.5)
-    s = max(W / im.width, H / im.height) * zoom
+    base = max(W / im.width, H / im.height)
+    if zoom_max > zoom:
+        for eje, (fv, dv, lado, total) in enumerate(((f[0], destino[0], W, im.width), (f[1], destino[1], H, im.height))):
+            sl = base * total / lado                       # cuánto sobra en este eje con zoom 1
+            if fv > dv and fv < 1:
+                need = (1 - dv) / (1 - fv) / sl
+            elif fv < dv and fv > 0:
+                need = dv / fv / sl
+            else:
+                need = 1.0
+            zoom = max(zoom, min(zoom_max, need))
+    s = base * zoom
     sw, sh = im.width * s, im.height * s
     x = max(0.0, min(f[0] * sw - destino[0] * W, sw - W))
     y = max(0.0, min(f[1] * sh - destino[1] * H, sh - H))
