@@ -6,14 +6,12 @@ datos: img, img2, fotos (lista opcional), etiqueta, portada, titulo, marca, esce
 
 Estructura:
   1) Gancho (0 a ~3 s): la primera toma con el titular grande y el marcatextos rosa.
-  2) Cuerpo: una ESCENA por cada frase de la voz ("escenas" en los datos), para que lo que se dice se vea:
+  2) Cuerpo: una ESCENA por cada frase de la voz ("escenas" en los datos). SIEMPRE se ve video o foto:
        video  -> la toma del video de la campaña que corresponde ("desde"/"hasta" en segundos; si no viene,
-                 la siguiente toma sin usar: el video nunca se repite)
-       foto   -> foto de lo que se menciona (URL, ruta o 'img'/'img2'), con acercamiento lento
-       dato   -> cifra en grande que se cuenta desde cero + texto corto
-       frase  -> frase clave en grande con marcatextos
-     Subtítulos tipo karaoke sobre video y fotos.
-  3) Cierre morado uva (3 s): CTA para seguir la cuenta.
+                 la siguiente toma sin usar). Una frase larga encadena varias tomas; el video no se repite.
+       foto   -> foto de lo que se menciona (URL, ruta o 'img'/'img2'), con una deriva muy lenta.
+     Cortes suaves al ritmo de la voz (fundido de 0.16 s, sin zoom). Subtítulos tipo karaoke.
+  3) Cierre (3 s): la última toma del video con el CTA para seguir la cuenta encima.
 Solo se arma si la nota tiene video de la campaña.
 Audio: voz con IA (scripts/voz.py) + música de fondo bajita.
 """
@@ -129,7 +127,7 @@ def bajar_video(data, tmp):
     return None
 
 
-TRANS = 0.22   # segundos del cambio de escena (fundido corto con un pequeño golpe de zoom)
+TRANS = 0.16   # cambio de escena: fundido muy corto, sin zoom (corte suave al ritmo de la voz)
 CORTE = [None]   # caja sin franjas negras del video (si el video vertical viene dentro de un cuadro horizontal)
 ESCALA = 'scale=min(1920\\,iw):-2'
 
@@ -222,11 +220,8 @@ def preparar(data):
         'brand': pill('NEWSBRAND · LA GUAYABA ILUSTRADA', font('lg-bold.woff2', 26), (255, 255, 255, 46), WHITE, 26, 14),
         'tag': pill((data.get('etiqueta') or 'NOTICIAS').upper(), font('lg-black.woff2', 34), ROSA, UVA, 30, 16),
         'marca': pill((data.get('marca') or '').upper(), font('lg-black.woff2', 30), ROSA, UVA, 24, 13) if data.get('marca') else None,
-        'cta': text_block('Síguenos para no perderte la _próxima_', W - 2 * M, 3, 'lg-black.woff2', 128, 80, WHITE, it_color=ROSA),
-        'cta2': body_block('Noticias de marcas, diseño y publicidad que sí importan. Todos los días.', W - 2 * M, 44, WHITE, 3),
-        'bio': pill('SEGUIR  @lgi.newsbrand', font('lg-black.woff2', 46), ROSA, UVA, 54, 30),
-        'firma': text_block('LG.I', 400, 1, 'lg-bold.woff2', 110, 100, WHITE, track=-0.05),
-        'sigue': pill('Comenta · Guarda · Comparte', font('lg-bold.woff2', 34), WHITE, UVA, 30, 16),
+        'cta': text_block('Síguenos para no perderte la próxima', W - 2 * M, 2, 'lg-black.woff2', 76, 56, WHITE),
+        'bio': pill('@lgi.newsbrand', font('lg-black.woff2', 40), ROSA, UVA, 40, 22),
     }
     d0 = ImageDraw.Draw(Image.new('RGB', (4, 4)))
     fonts, ls, size = C.fitted(d0, data['portada'], W - 2 * M, 4, 'lg-black.woff2', 112, 64)
@@ -255,22 +250,13 @@ def gancho(base, t, L):
         base.alpha_composite(capa)
 
 
-def cierre(t, L):
-    im = Image.new('RGBA', (W, H), UVA)
-    cta = L['cta']; a = eo(lin(t, .15, .7)); y = 560
-    paste(im, cta, M - 20, y + (1 - a) * 60, a)
-    y += cta.height + 30
-    b = eo(lin(t, .45, 1.0)); paste(im, L['cta2'], M - 10, y + (1 - b) * 40, b)
-    y += L['cta2'].height + 70
-    c = eo(lin(t, .7, 1.1)); pulso = 1 - 0.04 * max(0.0, math.sin(max(0, t - 1.2) * math.pi / 0.9)) ** 8
-    bio = L['bio']
-    k = c * pulso
-    if k != 1:
-        bio = bio.resize((max(1, int(bio.width * k)), max(1, int(bio.height * k))), Image.BILINEAR)
-    paste(im, bio, M + (L['bio'].width - bio.width) / 2, y + (L['bio'].height - bio.height) / 2, min(1, c))
-    paste(im, L['firma'], M - 20, 1480, eo(lin(t, 1.0, 1.5)))
-    paste(im, L['sigue'], W - M - L['sigue'].width, 1510, eo(lin(t, 1.1, 1.6)))
-    return im
+def cierre(base, t, L):
+    """CTA sobre el video (nunca fondo de color): aparece con un fundido suave."""
+    a = eio(lin(t, 0.1, 0.9))
+    y = 1330
+    paste(base, L['cta'], M - 10, y, a)
+    b = eio(lin(t, 0.5, 1.3))
+    paste(base, L['bio'], M, y + L['cta'].height + 24, b)
 
 
 def guion_de(data):
@@ -360,16 +346,20 @@ def bajar_foto(ref, tmp, k):
     return None
 
 
-def plan(escenas, ini, fin_cuerpo, vid, tomas, vdur, data, tmp):
-    """Convierte las escenas en tramos con su imagen: [{'a','b','tipo', ...}].
-    El video nunca se repite: cada tramo usa una toma nueva; si se acaba, siguen fotos o tarjetas."""
+def plan(escenas, ini, fin_cuerpo, total, vid, tomas, vdur, data, tmp):
+    """Convierte las escenas en tramos de imagen: [{'a','b','tipo': 'video'|'foto', ...}].
+    Siempre hay video o foto en pantalla. Las tomas no se repiten mientras haya material nuevo:
+    una frase larga encadena varias tomas; si se acaba el video, siguen las fotos; solo al final,
+    si no queda nada, se vuelve a una toma con otro encuadre (más cerrado) y en cámara lenta."""
     import encuadre
+    pedidas = {data.get(e['foto']) if e.get('foto') in ('img', 'img2') else e.get('foto')
+               for e in escenas if e.get('foto')}
     fotos_nota = [p for p in (data.get('img'), data.get('img2')) if p and os.path.exists(p)]
     fotos_nota += [p for p in (data.get('fotos') or []) if p and os.path.exists(p) and p not in fotos_nota]
-    fi = [0]
-    pedidas = {data.get(e['foto']) if e.get('foto') in ('img', 'img2') else e.get('foto')
-               for e in escenas if (e.get('ver') or '') == 'foto'}
     fotos_nota = [p for p in fotos_nota if p not in pedidas]   # las fotos que pide una escena no se usan de relleno
+    fi = [0]
+    usos = [0] * len(tomas)
+    tramos, usados, k, mitad = [], [], [0], [0]
 
     def foto_libre():
         while fi[0] < len(fotos_nota):
@@ -379,162 +369,106 @@ def plan(escenas, ini, fin_cuerpo, vid, tomas, vdur, data, tmp):
                 return im
         return None
 
-    def tarjeta(e):
-        if e.get('dato'):
-            return {'tipo': 'dato', 'dato': e['dato'], 'texto': e.get('texto', '')}
-        return {'tipo': 'frase', 'frase': e.get('frase') or e.get('texto') or data.get('portada', '')}
-
-    tramos, usados, k = [], [], 0
-
     def libre(t0, t1):
         return all(t1 <= a + 0.05 or t0 >= b - 0.05 for a, b in usados)
+
+    def poner_foto(a, b, im):
+        tramos.append(dict(a=a, b=b, tipo='foto', im=im, foco=encuadre.foco(im)))
+
+    def poner_video(a, d, desde, hasta=None, zoom=1.0, vel_min=0.7):
+        """Pone un tramo de video desde `desde`; regresa los segundos que cubrió."""
+        hay = vdur - desde
+        if hasta is not None and hasta > desde + 0.3:
+            hay = min(hay, hasta - desde)              # nunca se pasa de la toma elegida
+        vel = 1.0 if hay >= d else max(vel_min, hay / d)
+        largo = min(d, hay / vel)
+        if largo < 0.4:
+            return 0.0
+        cuadros = clip(vid, tmp, k[0], desde, largo * vel); k[0] += 1
+        if len(cuadros) < 3:
+            return 0.0
+        foco = encuadre.foco(abrir(cuadros[len(cuadros) // 2]).convert('RGB'))
+        if zoom > 1:                                    # otro encuadre: mitad de arriba o de abajo de la toma
+            foco = (foco[0], 0.27 if mitad[0] % 2 == 0 else 0.73); mitad[0] += 1
+        tramos.append(dict(a=a, b=a + largo, tipo='video', cuadros=cuadros, vel=vel, foco=foco, zoom=zoom))
+        usados.append((desde, desde + largo * vel))
+        for i, (t0, t1) in enumerate(tomas):
+            if t0 < desde + largo * vel and t1 > desde:
+                usos[i] += 1
+        return largo
+
+    def toma_libre():
+        return next(((t0, t1) for t0, t1 in tomas if libre(t0, min(t1, t0 + 1.0))), None)
+
+    def rellenar(a, b, e=None, primera=True):
+        """Cubre de a a b con video nuevo, luego fotos y, si ya no hay nada, otro encuadre de una toma."""
+        while b - a > 0.05:
+            d = b - a
+            cubierto = 0.0
+            if primera and e and e.get('desde') is not None and float(e['desde']) < vdur - 0.4:
+                h = e.get('hasta')
+                cubierto = poner_video(a, d, float(e['desde']), float(h) if h is not None else None)
+            else:
+                tl = toma_libre() if vid else None
+                if tl:
+                    cubierto = poner_video(a, d, tl[0], tl[1])
+                    if not cubierto:
+                        usados.append(tl)
+                        continue
+                else:
+                    im = foto_libre()
+                    if im:
+                        poner_foto(a, min(b, a + max(2.5, min(d, 4.5))), im)
+                        cubierto = tramos[-1]['b'] - a
+                    elif tomas:
+                        i = min(range(len(tomas)), key=lambda j: (usos[j], -(tomas[j][1] - tomas[j][0])))
+                        cubierto = poner_video(a, d, tomas[i][0], tomas[i][1], zoom=1.35, vel_min=0.6)
+                        usos[i] += 1
+            primera = False
+            if cubierto <= 0:
+                if tramos:
+                    tramos[-1]['b'] = b
+                break
+            a += cubierto
+            if b - a < 0.9 and tramos:                  # sobra muy poquito: se alarga la toma actual
+                tramos[-1]['b'] = b
+                break
+
     for i, e in enumerate(escenas):
         a = 0.0 if i == 0 else max(0.0, ini[i] - 0.12)
         b = fin_cuerpo if i == len(escenas) - 1 else max(a + 0.3, ini[i + 1] - 0.12)
-        d = b - a
-        ver = (e.get('ver') or 'video').lower()
-        if ver == 'foto':
-            im = bajar_foto(e.get('foto') if e.get('foto') not in ('img', 'img2') else data.get(e['foto']), tmp, i) or foto_libre()
-            tramos.append(dict(a=a, b=b, tipo='foto', im=im, foco=encuadre.foco(im)) if im else dict(a=a, b=b, **tarjeta(e)))
-            continue
-        if ver in ('dato', 'frase'):
-            tramos.append(dict(a=a, b=b, **tarjeta(e)))
-            continue
-        # video
-        desde = e.get('desde')
-        if desde is None and vid:                         # la siguiente toma que no se ha usado
-            desde = next((t0 for t0, t1 in tomas if libre(t0, min(t1, t0 + 1.0))), None)
-        largo = 0.0
-        if vid and desde is not None and desde < vdur - 0.6:
-            desde = float(desde)
-            vel = 1.0
-            hay = vdur - desde                             # segundos de video disponibles desde ahí
-            if e.get('hasta') is not None and float(e['hasta']) > desde + 0.3:
-                hay = min(hay, float(e['hasta']) - desde)  # nunca se pasa de la toma elegida (no se repiten tomas)
-            if hay < d:                                    # no alcanza: cámara lenta suave (máx. 30 %)
-                vel = max(0.7, hay / d)
-            largo = min(d, hay / vel)
-            cuadros = clip(vid, tmp, k, desde, largo * vel); k += 1
-            if len(cuadros) >= 3:
-                foco = encuadre.foco(abrir(cuadros[len(cuadros) // 2]).convert('RGB'))
-                tramos.append(dict(a=a, b=a + largo, tipo='video', cuadros=cuadros, vel=vel, foco=foco))
-                usados.append((desde, desde + largo * vel))
-            else:
-                largo = 0.0
-        if largo < d - 1.2:                               # no hubo (o no alcanzó) el video: foto de la nota o tarjeta
-            a2 = a + largo
-            im = foto_libre()
-            tramos.append(dict(a=a2, b=b, tipo='foto', im=im, foco=encuadre.foco(im)) if im else dict(a=a2, b=b, **tarjeta(e)))
-        elif tramos:
-            tramos[-1]['b'] = b
+        if (e.get('ver') or '').lower() == 'foto' or e.get('foto'):
+            ref = e.get('foto')
+            im = bajar_foto(data.get(ref) if ref in ('img', 'img2') else ref, tmp, i)
+            if im:
+                poner_foto(a, b, im)
+                continue
+        rellenar(a, b, e)
+    # cierre: la última toma del video (normalmente el producto o el logo) detrás del CTA
+    if vid and tomas:
+        t0, t1 = toma_libre() or tomas[-1]
+        if not poner_video(fin_cuerpo, total - fin_cuerpo, t0, t1, vel_min=0.5):
+            rellenar(fin_cuerpo, total, primera=False)
+    else:
+        rellenar(fin_cuerpo, total, primera=False)
+    if tramos:
+        tramos[-1]['b'] = max(tramos[-1]['b'], total)
     return tramos
 
 
-# ---------------------------------------------------------------- tarjetas (datos y frases en grande)
-def fondo_tarjeta(t):
-    """Morado uva con una mancha rosa suave que se mueve despacio."""
-    im = Image.new('RGBA', (W, H), UVA)
-    if 'mancha' not in L_CACHE:
-        g = Image.new('L', (64, 64), 0)
-        g.putdata([int(82 * max(0.0, 1 - math.hypot(x - 31.5, y - 31.5) / 31.5) ** 1.6) for y in range(64) for x in range(64)])
-        g = g.resize((1500, 1500), Image.BICUBIC)
-        m = Image.new('RGBA', (1500, 1500), ROSA); m.putalpha(g)
-        L_CACHE['mancha'] = m
-    x = -200 + 160 * math.sin(t * 0.5); y = 120 + 140 * math.cos(t * 0.37)
-    im.alpha_composite(L_CACHE['mancha'], (int(x), int(y)))
-    return im
-
-
-L_CACHE = {}
-
-
-def _cifra(dato, p):
-    """Si el dato empieza con un número, lo cuenta desde cero."""
-    m = re.match(r'^(\D*?)(\d[\d,]*)(.*)$', dato)
-    if not m or p >= 1:
-        return dato
-    n = int(m.group(2).replace(',', ''))
-    v = int(round(n * p))
-    s = f'{v:,}' if ',' in m.group(2) else str(v)
-    return m.group(1) + s + m.group(3)
-
-
-def tarjeta_dato(tr, tl):
-    im = fondo_tarjeta(tr['a'] + tl)
-    p = eo(lin(tl, 0.05, 0.45))
-    txt = _cifra(tr['dato'], lin(tl, 0.05, 0.9))
-    d0 = ImageDraw.Draw(Image.new('RGB', (4, 4)))
-    size = 300
-    while size > 110 and d0.textlength(tr['dato'], font=font('lg-black.woff2', size)) > W - 2 * M:
-        size -= 10
-    f = font('lg-black.woff2', size)
-    if d0.textlength(tr['dato'], font=f) > W - 2 * M:         # muy largo: en varios renglones
-        blk = text_block(tr['dato'], W - 2 * M, 3, 'lg-black.woff2', 150, 90, ROSA)
-        y = 700 - blk.height / 2
-        paste(im, blk, M - 20, y + (1 - p) * 50, p)
-        yb = y + blk.height + 30
-    else:
-        a, de = f.getmetrics()
-        capa, d = layer(W, a + de + 20)
-        d.text((W / 2, a + 10), txt, font=f, fill=ROSA, anchor='ms')
-        k = 0.86 + 0.14 * eo(lin(tl, 0.05, 0.5))
-        if k != 1:
-            capa = capa.resize((int(capa.width * k), int(capa.height * k)), Image.BILINEAR)
-        y = 820 - capa.height / 2
-        paste(im, capa, (W - capa.width) / 2, y, p)
-        yb = 820 + (a + de) / 2 + 40
-    if tr.get('texto'):
-        if 'txt_' + tr['texto'] not in L_CACHE:
-            L_CACHE['txt_' + tr['texto']] = body_block(tr['texto'], W - 2 * M, 58, WHITE, 5)
-        blk = L_CACHE['txt_' + tr['texto']]
-        q = eo(lin(tl, 0.35, 0.85))
-        paste(im, blk, M - 10, yb + (1 - q) * 40, q)
-    return im
-
-
-def tarjeta_frase(tr, tl):
-    im = fondo_tarjeta(tr['a'] + tl)
-    clave = 'fr_' + tr['frase']
-    if clave not in L_CACHE:
-        d0 = ImageDraw.Draw(Image.new('RGB', (4, 4)))
-        L_CACHE[clave] = C.fitted(d0, tr['frase'], W - 2 * M, 6, 'lg-black.woff2', 120, 64)
-    fonts, ls, size = L_CACHE[clave]
-    lh = size * 1.1
-    y0 = 860 - len(ls) * lh / 2
-    run = [0]
-
-    def marca():
-        k = run[0]; run[0] += 1
-        return eio(lin(tl, 0.5 + k * 0.35, 0.95 + k * 0.35))
-    for i, ln in enumerate(ls):
-        p = eo(lin(tl, 0.05 + i * 0.1, 0.45 + i * 0.1))
-        capa = Image.new('RGBA', (W, H), (0, 0, 0, 0))
-        C.render(ImageDraw.Draw(capa), M, y0 + i * lh + (1 - p) * 30, [ln], fonts, lh, WHITE,
-                 hl_bg=ROSA, hl_fg=UVA, pad=12, marca=marca, it_color=ROSA)
-        if p < 1:
-            capa.putalpha(capa.getchannel('A').point(lambda v: int(v * p)))
-        im.alpha_composite(capa)
-    return im
-
-
 def imagen_tramo(tr, tl):
-    """Fondo del tramo en su segundo local tl."""
+    """Imagen del tramo en su segundo local tl (siempre video o foto)."""
     if tr['tipo'] == 'video':
         cs = tr['cuadros']
-        return vertical(abrir(cs[min(len(cs) - 1, int(tl * tr['vel'] * FPS))]), tr['foco']).convert('RGBA'), True
-    if tr['tipo'] == 'foto':
-        d = max(0.5, tr['b'] - tr['a'])
-        z = 1.0 + 0.09 * eio(tl / d)                    # acercamiento lento sobre la foto
-        return vertical(tr['im'], tr['foco'], zoom=z).convert('RGBA'), True
-    if tr['tipo'] == 'dato':
-        return tarjeta_dato(tr, tl), False
-    return tarjeta_frase(tr, tl), False
+        return vertical(abrir(cs[min(len(cs) - 1, int(tl * tr['vel'] * FPS))]), tr['foco'], zoom=tr.get('zoom', 1.0)).convert('RGBA')
+    d = max(0.5, tr['b'] - tr['a'])
+    z = 1.0 + 0.045 * (tl / d)                         # deriva muy lenta sobre la foto
+    return vertical(tr['im'], tr['foco'], zoom=z).convert('RGBA')
 
 
 def make(data, out):
     import voz, tomas as TM
     tmp = tempfile.mkdtemp()
-    L_CACHE.clear()
     try:
         escenas = escenas_de(data)
         (palabras, dvoz), mp3 = voz.sintetizar(guion_de(data), f'{tmp}/voz.mp3')
@@ -550,7 +484,7 @@ def make(data, out):
             raise RuntimeError('No pude sacar el video de la campaña')
         CORTE[0] = sin_bordes(muestras(vid, tmp, vdur))   # un video vertical metido en cuadro horizontal sale a pantalla completa
         ini = tiempos(escenas, palabras, voz.limpiar)
-        tramos = plan(escenas, ini, fin_cuerpo, vid, tms, vdur, data, tmp)
+        tramos = plan(escenas, ini, fin_cuerpo, total, vid, tms, vdur, data, tmp)
         print('Reel:', [(round(x['a'], 1), round(x['b'], 1), x['tipo']) for x in tramos], file=sys.stderr)
         G = [g for g in grupos(palabras)]
         cmd = ['ffmpeg', '-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', str(FPS), '-c:v', 'mjpeg', '-i', '-']
@@ -559,40 +493,30 @@ def make(data, out):
         ti = 0
         for i in range(int(total * FPS)):
             t = i / FPS
-            if t >= fin_cuerpo:
-                im = cierre(t - fin_cuerpo, L)
-                if t - fin_cuerpo < 0.3:                   # transición: el cierre sube desde abajo
-                    k = eio((t - fin_cuerpo) / 0.3)
-                    prev = Image.new('RGBA', (W, H), UVA)
-                    prev.alpha_composite(im, (0, int(H * (1 - k))))
-                    im = prev
+            while ti < len(tramos) - 1 and t >= tramos[ti]['b']:
+                ti += 1
+            tr = tramos[ti]
+            tl = max(0.0, t - tr['a'])
+            im = imagen_tramo(tr, tl)
+            if ti > 0 and tl < TRANS:                       # corte suave: fundido muy corto, sin zoom
+                pv = tramos[ti - 1]
+                prev = imagen_tramo(pv, max(0.0, pv['b'] - pv['a'] - 1 / FPS))
+                a = tl / TRANS
+                im = Image.blend(prev, im, a * a * (3 - 2 * a))
+            im.alpha_composite(L['abajo']); im.alpha_composite(L['arriba'], (0, 0))
+            paste(im, L['brand'], M, 150)
+            if t < GANCHO:
+                gancho(im, t, L)
             else:
-                while ti < len(tramos) - 1 and t >= tramos[ti]['b']:
-                    ti += 1
-                tr = tramos[ti]
-                tl = max(0.0, t - tr['a'])
-                im, es_imagen = imagen_tramo(tr, tl)
-                if ti > 0 and tl < TRANS:                   # cambio de escena: fundido corto con golpe de zoom
-                    pv = tramos[ti - 1]
-                    prev, _ = imagen_tramo(pv, max(0.0, pv['b'] - pv['a'] - 1 / FPS))
-                    a = tl / TRANS; a = a * a * (3 - 2 * a)
-                    z = 1 + 0.05 * (1 - a)
-                    im = im.resize((int(W * z), int(H * z)), Image.BILINEAR).crop(
-                        (int((W * z - W) / 2), int((H * z - H) / 2), int((W * z - W) / 2) + W, int((H * z - H) / 2) + H))
-                    im = Image.blend(prev, im, a)
-                if es_imagen or t < GANCHO:
-                    im.alpha_composite(L['abajo']); im.alpha_composite(L['arriba'], (0, 0))
-                paste(im, L['brand'], M, 150)
-                if t < GANCHO:
-                    gancho(im, t, L)
+                if L['marca']:
+                    paste(im, L['marca'], M, 230, eo(lin(t, GANCHO, GANCHO + .4)))
+                if t >= fin_cuerpo:
+                    cierre(im, t - fin_cuerpo, L)
                 else:
-                    if L['marca']:
-                        paste(im, L['marca'], M, 230, eo(lin(t, GANCHO, GANCHO + .4)))
-                    if es_imagen:                           # en las tarjetas el texto grande ya es lo que se dice
-                        g = next((g for g in G if g[0][0] - 0.05 <= t <= g[-1][1] + 0.25), None)
-                        if g:
-                            s = subtitulo(g, t)
-                            paste(im, s, (W - s.width) / 2, 1380)
+                    g = next((g for g in G if g[0][0] - 0.05 <= t <= g[-1][1] + 0.25), None)
+                    if g:
+                        s = subtitulo(g, t)
+                        paste(im, s, (W - s.width) / 2, 1380)
             buf = __import__('io').BytesIO()
             im.convert('RGB').save(buf, 'JPEG', quality=90)
             pr.stdin.write(buf.getvalue())
