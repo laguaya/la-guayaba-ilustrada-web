@@ -105,7 +105,7 @@ def video_corrido(ruta, tmp, segundos):
     """Cuadros del video de la campaña, una sola pasada (máximo lo que dure el Reel)."""
     carpeta = f'{tmp}/video'; os.makedirs(carpeta, exist_ok=True)
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', '0.2', '-i', ruta, '-t', f'{segundos:.2f}',
-                    '-vf', f'fps={FPS},scale=1280:-2', '-q:v', '3', f'{carpeta}/%05d.jpg'], capture_output=True, timeout=600)
+                    '-vf', f'fps={FPS},scale=min(1920\\,iw):-2', '-q:v', '2', f'{carpeta}/%05d.jpg'], capture_output=True, timeout=600)
     return sorted(glob.glob(f'{carpeta}/*.jpg'))
 
 
@@ -135,6 +135,33 @@ def bajar_video(data, tmp):
 TRANS = 0.6   # segundos de la transición cuando el video vuelve a empezar
 
 
+CORTE = [None]   # caja sin franjas negras del video (si el video vertical viene dentro de un cuadro horizontal)
+
+
+def sin_bordes(cuadros):
+    """Detecta franjas negras fijas (arriba/abajo o a los lados) en el video y regresa la caja útil."""
+    from PIL import ImageChops
+    caja = None
+    n = len(cuadros)
+    for i in range(1, 10):
+        im = Image.open(cuadros[min(n - 1, int(n * i / 10))]).convert('L')
+        b = im.point(lambda v: 255 if v > 22 else 0).getbbox()
+        if not b:
+            continue
+        caja = b if caja is None else (min(caja[0], b[0]), min(caja[1], b[1]), max(caja[2], b[2]), max(caja[3], b[3]))
+    if not caja:
+        return None
+    w, h = Image.open(cuadros[0]).size
+    if (caja[2] - caja[0]) < w * 0.96 or (caja[3] - caja[1]) < h * 0.96:
+        return caja
+    return None
+
+
+def abrir(cuadros, i):
+    im = Image.open(cuadros[i])
+    return im.crop(CORTE[0]) if CORTE[0] else im
+
+
 def cuadro_fondo(cuadros, foco, t):
     """Cuadro del video en el segundo t. Si el video es más corto que el Reel, se repite y el cambio
     del final al inicio se hace con una transición suave (fundido con un leve acercamiento)."""
@@ -143,10 +170,10 @@ def cuadro_fondo(cuadros, foco, t):
     ciclo = max(0.5, dur - TRANS)                     # cada vuelta empieza TRANS segundos antes de acabar la anterior
     k = int(t // ciclo)
     local = t - k * ciclo                             # tiempo dentro de la vuelta actual
-    actual = vertical(Image.open(cuadros[min(n - 1, int(local * FPS))]), foco)
+    actual = vertical(abrir(cuadros, min(n - 1, int(local * FPS))), foco)
     if k > 0 and local < TRANS:                       # mezcla con el final de la vuelta anterior
         prev_t = local + ciclo
-        prev = vertical(Image.open(cuadros[min(n - 1, int(prev_t * FPS))]), foco)
+        prev = vertical(abrir(cuadros, min(n - 1, int(prev_t * FPS))), foco)
         a = local / TRANS
         a = a * a * (3 - 2 * a)
         z = 1 + 0.04 * (1 - a)                        # el video nuevo entra con un pequeño acercamiento
@@ -290,7 +317,8 @@ def make(data, out):
         if len(cuadros) < FPS * 3:
             raise RuntimeError('No pude sacar el video de la campaña')
         import encuadre
-        foco = encuadre.foco(Image.open(cuadros[len(cuadros) // 3]).convert('RGB'))
+        CORTE[0] = sin_bordes(cuadros)                      # un video vertical metido en cuadro horizontal sale a pantalla completa
+        foco = encuadre.foco(abrir(cuadros, len(cuadros) // 3).convert('RGB'))
         G = [g for g in grupos(palabras)]
         cmd = ['ffmpeg', '-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', str(FPS), '-c:v', 'mjpeg', '-i', '-']
         pr = subprocess.Popen(cmd + ['-c:v', 'libx264', '-preset', 'medium', '-crf', '20', '-pix_fmt', 'yuv420p',
