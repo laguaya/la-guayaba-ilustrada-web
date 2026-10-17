@@ -139,11 +139,18 @@ def _descargar(url, ruta):
 
 
 def _ytdlp(url, ruta):
-    """YouTube, Vimeo y otros reproductores (si yt-dlp está instalado)."""
+    """YouTube, Vimeo, TikTok, Instagram y otros reproductores (si yt-dlp está instalado). Si existe el secreto
+    YT_COOKIES (cookies de una cuenta de YouTube en formato Netscape), se usan para que YouTube no bloquee."""
     if not shutil.which('yt-dlp'):
         return False
+    extra = []
+    if os.environ.get('YT_COOKIES'):
+        ck = os.path.join(os.path.dirname(ruta), 'cookies.txt')
+        if not os.path.exists(ck):
+            open(ck, 'w').write(os.environ['YT_COOKIES'])
+        extra = ['--cookies', ck]
     try:
-        subprocess.run(['yt-dlp', '-q', '--no-playlist', '--max-filesize', '150M', '-f',
+        subprocess.run(['yt-dlp', '-q', '--no-playlist', '--max-filesize', '150M'] + extra + ['-f',
                         'bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[height<=1080][ext=mp4]/bv*[height<=1080]+ba/b',
                         '--merge-output-format', 'mp4', '-o', ruta, url], capture_output=True, timeout=300)
     except Exception:
@@ -151,46 +158,13 @@ def _ytdlp(url, ruta):
     return os.path.exists(ruta) and os.path.getsize(ruta) > 50000
 
 
-def pexels(consulta, ruta):
-    """Video de apoyo de Pexels (gratis, con permiso de uso comercial) para lo que se dice: "papas fritas", "freidora
-    de aire", "podcast"... Necesita el secreto PEXELS_API_KEY. Prefiere videos verticales en HD."""
-    import requests
-    clave = os.environ.get('PEXELS_API_KEY')
-    if not clave:
-        return False
-    try:
-        for orient in ('portrait', 'landscape'):
-            r = requests.get('https://api.pexels.com/videos/search', headers={'Authorization': clave}, timeout=30,
-                             params={'query': consulta, 'orientation': orient, 'per_page': 8, 'size': 'medium'})
-            if r.status_code != 200:
-                print('Pexels:', r.status_code, r.text[:200], file=sys.stderr)
-                return False
-            for v in r.json().get('videos', []):
-                if v.get('duration', 0) < 4 or v['id'] in PEXELS_USADOS:
-                    continue
-                arch = [f for f in v.get('video_files', []) if f.get('file_type') == 'video/mp4' and (f.get('width') or 0) >= 720]
-                arch.sort(key=lambda f: abs((f.get('height') or 0) - 1920))
-                for f in arch[:2]:
-                    if _descargar(f['link'], ruta):
-                        PEXELS_USADOS.add(v['id'])
-                        return True
-    except Exception as e:
-        print('Pexels:', e, file=sys.stderr)
-    return False
-
-
-PEXELS_USADOS = set()
-
-
 def bajar_url(url, ruta):
-    """Baja un video: MP4 directo, página con MP4 (Ads of the World), "pexels:<búsqueda>", o YouTube/Vimeo con yt-dlp
-    (YouTube y Vimeo suelen bloquear a los servidores de GitHub; lo más seguro son MP4 directos y Pexels)."""
+    """Baja un video REAL: MP4 directo, página con MP4 (Ads of the World), o YouTube/Vimeo/TikTok/Instagram con yt-dlp
+    (YouTube necesita el secreto YT_COOKIES para que no lo bloquee)."""
     try:
-        if url.startswith('pexels:'):
-            return pexels(url[7:].strip(), ruta)
         if re.search(r'\.(mp4|mov|m4v|webm)(\?|$)', url, re.I):
             return _descargar(url, ruta)
-        if re.search(r'youtube\.com|youtu\.be|vimeo\.com', url, re.I):
+        if re.search(r'youtube\.com|youtu\.be|vimeo\.com|tiktok\.com|instagram\.com|x\.com|twitter\.com|facebook\.com', url, re.I):
             return _ytdlp(url, ruta)
         import fuentes
         for u in fuentes.mp4s_de_pagina(url):
@@ -520,8 +494,8 @@ def plan(escenas, ini, fin_cuerpo, total, principal, extras, data, tmp):
                 if F:
                     h = e.get('hasta')
                     cubierto = poner_video(F, a, d, float(e['desde']), float(h) if h is not None else None)
-            elif primera and e and (e.get('video') in por_url or 'pexels:' + str(e.get('buscar_video')) in por_url):
-                F = por_url.get(e.get('video')) or por_url['pexels:' + str(e.get('buscar_video'))]
+            elif primera and e and e.get('video') in por_url:
+                F = por_url[e['video']]
                 tl = F.toma_libre(min(TOMA_MIN, d))
                 if tl:
                     cubierto = poner_video(F, a, d, *tl)
@@ -625,9 +599,8 @@ def imagen_tramo(tr, tl):
 def videos_extra(data, escenas, tmp):
     """Videos de apoyo: los que puso el redactor ("videos" y los "video" de cada escena)."""
     urls = []
-    for u in list(data.get('videos') or []) + [e.get('video') for e in escenas] + \
-            ['pexels:' + e['buscar_video'] for e in escenas if isinstance(e.get('buscar_video'), str)]:
-        if isinstance(u, str) and (u.startswith(('http', 'pexels:')) or os.path.exists(u)) and u not in urls:
+    for u in list(data.get('videos') or []) + [e.get('video') for e in escenas]:
+        if isinstance(u, str) and (u.startswith('http') or os.path.exists(u)) and u not in urls:
             urls.append(u)
     out = []
     for i, u in enumerate(urls[:12]):

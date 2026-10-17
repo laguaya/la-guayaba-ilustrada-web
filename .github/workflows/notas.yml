@@ -29,14 +29,17 @@ jobs:
         with:
           python-version: '3.12'
       - run: (sudo apt-get update -qq && sudo apt-get install -y -qq tesseract-ocr ffmpeg) >/dev/null 2>&1 || true
-      - run: pip install -q requests pillow fonttools brotli "opencv-contrib-python-headless<5" pillow-heif edge-tts yt-dlp
+      - uses: denoland/setup-deno@v2   # yt-dlp lo necesita para YouTube
+        with:
+          deno-version: v2.x
+      - run: pip install -q requests pillow fonttools brotli "opencv-contrib-python-headless<5" pillow-heif edge-tts "yt-dlp[default,curl-cffi]"
       - env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: '8941716448'
           IG_TOKEN: ${{ secrets.IG_TOKEN }}
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
-          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          YT_COOKIES: ${{ secrets.YT_COOKIES }}
           ELEVENLABS_VOICE_ID: ${{ secrets.ELEVENLABS_VOICE_ID || vars.ELEVENLABS_VOICE_ID }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python -u scripts/notas.py --listen

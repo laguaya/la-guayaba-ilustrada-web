@@ -63,33 +63,32 @@
   },
   {
    "voz": "Todo es real, hecho a mano por Impossible Studios y animado en stop motion, foto por foto.",
-   "ver": "video",
-   "buscar_video": "stop motion animation"
+   "ver": "video"
   },
   {
-   "voz": "Detrás está la agencia canadiense Rethink.",
+   "voz": "Detrás está Rethink, la agencia canadiense que también le hizo a McCain la campaña Together is Golden.",
    "ver": "video",
-   "buscar_video": "advertising agency creative team meeting"
+   "video": "https://www.youtube.com/watch?v=ArbK6yriSfw"
   },
   {
    "voz": "El objetivo es venderle a la Generación Z sus nuevas papas para freidora de aire, con creadores que ya sigue.",
-   "ver": "video",
-   "buscar_video": "air fryer french fries"
+   "ver": "video"
   },
   {
    "voz": "Y ojo, no es cualquier marca: una de cada cuatro papas fritas del mundo es de McCain.",
    "ver": "video",
-   "buscar_video": "french fries"
+   "video": "https://www.youtube.com/watch?v=ArbK6yriSfw"
   },
   {
    "voz": "La lección para tu negocio: no interrumpas el contenido de tu cliente… vuélvete parte de él.",
-   "ver": "video",
-   "buscar_video": "content creator filming phone"
+   "ver": "video"
   },
   {
    "voz": "¿Tú comprarías después de ver esto? Te leo en comentarios, y síguenos para más campañas así todos los días.",
    "ver": "video"
   }
  ],
- "videos": []
+ "videos": [
+  "https://www.youtube.com/watch?v=ArbK6yriSfw"
+ ]
 }
