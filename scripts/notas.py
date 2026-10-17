@@ -568,8 +568,12 @@ def send_reel(n):
         tg('sendMessage', chat_id=CHAT, text=f'⚠️ No pude armar el Reel: {str(e)[:200]}')
         return False
     with open(out, 'rb') as f:
+        import voz
+        aviso = ''
+        if os.environ.get('ELEVENLABS_API_KEY') and voz.ELEVEN_ERROR[0]:
+            aviso = f'\n⚠️ ElevenLabs no respondió ({voz.ELEVEN_ERROR[0][:120]}), usé la voz de respaldo.'
         r = tg('sendVideo', files={'video': f}, chat_id=CHAT, supports_streaming='true', width=1080, height=1920,
-               caption='🎬 Reel del día para Instagram (sale junto con el carrusel al publicar)')
+               caption='🎬 Reel para Instagram (sale junto con el carrusel al publicar)' + aviso)
     if r.get('ok'):
         remember(r['result']['message_id'], n['id'])
     return bool(r.get('ok'))
