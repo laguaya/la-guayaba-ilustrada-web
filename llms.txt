@@ -93,6 +93,7 @@
 - [RSS](https://guayabailustrada.com.mx/feed.xml)
 
 ## Notas recientes
+- [Microsoft convierte la letra de Miguel Ángel en una tipografía para Word y PowerPoint](https://guayabailustrada.com.mx/notas/microsoft-michelangelus-tipografia-miguel-angel): Se llama Michelangelus, la diseñó el estudio italiano Studiogusto para la basílica de San Pedro y llegará a Microsoft 365 a finales de 2026.
 - [McDonald's convierte la caja de la Cajita Feliz en un examen de la vista para niños](https://guayabailustrada.com.mx/notas/mcdonalds-happy-view-caja-examen-vista): En Brasil, la agencia GALERIA y el Hospital CEMA metieron cinco lentes de prueba en la caja para detectar a tiempo problemas visuales en niños de 3 a 13 años.
 - [HARIBO convierte en debate familiar la forma de comer sus gomitas Twin Snakes](https://guayabailustrada.com.mx/notas/haribo-twin-snakes-dulce-o-acido): Quiet Storm lleva Twin Snakes, la víbora de gomita mitad dulce y mitad ácida, a su formato Kids' Voices con un comercial para Disney+ y Hulu.
 - [Mitsubishi le pone su propia nube de lluvia a una camioneta y la saca a pasear](https://guayabailustrada.com.mx/notas/mitsubishi-xforce-nube-lluvia): La marca recorre Kuala Lumpur con un Xforce que lleva encima una nube que lo moja sin parar para presumir su modo de manejo en piso mojado.
@@ -112,4 +113,3 @@
 - [Meta lanza Muse Wonder, su IA más potente, y apuesta por una que te recuerde](https://guayabailustrada.com.mx/notas/meta-muse-wonder-ia): La empresa de Instagram y WhatsApp presentó dos modelos nuevos que prometen resolver tareas largas y acordarse de lo que le importa a cada usuario.
 - [Apple lanza HomeView, su pantalla para el hogar, pero no llega a México](https://guayabailustrada.com.mx/notas/apple-homeview-mexico): Es la respuesta de Apple a Alexa: una pantalla de 7 pulgadas con Siri renovada por IA que controla la casa.
 - [Pinterest pide a las marcas algo raro: dejar que su audiencia se vaya del celular](https://guayabailustrada.com.mx/notas/pinterest-disena-la-salida): Su nueva guía, Design the Exit, propone dejar de pelear por el scroll y ayudar a la gente a actuar en su vida real.
-- [Facebook ya te deja decirle a su algoritmo, con tus palabras, qué quieres ver](https://guayabailustrada.com.mx/notas/facebook-algoritmo-con-tus-palabras): La nueva versión de Your Algorithm usa IA para ajustar el Feed y los Reels según lo que el usuario le escribe.
