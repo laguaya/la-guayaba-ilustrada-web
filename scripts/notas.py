@@ -596,14 +596,16 @@ def build_reel(n):
 
 
 REEL = 'drafts/ig/.reel.json'   # {'ts': segundos, 'id': nota, 'previo': ts}
-CADA_REEL = 2 * 3600 - 600         # un Reel cada 2 horas (con 10 min de holgura)
+CADA_REEL = 90 * 60                # cada nota (una cada 2 horas) lleva su Reel; 30 min de holgura
 
 
 def toca_reel(n):
     """Reel cada 2 horas: la siguiente nota que traiga video de la campaña (sin video no hay Reel)."""
     if 'reel' in n:
         return bool(n['reel'])
-    if not n.get('ig') or not n.get('mp4'):
+    ig = n.get('ig') or {}
+    if not ig or not (n.get('mp4') or n.get('yt') or n.get('vm') or ig.get('videos')
+                      or any(e.get('video') for e in ig.get('escenas') or [])):
         return False
     st = load(REEL) if os.path.exists(REEL) else {}
     return time.time() - float(st.get('ts') or 0) >= CADA_REEL
