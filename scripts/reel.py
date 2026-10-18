@@ -270,6 +270,7 @@ class Fuente:
         m = self._muestras()
         self.crop = sin_bordes(m) if m else None
         self.foco = encuadre.foco(self.abrir(m[len(m) // 2]).convert('RGB')) if m else (0.5, 0.45)
+        print('Fuente', self.id, nombre[:70], f'{self.dur:.1f}s', len(self.tomas), 'tomas', file=sys.stderr)
 
     def _muestras(self, n=7):
         carpeta = f'{self.tmp}/muestras{self.id}'; os.makedirs(carpeta, exist_ok=True)
