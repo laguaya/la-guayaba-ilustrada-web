@@ -1,0 +1,12 @@
+2026-10-18T03:17:29.702670 mccain-fryjack-papas-stop-motion
+ElevenLabs voces: 401 {"detail":{"type":"authentication_error","code":"unauthorized","message":"The API key you used is missing the permission voices_read to execute this operation.","status":"missing_permissions","request
+ElevenLabs: voz None modelo eleven_multilingual_v2
+yt-dlp: b' also be missing\nERROR: [youtube] ArbK6yriSfw: Sign in to confirm you\xe2\x80\x99re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies\n'
+Invidious https://invidious.f5.si probando 1080 p
+Invidious https://invidious.f5.si probando 720 p
+Invidious https://invidious.f5.si probando 360 p
+Invidious https://inv.nadeko.net HTTPSConnectionPool(host='inv.nadeko.net', port=443): Max retries exceeded with url: /api/v1/videos/ArbK6yriSfw?local=true (Caused by NewConnectionError("HTTPSConnection(host='inv.nadeko.net', port=443): Failed to establish a new connection: [Errno 101] Network is unreachable"))
+Invidious https://yewtu.be 403
+Invidious https://invidious.nerdvpn.de 401
+Reel: [(0.0, 3.9, 'video1'), (3.9, 6.4, 'video1'), (6.4, 8.3, 'video1'), (8.3, 9.5, 'video1'), (9.5, 10.7, 'video1'), (10.7, 13.3, 'video1'), (13.3, 15.4, 'video1'), (15.4, 16.8, 'video1'), (16.8, 19.4, 'video1'), (19.4, 21.8, 'foto'), (21.8, 25.3, 'foto'), (25.3, 30.3, 'video1'), (30.3, 32.7, 'video1'), (32.7, 33.8, 'video1'), (33.8, 35.5, 'video1'), (35.5, 36.5, 'video1'), (36.5, 41.1, 'video1'), (41.1, 45.9, 'video1'), (45.9, 48.2, 'video1'), (48.2, 49.4, 'video1'), (49.4, 50.8, 'video1'), (50.8, 51.8, 'video1'), (51.8, 57.4, 'video1'), (57.4, 60.0, 'video1')]
+
