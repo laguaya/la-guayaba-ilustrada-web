@@ -348,6 +348,10 @@ def handle_message(u, msg):
     rto = (msg.get('reply_to_message') or {}).get('message_id')
     nid = msgs().get(str(rto)) if rto else None
     text = msg.get('text') or msg.get('caption') or ''
+    mt = re.fullmatch(r'\s*tiktok(?:\s+(\S+))?\s*', text, re.I)
+    if mt:
+        tiktok_mensaje(mid, mt.group(1))
+        return
     is_photo = 'photo' in msg or (msg.get('document', {}).get('mime_type', '').startswith('image/'))
     yt = re.search(r'(?:youtu\.be/|youtube\.com/(?:watch\?(?:.*&)?v=|shorts/|embed/|live/))([A-Za-z0-9_-]{11})', text)
     vm = re.search(r'vimeo\.com/(?:video/)?(\d{5,})', text)
@@ -1228,7 +1232,8 @@ def poll():
                     n['ig'] = load(igp)
                 n['tg'] = (cq.get('message') or {}).get('message_id')
                 queue_instagram(n, 'reel')
-                mark(cq, '📲 Va. En unos minutos sale el Reel en Instagram; te aviso aquí.')
+                tt = queue_tiktok(n)
+                mark(cq, '📲 Va. En unos minutos sale el Reel en Instagram' + (' y en TikTok' if tt else '') + '; te aviso aquí.')
             else:
                 tg('answerCallbackQuery', callback_query_id=cq['id'], text='No encontré ese Reel.')
             changed = True
@@ -1422,6 +1427,91 @@ def publish_anim(item, api, uid, tok, site):
     pub = requests.post(f'{api}/{uid}/media_publish', data={'creation_id': car['id'], 'access_token': tok}, timeout=60).json()
     if 'id' not in pub:
         raise RuntimeError(pub)
+
+
+TTQ = 'drafts/.tiktokq.json'
+
+
+def tiktok_mensaje(mid, code):
+    sys.path.insert(0, 'scripts')
+    import tiktok
+    if not tiktok.configurado():
+        reply(mid, 'Todavía no están las llaves de TikTok en GitHub (TIKTOK_CLIENT_KEY y TIKTOK_CLIENT_SECRET).')
+        return
+    if not code:
+        tg('sendMessage', chat_id=CHAT, reply_to_message_id=mid,
+           text='🎵 Para conectar TikTok:\n1. Abre este link e inicia sesión con la cuenta de La Guayaba.\n2. Acepta los permisos.\n3. La página te dará un mensaje que empieza con "tiktok"; cópialo y mándamelo aquí.',
+           reply_markup={'inline_keyboard': [[{'text': '🎵 Conectar TikTok', 'url': tiktok.link_autorizacion()}]]})
+        return
+    try:
+        cuenta = tiktok.canjear(code)
+        reply(mid, f'✅ TikTok conectado{" (@" + cuenta + ")" if cuenta else ""}. Desde ahora, cuando subas un Reel con el botón, también sale en TikTok.')
+    except Exception as e:
+        reply(mid, f'⚠️ TikTok no aceptó ese código ({str(e)[:200]}). Escribe "tiktok" para pedir un link nuevo; el código solo sirve unos minutos.')
+
+
+def queue_tiktok(n):
+    sys.path.insert(0, 'scripts')
+    import tiktok
+    if not tiktok.conectado():
+        return False
+    q = load(TTQ) if os.path.exists(TTQ) else []
+    if any(i['id'] == n['id'] for i in q):
+        return True
+    cap = re.sub(r'\n?Nota completa en el link de la bio\.?\n?', '\n', n['ig'].get('caption', '')).strip()
+    q.append({'id': n['id'], 'caption': cap, 'reply': n.get('tg')})
+    save(TTQ, q)
+    return True
+
+
+def tiktok_cola():
+    """Sube a TikTok un Reel a la vez. Cada Reel se sube UNA sola vez: si ya tiene publish_id solo se revisa su estado."""
+    global changed
+    if not os.path.exists(TTQ):
+        return
+    sys.path.insert(0, 'scripts')
+    import tiktok
+    q = load(TTQ)
+    if not q or not tiktok.configurado():
+        return
+    it = q[0]
+    if time.time() < float(it.get('despues') or 0):
+        return
+    try:
+        if not it.get('publish_id'):
+            it['publish_id'], it['priv'] = tiktok.iniciar(f'assets/ig/{it["id"]}/reel.mp4', it['caption'])
+            it['despues'] = time.time() + 30
+        else:
+            st, motivo = tiktok.estado(it['publish_id'])
+            if st == 'PUBLISH_COMPLETE':
+                extra = '' if it.get('priv') == 'PUBLIC_TO_EVERYONE' else ' (en privado, mientras TikTok aprueba la app)'
+                tg('sendMessage', chat_id=CHAT, text=f'🎵 Listo, el Reel ya está en TikTok{extra}.', reply_to_message_id=it.get('reply'))
+                q.pop(0)
+            elif st == 'FAILED':
+                tg('sendMessage', chat_id=CHAT, text=f'⚠️ TikTok rechazó el Reel ({motivo}).', reply_to_message_id=it.get('reply'))
+                q.pop(0)
+            else:
+                it['despues'] = time.time() + 30
+                it['revisiones'] = it.get('revisiones', 0) + 1
+                if it['revisiones'] > 120:
+                    tg('sendMessage', chat_id=CHAT, text='⚠️ TikTok lleva una hora procesando el Reel; revísalo en la app.', reply_to_message_id=it.get('reply'))
+                    q.pop(0)
+    except Exception as e:
+        print('TikTok:', e, file=sys.stderr)
+        if it.get('publish_id'):
+            it['despues'] = time.time() + 120          # ya se subió: solo se vuelve a revisar, nunca se sube otra vez
+        else:
+            it['intentos'] = it.get('intentos', 0) + 1
+            if it['intentos'] >= 3:
+                tg('sendMessage', chat_id=CHAT, text=f'⚠️ No pude subir el Reel a TikTok ({str(e)[:250]}).', reply_to_message_id=it.get('reply'))
+                q.pop(0)
+            else:
+                it['despues'] = time.time() + 600
+    if q:
+        save(TTQ, q)
+    else:
+        os.remove(TTQ)
+    changed = True
 
 
 IG_ULTIMO = 'drafts/.ig_ultimo.json'
@@ -1760,6 +1850,10 @@ def listen(hours=5.6):
                 changed = True
             send_pending()
             reels_sueltos()
+            try:
+                tiktok_cola()
+            except Exception as e:
+                print('TikTok cola:', e, file=sys.stderr)
             poll()
             try:
                 if thumb_backfill():

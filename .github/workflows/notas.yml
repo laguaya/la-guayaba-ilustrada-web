@@ -32,7 +32,7 @@ jobs:
       - uses: denoland/setup-deno@v2   # yt-dlp lo necesita para YouTube
         with:
           deno-version: v2.x
-      - run: pip install -q requests pillow fonttools brotli "opencv-contrib-python-headless<5" pillow-heif edge-tts "yt-dlp[default,curl-cffi]" faster-whisper
+      - run: pip install -q requests pillow fonttools brotli "opencv-contrib-python-headless<5" pillow-heif edge-tts cryptography "yt-dlp[default,curl-cffi]" faster-whisper
       - env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: '8941716448'
@@ -40,6 +40,8 @@ jobs:
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
           YT_COOKIES: ${{ secrets.YT_COOKIES }}
+          TIKTOK_CLIENT_KEY: ${{ secrets.TIKTOK_CLIENT_KEY }}
+          TIKTOK_CLIENT_SECRET: ${{ secrets.TIKTOK_CLIENT_SECRET }}
           ELEVENLABS_VOICE_ID: ${{ secrets.ELEVENLABS_VOICE_ID || vars.ELEVENLABS_VOICE_ID }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python -u scripts/notas.py --listen
