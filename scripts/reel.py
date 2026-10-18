@@ -768,7 +768,45 @@ def pronunciado(texto, pron):
     solo para la voz; los subtítulos se quedan con la escritura real."""
     for orig in sorted(pron, key=len, reverse=True):
         texto = re.sub(r'(?<!\w)' + re.escape(orig) + r'(?!\w)', pron[orig], texto, flags=re.I)
+    # sin puntos suspensivos: la voz los lee como pausas largas y el Reel pierde ritmo
+    texto = re.sub(r'\s*(\.\.\.|…)\s*', ', ', texto)
+    texto = re.sub(r',\s*([,.!?¡¿])', r'\1', texto)
     return texto
+
+
+def apretar(mp3, palabras, salida, max_sil=0.12):
+    """Quita los silencios largos entre frases (los deja en ~0.12 s) sin acelerar la voz, y recorre los tiempos
+    de cada palabra para que los subtítulos y los cortes sigan cayendo justo."""
+    import numpy as np
+    p = subprocess.run(['ffmpeg', '-hide_banner', '-i', mp3, '-af', 'silencedetect=n=-34dB:d=0.16', '-f', 'null', '-'],
+                       capture_output=True, text=True, timeout=120).stderr
+    ini = [float(x) for x in re.findall(r'silence_start: ([\d.]+)', p)]
+    fin = [float(x) for x in re.findall(r'silence_end: ([\d.]+)', p)]
+    cortes = [(a + max_sil / 2, b - max_sil / 2) for a, b in zip(ini, fin) if b - a > max_sil and a > 0.05]
+    if not cortes:
+        return mp3, palabras
+    sr = 44100
+    pcm = subprocess.run(['ffmpeg', '-v', 'error', '-i', mp3, '-f', 's16le', '-ac', '2', '-ar', str(sr), '-'],
+                         capture_output=True, timeout=120).stdout
+    x = np.frombuffer(pcm, np.int16).reshape(-1, 2)
+    partes, t = [], 0.0
+    for a, b in cortes:
+        partes.append(x[int(t * sr):int(a * sr)]); t = b
+    partes.append(x[int(t * sr):])
+    y = np.concatenate(partes)
+    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 's16le', '-ac', '2', '-ar', str(sr), '-i', '-', '-b:a', '192k', salida],
+                   input=y.tobytes(), check=True, timeout=120)
+
+    def mover(tt):
+        quita = 0.0
+        for a, b in cortes:
+            if tt >= b:
+                quita += b - a
+            elif tt > a:
+                quita += tt - a
+        return tt - quita
+    print('Pausas recortadas:', len(cortes), f'{sum(b - a for a, b in cortes):.1f}s', file=sys.stderr)
+    return salida, [(mover(a), mover(b), w) for a, b, w in palabras]
 
 
 def restaurar(palabras, pron):
@@ -811,6 +849,9 @@ def make(data, out):
         else:
             (palabras, dvoz), mp3 = voz.sintetizar(pronunciado(guion_de(data), pron), f'{tmp}/voz.mp3')
         palabras = restaurar(palabras, pron)          # los subtítulos salen con la escritura correcta
+        if mp3:                                       # ritmo: sin silencios largos entre frases (la voz no se acelera)
+            mp3, palabras = apretar(mp3, palabras, f'{tmp}/voz_apretada.mp3')
+            dvoz = max([b for _, b, _ in palabras] + [0]) + 0.15
         total = TOTAL
         # la voz tiene que caber en el minuto: si se pasa, se acelera un poco (máx. 25 %) sin cambiar el tono
         cabe = total - CIERRE_MIN - INICIO_VOZ - 0.4
@@ -899,9 +940,9 @@ def make(data, out):
             # la música se oye siempre, pero la voz manda: baja un poco mientras habla y sube en las pausas
             cmd += ['-stream_loop', '-1', '-i', MUSIC]
             if mp3:
-                filtros.append(f'[{entradas}:a]aformat=sample_rates=44100:channel_layouts=stereo,volume=0.26,'
+                filtros.append(f'[{entradas}:a]aformat=sample_rates=44100:channel_layouts=stereo,volume=0.11,'
                                f'afade=t=out:st={total - 1.8:.2f}:d=1.8[m0]')
-                filtros.append(f'[m0][{"vsc2" if bus else "vsc"}]sidechaincompress=threshold=0.04:ratio=3:attack=40:release=500:makeup=1[m]')
+                filtros.append(f'[m0][{"vsc2" if bus else "vsc"}]sidechaincompress=threshold=0.03:ratio=5:attack=30:release=450:makeup=1[m]')
             else:
                 filtros.append(f'[{entradas}:a]volume=0.9,afade=t=out:st={total - 1.8:.2f}:d=1.8[m]')
             entradas += 1

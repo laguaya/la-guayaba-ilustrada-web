@@ -14,27 +14,27 @@
  ],
  "escenas": [
   {
-   "voz": "¡Bill Murray volvió a cazar fantasmas! Pero ahora... para vender camionetas eléctricas.",
+   "voz": "¡Bill Murray volvió a cazar fantasmas! Y esta vez, para vender camionetas eléctricas.",
    "ver": "video"
   },
   {
-   "voz": "Es la madrugada de Halloween. Slimer, el fantasma verde y glotón, está saqueando el refrigerador de una familia.",
+   "voz": "Madrugada de Halloween. Slimer, el fantasma verde y glotón, se está tragando todo el refrigerador de una familia.",
    "ver": "video"
   },
   {
-   "voz": "Y entonces llega Venkman... en el Ecto R1. Una Rivian disfrazada del auto de la película.",
+   "voz": "Y entonces aparece Venkman, a bordo del Ecto R1: una Rivian vestida igualita al auto de la película.",
    "ver": "video"
   },
   {
-   "voz": "Lo atrapa, lo encierra en la cajuela delantera y termina embarrado de baba.",
+   "voz": "Lo atrapa, lo encierra en la cajuela delantera y termina, claro, embarrado de baba.",
    "ver": "video"
   },
   {
-   "voz": "Detrás está Gil Kenan, el director de Ghostbusters: Apocalipsis fantasma.",
+   "voz": "Lo dirigió Gil Kenan, el director de Ghostbusters: Apocalipsis fantasma.",
    "ver": "video"
   },
   {
-   "voz": "Usaron un títere de Slimer como el original y efectos hechos en cámara. Nada de inteligencia artificial.",
+   "voz": "Y ojo: nada de inteligencia artificial. Slimer es un títere, como el original, y los efectos se hicieron en cámara.",
    "ver": "video"
   },
   {
@@ -42,19 +42,23 @@
    "ver": "video"
   },
   {
-   "voz": "Anuncia una actualización que llega por internet, como cuando se actualiza tu celular.",
+   "voz": "Vende una actualización que llega por internet, igualito que cuando se actualiza tu celular.",
    "ver": "video"
   },
   {
-   "voz": "Estacionada, la camioneta toca el tema de la película, cambia luces y sonidos... ¡y hasta trae un videojuego!",
+   "voz": "Con un botón, la camioneta toca el tema de la película, cambia luces y sonidos y hasta trae un videojuego.",
    "ver": "video"
   },
   {
-   "voz": "La lección para tu marca: si tu producto se puede actualizar, cada temporada es un pretexto para consentir a quien ya te compró.",
+   "voz": "Y no es la primera vez: el año pasado convirtió sus autos en el auto increíble, con David Hasselhoff.",
    "ver": "video"
   },
   {
-   "voz": "¿Genial o exagerado? Dímelo en comentarios... y síguenos para más campañas así.",
+   "voz": "La lección para tu marca: si tu producto se actualiza, cada temporada es un pretexto para consentir a quien ya te compró.",
+   "ver": "video"
+  },
+  {
+   "voz": "¿Genial o exagerado? Dímelo en comentarios y síguenos para más campañas así.",
    "ver": "video"
   }
  ],
