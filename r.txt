@@ -1,0 +1,10 @@
+Invidious https://invidious.f5.si probando 1080 p
+Invidious https://invidious.f5.si probando 720 p
+Invidious https://invidious.f5.si probando 360 p
+Invidious https://inv.nadeko.net 403
+Invidious https://yewtu.be 403
+Invidious https://invidious.nerdvpn.de 401
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+False
+False
+[(np.float64(0.0), np.float64(0.35), 'Bil'), (np.float64(0.35), np.float64(0.7), 'Mórrei'), (np.float64(0.7), np.float64(1.16), 'volvió'), (np.float64(1.16), np.float64(1.3), 'a'), (np.float64(1.3), np.float64(1.58), 'cazar'), (np.float64(1.58), np.float64(2.18), 'fantasmas')]
