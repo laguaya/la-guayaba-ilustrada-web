@@ -1525,6 +1525,7 @@ def tiktok_cola():
                     q.pop(0)
     except Exception as e:
         print('TikTok:', e, file=sys.stderr)
+        it['error'] = str(e)[:300]
         if it.get('publish_id'):
             it['despues'] = time.time() + 120          # ya se subió: solo se vuelve a revisar, nunca se sube otra vez
         else:
@@ -1533,7 +1534,7 @@ def tiktok_cola():
                 tg('sendMessage', chat_id=CHAT, text=f'⚠️ No pude subir el Reel a TikTok ({str(e)[:250]}).', reply_to_message_id=it.get('reply'))
                 q.pop(0)
             else:
-                it['despues'] = time.time() + 600
+                it['despues'] = time.time() + 120
     if q:
         save(TTQ, q)
     else:
