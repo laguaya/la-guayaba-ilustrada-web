@@ -1,12 +1,21 @@
-2026-10-18T03:26:12.613042 mccain-fryjack-papas-stop-motion
+2026-10-18T03:36:08.045911 rivian-ghostbusters-bill-murray-halloween
 ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
 ElevenLabs usó eleven_v4
-yt-dlp: b' also be missing\nERROR: [youtube] ArbK6yriSfw: Sign in to confirm you\xe2\x80\x99re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies\n'
-Invidious https://invidious.f5.si probando 1080 p
-Invidious https://invidious.f5.si probando 720 p
-Invidious https://invidious.f5.si probando 360 p
+yt-dlp: b'WARNING: [generic] Falling back on generic information extractor\nERROR: [youtube] Y5ZT7wPQhj8: Video unavailable\nERROR: [youtube] 7Hd_TIEWmH8: Video unavailable\nERROR: [youtube] FrDvg9KhDBY: Video unavailable\n'
+yt-dlp: b'ERROR: [youtube] 7Hd_TIEWmH8: Video unavailable\n'
+Invidious https://invidious.f5.si 500
 Invidious https://inv.nadeko.net 403
 Invidious https://yewtu.be 403
 Invidious https://invidious.nerdvpn.de 401
-Reel: [(0.0, 4.5, 'video1'), (4.5, 6.5, 'video1'), (6.5, 8.1, 'video1'), (8.1, 9.6, 'video1'), (9.6, 10.1, 'video1'), (10.1, 12.9, 'video1'), (12.9, 15.0, 'video1'), (15.0, 16.6, 'video1'), (16.6, 19.2, 'video1'), (19.2, 22.0, 'video1'), (22.0, 25.4, 'foto'), (25.4, 29.9, 'foto'), (29.9, 30.5, 'video1'), (30.5, 32.8, 'video1'), (32.8, 34.0, 'video1'), (34.0, 35.3, 'video1'), (35.3, 35.8, 'video1'), (35.8, 41.3, 'video1'), (41.3, 46.3, 'video1'), (46.3, 48.6, 'video1'), (48.6, 49.8, 'video1'), (49.8, 51.1, 'video1'), (51.1, 51.7, 'video1'), (51.7, 56.1, 'video1'), (56.1, 57.4, 'video1'), (57.4, 60.0, 'video1')]
+yt-dlp: b'ERROR: [youtube] Y5ZT7wPQhj8: Video unavailable\n'
+Invidious https://invidious.f5.si 500
+Invidious https://inv.nadeko.net 403
+Invidious https://yewtu.be 403
+Invidious https://invidious.nerdvpn.de 401
+yt-dlp: b'ERROR: [youtube] FrDvg9KhDBY: Video unavailable\n'
+Invidious https://invidious.f5.si 500
+Invidious https://inv.nadeko.net 403
+Invidious https://yewtu.be 403
+Invidious https://invidious.nerdvpn.de 401
+Reel: [(0.0, 5.9, 'video1'), (5.9, 8.8, 'video1'), (8.8, 12.2, 'video1'), (12.2, 14.1, 'video1'), (14.1, 15.1, 'video1'), (15.1, 17.8, 'video2'), (17.8, 19.1, 'video2'), (19.1, 22.0, 'video2'), (22.0, 26.4, 'video2'), (26.4, 28.4, 'video2'), (28.4, 30.1, 'video2'), (30.1, 31.9, 'video2'), (31.9, 33.6, 'video2'), (33.6, 35.7, 'video2'), (35.7, 36.8, 'video2'), (36.8, 39.1, 'video2'), (39.1, 39.8, 'video1'), (39.8, 40.9, 'video2'), (40.9, 42.4, 'video2'), (42.4, 45.8, 'video2'), (45.8, 46.9, 'video2'), (46.9, 52.3, 'video2'), (52.3, 57.4, 'video2'), (57.4, 60.0, 'video1')]
 
