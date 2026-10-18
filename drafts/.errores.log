@@ -1,0 +1,12 @@
+2026-10-18T02:37:49.581685 reel rivian-ghostbusters-bill-murray-halloween
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Alinear voz: open() got an unexpected keyword argument 'metadata_errors'
+yt-dlp: b' also be missing\nERROR: [youtube] AzErJdWUDTE: Sign in to confirm you\xe2\x80\x99re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies\n'
+
+Traceback (most recent call last):
+  File "/home/runner/work/la-guayaba-ilustrada-web/la-guayaba-ilustrada-web/scripts/notas.py", line 569, in build_reel
+    reel.make(data, out)
+  File "/home/runner/work/la-guayaba-ilustrada-web/la-guayaba-ilustrada-web/scripts/reel.py", line 739, in make
+    raise RuntimeError('La nota no tiene video de la campaña para el Reel')
+RuntimeError: La nota no tiene video de la campaña para el Reel
+
