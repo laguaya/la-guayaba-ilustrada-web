@@ -621,8 +621,17 @@ def reservar_reel(nid, si=True):
     save(REEL, st)
 
 
+RETENER = 'drafts/.retener_hasta.json'
+
+
 def hora_de_salir():
     """Los Reels salen en punto: de 8 a 22 h, cada 2 horas (hora de Ciudad de México)."""
+    if os.path.exists(RETENER):   # {"hasta": segundos}: nada sale antes de esa hora (para no encimar dos Reels)
+        try:
+            if time.time() < float(load(RETENER).get('hasta') or 0):
+                return False
+        except Exception:
+            pass
     h = datetime.now(timezone(timedelta(hours=-6))).hour
     return 8 <= h <= 22 and h % 2 == 0
 
