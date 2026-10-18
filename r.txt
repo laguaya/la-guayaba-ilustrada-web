@@ -1,0 +1,18 @@
+INV https://inv.nadeko.net 403 0 0
+INV https://invidious.nerdvpn.de 401 0 0
+INV https://yewtu.be 403 0 0
+INV https://invidious.f5.si 200 1 200
+INV https://iv.melmac.space ERR HTTPSConnectionPool(host='iv.melmac.space', port=443): Max retries exceeded with
+INV https://invidious.privacyredirect.com 404 0 0
+INV https://inv.tux.pizza ERR HTTPSConnectionPool(host='inv.tux.pizza', port=443): Max retries exceeded with u
+INV https://invidious.jing.rocks ERR HTTPSConnectionPool(host='invidious.jing.rocks', port=443): Max retries exceeded
+INV https://iv.ggtyler.dev ERR HTTPSConnectionPool(host='iv.ggtyler.dev', port=443): Max retries exceeded with 
+INV https://invidious.reallyaweso.me 502 0 0
+PIPED https://pipedapi.kavin.rocks 526 0 0
+PIPED https://pipedapi.adminforge.de 403 0 0
+PIPED https://api.piped.private.coffee 500 0 0
+PIPED https://pipedapi.reallyaweso.me 502 0 0
+PIPED https://piped-api.lunar.icu 502 0 0
+COBALT https://api.cobalt.tools 400 {"status":"error","error":{"code":"error.api.auth.jwt.missing"}}
+COBALT https://cobalt-api.kwiatekmiki.com ERR HTTPSConnectionPool(host='cobalt-api.kwiatekmiki.com', port=443): Max retries ex
+COBALT https://cobalt.canine.tools 405 
