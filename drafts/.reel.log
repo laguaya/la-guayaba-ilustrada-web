@@ -1,9 +1,10 @@
-2026-10-18T15:50:00.438605 rivian-ghostbusters-bill-murray-halloween
+2026-10-18T16:04:28.491358 rivian-ghostbusters-bill-murray-halloween
 ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
 ElevenLabs usó eleven_v4
+Pausas recortadas: 33 9.0s
 Video desde caché: https://www.youtube.com/watch?v=AzErJdWUDTE
 Video av1 -> h264 ok
 Fuente 1 campana 71.2s 24 tomas
 yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: [youtube] Y5ZT7wPQhj8: Video unavailable\nERROR: [youtube] 7Hd_TIEWmH8: Video unavailable\nERROR: [youtube] FrDvg9KhDBY: Video unavailable\n'
-Reel: [(0.0, 6.0, 'video1'), (6.0, 9.0, 'video1'), (9.0, 12.4, 'video1'), (12.4, 14.3, 'video1'), (14.3, 15.4, 'video1'), (15.4, 17.9, 'video1'), (17.9, 22.2, 'video1'), (22.2, 26.6, 'video1'), (26.6, 30.7, 'video1'), (30.7, 32.1, 'video1'), (32.1, 35.6, 'video1'), (35.6, 38.4, 'video1'), (38.4, 39.7, 'video1'), (39.7, 41.9, 'video1'), (41.9, 43.9, 'video1'), (43.9, 45.9, 'video1'), (45.9, 47.4, 'video1'), (47.4, 48.8, 'video1'), (48.8, 50.0, 'video1'), (50.0, 57.4, 'video1'), (57.4, 60.0, 'video1')]
+Reel: [(0.0, 4.9, 'video1'), (4.9, 7.9, 'video1'), (7.9, 10.8, 'video1'), (10.8, 12.6, 'video1'), (12.6, 13.7, 'video1'), (13.7, 16.4, 'video1'), (16.4, 20.9, 'video1'), (20.9, 24.7, 'video1'), (24.7, 28.8, 'video1'), (28.8, 30.2, 'video1'), (30.2, 33.7, 'video1'), (33.7, 36.2, 'video1'), (36.2, 37.4, 'video1'), (37.4, 39.5, 'video1'), (39.5, 42.1, 'video1'), (42.1, 42.8, 'video1'), (42.8, 44.3, 'video1'), (44.3, 45.7, 'video1'), (45.7, 47.4, 'video1'), (47.4, 48.7, 'video1'), (48.7, 57.4, 'video1'), (57.4, 60.0, 'video1')]
 
