@@ -246,6 +246,23 @@ def siguiente_vuelta():
 REHACER = 'drafts/.rehacer_reel.json'   # notas publicadas a las que hay que rehacerles el Reel (lo pide Claude)
 
 
+REENVIAR = 'drafts/.reenviar_reel.json'   # Reels ya armados que hay que volver a mandar a Telegram (sin rehacerlos)
+
+
+def enviar_reel(nid, titulo=None):
+    out = f'assets/ig/{nid}/reel.mp4'
+    if not os.path.exists(out):
+        tg('sendMessage', chat_id=CHAT, text=f'⚠️ No encontré el Reel de {nid}.')
+        return
+    n, _ = note_get(nid)
+    with open(out, 'rb') as f:
+        r = tg('sendVideo', files={'video': f}, chat_id=CHAT, supports_streaming='true', width=1080, height=1920,
+               caption=f'🎬 Reel: {(titulo or (n or {}).get("t") or nid)[:120]}\nSi te gusta, súbelo con el botón.',
+               reply_markup={'inline_keyboard': [[{'text': '📲 Subir este Reel a Instagram', 'callback_data': f'subreel:{nid}'}]]})
+    if r.get('ok'):
+        remember(r['result']['message_id'], nid)
+
+
 def rehacer_reel(nid):
     """Vuelve a armar el Reel de una nota ya publicada y lo manda a Telegram con botón para subirlo."""
     n, _ = note_get(nid)
@@ -1574,6 +1591,11 @@ def listen(hours=5.6):
                 ids = load(REHACER); os.remove(REHACER)
                 for rid in ids:
                     rehacer_reel(rid)
+                changed = True
+            if os.path.exists(REENVIAR):
+                ids = load(REENVIAR); os.remove(REENVIAR)
+                for rid in ids:
+                    enviar_reel(rid)
                 changed = True
             send_pending()
             poll()
