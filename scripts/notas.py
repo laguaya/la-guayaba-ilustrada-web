@@ -1370,7 +1370,7 @@ def publish_reel(item, api, uid, tok, site):
             break
         if st.get('status_code') == 'ERROR':
             raise RuntimeError(st)
-        time.sleep(8)
+        time.sleep(15)
     pub = requests.post(f'{api}/{uid}/media_publish', data={'creation_id': c['id'], 'access_token': tok}, timeout=60).json()
     if 'id' not in pub:
         raise RuntimeError(pub)
@@ -1424,6 +1424,36 @@ def publish_anim(item, api, uid, tok, site):
         raise RuntimeError(pub)
 
 
+IG_ULTIMO = 'drafts/.ig_ultimo.json'
+IG_ESPACIO = 8 * 60          # mínimo entre dos publicaciones en Instagram (si no, Meta las bloquea por spam)
+
+
+def limite_ig(e):
+    s = str(e)
+    return any(k in s for k in ("'code': 4,", "'code': 17,", "'code': 32,", "'code': 613", '2207051', '2207042',
+                                'request limit', "'is_transient': True", 'action is blocked'))
+
+
+def reintentar_ig(item, e, que):
+    """Programa otro intento en vez de rendirse. Regresa True si se vuelve a intentar."""
+    if limite_ig(e):
+        item['esperas'] = item.get('esperas', 0) + 1
+        if item['esperas'] > 8:
+            tg('sendMessage', chat_id=CHAT, text=f'⚠️ Instagram sigue sin dejarme publicar {que} después de varias horas. Avísame y lo reviso.', reply_to_message_id=item.get('reply'))
+            return False
+        espera = min(30 * 2 ** (item['esperas'] - 1), 180)
+        item['despues'] = time.time() + espera * 60
+        if item['esperas'] == 1:
+            tg('sendMessage', chat_id=CHAT, text=f'⏳ Instagram pidió esperar un poco antes de publicar {que}. Lo subo solo en unos {espera} minutos; no tienes que hacer nada.', reply_to_message_id=item.get('reply'))
+        return True
+    item['intentos'] = item.get('intentos', 0) + 1
+    if item['intentos'] < 4:
+        item['despues'] = time.time() + 10 * 60
+        return True
+    tg('sendMessage', chat_id=CHAT, text=f'⚠️ No pude publicar {que} en Instagram ({str(e)[:300]}).', reply_to_message_id=item.get('reply'))
+    return False
+
+
 def instagram():
     """Publica los carruseles en cola usando la API oficial de Instagram."""
     import time
@@ -1436,19 +1466,24 @@ def instagram():
         return
     api = os.environ.get('IG_API', 'https://graph.instagram.com/v21.0')
     site = os.environ.get('SITE', 'https://guayabailustrada.com.mx')
+    antes = json.dumps(q, sort_keys=True)
     rest = []
+    ult = load(IG_ULTIMO).get('t', 0) if os.path.exists(IG_ULTIMO) else 0
     for item in q:
+        # Instagram bloquea si se publica muy seguido: espera entre publicaciones y respeta los reintentos programados
+        if time.time() < float(item.get('despues') or 0) or time.time() - ult < IG_ESPACIO:
+            rest.append(item)
+            continue
+        ult = time.time()
+        save(IG_ULTIMO, {'t': ult})
         if item.get('kind') == 'reel':
             try:
                 publish_reel(item, api, uid, tok, site)
                 tg('sendMessage', chat_id=CHAT, text='🎬 Listo, el Reel ya está publicado en Instagram.', reply_to_message_id=item.get('reply'))
             except Exception as e:
                 print('Reel falló:', e, file=sys.stderr)
-                item['intentos'] = item.get('intentos', 0) + 1
-                if item['intentos'] < 3:
+                if reintentar_ig(item, e, 'el Reel'):
                     rest.append(item)
-                else:
-                    tg('sendMessage', chat_id=CHAT, text=f'⚠️ No pude publicar el Reel en Instagram ({str(e)[:300]}).', reply_to_message_id=item.get('reply'))
             continue
         if item.get('animado'):
             try:
@@ -1484,18 +1519,17 @@ def instagram():
                 st = requests.get(f'{api}/{car["id"]}', params={'fields': 'status_code', 'access_token': tok}, timeout=30).json()
                 if st.get('status_code') == 'FINISHED':
                     break
-                time.sleep(6)
+                time.sleep(12)
             pub = requests.post(f'{api}/{uid}/media_publish', data={'creation_id': car['id'], 'access_token': tok}, timeout=60).json()
             if 'id' not in pub:
                 raise RuntimeError(pub)
             tg('sendMessage', chat_id=CHAT, text='📲 Listo, el carrusel ya está publicado en Instagram.', reply_to_message_id=item.get('reply'))
         except Exception as e:
             print('Instagram falló:', e, file=sys.stderr)
-            item['intentos'] = item.get('intentos', 0) + 1
-            if item['intentos'] < 3:
+            if reintentar_ig(item, e, 'el carrusel'):
                 rest.append(item)
-            else:
-                tg('sendMessage', chat_id=CHAT, text=f'⚠️ No pude publicar el carrusel en Instagram ({str(e)[:300]}). Súbelo a mano con las imágenes de arriba.', reply_to_message_id=item.get('reply'))
+    if json.dumps(rest, sort_keys=True) == antes:
+        return                                   # solo esperando: nada cambió, no hace falta commit
     if rest:
         save(IGQ, rest)
     else:
