@@ -34,20 +34,65 @@ def duracion(ruta):
         return 0.0
 
 
+_CFG = {}
+
+
+def _eleven_config(clave):
+    """Voz y modelo de ElevenLabs. La voz se busca por nombre ("Sergio noticias") si no hay ELEVENLABS_VOICE_ID;
+    el modelo es el más nuevo disponible (Eleven v4) si no hay ELEVENLABS_MODEL."""
+    import requests
+    if _CFG:
+        return _CFG['voz'], _CFG['modelo']
+    h = {'xi-api-key': clave}
+    voz = os.environ.get('ELEVENLABS_VOICE_ID')
+    if not voz:
+        nombre = os.environ.get('ELEVENLABS_VOICE_NAME', 'Sergio noticias').lower()
+        try:
+            r = requests.get('https://api.elevenlabs.io/v2/voices', headers=h, params={'search': nombre, 'page_size': 50}, timeout=30)
+            vs = r.json().get('voices', []) if r.status_code == 200 else []
+            if r.status_code != 200:
+                print('ElevenLabs voces:', r.status_code, r.text[:200], file=sys.stderr)
+                ELEVEN_ERROR[0] = f'voces {r.status_code}: {r.text[:150]}'
+            voz = next((v['voice_id'] for v in vs if v.get('name', '').lower() == nombre), None) or \
+                next((v['voice_id'] for v in vs if nombre in v.get('name', '').lower()), None)
+        except Exception as e:
+            print('ElevenLabs voces:', e, file=sys.stderr)
+    modelo = os.environ.get('ELEVENLABS_MODEL')
+    if not modelo:
+        modelo = 'eleven_multilingual_v2'
+        try:
+            r = requests.get('https://api.elevenlabs.io/v1/models', headers=h, timeout=30)
+            ids = [m.get('model_id', '') for m in r.json()] if r.status_code == 200 else []
+            for preferido in ('eleven_v4', 'eleven_v3', 'eleven_multilingual_v2'):
+                cand = [i for i in ids if i.startswith(preferido)]
+                if cand:
+                    modelo = sorted(cand, key=len)[0]
+                    break
+        except Exception as e:
+            print('ElevenLabs modelos:', e, file=sys.stderr)
+    print('ElevenLabs: voz', voz, 'modelo', modelo, file=sys.stderr)
+    _CFG.update(voz=voz, modelo=modelo)
+    return voz, modelo
+
+
 def elevenlabs(texto, salida):
     """Voz de ElevenLabs con tiempos por letra (para los subtítulos). Regresa (palabras, duración) o None."""
     import base64, requests
-    clave, voz = os.environ.get('ELEVENLABS_API_KEY'), os.environ.get('ELEVENLABS_VOICE_ID')
-    if not (clave and voz):
+    clave = os.environ.get('ELEVENLABS_API_KEY')
+    if not clave:
         return None
-    modelo = os.environ.get('ELEVENLABS_MODEL', 'eleven_multilingual_v2')
+    voz, modelo = _eleven_config(clave)
+    if not voz:
+        return None
     try:
         r = requests.post(f'https://api.elevenlabs.io/v1/text-to-speech/{voz}/with-timestamps',
                           params={'output_format': 'mp3_44100_128'},
                           headers={'xi-api-key': clave, 'Content-Type': 'application/json'},
                           json={'text': texto, 'model_id': modelo,
-                                'voice_settings': {'stability': 0.45, 'similarity_boost': 0.8, 'style': 0.25,
-                                                   'use_speaker_boost': True}}, timeout=120)
+                                'voice_settings': {'stability': float(os.environ.get('ELEVENLABS_STABILITY', '0.5')),
+                                                   'similarity_boost': float(os.environ.get('ELEVENLABS_SIMILARITY', '0.75')),
+                                                   'speed': float(os.environ.get('ELEVENLABS_SPEED', '1.0')),
+                                                   'use_speaker_boost': True}}, timeout=180)
         if r.status_code != 200:
             print('ElevenLabs:', r.status_code, r.text[:300], file=sys.stderr)
             ELEVEN_ERROR[0] = f'{r.status_code}: {r.text[:200]}'

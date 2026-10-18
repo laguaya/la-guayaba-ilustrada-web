@@ -87,16 +87,10 @@
    }
   ],
   "pronunciar": {
-   "Bill Murray": "Bil Mórrei",
-   "Halloween": "Jálouin",
    "Slimer": "Sláimer",
    "Venkman": "Vénkman",
-   "Ecto R1": "Ecto ar uán",
-   "Rivian": "Rívian",
-   "Gil Kenan": "Guil Kínan",
-   "Ghostbusters": "Góstbosters"
-  },
-  "voz_audio": "drafts/voces/rivian-ghostbusters-bill-murray-halloween.mp3"
+   "Ecto R1": "Ecto ar uán"
+  }
  },
  "yt": "AzErJdWUDTE",
  "auto_video": true,
