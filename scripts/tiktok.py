@@ -20,7 +20,7 @@ def configurado():
 
 def _fernet():
     from cryptography.fernet import Fernet
-    k = hashlib.sha256(('lgi-tiktok:' + os.environ['TIKTOK_CLIENT_SECRET']).encode()).digest()
+    k = hashlib.sha256(('lgi-tiktok:' + os.environ['TIKTOK_CLIENT_SECRET'].strip()).encode()).digest()
     return Fernet(base64.urlsafe_b64encode(k))
 
 
@@ -42,13 +42,13 @@ def conectado():
 
 
 def link_autorizacion():
-    q = {'client_key': os.environ['TIKTOK_CLIENT_KEY'], 'scope': SCOPES, 'response_type': 'code',
+    q = {'client_key': os.environ['TIKTOK_CLIENT_KEY'].strip(), 'scope': SCOPES, 'response_type': 'code',
          'redirect_uri': REDIRECT, 'state': hashlib.sha1(str(time.time()).encode()).hexdigest()[:16]}
     return 'https://www.tiktok.com/v2/auth/authorize/?' + urllib.parse.urlencode(q)
 
 
 def _token_req(data):
-    data.update(client_key=os.environ['TIKTOK_CLIENT_KEY'], client_secret=os.environ['TIKTOK_CLIENT_SECRET'])
+    data.update(client_key=os.environ['TIKTOK_CLIENT_KEY'].strip(), client_secret=os.environ['TIKTOK_CLIENT_SECRET'].strip())
     r = requests.post(f'{API}/oauth/token/', data=data, timeout=60,
                       headers={'Content-Type': 'application/x-www-form-urlencoded'}).json()
     if not r.get('access_token'):
