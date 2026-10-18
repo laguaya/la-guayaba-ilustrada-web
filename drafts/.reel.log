@@ -1,24 +1,22 @@
-2026-10-18T18:39:55.462439 vaca-que-rie-deja-de-sonreir-empaque
+2026-10-18T19:37:34.258271 twix-hallowmas-zombie-claus
+ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
 ElevenLabs usó eleven_v4
-Pausas recortadas: 22 5.0s
-Caché guardada: https://www.youtube.com/watch?v=dvllc3Qen4w 201
+Pausas recortadas: 23 6.6s
+Fuente 1 campana 40.0s 12 tomas
+Caché guardada: https://www.instagram.com/reel/DeHWLbTTiY9/ 201
+Video vp9 -> h264 ok
+Fuente 2 https://www.instagram.com/reel/DeHWLbTTiY9/ 40.0s 12 tomas
+Caché guardada: https://www.instagram.com/reel/Ddth2RjTyX9/ 201
+Video vp9 -> h264 ok
+Fuente 3 https://www.instagram.com/reel/Ddth2RjTyX9/ 32.4s 11 tomas
+Caché guardada: https://www.youtube.com/watch?v=idCTFaiE5_Y 201
 Video av1 -> h264 ok
-Fuente 4 campana 30.0s 14 tomas
-yt-dlp default : b'ed-in. Use --cookies, --cookies-from-browser, --username and --password, --netrc-cmd, or --netrc (vimeo) to provide account credentials. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies\n'
-yt-dlp default : b'ed-in. Use --cookies, --cookies-from-browser, --username and --password, --netrc-cmd, or --netrc (vimeo) to provide account credentials. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies\n'
-Caché guardada: https://www.youtube.com/watch?v=TMaLTm9YTpo 201
-Video av1 -> h264 ok
-Fuente 5 https://www.youtube.com/watch?v=TMaLTm9YTpo 75.8s 43 tomas
-Caché guardada: https://www.youtube.com/watch?v=8mhIs-XURok 201
-Video av1 -> h264 ok
-Fuente 6 https://www.youtube.com/watch?v=8mhIs-XURok 7.8s 1 tomas
-Caché guardada: https://www.instagram.com/reel/Ddley56DiKj/ 201
-Fuente 7 https://www.instagram.com/reel/Ddley56DiKj/ 17.1s 3 tomas
-Caché guardada: https://www.instagram.com/reel/Dd4kYNfnaOt/ 201
-Fuente 8 https://www.instagram.com/reel/Dd4kYNfnaOt/ 30.1s 14 tomas
-Caché guardada: https://www.instagram.com/reel/DdubbcLtsS7/ 201
-Fuente 9 https://www.instagram.com/reel/DdubbcLtsS7/ 10.1s 2 tomas
-Caché guardada: https://www.instagram.com/reel/DdlhrWlgtgl/ 201
-Fuente 10 https://www.instagram.com/reel/DdlhrWlgtgl/ 17.1s 3 tomas
-Reel: [(0.0, 2.0, 'video4'), (2.0, 3.2, 'video4'), (3.2, 4.3, 'video4'), (4.3, 8.1, 'video4'), (8.1, 11.7, 'video4'), (11.7, 14.4, 'video4'), (14.4, 16.6, 'video4'), (16.6, 20.4, 'video7'), (20.4, 24.3, 'video6'), (24.3, 25.6, 'video5'), (25.6, 27.1, 'video4'), (27.1, 28.9, 'video4'), (28.9, 30.9, 'video8'), (30.9, 32.4, 'video4'), (32.4, 37.5, 'video9'), (37.5, 40.1, 'video4'), (40.1, 42.0, 'video4'), (42.0, 46.4, 'video10'), (46.4, 48.0, 'video4'), (48.0, 51.7, 'video4'), (51.7, 60.0, 'video4')]
+Fuente 4 https://www.youtube.com/watch?v=idCTFaiE5_Y 15.1s 5 tomas
+Caché guardada: https://www.instagram.com/reel/Dd_p1tjKVOZ/ 201
+Video vp9 -> h264 ok
+Fuente 5 https://www.instagram.com/reel/Dd_p1tjKVOZ/ 126.2s 64 tomas
+Caché guardada: https://www.instagram.com/reel/DeCSYlGzJsD/ 201
+Video vp9 -> h264 ok
+Fuente 6 https://www.instagram.com/reel/DeCSYlGzJsD/ 22.2s 8 tomas
+Reel: [(0.0, 4.0, 'video1'), (4.0, 5.6, 'video1'), (5.6, 8.4, 'video1'), (8.4, 9.9, 'video1'), (9.9, 13.7, 'video1'), (13.7, 18.7, 'video1'), (18.7, 22.9, 'video3'), (22.9, 26.0, 'video4'), (26.0, 27.5, 'video1'), (27.5, 29.8, 'video5'), (29.8, 32.5, 'video1'), (32.5, 36.2, 'video6'), (36.2, 39.8, 'video1'), (39.8, 41.0, 'video1'), (41.0, 42.7, 'video1'), (42.7, 45.5, 'video1'), (45.5, 48.6, 'video1'), (48.6, 49.7, 'video2'), (49.7, 54.8, 'video2'), (54.8, 60.0, 'video1')]
 
