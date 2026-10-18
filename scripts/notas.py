@@ -573,6 +573,8 @@ def build_reel(n):
         raise
     finally:
         sys.stderr.write(buf.getvalue())
+        with open('drafts/.reel.log', 'w') as f:      # último Reel: qué voz, qué videos y qué tramos usó
+            f.write(f'{datetime.now().isoformat()} {n["id"]}\n{buf.getvalue()[-4000:]}\n')
     return out
 
 
