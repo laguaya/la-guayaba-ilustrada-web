@@ -1,0 +1,15 @@
+360p video/mp4; codecs="a {} 200 text/html; charset=utf-8 None https://invidious.f5.si/videoplayback?expire=1792312280&ei=eC_UasKfEvWDvcAPlLiNiAg&ip=124.
+360p video/mp4; codecs="a {'Range': 'bytes=0-'} 200 text/html; charset=utf-8 None https://invidious.f5.si/videoplayback?expire=1792312280&ei=eC_UasKfEvWDvcAPlLiNiAg&ip=124.
+None audio/mp4; codecs="m {} 200 text/html; charset=utf-8 None https://invidious.f5.si/videoplayback?expire=1792312280&ei=eC_UasKfEvWDvcAPlLiNiAg&ip=124.
+None audio/mp4; codecs="m {'Range': 'bytes=0-'} 200 text/html; charset=utf-8 None https://invidious.f5.si/videoplayback?expire=1792312280&ei=eC_UasKfEvWDvcAPlLiNiAg&ip=124.
+None audio/mp4; codecs="m {} 200 text/html; charset=utf-8 None https://invidious.f5.si/videoplayback?expire=1792312280&ei=eC_UasKfEvWDvcAPlLiNiAg&ip=124.
+None audio/mp4; codecs="m {'Range': 'bytes=0-'} 200 text/html; charset=utf-8 None https://invidious.f5.si/videoplayback?expire=1792312280&ei=eC_UasKfEvWDvcAPlLiNiAg&ip=124.
+None audio/webm; codecs=" {} 200 text/html; charset=utf-8 None https://invidious.f5.si/videoplayback?expire=1792312280&ei=eC_UasKfEvWDvcAPlLiNiAg&ip=124.
+None audio/webm; codecs=" {'Range': 'bytes=0-'} 200 text/html; charset=utf-8 None https://invidious.f5.si/videoplayback?expire=1792312280&ei=eC_UasKfEvWDvcAPlLiNiAg&ip=124.
+None audio/webm; codecs=" {} 200 text/html; charset=utf-8 None https://invidious.f5.si/videoplayback?expire=1792312280&ei=eC_UasKfEvWDvcAPlLiNiAg&ip=124.
+None audio/webm; codecs=" {'Range': 'bytes=0-'} 200 text/html; charset=utf-8 None https://invidious.f5.si/videoplayback?expire=1792312280&ei=eC_UasKfEvWDvcAPlLiNiAg&ip=124.
+None audio/webm; codecs=" {} 200 text/html; charset=utf-8 None https://invidious.f5.si/videoplayback?expire=1792312280&ei=eC_UasKfEvWDvcAPlLiNiAg&ip=124.
+None audio/webm; codecs=" {'Range': 'bytes=0-'} 200 text/html; charset=utf-8 None https://invidious.f5.si/videoplayback?expire=1792312280&ei=eC_UasKfEvWDvcAPlLiNiAg&ip=124.
+https://invidious.f5.si/videoplayback?expire=1792312280&ei=eC_UasKfEvWDvcAPlLiNiAg&ip=124.209.226.195&id=o-AHd9iko0ybtA_-JkdVGqAFYqF_A7aCxgSNFbPNbrt4UG&itag=250&source=youtube&requiressl=yes&xpc=EgVo2
+/latest_version?id=AzErJdWUDTE&itag=18&local=true 200 text/html; charset=utf-8 None
+/latest_version?id=AzErJdWUDTE&itag=137&local=true 200 text/html; charset=utf-8 None
