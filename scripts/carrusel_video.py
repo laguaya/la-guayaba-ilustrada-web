@@ -28,7 +28,7 @@ def _video(fn, data, n, ruta, dur=None):
     dur = dur or DUR
     cmd = ['ffmpeg', '-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', str(FPS), '-c:v', 'mjpeg', '-i', '-',
            '-f', 'lavfi', '-i', 'anullsrc=r=44100:cl=stereo', '-shortest',
-           '-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-pix_fmt', 'yuv420p', '-profile:v', 'high',
+           '-c:v', 'libx264', '-preset', 'medium', '-crf', '18', '-maxrate', '6000k', '-bufsize', '12000k', '-pix_fmt', 'yuv420p', '-profile:v', 'high',
            '-c:a', 'aac', '-b:a', '64k', '-movflags', '+faststart', ruta]
     pr = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     quieto = None

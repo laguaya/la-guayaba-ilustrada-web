@@ -648,7 +648,10 @@ def make(data, out):
               file=sys.stderr)
         G = [g for g in grupos(palabras)]
         cmd = ['ffmpeg', '-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', str(FPS), '-c:v', 'mjpeg', '-i', '-']
-        pr = subprocess.Popen(cmd + ['-c:v', 'libx264', '-preset', 'medium', '-crf', '20', '-pix_fmt', 'yuv420p',
+        # tope de bitrate: el Reel de 1 minuto queda en ~18 MB (Cloudflare Pages rechaza archivos de más de 25 MB
+        # y si uno se pasa, la página entera deja de actualizarse)
+        pr = subprocess.Popen(cmd + ['-c:v', 'libx264', '-preset', 'medium', '-crf', '22', '-maxrate', '2300k', '-bufsize', '4600k',
+                                     '-pix_fmt', 'yuv420p',
                                      '-r', str(FPS), f'{tmp}/video.mp4'], stdin=subprocess.PIPE)
         ti = 0
         for i in range(int(round(total * FPS))):
@@ -715,6 +718,11 @@ def make(data, out):
             cmd += ['-filter_complex', ';'.join(filtros), '-map', '0:v', '-map', '[a]', '-c:a', 'aac', '-b:a', '192k']
         cmd += ['-c:v', 'copy', '-t', f'{total:.3f}', '-movflags', '+faststart', out]
         subprocess.run(cmd, check=True)
+        if os.path.getsize(out) > 22 * 1024 * 1024:     # seguro extra: nunca más de 22 MB
+            subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', out, '-c:v', 'libx264', '-preset', 'medium', '-b:v', '2000k',
+                            '-maxrate', '2000k', '-bufsize', '4000k', '-pix_fmt', 'yuv420p', '-c:a', 'copy',
+                            '-movflags', '+faststart', f'{tmp}/chico.mp4'], check=True)
+            shutil.move(f'{tmp}/chico.mp4', out)
         return out
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
