@@ -621,9 +621,17 @@ def reservar_reel(nid, si=True):
     save(REEL, st)
 
 
+def hora_de_salir():
+    """Los Reels salen en punto: de 8 a 22 h, cada 2 horas (hora de Ciudad de México)."""
+    h = datetime.now(timezone(timedelta(hours=-6))).hour
+    return 8 <= h <= 22 and h % 2 == 0
+
+
 def send_reel(n):
     try:
-        out = build_reel(n)
+        out = f'assets/ig/{n["id"]}/reel.mp4'
+        if not (n.get('reel_listo') and os.path.exists(out)):
+            out = build_reel(n)
     except Exception as e:
         print('Reel:', e, file=sys.stderr)
         tg('sendMessage', chat_id=CHAT, text=f'⚠️ No pude armar el Reel: {str(e)[:200]}')
@@ -978,6 +986,24 @@ def send_pending():
                 if otra != n['id']:
                     PREVIEW.add(otra)
             n = load(path)
+        if n.get('ig') and not n.get('urgente') and not hora_de_salir():
+            # se arma el Reel antes y se manda a Telegram en punto (8, 10, 12, 14, 16, 18, 20 y 22 h)
+            if not n.get('reel_listo'):
+                if 'reel' not in n and toca_reel(n):
+                    n['reel'] = True
+                    reservar_reel(n['id'])
+                if n.get('reel'):
+                    try:
+                        build_reel(n)
+                    except Exception as e:
+                        print('Reel (previo):', e, file=sys.stderr)
+                        n['reel'] = False
+                        reservar_reel(n['id'], False)
+                n['reel_listo'] = True
+                n.pop('_data', None)
+                save(path, n)
+                changed = True
+            continue
         cap = (f'<b>Nota nueva para revisar</b> · {esc(n["k"])}\n🖼 <i>Esta es la portada que tendrá en la web.</i>\n\n'
                f'<b>{esc(n["t"])}</b>\n<i>{esc(n["x"])}</i>')
         if n.get('auto_video'):
