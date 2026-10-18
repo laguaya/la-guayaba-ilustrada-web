@@ -10,3 +10,19 @@ Traceback (most recent call last):
     raise RuntimeError('La nota no tiene video de la campaña para el Reel')
 RuntimeError: La nota no tiene video de la campaña para el Reel
 
+2026-10-18T03:48:59.182529 reel rivian-ghostbusters-bill-murray-halloween
+ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
+ElevenLabs usó eleven_v4
+yt-dlp: b' also be missing\nERROR: [youtube] AzErJdWUDTE: Sign in to confirm you\xe2\x80\x99re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies\n'
+Invidious https://invidious.f5.si 500
+Invidious https://inv.nadeko.net 403
+Invidious https://yewtu.be 403
+Invidious https://invidious.nerdvpn.de 401
+
+Traceback (most recent call last):
+  File "/home/runner/work/la-guayaba-ilustrada-web/la-guayaba-ilustrada-web/scripts/notas.py", line 569, in build_reel
+    reel.make(data, out)
+  File "/home/runner/work/la-guayaba-ilustrada-web/la-guayaba-ilustrada-web/scripts/reel.py", line 763, in make
+    raise RuntimeError('La nota no tiene video de la campaña para el Reel')
+RuntimeError: La nota no tiene video de la campaña para el Reel
+

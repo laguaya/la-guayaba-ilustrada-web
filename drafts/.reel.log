@@ -1,7 +1,9 @@
-2026-10-18T03:42:25.570309 rivian-ghostbusters-bill-murray-halloween
+2026-10-18T03:48:59.183654 rivian-ghostbusters-bill-murray-halloween
 ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
 ElevenLabs usó eleven_v4
-Fuente 1 campana 71.3s 24 tomas
-yt-dlp: b'WARNING: [generic] Falling back on generic information extractor\nERROR: [youtube] Y5ZT7wPQhj8: Video unavailable\nERROR: [youtube] 7Hd_TIEWmH8: Video unavailable\nERROR: [youtube] FrDvg9KhDBY: Video unavailable\n'
-Reel: [(0.0, 5.9, 'video1'), (5.9, 8.8, 'video1'), (8.8, 12.1, 'video1'), (12.1, 14.0, 'video1'), (14.0, 15.1, 'video1'), (15.1, 17.7, 'foto'), (17.7, 22.0, 'foto'), (22.0, 26.3, 'video1'), (26.3, 31.7, 'video1'), (31.7, 35.4, 'video1'), (35.4, 39.6, 'video1'), (39.6, 43.7, 'video1'), (43.7, 45.6, 'video1'), (45.6, 48.4, 'video1'), (48.4, 50.8, 'video1'), (50.8, 52.3, 'video1'), (52.3, 54.3, 'video1'), (54.3, 56.0, 'video1'), (56.0, 57.5, 'video1'), (57.5, 60.0, 'video1')]
+yt-dlp: b' also be missing\nERROR: [youtube] AzErJdWUDTE: Sign in to confirm you\xe2\x80\x99re not a bot. Use --cookies-from-browser or --cookies for the authentication. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies. Also see  https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies  for tips on effectively exporting YouTube cookies\n'
+Invidious https://invidious.f5.si 500
+Invidious https://inv.nadeko.net 403
+Invidious https://yewtu.be 403
+Invidious https://invidious.nerdvpn.de 401
 
