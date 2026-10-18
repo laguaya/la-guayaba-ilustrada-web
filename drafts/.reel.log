@@ -1,14 +1,16 @@
-2026-10-18T21:31:18.570462 meltwater-kim-cattrall-intelligence-in-style
-ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
+2026-10-18T23:36:44.875792 pringles-urna-lata-reel-once-you-drop
 ElevenLabs usó eleven_v4
-Pausas recortadas: 21 7.0s
-Caché guardada: https://www.youtube.com/watch?v=jYz7QQ5dojQ 201
-Fuente 1 campana 32.9s 8 tomas
-Caché guardada: https://www.youtube.com/watch?v=rSPz_KyQZwk 201
+Pausas recortadas: 24 6.6s
+Caché guardada: https://www.youtube.com/watch?v=0Hhys3lVZpI 201
 Video av1 -> h264 ok
-Fuente 2 https://www.youtube.com/watch?v=rSPz_KyQZwk 32.6s 9 tomas
-Caché guardada: https://www.youtube.com/watch?v=OWYy8FPG-G8 201
-Fuente 3 https://www.youtube.com/watch?v=OWYy8FPG-G8 30.7s 9 tomas
-yt-dlp default : b'ed-in. Use --cookies, --cookies-from-browser, --username and --password, --netrc-cmd, or --netrc (vimeo) to provide account credentials. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies\n'
-Reel: [(0.0, 3.6, 'video1'), (3.6, 4.9, 'video1'), (4.9, 9.6, 'video1'), (9.6, 14.5, 'video1'), (14.5, 18.8, 'video2'), (18.8, 20.4, 'video3'), (20.4, 23.8, 'video1'), (23.8, 26.5, 'video1'), (26.5, 28.6, 'video1'), (28.6, 30.1, 'video1'), (30.1, 34.7, 'video1'), (34.7, 36.1, 'video2'), (36.1, 38.8, 'video1'), (38.8, 43.0, 'video3'), (43.0, 47.3, 'video2'), (47.3, 49.6, 'video2'), (49.6, 52.1, 'video2'), (52.1, 53.3, 'video2'), (53.3, 60.0, 'video1')]
+Fuente 4 campana 92.3s 31 tomas
+Caché guardada: https://www.youtube.com/watch?v=Wy71k_h2XSA 201
+Video av1 -> h264 ok
+Fuente 5 https://www.youtube.com/watch?v=Wy71k_h2XSA 24.5s 5 tomas
+Caché guardada: https://www.instagram.com/reel/Deb3iQPNtCy/ 201
+Fuente 6 https://www.instagram.com/reel/Deb3iQPNtCy/ 92.3s 31 tomas
+Caché guardada: https://www.instagram.com/reel/DecZ4fwPb-m/ 201
+Video vp9 -> h264 ok
+Fuente 7 https://www.instagram.com/reel/DecZ4fwPb-m/ 42.8s 8 tomas
+Reel: [(0.0, 4.1, 'video4'), (4.1, 5.9, 'video4'), (5.9, 7.6, 'video4'), (7.6, 9.2, 'video4'), (9.2, 10.9, 'video4'), (10.9, 14.4, 'video6'), (14.4, 15.5, 'video4'), (15.5, 17.7, 'video4'), (17.7, 20.7, 'video4'), (20.7, 21.1, 'video4'), (21.1, 25.4, 'video5'), (25.4, 27.5, 'video4'), (27.5, 32.4, 'video4'), (32.4, 36.8, 'video7'), (36.8, 40.2, 'video4'), (40.2, 43.5, 'video4'), (43.5, 45.1, 'video4'), (45.1, 46.5, 'video4'), (46.5, 50.6, 'video4'), (50.6, 60.0, 'video4')]
 
