@@ -1,5 +1,16 @@
-2026-10-18T18:28:09.392024 aora-mexico-maquillaje-sin-plastico-time
+2026-10-18T18:34:49.193740 aora-mexico-maquillaje-sin-plastico-time
 ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
 ElevenLabs usó eleven_v4
-Pausas recortadas: 18 5.6s
+Pausas recortadas: 20 5.4s
+Caché guardada: https://www.youtube.com/watch?v=Lrb2eSAFw7g 201
+Video principal (de apoyo): https://www.youtube.com/watch?v=Lrb2eSAFw7g
+Fuente 1 campana 2942.1s 162 tomas
+Video desde caché: https://www.youtube.com/watch?v=Lrb2eSAFw7g
+Fuente 2 https://www.youtube.com/watch?v=Lrb2eSAFw7g 2942.1s 162 tomas
+yt-dlp default : b'on using  yt-dlp -U\nERROR: [Instagram] DehZ6mGB-TA: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U\n'
+Caché guardada: https://www.instagram.com/p/DeiGg5juH7S/ 201
+Video vp9 -> h264 ok
+Fuente 3 https://www.instagram.com/p/DeiGg5juH7S/ 120.7s 57 tomas
+yt-dlp default : b'on using  yt-dlp -U\nERROR: [Instagram] DF6AQjZSzfO: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U\n'
+Reel: [(0.0, 4.3, 'video1'), (4.3, 8.2, 'video1'), (8.2, 12.4, 'video1'), (12.4, 16.1, 'video2'), (16.1, 22.9, 'video1'), (22.9, 27.2, 'video1'), (27.2, 31.9, 'video1'), (31.9, 33.0, 'video3'), (33.0, 38.8, 'video1'), (38.8, 43.3, 'video1'), (43.3, 48.3, 'video1'), (48.3, 52.9, 'video1'), (52.9, 57.7, 'video1'), (57.7, 60.0, 'video1')]
 
