@@ -35,6 +35,7 @@ def duracion(ruta):
 
 
 _CFG = {}
+VOZ_SERGIO = 'l2MzrQUmaydmQn5rFHJV'   # "Sergio noticias" en la cuenta de ElevenLabs de Sergio
 
 
 def _eleven_config(clave):
@@ -44,7 +45,7 @@ def _eleven_config(clave):
     if _CFG:
         return _CFG['voz'], _CFG['modelo']
     h = {'xi-api-key': clave}
-    voz = os.environ.get('ELEVENLABS_VOICE_ID')
+    voz = os.environ.get('ELEVENLABS_VOICE_ID') or VOZ_SERGIO
     if not voz:
         nombre = os.environ.get('ELEVENLABS_VOICE_NAME', 'Sergio noticias').lower()
         try:
@@ -59,7 +60,7 @@ def _eleven_config(clave):
             print('ElevenLabs voces:', e, file=sys.stderr)
     modelo = os.environ.get('ELEVENLABS_MODEL')
     if not modelo:
-        modelo = 'eleven_multilingual_v2'
+        modelo = None                                 # si no se pueden leer los modelos, se prueba v4 -> v3 -> v2
         try:
             r = requests.get('https://api.elevenlabs.io/v1/models', headers=h, timeout=30)
             ids = [m.get('model_id', '') for m in r.json()] if r.status_code == 200 else []
@@ -85,14 +86,19 @@ def elevenlabs(texto, salida):
     if not voz:
         return None
     try:
-        r = requests.post(f'https://api.elevenlabs.io/v1/text-to-speech/{voz}/with-timestamps',
-                          params={'output_format': 'mp3_44100_128'},
-                          headers={'xi-api-key': clave, 'Content-Type': 'application/json'},
-                          json={'text': texto, 'model_id': modelo,
-                                'voice_settings': {'stability': float(os.environ.get('ELEVENLABS_STABILITY', '0.5')),
-                                                   'similarity_boost': float(os.environ.get('ELEVENLABS_SIMILARITY', '0.75')),
-                                                   'speed': float(os.environ.get('ELEVENLABS_SPEED', '1.0')),
-                                                   'use_speaker_boost': True}}, timeout=180)
+        for modelo in ([modelo] if modelo else ['eleven_v4', 'eleven_v3', 'eleven_multilingual_v2']):
+            r = requests.post(f'https://api.elevenlabs.io/v1/text-to-speech/{voz}/with-timestamps',
+                              params={'output_format': 'mp3_44100_128'},
+                              headers={'xi-api-key': clave, 'Content-Type': 'application/json'},
+                              json={'text': texto, 'model_id': modelo,
+                                    'voice_settings': {'stability': float(os.environ.get('ELEVENLABS_STABILITY', '0.5')),
+                                                       'similarity_boost': float(os.environ.get('ELEVENLABS_SIMILARITY', '0.75')),
+                                                       'speed': float(os.environ.get('ELEVENLABS_SPEED', '1.0')),
+                                                       'use_speaker_boost': True}}, timeout=180)
+            if r.status_code == 200 or 'model' not in r.text.lower():
+                break
+            print('ElevenLabs modelo', modelo, 'no disponible:', r.text[:120], file=sys.stderr)
+        print('ElevenLabs usó', modelo, file=sys.stderr)
         if r.status_code != 200:
             print('ElevenLabs:', r.status_code, r.text[:300], file=sys.stderr)
             ELEVEN_ERROR[0] = f'{r.status_code}: {r.text[:200]}'
