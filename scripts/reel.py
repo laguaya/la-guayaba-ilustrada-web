@@ -917,7 +917,7 @@ def make(data, out):
         if mp3:
             ms = int(INICIO_VOZ * 1000)
             cmd += ['-i', mp3]
-            filtros.append(f'[{entradas}:a]atempo={tempo:.4f},adelay={ms}|{ms},volume=1.0,asplit=3[v][vsc][vsc2]'); entradas += 1
+            filtros.append(f'[{entradas}:a]atempo={tempo:.4f},adelay={ms}|{ms},volume=1.0,apad=whole_dur={total:.3f},asplit=3[v][vsc][vsc2]'); entradas += 1
         for tr in tramos:
             if not SONIDO_ORIGINAL or tr['tipo'] != 'video' or not tr['F'].audio:
                 continue
