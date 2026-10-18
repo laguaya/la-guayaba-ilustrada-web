@@ -348,9 +348,15 @@ def handle_message(u, msg):
     rto = (msg.get('reply_to_message') or {}).get('message_id')
     nid = msgs().get(str(rto)) if rto else None
     text = msg.get('text') or msg.get('caption') or ''
-    mt = re.fullmatch(r'\s*tiktok(?:\s+(\S+))?\s*', text, re.I)
+    mt = re.fullmatch(r'\W*tik\s*tok\W*(?:\s+(\S+))?\s*', text, re.I)
     if mt:
-        tiktok_mensaje(mid, mt.group(1))
+        try:
+            tiktok_mensaje(mid, mt.group(1))
+        except Exception as e:
+            import traceback
+            with open('drafts/.errores.log', 'a') as f:
+                f.write(f'{datetime.now().isoformat()} tiktok\n{traceback.format_exc()}\n')
+            reply(mid, f'⚠️ Algo falló con TikTok: {str(e)[:200]}')
         return
     is_photo = 'photo' in msg or (msg.get('document', {}).get('mime_type', '').startswith('image/'))
     yt = re.search(r'(?:youtu\.be/|youtube\.com/(?:watch\?(?:.*&)?v=|shorts/|embed/|live/))([A-Za-z0-9_-]{11})', text)
@@ -1439,9 +1445,15 @@ def tiktok_mensaje(mid, code):
         reply(mid, 'Todavía no están las llaves de TikTok en GitHub (TIKTOK_CLIENT_KEY y TIKTOK_CLIENT_SECRET).')
         return
     if not code:
-        tg('sendMessage', chat_id=CHAT, reply_to_message_id=mid,
-           text='🎵 Para conectar TikTok:\n1. Abre este link e inicia sesión con la cuenta de La Guayaba.\n2. Acepta los permisos.\n3. La página te dará un mensaje que empieza con "tiktok"; cópialo y mándamelo aquí.',
-           reply_markup={'inline_keyboard': [[{'text': '🎵 Conectar TikTok', 'url': tiktok.link_autorizacion()}]]})
+        link = tiktok.link_autorizacion()
+        txt = ('🎵 Para conectar TikTok:\n1. Abre el link e inicia sesión con la cuenta de La Guayaba.\n2. Acepta los permisos.\n'
+               '3. La página te dará un mensaje que empieza con "tiktok"; cópialo y mándamelo aquí.')
+        r = tg('sendMessage', chat_id=CHAT, reply_to_message_id=mid, text=txt,
+               reply_markup={'inline_keyboard': [[{'text': '🎵 Conectar TikTok', 'url': link}]]})
+        if not r.get('ok'):
+            with open('drafts/.errores.log', 'a') as f:
+                f.write(f'{datetime.now().isoformat()} tiktok link: {r.get("description")}\n')
+            tg('sendMessage', chat_id=CHAT, text=txt + '\n\n' + link, disable_web_page_preview='true')
         return
     try:
         cuenta = tiktok.canjear(code)
