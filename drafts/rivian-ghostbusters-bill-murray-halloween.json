@@ -95,7 +95,18 @@
     "voz": "¿Genial o exagerado? Dímelo en comentarios y síguenos para más campañas.",
     "ver": "video"
    }
-  ]
+  ],
+  "pronunciar": {
+   "Bill Murray": "Bil Mórrei",
+   "Slimer": "Sláimer",
+   "Venkman": "Vénkman",
+   "Ecto R1": "Ecto ar uán",
+   "Rivian": "Rívian",
+   "Gil Kenan": "Guil Kínan",
+   "Ghostbusters": "Góstbosters",
+   "David Hasselhoff": "Déivid Jáseljof",
+   "Halloween": "Jálouin"
+  }
  },
  "yt": "AzErJdWUDTE",
  "auto_video": true,

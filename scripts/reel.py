@@ -616,13 +616,46 @@ def videos_extra(data, escenas, tmp):
     return out
 
 
+def pronunciado(texto, pron):
+    """Cambia los nombres extranjeros por cómo se dicen en español de México ("Bill Murray" -> "Bil Mórrei")
+    solo para la voz; los subtítulos se quedan con la escritura real."""
+    for orig in sorted(pron, key=len, reverse=True):
+        texto = re.sub(r'(?<!\w)' + re.escape(orig) + r'(?!\w)', pron[orig], texto, flags=re.I)
+    return texto
+
+
+def restaurar(palabras, pron):
+    """En los tiempos de la voz, vuelve a poner la escritura real de cada nombre que se pronunció distinto."""
+    for orig, fon in pron.items():
+        f = [_norm(w) for w in fon.split() if _norm(w)]
+        o = orig.split()
+        if not f or not o:
+            continue
+        out, i = [], 0
+        while i < len(palabras):
+            ventana = [_norm(w) for _, _, w in palabras[i:i + len(f)]]
+            if ventana == f:
+                a, b = palabras[i][0], palabras[i + len(f) - 1][1]
+                cola = re.sub(r'^.*?([.,;:?!…]*)$', r'\1', palabras[i + len(f) - 1][2])
+                paso = (b - a) / len(o)
+                for k, w in enumerate(o):
+                    out.append((a + k * paso, a + (k + 1) * paso, w + (cola if k == len(o) - 1 else '')))
+                i += len(f)
+            else:
+                out.append(palabras[i]); i += 1
+        palabras = out
+    return palabras
+
+
 def make(data, out):
     import voz
     tmp = tempfile.mkdtemp()
     global FPS
     try:
         escenas = escenas_de(data)
-        (palabras, dvoz), mp3 = voz.sintetizar(guion_de(data), f'{tmp}/voz.mp3')
+        pron = {k: v for k, v in (data.get('pronunciar') or {}).items() if k and v}
+        (palabras, dvoz), mp3 = voz.sintetizar(pronunciado(guion_de(data), pron), f'{tmp}/voz.mp3')
+        palabras = restaurar(palabras, pron)          # los subtítulos salen con la escritura correcta
         total = TOTAL
         # la voz tiene que caber en el minuto: si se pasa, se acelera un poco (máx. 25 %) sin cambiar el tono
         cabe = total - CIERRE_MIN - INICIO_VOZ - 0.4
