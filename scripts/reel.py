@@ -866,6 +866,11 @@ def make(data, out):
         fin_cuerpo = min(total - CIERRE_MIN, INICIO_VOZ + dvoz + 0.5)
         L = preparar(data)
         vid = bajar_video(data, tmp)
+        for u in ([] if vid else (data.get('videos') or [])):   # sin video de la campaña: el primer video real de apoyo
+            if bajar_url(u, f'{tmp}/campana.mp4'):
+                vid = f'{tmp}/campana.mp4'
+                print('Video principal (de apoyo):', u, file=sys.stderr)
+                break
         if not vid:
             raise RuntimeError('La nota no tiene video de la campaña para el Reel')
         FPS = fps_de(vid)                                   # se arma a los cuadros por segundo del video original
