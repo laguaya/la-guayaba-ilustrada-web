@@ -603,6 +603,7 @@ def toca_reel(n):
     """Reel cada 2 horas: la siguiente nota que traiga video de la campaña (sin video no hay Reel)."""
     if 'reel' in n:
         return bool(n['reel'])
+    return False   # los Reels ya no van con la nota: son notas aparte en drafts/reels/
     ig = n.get('ig') or {}
     if not ig or not (n.get('mp4') or n.get('yt') or n.get('vm') or ig.get('videos')
                       or any(e.get('video') for e in ig.get('escenas') or [])):
@@ -622,6 +623,72 @@ def reservar_reel(nid, si=True):
 
 
 RETENER = 'drafts/.retener_hasta.json'
+REELS = 'drafts/reels'            # Reels independientes de las notas: drafts/reels/<id>.json
+SALIDA = 'drafts/reels/.salida.json'
+
+
+def turno_actual():
+    now = datetime.now(timezone(timedelta(hours=-6)))
+    return now.strftime('%Y-%m-%d-') + str(now.hour)
+
+
+def build_reel_solo(r):
+    """Reel de una noticia propia (no la de la web): {"id","t","src","yt"|"mp4"|"vm","ig":{portada, escenas, videos, pronunciar, caption, marca, etiqueta}}"""
+    sys.path.insert(0, 'scripts')
+    import reel, io, contextlib, traceback
+    data = dict(r.get('ig') or {})
+    for k in ('src', 'mp4', 'yt', 'vm'):
+        data[k] = r.get(k, '') or data.get(k, '')
+    data['videos'] = data.get('videos') or r.get('videos') or []
+    data.setdefault('etiqueta', r.get('k') or 'Noticias')
+    data.setdefault('portada', r.get('t', ''))
+    out = f'assets/ig/{r["id"]}/reel.mp4'
+    os.makedirs(os.path.dirname(out), exist_ok=True)
+    buf = io.StringIO()
+    try:
+        with contextlib.redirect_stderr(buf):
+            reel.make(data, out)
+    except Exception:
+        with open('drafts/.errores.log', 'a') as f:
+            f.write(f'{datetime.now().isoformat()} reel {r["id"]}\n{buf.getvalue()[-3000:]}\n{traceback.format_exc()}\n')
+        raise
+    finally:
+        sys.stderr.write(buf.getvalue())
+        with open('drafts/.reel.log', 'w') as f:
+            f.write(f'{datetime.now().isoformat()} {r["id"]}\n{buf.getvalue()[-4000:]}\n')
+    return out
+
+
+def reels_sueltos():
+    """Arma cada Reel en cuanto llega y lo manda a Telegram en punto: uno por horario (8 a 22 h, cada 2 horas)."""
+    global changed
+    for path in sorted(glob.glob(f'{REELS}/*.json')):
+        r = load(path)
+        if r.get('tg') or r.get('fallo'):
+            continue
+        if not r.get('listo'):
+            try:
+                build_reel_solo(r)
+                r['listo'] = True
+            except Exception as e:
+                r['fallo'] = str(e)[:300]
+                tg('sendMessage', chat_id=CHAT, text=f'⚠️ No pude armar el Reel "{r.get("t", r["id"])[:80]}": {str(e)[:200]}')
+            save(path, r); changed = True
+            continue
+        sal = load(SALIDA) if os.path.exists(SALIDA) else {}
+        if not r.get('urgente') and (not hora_de_salir() or sal.get('turno') == turno_actual()):
+            continue
+        with open(f'assets/ig/{r["id"]}/reel.mp4', 'rb') as f:
+            res = tg('sendVideo', files={'video': f}, chat_id=CHAT, supports_streaming='true', width=1080, height=1920,
+                     caption=f'🎬 Reel: {r.get("t", r["id"])[:150]}\nSi te gusta, súbelo con el botón.',
+                     reply_markup={'inline_keyboard': [[{'text': '📲 Subir este Reel a Instagram', 'callback_data': f'subreel:{r["id"]}'}]]})
+        if res.get('ok'):
+            r['tg'] = res['result']['message_id']
+            remember(r['tg'], r['id'])
+            save(path, r)
+            save(SALIDA, {'turno': turno_actual(), 'id': r['id']})
+            changed = True
+        return
 
 
 def hora_de_salir():
@@ -995,7 +1062,7 @@ def send_pending():
                 if otra != n['id']:
                     PREVIEW.add(otra)
             n = load(path)
-        if n.get('ig') and not n.get('urgente') and not hora_de_salir():
+        if n.get('ig') and n.get('reel') and not n.get('urgente') and not hora_de_salir():
             # se arma el Reel antes y se manda a Telegram en punto (8, 10, 12, 14, 16, 18, 20 y 22 h)
             if not n.get('reel_listo'):
                 if 'reel' not in n and toca_reel(n):
@@ -1154,9 +1221,11 @@ def poll():
             continue
         if (cq.get('data') or '').startswith('subreel:'):
             sid = cq['data'].split(':', 1)[1]
-            n, _ = note_get(sid)
-            if n and os.path.exists(f'assets/ig/{sid}/reel.mp4') and os.path.exists(f'drafts/ig/{sid}.json'):
-                n['ig'] = load(f'drafts/ig/{sid}.json')
+            n, _ = note_get(sid) if not os.path.exists(f'{REELS}/{sid}.json') else (load(f'{REELS}/{sid}.json'), None)
+            igp = f'drafts/ig/{sid}.json'
+            if n and os.path.exists(f'assets/ig/{sid}/reel.mp4') and (os.path.exists(igp) or n.get('ig')):
+                if os.path.exists(igp):
+                    n['ig'] = load(igp)
                 n['tg'] = (cq.get('message') or {}).get('message_id')
                 queue_instagram(n, 'reel')
                 mark(cq, '📲 Va. En unos minutos sale el Reel en Instagram; te aviso aquí.')
@@ -1635,6 +1704,7 @@ def listen(hours=5.6):
                     enviar_reel(rid)
                 changed = True
             send_pending()
+            reels_sueltos()
             poll()
             try:
                 if thumb_backfill():

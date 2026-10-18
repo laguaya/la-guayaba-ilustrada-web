@@ -763,6 +763,10 @@ def videos_extra(data, escenas, tmp):
     return out
 
 
+# palabras que la voz de IA acentúa mal en cualquier nota (verbos en -iar que se conjugan como "cambiar")
+PRON_FIJA = {'financian': 'finánsian', 'financia': 'finánsia', 'financiamos': 'finansiámos'}
+
+
 def pronunciado(texto, pron):
     """Cambia los nombres extranjeros por cómo se dicen en español de México ("Bill Murray" -> "Bil Mórrei")
     solo para la voz; los subtítulos se quedan con la escritura real."""
@@ -838,7 +842,8 @@ def make(data, out):
     global FPS
     try:
         escenas = escenas_de(data)
-        pron = {k: v for k, v in (data.get('pronunciar') or {}).items() if k and v}
+        pron = dict(PRON_FIJA)
+        pron.update({k: v for k, v in (data.get('pronunciar') or {}).items() if k and v})
         grabada = data.get('voz_audio') if data.get('voz_audio') and os.path.exists(data['voz_audio']) else None
         if grabada:   # voz que Sergio ya generó (ElevenLabs): se le acortan los silencios largos y se alinea con el guion
             mp3 = f'{tmp}/voz.mp3'
