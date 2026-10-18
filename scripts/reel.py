@@ -29,7 +29,7 @@ INK, WHITE = '#0B0B0B', '#FFFFFF'
 UVA, ROSA = '#6E1F5E', '#FFC6DD'
 PINK = ROSA
 R = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MUSIC = os.path.join(R, 'assets', 'audio', 'reel.m4a')
+MUSIC = os.path.join(R, 'assets', 'audio', 'musica', 'uplifting-hiphop-jazz-funk-60.mp3')   # la canción que eligió Sergio (versión de 60 s)
 GANCHO, CIERRE, INICIO_VOZ = 3.2, 3.0, 0.35
 
 
@@ -655,7 +655,7 @@ def plan(escenas, ini, fin_cuerpo, total, principal, extras, data, tmp):
                         cubierto = poner_video(F, a, d, *tl)
                         if cubierto:
                             break
-            if not cubierto:
+            if not cubierto and not fuentes_todas:       # solo si no hay ningún video se usa una foto
                 im = foto_libre()
                 if im:
                     poner_foto(a, min(b, a + max(2.5, min(d, 4.5))), im)
@@ -684,7 +684,7 @@ def plan(escenas, ini, fin_cuerpo, total, principal, extras, data, tmp):
     for i, e in enumerate(escenas):
         a = 0.0 if i == 0 else max(0.0, ini[i] - 0.08)
         b = fin_cuerpo if i == len(escenas) - 1 else max(a + 0.3, ini[i + 1] - 0.08)
-        if (e.get('ver') or '').lower() == 'foto' or e.get('foto'):
+        if not (principal or extras) and ((e.get('ver') or '').lower() == 'foto' or e.get('foto')):   # Sergio: puro video
             ref = e.get('foto')
             im = bajar_foto(data.get(ref) if ref in ('img', 'img2') else ref, tmp, i)
             if im:
@@ -876,7 +876,7 @@ def make(data, out):
         if mp3:
             ms = int(INICIO_VOZ * 1000)
             cmd += ['-i', mp3]
-            filtros.append(f'[{entradas}:a]atempo={tempo:.4f},adelay={ms}|{ms},volume=1.0,asplit=2[v][vsc]'); entradas += 1
+            filtros.append(f'[{entradas}:a]atempo={tempo:.4f},adelay={ms}|{ms},volume=1.0,asplit=3[v][vsc][vsc2]'); entradas += 1
         for tr in tramos:
             if not SONIDO_ORIGINAL or tr['tipo'] != 'video' or not tr['F'].audio:
                 continue
@@ -895,12 +895,22 @@ def make(data, out):
                 filtros.append('[clips][vsc]sidechaincompress=threshold=0.02:ratio=6:attack=15:release=350[orig]')
             else:
                 filtros.append('[clips]anull[orig]')
-        elif mp3:
-            filtros.append('[vsc]anullsink')
         if os.path.exists(MUSIC):
+            # la música se oye siempre, pero la voz manda: baja un poco mientras habla y sube en las pausas
             cmd += ['-stream_loop', '-1', '-i', MUSIC]
-            vol = (0.08 if bus else 0.14) if mp3 else (0.3 if bus else 0.9)
-            filtros.append(f'[{entradas}:a]volume={vol},afade=t=out:st={total - 1.5:.2f}:d=1.5[m]'); entradas += 1
+            if mp3:
+                filtros.append(f'[{entradas}:a]aformat=sample_rates=44100:channel_layouts=stereo,volume=0.26,'
+                               f'afade=t=out:st={total - 1.8:.2f}:d=1.8[m0]')
+                filtros.append(f'[m0][{"vsc2" if bus else "vsc"}]sidechaincompress=threshold=0.04:ratio=3:attack=40:release=500:makeup=1[m]')
+            else:
+                filtros.append(f'[{entradas}:a]volume=0.9,afade=t=out:st={total - 1.8:.2f}:d=1.8[m]')
+            entradas += 1
+
+        if mp3:                                          # salidas de la voz que no se usaron
+            usadas = ';'.join(filtros)
+            for lab in ('vsc', 'vsc2'):
+                if usadas.count(f'[{lab}]') < 2:
+                    filtros.append(f'[{lab}]anullsink')
         mez = ('[v]' if mp3 else '') + ('[orig]' if bus else '') + ('[m]' if os.path.exists(MUSIC) else '')
         n_in = mez.count('[')
         if n_in:
