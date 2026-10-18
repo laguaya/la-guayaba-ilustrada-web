@@ -1,5 +1,5 @@
 """Reel vertical (1080x1920, 30 fps, 15 a 75 s) de una nota, con branding de Newsbrand.
-# (YT_COOKIES renovado el 18 oct 2026)
+# (YT_COOKIES renovado el 18 oct 2026; llaves de TikTok 18 oct 14:32)
 
 Uso: python scripts/reel.py datos.json salida.mp4
 datos: img, img2, fotos (lista opcional), etiqueta, portada, titulo, marca, escenas o guion (texto de la voz),
