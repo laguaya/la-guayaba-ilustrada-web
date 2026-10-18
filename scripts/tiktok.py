@@ -96,17 +96,22 @@ def iniciar(video, caption):
     info = _post('/post/publish/creator_info/query/', {}, tok)
     opciones = info.get('privacy_level_options') or ['SELF_ONLY']
     tam = os.path.getsize(video)
+    fuente = {'source': 'FILE_UPLOAD', 'video_size': tam, 'chunk_size': tam, 'total_chunk_count': 1}
+    d = None
     for priv in (['PUBLIC_TO_EVERYONE'] if 'PUBLIC_TO_EVERYONE' in opciones else []) + ['SELF_ONLY']:
         body = {'post_info': {'title': caption[:2200], 'privacy_level': priv, 'disable_duet': False,
                               'disable_comment': False, 'disable_stitch': False, 'video_cover_timestamp_ms': 1500},
-                'source_info': {'source': 'FILE_UPLOAD', 'video_size': tam, 'chunk_size': tam, 'total_chunk_count': 1}}
+                'source_info': fuente}
         try:
             d = _post('/post/publish/video/init/', body, tok)
             break
         except RuntimeError as e:
-            if 'unaudited' in str(e) and priv != 'SELF_ONLY':
-                continue          # app sin aprobar: TikTok solo deja publicar en privado
-            raise
+            if 'unaudited' not in str(e):
+                raise
+    if d is None:
+        # app todavía sin aprobar y cuenta pública: TikTok solo deja mandarlo como BORRADOR a la bandeja de la app
+        d = _post('/post/publish/inbox/video/init/', {'source_info': fuente}, tok)
+        priv = 'BORRADOR'
     with open(video, 'rb') as f:
         r = requests.put(d['upload_url'], data=f.read(), timeout=600,
                          headers={'Content-Type': 'video/mp4', 'Content-Length': str(tam),

@@ -1514,6 +1514,11 @@ def tiktok_cola():
                 extra = '' if it.get('priv') == 'PUBLIC_TO_EVERYONE' else ' (en privado, mientras TikTok aprueba la app)'
                 tg('sendMessage', chat_id=CHAT, text=f'🎵 Listo, el Reel ya está en TikTok{extra}.', reply_to_message_id=it.get('reply'))
                 q.pop(0)
+            elif st == 'SEND_TO_USER_INBOX':
+                tg('sendMessage', chat_id=CHAT, reply_to_message_id=it.get('reply'),
+                   text='🎵 El Reel ya está en tu TikTok como BORRADOR (mientras TikTok aprueba la app no deja publicar directo en una cuenta pública). '
+                        'Abre TikTok, toca la notificación o ve a tu bandeja, y publícalo. Este es el texto:\n\n' + it['caption'])
+                q.pop(0)
             elif st == 'FAILED':
                 tg('sendMessage', chat_id=CHAT, text=f'⚠️ TikTok rechazó el Reel ({motivo}).', reply_to_message_id=it.get('reply'))
                 q.pop(0)
