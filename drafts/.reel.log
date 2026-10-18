@@ -1,22 +1,15 @@
-2026-10-18T19:37:34.258271 twix-hallowmas-zombie-claus
-ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
+2026-10-18T19:43:14.321618 doordash-skims-kim-kardashian
 ElevenLabs usó eleven_v4
-Pausas recortadas: 23 6.6s
-Fuente 1 campana 40.0s 12 tomas
-Caché guardada: https://www.instagram.com/reel/DeHWLbTTiY9/ 201
-Video vp9 -> h264 ok
-Fuente 2 https://www.instagram.com/reel/DeHWLbTTiY9/ 40.0s 12 tomas
-Caché guardada: https://www.instagram.com/reel/Ddth2RjTyX9/ 201
-Video vp9 -> h264 ok
-Fuente 3 https://www.instagram.com/reel/Ddth2RjTyX9/ 32.4s 11 tomas
-Caché guardada: https://www.youtube.com/watch?v=idCTFaiE5_Y 201
+Pausas recortadas: 24 5.2s
+Fuente 7 campana 69.9s 14 tomas
+Caché guardada: https://www.youtube.com/watch?v=jvw_lStBUf8 201
 Video av1 -> h264 ok
-Fuente 4 https://www.youtube.com/watch?v=idCTFaiE5_Y 15.1s 5 tomas
-Caché guardada: https://www.instagram.com/reel/Dd_p1tjKVOZ/ 201
+Fuente 8 https://www.youtube.com/watch?v=jvw_lStBUf8 69.9s 14 tomas
+Caché guardada: https://www.instagram.com/reel/DeZyF6ap2n2/ 201
+Fuente 9 https://www.instagram.com/reel/DeZyF6ap2n2/ 10.4s 2 tomas
+Caché guardada: https://www.instagram.com/reel/DecMATbRYOv/ 201
 Video vp9 -> h264 ok
-Fuente 5 https://www.instagram.com/reel/Dd_p1tjKVOZ/ 126.2s 64 tomas
-Caché guardada: https://www.instagram.com/reel/DeCSYlGzJsD/ 201
-Video vp9 -> h264 ok
-Fuente 6 https://www.instagram.com/reel/DeCSYlGzJsD/ 22.2s 8 tomas
-Reel: [(0.0, 4.0, 'video1'), (4.0, 5.6, 'video1'), (5.6, 8.4, 'video1'), (8.4, 9.9, 'video1'), (9.9, 13.7, 'video1'), (13.7, 18.7, 'video1'), (18.7, 22.9, 'video3'), (22.9, 26.0, 'video4'), (26.0, 27.5, 'video1'), (27.5, 29.8, 'video5'), (29.8, 32.5, 'video1'), (32.5, 36.2, 'video6'), (36.2, 39.8, 'video1'), (39.8, 41.0, 'video1'), (41.0, 42.7, 'video1'), (42.7, 45.5, 'video1'), (45.5, 48.6, 'video1'), (48.6, 49.7, 'video2'), (49.7, 54.8, 'video2'), (54.8, 60.0, 'video1')]
+Fuente 10 https://www.instagram.com/reel/DecMATbRYOv/ 69.9s 14 tomas
+yt-dlp default : b'on using  yt-dlp -U\nERROR: [Instagram] DeeWHgRRty6: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U\n'
+Reel: [(0.0, 3.6, 'video7'), (3.6, 7.6, 'video7'), (7.6, 11.9, 'video7'), (11.9, 15.7, 'video7'), (15.7, 19.6, 'video7'), (19.6, 23.9, 'video9'), (23.9, 28.7, 'video10'), (28.7, 30.6, 'video7'), (30.6, 32.2, 'video7'), (32.2, 37.1, 'video7'), (37.1, 40.9, 'video7'), (40.9, 42.4, 'video7'), (42.4, 44.1, 'video7'), (44.1, 47.6, 'video7'), (47.6, 49.0, 'video7'), (49.0, 50.5, 'video7'), (50.5, 60.0, 'video7')]
 
