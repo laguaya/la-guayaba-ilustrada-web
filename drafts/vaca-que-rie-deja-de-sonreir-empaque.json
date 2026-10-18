@@ -109,5 +109,89 @@
  "ig1": "assets/work/nota-vaca-que-rie-deja-de-sonreir-empaque-foto-src1.webp",
  "ig2": "assets/work/nota-vaca-que-rie-deja-de-sonreir-empaque-foto-src1.webp",
  "cands_v": 2,
- "reel": false
+ "reel": false,
+ "_data": {
+  "etiqueta": "Inspiración",
+  "portada": "La Vaca que Ríe *dejó de reírse* después de 105 años",
+  "titulo": "La Vaca que Ríe pone _cara seria_ en su empaque",
+  "resumen": "Bel puso a la vaca sin sonrisa y con un “tenemos que hablar” en [más de 4,700 tiendas] de Estados Unidos. El porqué se reveló en [Jimmy Kimmel Live] y ahora la marca pide [#SpreadTheLaugh].",
+  "info": [
+   "[La Vaca que Ríe] es el quesito untable en porciones triangulares que creó Léon Bel en Francia en 1921. Su mascota roja con aretes en forma de caja de queso la dibujó el ilustrador Benjamin Rabier y lleva más de cien años sonriendo en el empaque.",
+   "La campaña no usó medios pagados, según DesignRush. Todo salió del empaque con QR, videos en redes y una aparición en televisión. La segunda fase, [#SpreadTheLaugh], invita a subir videos de pleitos por tonterías para que la vaca vuelva a sonreír."
+  ],
+  "marca": "La Vaca que Ríe",
+  "caption": "La Vaca que Ríe dejó de reírse por primera vez en 105 años, y fue a propósito 🐄\n\nBel Brands puso a la vaca seria en más de 4,700 tiendas de Estados Unidos con un QR y un “tenemos que hablar”. El misterio se resolvió en Jimmy Kimmel Live y se volvió conversación en redes sociales sin un peso en medios pagados, según DesignRush.\nUna lección de branding y diseño de empaque: a veces basta con mover un detalle que todos conocen.\n\n¿Te atreverías a cambiar el logo de tu marca unos días?\nGuárdalo para tu próxima lluvia de ideas y mándaselo a quien lleva las redes de tu negocio.\n\nNota completa en el link de la bio.\nSíguenos para las noticias de marcas, diseño y publicidad que sí importan, todos los días.\n\n#LaVacaQueRie #DiseñoDeEmpaque #Branding #PublicidadCreativa #MarketingDigital",
+  "videos": [
+   "https://vimeo.com/1231578179",
+   "https://vimeo.com/1231578180",
+   "https://www.youtube.com/watch?v=TMaLTm9YTpo",
+   "https://www.youtube.com/watch?v=8mhIs-XURok",
+   "https://www.instagram.com/reel/Ddley56DiKj/"
+  ],
+  "pronunciar": {
+   "Spread the Laugh": "Spred de laf"
+  },
+  "escenas": [
+   {
+    "voz": "La vaca más feliz del súper dejó de reírse.",
+    "ver": "video"
+   },
+   {
+    "voz": "En Estados Unidos su empaque salió con la vaca seria y un mensaje: tenemos que hablar.",
+    "ver": "video"
+   },
+   {
+    "voz": "En redes la vieron sola en una cafetería, mirando la lluvia.",
+    "ver": "video"
+   },
+   {
+    "voz": "Llegó a más de cuatro mil setecientas tiendas con un QR que no explicaba nada.",
+    "ver": "video",
+    "video": "https://vimeo.com/1231578179"
+   },
+   {
+    "voz": "La gente se puso a teorizar y la marca solo dijo: ya lo explicará.",
+    "ver": "video",
+    "video": "https://www.instagram.com/reel/Ddley56DiKj/"
+   },
+   {
+    "voz": "Una semana después, el misterio se resolvió en el programa de Jimmy Kimmel.",
+    "ver": "video",
+    "video": "https://www.youtube.com/watch?v=8mhIs-XURok"
+   },
+   {
+    "voz": "¿La razón? Buscó de qué se ríe la gente y encontró puro pleito por tonterías.",
+    "ver": "video",
+    "video": "https://www.youtube.com/watch?v=TMaLTm9YTpo"
+   },
+   {
+    "voz": "Como calcetines con sandalias o iPhone contra Android.",
+    "ver": "video",
+    "video": "https://www.instagram.com/reel/Dd4kYNfnaOt/"
+   },
+   {
+    "voz": "Ahora pide que subas tu discusión con Spread the Laugh, contagia la risa, para que vuelva a sonreír.",
+    "ver": "video",
+    "video": "https://www.instagram.com/reel/DdubbcLtsS7/"
+   },
+   {
+    "voz": "Y lo más loco: esta vaca nació como dibujo en la Primera Guerra Mundial.",
+    "ver": "video",
+    "video": "https://vimeo.com/1231578180"
+   },
+   {
+    "voz": "La lección: cambiar tu logo unos días da más conversación que un año de anuncios.",
+    "ver": "video",
+    "video": "https://www.instagram.com/reel/DdlhrWlgtgl/"
+   },
+   {
+    "voz": "¿Genial o exagerado? Dímelo en comentarios y síguenos para más campañas así.",
+    "ver": "video"
+   }
+  ],
+  "img": "assets/work/nota-vaca-que-rie-deja-de-sonreir-empaque-foto-src1.webp",
+  "img2": "assets/work/nota-vaca-que-rie-deja-de-sonreir-empaque-foto-src1.webp",
+  "fecha": "18 OCTUBRE 2026"
+ },
+ "tg": 601
 }

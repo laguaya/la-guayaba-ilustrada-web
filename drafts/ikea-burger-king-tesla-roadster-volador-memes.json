@@ -102,5 +102,79 @@
  "ig1": "assets/work/nota-ikea-burger-king-tesla-roadster-volador-memes-foto-src1.webp",
  "ig2": "assets/work/nota-ikea-burger-king-tesla-roadster-volador-memes-foto-src2.webp",
  "cands_v": 2,
- "reel_listo": true
+ "reel_listo": true,
+ "_data": {
+  "etiqueta": "Tendencias",
+  "portada": "IKEA se burló del *Tesla que vuela* con 13 dólares",
+  "titulo": "Las marcas se cuelgan del _auto volador_ de Tesla",
+  "resumen": "Tesla hizo volar su nuevo [Roadster] en Texas. Un día después, IKEA Taiwán lo copió con [carritos de juguete] y Burger King abrió un [Fly Thru] para autos voladores.",
+  "info": [
+   "El [marketing en tiempo real] es aprovechar la noticia del día para meter tu marca mientras todos hablan de ella. Funciona cuando el chiste necesita tu producto. Aquí la noticia fue el Roadster, el deportivo de Tesla que sube rampas de cabeza con propulsores de aire.",
+   "IKEA Taiwán recreó la rampa con carritos LILLABO de [12.99 dólares] y una toalla: seguro y barato. No es su primera burla: en 2014 vendió su catálogo como si fuera de Apple. Mientras, el Tesla prometido para 2020 llegará hasta [2028]."
+  ],
+  "marca": "IKEA",
+  "caption": "IKEA le respondió al Tesla que vuela con carritos de juguete de 13 dólares y una toalla 🚗\n\nTesla presentó su nuevo Roadster en Texas y, al día siguiente, IKEA Taiwán, Burger King, McDonald's y Domino's ya tenían su meme de marca. Eso es marketing en tiempo real: publicidad rápida, con humor y con el producto al centro.\n\n¿Qué marca mexicana crees que lo habría hecho mejor?\n\nGuárdalo para tu próxima lluvia de ideas o mándaselo a tu community manager.\n\nNota completa en el link de la bio.\n\nSíguenos para las noticias de marcas, diseño y publicidad que sí importan, todos los días.\n\n#IKEA #Tesla #MarketingEnTiempoReal #PublicidadCreativa #RedesSociales",
+  "videos": [
+   "https://www.youtube.com/watch?v=eqOfmtTJD1A",
+   "https://www.youtube.com/watch?v=_iRhJ1JBRrg",
+   "https://www.youtube.com/watch?v=MOXQo7nURs0",
+   "https://www.instagram.com/p/DejGj2EvzZC/"
+  ],
+  "pronunciar": {
+   "Roadster": "Róudster",
+   "Fly Thru": "Flái zru"
+  },
+  "escenas": [
+   {
+    "voz": "Tesla hizo volar un auto y las marcas le robaron el show.",
+    "ver": "video"
+   },
+   {
+    "voz": "En Texas, el nuevo Roadster subió una rampa, quedó de cabeza y aterrizó sobre sus ruedas.",
+    "ver": "video"
+   },
+   {
+    "voz": "Lo empujan propulsores de aire comprimido, con tecnología de SpaceX, y brincó sobre una fila de Teslas.",
+    "ver": "video",
+    "video": "https://www.youtube.com/watch?v=eqOfmtTJD1A"
+   },
+   {
+    "voz": "Y ojo: lo prometieron para dos mil veinte. Ahora dicen que llega en dos mil veintiocho.",
+    "ver": "video",
+    "video": "https://www.youtube.com/watch?v=_iRhJ1JBRrg"
+   },
+   {
+    "voz": "Al día siguiente, IKEA Taiwán armó su versión con carritos de juguete y una toalla como rampa.",
+    "ver": "video",
+    "video": "https://www.instagram.com/p/DejGj2EvzZC/"
+   },
+   {
+    "voz": "Su frase: seguro y barato. Burger King en Emiratos publicó un Fly Thru, autoservicio para autos voladores.",
+    "ver": "foto",
+    "foto": "https://media.openthemagazine.com/openthemagazine/2026-10-18/fa9dcn28/TESLA-PIC.png?w=1200&auto=format,compress"
+   },
+   {
+    "voz": "Y no es nuevo. En dos mil catorce, IKEA presentó su catálogo de papel como si fuera un aparato de Apple.",
+    "ver": "video",
+    "video": "https://www.youtube.com/watch?v=MOXQo7nURs0"
+   },
+   {
+    "voz": "Eso es marketing en tiempo real: subirte a la noticia del día con humor y tu producto.",
+    "ver": "foto",
+    "foto": "https://cdn.mos.cms.futurecdn.net/jd86hT64ULrpKncnprPjm-1920-80.jpg"
+   },
+   {
+    "voz": "Para tu marca: no necesitas presupuesto de Tesla, necesitas reflejos rápidos.",
+    "ver": "video"
+   },
+   {
+    "voz": "¿Qué marca mexicana lo haría mejor? Dímelo en comentarios y síguenos para más campañas así.",
+    "ver": "video"
+   }
+  ],
+  "img": "assets/work/nota-ikea-burger-king-tesla-roadster-volador-memes-foto-src1.webp",
+  "img2": "assets/work/nota-ikea-burger-king-tesla-roadster-volador-memes-foto-src2.webp",
+  "fecha": "18 OCTUBRE 2026"
+ },
+ "tg": 595
 }
