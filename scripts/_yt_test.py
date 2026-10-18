@@ -1,15 +1,8 @@
-import requests, re
-H={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36'}
-b='https://invidious.f5.si'
-j=requests.get(f'{b}/api/v1/videos/AzErJdWUDTE',params={'local':'true'},headers=H,timeout=30).json()
-for f in (j.get('formatStreams',[])+j.get('adaptiveFormats',[]))[:6]:
-    u=f['url']; u=b+u if u.startswith('/') else u
-    for hdr in ({}, {'Range':'bytes=0-'}):
-        try:
-            r=requests.get(u,headers={**H,**hdr},timeout=30,stream=True,allow_redirects=True)
-            print(f.get('qualityLabel'), f.get('type','')[:20], hdr, r.status_code, r.headers.get('content-type'), r.headers.get('content-length'), r.url[:90])
-        except Exception as e: print('ERR',str(e)[:100])
-print(u[:200])
-# dash / latest_version endpoint
-for q in ('/latest_version?id=AzErJdWUDTE&itag=18&local=true','/latest_version?id=AzErJdWUDTE&itag=137&local=true'):
-    r=requests.get(b+q,headers=H,timeout=30,stream=True); print(q, r.status_code, r.headers.get('content-type'), r.headers.get('content-length'))
+import sys, re; sys.path.insert(0,'scripts')
+import fuentes
+urls=["https://rivian.com/stories/new-software-halloween-ghostbusters-2026","https://www.topgear.com/car-news/usa/who-you-gonna-call-new-ecto-r1-rivians-ghostbusters-themed-electric-suv","https://www.kbb.com/car-news/rivian-halloween-mode-2026-goes-gangbusters-for-ghostbusters/","https://www.jalopnik.com/2281691/rivian-halloween-mode-ghostbusters-officially-licensed-movie-sounds-games/","https://www.gearpatrol.com/?p=1043629","https://www.automotiveaddicts.com/?p=124156","https://hauntedattractionnetwork.com/rivian-halloween-mode/","https://www.techradar.com/vehicle-tech/hybrid-electric-vehicles/just-silly-enough-to-be-perfect-ive-seen-rivians-ghostbusters-ecto-r1-in-action"]
+for u in urls:
+    try:
+        h=fuentes.pagina(u)
+        print(u[:60], len(h), fuentes.mp4s_de_pagina(u), sorted(set(re.findall(r'https?://[^"\'\s<>]+?\.(?:m3u8|mp4|webm)', h)))[:5], sorted(set(re.findall(r'(?:ctfassets|mux\.com|jwplayer\.com/[\w/.-]+|stream\.mux|cloudinary[^"\s]+video|brightcove)[^"\'\s<>]{0,80}', h)))[:6])
+    except Exception as e: print(u[:60], 'ERR', e)
