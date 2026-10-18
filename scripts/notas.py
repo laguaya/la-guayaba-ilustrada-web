@@ -1444,6 +1444,20 @@ def tiktok_mensaje(mid, code):
     if not tiktok.configurado():
         reply(mid, 'Todavía no están las llaves de TikTok en GitHub (TIKTOK_CLIENT_KEY y TIKTOK_CLIENT_SECRET).')
         return
+    if code and code.lower() in ('prueba', 'subir', 'test'):
+        # sube SOLO a TikTok el último Reel que ya se mandó a Telegram (sin volver a publicarlo en Instagram)
+        rs = [load(f) for f in glob.glob(f'{REELS}/*.json')]
+        rs = [r for r in rs if r.get('tg') and os.path.exists(f'assets/ig/{r["id"]}/reel.mp4')]
+        if not rs:
+            reply(mid, 'No encontré un Reel ya armado para probar.')
+            return
+        r = max(rs, key=lambda x: x['tg'])
+        r['tg'] = mid
+        if queue_tiktok(r):
+            reply(mid, f'🎵 Va. Subo a TikTok (solo TikTok) el Reel "{r.get("t", r["id"])[:80]}". Te aviso aquí cuando esté.')
+        else:
+            reply(mid, 'TikTok no está conectado; escribe "tiktok" primero.')
+        return
     if not code:
         link = tiktok.link_autorizacion()
         txt = ('🎵 Para conectar TikTok:\n1. Abre el link e inicia sesión con la cuenta de La Guayaba.\n2. Acepta los permisos.\n'
