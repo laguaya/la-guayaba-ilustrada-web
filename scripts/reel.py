@@ -159,13 +159,64 @@ def _ytdlp(url, ruta):
     return os.path.exists(ruta) and os.path.getsize(ruta) > 50000
 
 
+INVIDIOUS = ['https://invidious.f5.si', 'https://inv.nadeko.net', 'https://yewtu.be', 'https://invidious.nerdvpn.de']
+
+
+def _yt_id(url):
+    m = re.search(r'(?:v=|youtu\.be/|shorts/|embed/)([\w-]{11})', url)
+    return m.group(1) if m else None
+
+
+def invidious(url, ruta):
+    """YouTube sin cookies: lo baja a través de un espejo público de Invidious (los servidores de GitHub están
+    bloqueados por YouTube, los espejos no). Prefiere la pista de video MP4 de hasta 1080p (el audio no se usa)."""
+    import requests
+    vid = _yt_id(url)
+    if not vid:
+        return False
+    bases = list(INVIDIOUS)
+    try:
+        r = requests.get('https://api.invidious.io/instances.json', params={'sort_by': 'health'}, timeout=20)
+        for nombre, info in r.json():
+            u = (info or {}).get('uri', '')
+            if u.startswith('https://') and (info or {}).get('api') and u not in bases:
+                bases.append(u)
+    except Exception:
+        pass
+    for b in bases[:14]:
+        try:
+            r = requests.get(f'{b}/api/v1/videos/{vid}', params={'local': 'true'}, headers=UA_VID, timeout=25)
+            if r.status_code != 200:
+                continue
+            j = r.json()
+            def alto(f):
+                m = re.search(r'(\d+)p', f.get('qualityLabel') or f.get('resolution') or '')
+                return int(m.group(1)) if m else 0
+            vids = [f for f in j.get('adaptiveFormats', []) if 'video/mp4' in f.get('type', '') and 'avc1' in f.get('type', '')
+                    and 0 < alto(f) <= 1080]
+            vids.sort(key=alto, reverse=True)
+            opciones = vids[:2] + sorted(j.get('formatStreams', []), key=alto, reverse=True)[:1]
+            for f in opciones:
+                u = f.get('url', '')
+                if u.startswith('/'):
+                    u = b + u
+                if u and _descargar(u, ruta):
+                    print('Video de YouTube vía', b, alto(f), 'p', file=sys.stderr)
+                    return True
+        except Exception as e:
+            print('Invidious', b, e, file=sys.stderr)
+    return False
+
+
 def bajar_url(url, ruta):
     """Baja un video REAL: MP4 directo, página con MP4 (Ads of the World), o YouTube/Vimeo/TikTok/Instagram con yt-dlp
     (YouTube necesita el secreto YT_COOKIES para que no lo bloquee)."""
     try:
         if re.search(r'\.(mp4|mov|m4v|webm)(\?|$)', url, re.I):
             return _descargar(url, ruta)
-        if re.search(r'youtube\.com|youtu\.be|vimeo\.com|tiktok\.com|instagram\.com|x\.com|twitter\.com|facebook\.com', url, re.I):
+        if re.search(r'youtube\.com|youtu\.be', url, re.I):
+            return _ytdlp(url, ruta) or invidious(url, ruta)
+        if re.search(r'vimeo\.com|tiktok\.com|instagram\.com|x\.com|twitter\.com|facebook\.com', url, re.I):
             return _ytdlp(url, ruta)
         import fuentes
         for u in fuentes.mp4s_de_pagina(url):
