@@ -151,15 +151,20 @@ def _ytdlp(url, ruta):
         if not os.path.exists(ck):
             open(ck, 'w').write(os.environ['YT_COOKIES'])
         extra = ['--cookies', ck]
-    try:
-        r = subprocess.run(['yt-dlp', '-q', '--no-playlist', '--max-filesize', '150M'] + extra + ['-f',
-                        'bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[height<=1080][ext=mp4]/bv*[height<=1080]+ba/b',
-                        '--merge-output-format', 'mp4', '-o', ruta, url], capture_output=True, timeout=300)
-        if r.returncode:
-            print('yt-dlp:', r.stderr[-400:], file=sys.stderr)
-    except Exception:
-        return False
-    return os.path.exists(ruta) and os.path.getsize(ruta) > 50000
+    clientes = [[]]
+    if re.search(r'youtube\.com|youtu\.be', url):     # si YouTube bloquea un cliente, se prueba con otros
+        clientes += [['--extractor-args', f'youtube:player_client={c}'] for c in ('tv', 'web_safari', 'mweb', 'android_vr')]
+    for cli in clientes:
+        try:
+            r = subprocess.run(['yt-dlp', '-q', '--no-playlist', '--max-filesize', '150M'] + extra + cli + ['-f',
+                                'bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[height<=1080][ext=mp4]/bv*[height<=1080]+ba/b',
+                                '--merge-output-format', 'mp4', '-o', ruta, url], capture_output=True, timeout=300)
+        except Exception:
+            continue
+        if r.returncode == 0 and os.path.exists(ruta) and os.path.getsize(ruta) > 50000:
+            return True
+        print('yt-dlp', cli[-1:] or 'default', ':', r.stderr[-250:], file=sys.stderr)
+    return False
 
 
 INVIDIOUS = ['https://invidious.f5.si', 'https://inv.nadeko.net', 'https://yewtu.be', 'https://invidious.nerdvpn.de']
@@ -214,16 +219,77 @@ def invidious(url, ruta):
     return False
 
 
+def _gh():
+    tok, repo = os.environ.get('GITHUB_TOKEN'), os.environ.get('GITHUB_REPOSITORY', 'laguaya/la-guayaba-ilustrada-web')
+    return ({'Authorization': f'Bearer {tok}', 'Accept': 'application/vnd.github+json'} if tok else None), repo
+
+
+def _cache_nombre(url):
+    import hashlib
+    return hashlib.sha1(url.encode()).hexdigest()[:16] + '.mp4'
+
+
+def cache_get(url, ruta):
+    """Videos ya descargados una vez (YouTube y redes) se guardan en el Release "videos-cache" del repositorio:
+    así un video que se bajó bien nunca vuelve a depender de que YouTube no bloquee."""
+    import requests
+    h, repo = _gh()
+    if not h:
+        return False
+    try:
+        r = requests.get(f'https://api.github.com/repos/{repo}/releases/tags/videos-cache', headers=h, timeout=30)
+        if r.status_code != 200:
+            return False
+        a = next((a for a in r.json().get('assets', []) if a['name'] == _cache_nombre(url)), None)
+        if not a:
+            return False
+        rr = requests.get(a['url'], headers={**h, 'Accept': 'application/octet-stream'}, timeout=300, stream=True)
+        if rr.status_code != 200:
+            return False
+        with open(ruta, 'wb') as f:
+            for ch in rr.iter_content(1 << 16):
+                f.write(ch)
+        print('Video desde caché:', url[:60], file=sys.stderr)
+        return os.path.getsize(ruta) > 50000
+    except Exception as e:
+        print('Caché:', e, file=sys.stderr)
+        return False
+
+
+def cache_put(url, ruta):
+    import requests
+    h, repo = _gh()
+    if not h or not os.path.exists(ruta) or os.path.getsize(ruta) > 1900 * 1024 * 1024:
+        return
+    try:
+        r = requests.get(f'https://api.github.com/repos/{repo}/releases/tags/videos-cache', headers=h, timeout=30)
+        if r.status_code == 404:
+            r = requests.post(f'https://api.github.com/repos/{repo}/releases', headers=h, timeout=30,
+                              json={'tag_name': 'videos-cache', 'name': 'Videos para Reels (caché)', 'prerelease': True,
+                                    'body': 'Videos de YouTube y redes ya descargados para armar los Reels. No borrar.'})
+        rel = r.json()
+        up = rel['upload_url'].split('{')[0]
+        with open(ruta, 'rb') as f:
+            rr = requests.post(up, params={'name': _cache_nombre(url)}, data=f, timeout=600,
+                               headers={**h, 'Content-Type': 'video/mp4'})
+        print('Caché guardada:', url[:60], rr.status_code, file=sys.stderr)
+    except Exception as e:
+        print('Caché:', e, file=sys.stderr)
+
+
 def bajar_url(url, ruta):
     """Baja un video REAL: MP4 directo, página con MP4 (Ads of the World), o YouTube/Vimeo/TikTok/Instagram con yt-dlp
     (YouTube necesita el secreto YT_COOKIES para que no lo bloquee)."""
     try:
         if re.search(r'\.(mp4|mov|m4v|webm)(\?|$)', url, re.I):
             return _descargar(url, ruta)
-        if re.search(r'youtube\.com|youtu\.be', url, re.I):
-            return _ytdlp(url, ruta) or invidious(url, ruta)
-        if re.search(r'vimeo\.com|tiktok\.com|instagram\.com|x\.com|twitter\.com|facebook\.com', url, re.I):
-            return _ytdlp(url, ruta)
+        if re.search(r'youtube\.com|youtu\.be|vimeo\.com|tiktok\.com|instagram\.com|x\.com|twitter\.com|facebook\.com', url, re.I):
+            if cache_get(url, ruta):
+                return True
+            ok = _ytdlp(url, ruta) or (re.search(r'youtube\.com|youtu\.be', url) and invidious(url, ruta))
+            if ok:
+                cache_put(url, ruta)
+            return bool(ok)
         import fuentes
         for u in fuentes.mp4s_de_pagina(url):
             if _descargar(u, ruta):
