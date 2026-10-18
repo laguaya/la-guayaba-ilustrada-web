@@ -250,10 +250,11 @@ def rehacer_reel(nid):
     """Vuelve a armar el Reel de una nota ya publicada y lo manda a Telegram con botón para subirlo."""
     n, _ = note_get(nid)
     igp = f'drafts/ig/{nid}.json'
-    if not n or not os.path.exists(igp):
+    if not n or not (os.path.exists(igp) or n.get('ig')):
         tg('sendMessage', chat_id=CHAT, text=f'⚠️ No encontré la nota {nid} para rehacer su Reel.')
         return
-    n['ig'] = load(igp)
+    if os.path.exists(igp):
+        n['ig'] = load(igp)
     for k in ('ig1', 'ig2'):
         if n['ig'].get(k):
             n[k] = n['ig'][k]
@@ -557,6 +558,7 @@ def build_reel(n):
     data['src'] = n.get('src', '')
     data['guion'] = n.get('guion') or n['ig'].get('guion', '')
     data['mp4'] = n.get('mp4', '')
+    data['yt'], data['vm'] = n.get('yt', ''), n.get('vm', '')
     data['videos'] = n.get('videos') or n['ig'].get('videos') or []   # videos de apoyo (otras campañas, la marca, el producto)
     out = f'assets/ig/{n["id"]}/reel.mp4'
     os.makedirs(os.path.dirname(out), exist_ok=True)

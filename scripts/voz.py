@@ -81,6 +81,59 @@ def elevenlabs(texto, salida):
 ELEVEN_ERROR = ['']
 
 
+def _n(w):
+    return re.sub(r'[^0-9a-záéíóúüñ]', '', w.lower())
+
+
+def alinear(audio, texto):
+    """Tiempos de cada palabra de `texto` en una grabación ya hecha (por ejemplo, una voz que Sergio generó en
+    ElevenLabs). Usa faster-whisper para escuchar el audio y empata lo que oye con el guion; las palabras que no
+    reconoce se reparten entre sus vecinas. Regresa (palabras, duración)."""
+    import difflib
+    texto = limpiar(texto)
+    toks = texto.split()
+    dur = duracion(audio)
+    rec = []
+    try:
+        from faster_whisper import WhisperModel
+        m = WhisperModel(os.environ.get('WHISPER_MODEL', 'small'), device='cpu', compute_type='int8')
+        segs, _ = m.transcribe(audio, language='es', word_timestamps=True, vad_filter=False)
+        rec = [(w.start, w.end, w.word.strip()) for sg in segs for w in (sg.words or [])]
+    except Exception as e:
+        print('Alinear voz:', e, file=sys.stderr)
+    if not rec:                                   # sin whisper: reparto proporcional a lo largo del audio
+        pal, d = _estimado(texto)
+        k = dur / max(d, 0.1)
+        return [(a * k, b * k, w) for a, b, w in pal], dur
+    a = [_n(t) for t in toks]
+    b = [_n(w) for _, _, w in rec]
+    tiempos = [None] * len(toks)
+    for tag, i1, i2, j1, j2 in difflib.SequenceMatcher(None, a, b, autojunk=False).get_opcodes():
+        if tag == 'equal':
+            for k in range(i2 - i1):
+                tiempos[i1 + k] = rec[j1 + k][:2]
+        elif tag == 'replace':                    # lo dijo distinto (nombres, números): reparte el tramo oído
+            t0, t1 = rec[j1][0], rec[j2 - 1][1]
+            paso = (t1 - t0) / (i2 - i1)
+            for k in range(i2 - i1):
+                tiempos[i1 + k] = (t0 + k * paso, t0 + (k + 1) * paso)
+    # huecos (palabras que whisper no oyó): entre el fin de la anterior y el inicio de la siguiente
+    i = 0
+    while i < len(toks):
+        if tiempos[i] is not None:
+            i += 1; continue
+        j = i
+        while j < len(toks) and tiempos[j] is None:
+            j += 1
+        t0 = tiempos[i - 1][1] if i > 0 else 0.0
+        t1 = tiempos[j][0] if j < len(toks) else dur
+        paso = max(0.05, (t1 - t0) / (j - i))
+        for k in range(i, j):
+            tiempos[k] = (t0 + (k - i) * paso, t0 + (k - i + 1) * paso)
+        i = j
+    return [(s, e, w) for (s, e), w in zip(tiempos, toks)], dur
+
+
 def sintetizar(texto, salida, voz=None, ritmo=None):
     texto = limpiar(texto)
     res = elevenlabs(texto, salida)

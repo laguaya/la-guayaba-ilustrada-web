@@ -42,71 +42,61 @@
   ],
   "escenas": [
    {
-    "voz": "Bill Murray volvió a cazar fantasmas, pero ahora para vender camionetas eléctricas.",
+    "voz": "¡Bill Murray volvió a cazar fantasmas! Pero ahora... para vender camionetas eléctricas.",
     "ver": "video"
    },
    {
-    "voz": "Es Halloween y Slimer, el fantasma verde, saquea el refrigerador de una familia.",
+    "voz": "Es la madrugada de Halloween. Slimer, el fantasma verde y glotón, está saqueando el refrigerador de una familia.",
     "ver": "video"
    },
    {
-    "voz": "Llega Venkman en el Ecto R1, una Rivian disfrazada del auto de la película.",
+    "voz": "Y entonces llega Venkman... en el Ecto R1. Una Rivian disfrazada del auto de la película.",
     "ver": "video"
    },
    {
-    "voz": "Lo atrapa, lo encierra en la cajuela delantera y queda embarrado de baba.",
+    "voz": "Lo atrapa, lo encierra en la cajuela delantera y termina embarrado de baba.",
     "ver": "video"
    },
    {
-    "voz": "Rivian lo encargó a Gil Kenan, director de Ghostbusters: Apocalipsis fantasma.",
-    "ver": "video",
-    "video": "https://www.youtube.com/watch?v=HpOBXh02rVc"
-   },
-   {
-    "voz": "Usaron un títere de Slimer como el original y efectos hechos en cámara.",
+    "voz": "Detrás está Gil Kenan, el director de Ghostbusters: Apocalipsis fantasma.",
     "ver": "video"
    },
    {
-    "voz": "Lo más loco: anuncia una actualización que llega por internet, como en tu celular.",
-    "ver": "video",
-    "video": "https://www.youtube.com/watch?v=7Hd_TIEWmH8"
+    "voz": "Usaron un títere de Slimer como el original y efectos hechos en cámara. Nada de inteligencia artificial.",
+    "ver": "video"
    },
    {
-    "voz": "Estacionada, pone el tema de la película, cambia luces y pantallas y trae un videojuego.",
-    "ver": "video",
-    "video": "https://www.youtube.com/watch?v=Y5ZT7wPQhj8"
+    "voz": "Pero aquí viene lo más loco: el comercial no vende un auto nuevo.",
+    "ver": "video"
    },
    {
-    "voz": "En 2024 hizo lo mismo con David Hasselhoff y el auto increíble.",
-    "ver": "video",
-    "video": "https://www.adsoftheworld.com/campaigns/halloween-2024-software-update-knight-rider-ft-david-hasselhoff"
+    "voz": "Anuncia una actualización que llega por internet, como cuando se actualiza tu celular.",
+    "ver": "video"
    },
    {
-    "voz": "El Ecto R1 sí existe, no se vende y recorre seis tiendas en Estados Unidos.",
-    "ver": "foto",
-    "foto": "https://media.designrush.com/articles/1135030/conversions/rivian-ghostbusters-details-webp.webp"
+    "voz": "Estacionada, la camioneta toca el tema de la película, cambia luces y sonidos... ¡y hasta trae un videojuego!",
+    "ver": "video"
    },
    {
-    "voz": "La lección: si tu producto se actualiza, cada temporada es pretexto para consentir a tus clientes.",
-    "ver": "video",
-    "video": "https://www.youtube.com/watch?v=FrDvg9KhDBY"
+    "voz": "La lección para tu marca: si tu producto se puede actualizar, cada temporada es un pretexto para consentir a quien ya te compró.",
+    "ver": "video"
    },
    {
-    "voz": "¿Genial o exagerado? Dímelo en comentarios y síguenos para más campañas.",
+    "voz": "¿Genial o exagerado? Dímelo en comentarios... y síguenos para más campañas así.",
     "ver": "video"
    }
   ],
   "pronunciar": {
    "Bill Murray": "Bil Mórrei",
+   "Halloween": "Jálouin",
    "Slimer": "Sláimer",
    "Venkman": "Vénkman",
    "Ecto R1": "Ecto ar uán",
    "Rivian": "Rívian",
    "Gil Kenan": "Guil Kínan",
-   "Ghostbusters": "Góstbosters",
-   "David Hasselhoff": "Déivid Jáseljof",
-   "Halloween": "Jálouin"
-  }
+   "Ghostbusters": "Góstbosters"
+  },
+  "voz_audio": "drafts/voces/rivian-ghostbusters-bill-murray-halloween.mp3"
  },
  "yt": "AzErJdWUDTE",
  "auto_video": true,

@@ -182,6 +182,10 @@ def bajar_video(data, tmp):
     if data.get('video') and os.path.exists(str(data['video'])):
         return data['video']
     urls = [data['mp4']] if data.get('mp4') else []
+    if data.get('yt'):
+        urls.append('https://www.youtube.com/watch?v=' + data['yt'])
+    if data.get('vm'):
+        urls.append('https://vimeo.com/' + str(data['vm']))
     if not urls and data.get('src'):
         try:
             import fuentes
@@ -654,11 +658,21 @@ def make(data, out):
     try:
         escenas = escenas_de(data)
         pron = {k: v for k, v in (data.get('pronunciar') or {}).items() if k and v}
-        (palabras, dvoz), mp3 = voz.sintetizar(pronunciado(guion_de(data), pron), f'{tmp}/voz.mp3')
+        grabada = data.get('voz_audio') if data.get('voz_audio') and os.path.exists(data['voz_audio']) else None
+        if grabada:   # voz que Sergio ya generó (ElevenLabs): se le acortan los silencios largos y se alinea con el guion
+            mp3 = f'{tmp}/voz.mp3'
+            subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', grabada, '-af',
+                            'silenceremove=stop_periods=-1:stop_duration=0.3:stop_threshold=-38dB:stop_silence=0.22',
+                            '-ar', '44100', mp3], check=True)
+            palabras, dvoz = voz.alinear(mp3, pronunciado(guion_de(data), pron))
+        else:
+            (palabras, dvoz), mp3 = voz.sintetizar(pronunciado(guion_de(data), pron), f'{tmp}/voz.mp3')
         palabras = restaurar(palabras, pron)          # los subtítulos salen con la escritura correcta
         total = TOTAL
         # la voz tiene que caber en el minuto: si se pasa, se acelera un poco (máx. 25 %) sin cambiar el tono
         cabe = total - CIERRE_MIN - INICIO_VOZ - 0.4
+        if grabada:            # con voz grabada, la última frase (el CTA hablado) puede sonar debajo del cierre
+            cabe = total - INICIO_VOZ - 0.5
         tempo = 1.0
         if mp3 and dvoz > cabe:
             tempo = min(1.25, dvoz / cabe)

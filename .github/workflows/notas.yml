@@ -32,7 +32,7 @@ jobs:
       - uses: denoland/setup-deno@v2   # yt-dlp lo necesita para YouTube
         with:
           deno-version: v2.x
-      - run: pip install -q requests pillow fonttools brotli "opencv-contrib-python-headless<5" pillow-heif edge-tts "yt-dlp[default,curl-cffi]"
+      - run: pip install -q requests pillow fonttools brotli "opencv-contrib-python-headless<5" pillow-heif edge-tts "yt-dlp[default,curl-cffi]" faster-whisper
       - env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: '8941716448'
