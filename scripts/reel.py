@@ -189,6 +189,7 @@ def invidious(url, ruta):
         try:
             r = requests.get(f'{b}/api/v1/videos/{vid}', params={'local': 'true'}, headers=UA_VID, timeout=25)
             if r.status_code != 200:
+                print('Invidious', b, r.status_code, file=sys.stderr)
                 continue
             j = r.json()
             def alto(f):
@@ -202,6 +203,8 @@ def invidious(url, ruta):
                 u = f.get('url', '')
                 if u.startswith('/'):
                     u = b + u
+                if u:
+                    print('Invidious', b, 'probando', alto(f), 'p', file=sys.stderr)
                 if u and _descargar(u, ruta):
                     print('Video de YouTube vía', b, alto(f), 'p', file=sys.stderr)
                     return True

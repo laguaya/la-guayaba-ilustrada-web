@@ -97,7 +97,11 @@ def alinear(audio, texto):
     try:
         from faster_whisper import WhisperModel
         m = WhisperModel(os.environ.get('WHISPER_MODEL', 'small'), device='cpu', compute_type='int8')
-        segs, _ = m.transcribe(audio, language='es', word_timestamps=True, vad_filter=False)
+        import numpy as np                          # se decodifica con ffmpeg (evita choques de versión de PyAV)
+        pcm = subprocess.run(['ffmpeg', '-v', 'error', '-i', audio, '-f', 's16le', '-ac', '1', '-ar', '16000', '-'],
+                             capture_output=True, timeout=300).stdout
+        muestra = np.frombuffer(pcm, np.int16).astype(np.float32) / 32768.0
+        segs, _ = m.transcribe(muestra, language='es', word_timestamps=True, vad_filter=False)
         rec = [(w.start, w.end, w.word.strip()) for sg in segs for w in (sg.words or [])]
     except Exception as e:
         print('Alinear voz:', e, file=sys.stderr)
