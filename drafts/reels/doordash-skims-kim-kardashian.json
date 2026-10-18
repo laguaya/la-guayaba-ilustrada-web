@@ -1,0 +1,37 @@
+{
+ "id": "doordash-skims-kim-kardashian",
+ "t": "Kim Kardashian pide SKIMS por DoorDash a media grabación de su propio comercial",
+ "k": "Noticias",
+ "src": "https://musebyclios.com/film-tv/lets-watch-kim-kardashian-order-skims-via-doordash/",
+ "mp4": "https://cdn.musebyclios.com/wp-content/uploads/2026/10/13141204/SKIMS-Delivered-DoorDash-x-Kim-Kardashian.mp4",
+ "ig": {
+  "etiqueta": "Noticias",
+  "portada": "Kim Kardashian *paró su comercial* para pedir ropa",
+  "marca": "DoorDash x SKIMS",
+  "caption": "Kim Kardashian detuvo su propio comercial para pedir ropa por DoorDash, y eso era el comercial 📦\n\nSKIMS, su marca de ropa moldeadora valuada en 5,000 millones de dólares, ya se entrega por DoorDash en menos de una hora. La agencia OBB Bolded armó el spot a partir de algo que de verdad pasó en una sesión de fotos.\nUna lección de marketing y publicidad: las mejores ideas a veces ya te pasaron.\n\n¿Genial o exagerado?\nMándaselo a quien hace los videos de tu marca.\n\nSíguenos para las noticias de marcas, diseño y publicidad que sí importan, todos los días.\n\n#KimKardashian #SKIMS #DoorDash #MarketingDigital #PublicidadCreativa",
+  "videos": [
+   "https://www.youtube.com/watch?v=jvw_lStBUf8",
+   "https://www.instagram.com/reel/DeZyF6ap2n2/",
+   "https://www.instagram.com/reel/DecMATbRYOv/",
+   "https://www.instagram.com/p/DeeWR3tkW4b/"
+  ],
+  "pronunciar": {
+   "DoorDash": "Dór dash",
+   "OBB Bolded": "ou bi bi Bóulded"
+  },
+  "escenas": [
+   {"voz": "Kim Kardashian detuvo su propio comercial a media toma.", "ver": "video"},
+   {"voz": "Está en el set, algo no la convence y pide que esperen un segundo.", "ver": "video"},
+   {"voz": "Saca el celular y pide ropa de SKIMS por DoorDash, como quien pide tacos.", "ver": "video"},
+   {"voz": "Llega el repartidor con la bolsa roja, se cambia y la grabación sigue.", "ver": "video"},
+   {"voz": "Y otra vez, y otra: cada cambio de ropa es un nuevo pedido.", "ver": "video"},
+   {"voz": "Un día antes, Kim lo anunció en Instagram con una sola palabra: mañana.", "ver": "video", "video": "https://www.instagram.com/reel/DeZyF6ap2n2/"},
+   {"voz": "Lo más loco: pasó de verdad, en una sesión anterior pararon para que fuera por su SKIMS.", "ver": "video", "video": "https://www.instagram.com/reel/DecMATbRYOv/"},
+   {"voz": "De ahí la agencia OBB Bolded armó toda la campaña.", "ver": "video", "video": "https://www.instagram.com/p/DeeWR3tkW4b/"},
+   {"voz": "SKIMS, la marca de ropa moldeadora de Kim, vale cinco mil millones de dólares.", "ver": "video"},
+   {"voz": "Y es su primera alianza de entrega inmediata: llega en menos de una hora.", "ver": "video"},
+   {"voz": "La lección: tu mejor anuncio puede ser algo que ya te pasó.", "ver": "video"},
+   {"voz": "¿Genial o exagerado? Dímelo en comentarios y síguenos para más campañas así todos los días.", "ver": "video"}
+  ]
+ }
+}
