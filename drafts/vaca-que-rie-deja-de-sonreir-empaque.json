@@ -12,9 +12,9 @@
   "Tocar un logo es arriesgado, y otras marcas ya lo probaron con éxito. KitKat Canadá se volvió “KatKit” por unos días y Norwegian Air puso el logo de British Airways tras perder una apuesta del Mundial. La diferencia aquí es que la marca no cambió de nombre: solo le quitó la sonrisa a un personaje con más de cien años de historia en la memoria de la gente.",
   "Para tu marca: si tienes un personaje, un logo o un empaque que la gente reconoce, un cambio pequeño y temporal puede generar más conversación que una campaña completa. La clave es que el cambio provoque una pregunta, que haya una respuesta lista en pocos días y que la gente pueda participar. Un QR en tu etiqueta y tres videos en redes bastan para probarlo con poco presupuesto."
  ],
- "img": "assets/work/nota-vaca-que-rie-deja-de-sonreir-empaque.webp",
+ "img": "assets/work/nota-vaca-que-rie-deja-de-sonreir-empaque-foto-src1.webp",
  "alt": "La mascota de La Vaca que Ríe con cara seria en el empaque de quesitos Creamy Original",
- "cr": "",
+ "cr": "Foto: Reason Why",
  "src": "https://www.reasonwhy.es/actualidad/vaca-que-rie-deja-sonreir-por-primera-vez-para-cuestionar-discusiones-absurdas",
  "sn": "Con información de Reason Why",
  "yt": "dvllc3Qen4w",
@@ -102,5 +102,13 @@
     "ver": "video"
    }
   ]
- }
+ },
+ "cands": [
+  "assets/work/nota-vaca-que-rie-deja-de-sonreir-empaque-foto-src1.webp"
+ ],
+ "ig1": "assets/work/nota-vaca-que-rie-deja-de-sonreir-empaque-foto-src1.webp",
+ "ig2": "assets/work/nota-vaca-que-rie-deja-de-sonreir-empaque-foto-src1.webp",
+ "cands_v": 2,
+ "reel": true,
+ "reel_listo": true
 }

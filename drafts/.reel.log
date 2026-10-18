@@ -1,16 +1,24 @@
-2026-10-18T18:34:49.193740 aora-mexico-maquillaje-sin-plastico-time
-ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
+2026-10-18T18:39:55.462439 vaca-que-rie-deja-de-sonreir-empaque
 ElevenLabs usó eleven_v4
-Pausas recortadas: 20 5.4s
-Caché guardada: https://www.youtube.com/watch?v=Lrb2eSAFw7g 201
-Video principal (de apoyo): https://www.youtube.com/watch?v=Lrb2eSAFw7g
-Fuente 1 campana 2942.1s 162 tomas
-Video desde caché: https://www.youtube.com/watch?v=Lrb2eSAFw7g
-Fuente 2 https://www.youtube.com/watch?v=Lrb2eSAFw7g 2942.1s 162 tomas
-yt-dlp default : b'on using  yt-dlp -U\nERROR: [Instagram] DehZ6mGB-TA: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U\n'
-Caché guardada: https://www.instagram.com/p/DeiGg5juH7S/ 201
-Video vp9 -> h264 ok
-Fuente 3 https://www.instagram.com/p/DeiGg5juH7S/ 120.7s 57 tomas
-yt-dlp default : b'on using  yt-dlp -U\nERROR: [Instagram] DF6AQjZSzfO: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U\n'
-Reel: [(0.0, 4.3, 'video1'), (4.3, 8.2, 'video1'), (8.2, 12.4, 'video1'), (12.4, 16.1, 'video2'), (16.1, 22.9, 'video1'), (22.9, 27.2, 'video1'), (27.2, 31.9, 'video1'), (31.9, 33.0, 'video3'), (33.0, 38.8, 'video1'), (38.8, 43.3, 'video1'), (43.3, 48.3, 'video1'), (48.3, 52.9, 'video1'), (52.9, 57.7, 'video1'), (57.7, 60.0, 'video1')]
+Pausas recortadas: 22 5.0s
+Caché guardada: https://www.youtube.com/watch?v=dvllc3Qen4w 201
+Video av1 -> h264 ok
+Fuente 4 campana 30.0s 14 tomas
+yt-dlp default : b'ed-in. Use --cookies, --cookies-from-browser, --username and --password, --netrc-cmd, or --netrc (vimeo) to provide account credentials. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies\n'
+yt-dlp default : b'ed-in. Use --cookies, --cookies-from-browser, --username and --password, --netrc-cmd, or --netrc (vimeo) to provide account credentials. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies\n'
+Caché guardada: https://www.youtube.com/watch?v=TMaLTm9YTpo 201
+Video av1 -> h264 ok
+Fuente 5 https://www.youtube.com/watch?v=TMaLTm9YTpo 75.8s 43 tomas
+Caché guardada: https://www.youtube.com/watch?v=8mhIs-XURok 201
+Video av1 -> h264 ok
+Fuente 6 https://www.youtube.com/watch?v=8mhIs-XURok 7.8s 1 tomas
+Caché guardada: https://www.instagram.com/reel/Ddley56DiKj/ 201
+Fuente 7 https://www.instagram.com/reel/Ddley56DiKj/ 17.1s 3 tomas
+Caché guardada: https://www.instagram.com/reel/Dd4kYNfnaOt/ 201
+Fuente 8 https://www.instagram.com/reel/Dd4kYNfnaOt/ 30.1s 14 tomas
+Caché guardada: https://www.instagram.com/reel/DdubbcLtsS7/ 201
+Fuente 9 https://www.instagram.com/reel/DdubbcLtsS7/ 10.1s 2 tomas
+Caché guardada: https://www.instagram.com/reel/DdlhrWlgtgl/ 201
+Fuente 10 https://www.instagram.com/reel/DdlhrWlgtgl/ 17.1s 3 tomas
+Reel: [(0.0, 2.0, 'video4'), (2.0, 3.2, 'video4'), (3.2, 4.3, 'video4'), (4.3, 8.1, 'video4'), (8.1, 11.7, 'video4'), (11.7, 14.4, 'video4'), (14.4, 16.6, 'video4'), (16.6, 20.4, 'video7'), (20.4, 24.3, 'video6'), (24.3, 25.6, 'video5'), (25.6, 27.1, 'video4'), (27.1, 28.9, 'video4'), (28.9, 30.9, 'video8'), (30.9, 32.4, 'video4'), (32.4, 37.5, 'video9'), (37.5, 40.1, 'video4'), (40.1, 42.0, 'video4'), (42.0, 46.4, 'video10'), (46.4, 48.0, 'video4'), (48.0, 51.7, 'video4'), (51.7, 60.0, 'video4')]
 
