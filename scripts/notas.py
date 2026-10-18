@@ -562,7 +562,17 @@ def build_reel(n):
     data['videos'] = n.get('videos') or n['ig'].get('videos') or []   # videos de apoyo (otras campañas, la marca, el producto)
     out = f'assets/ig/{n["id"]}/reel.mp4'
     os.makedirs(os.path.dirname(out), exist_ok=True)
-    reel.make(data, out)
+    import io, contextlib, traceback
+    buf = io.StringIO()
+    try:
+        with contextlib.redirect_stderr(buf):
+            reel.make(data, out)
+    except Exception:
+        with open('drafts/.errores.log', 'a') as f:
+            f.write(f'{datetime.now().isoformat()} reel {n["id"]}\n{buf.getvalue()[-3000:]}\n{traceback.format_exc()}\n')
+        raise
+    finally:
+        sys.stderr.write(buf.getvalue())
     return out
 
 

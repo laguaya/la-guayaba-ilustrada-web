@@ -151,9 +151,11 @@ def _ytdlp(url, ruta):
             open(ck, 'w').write(os.environ['YT_COOKIES'])
         extra = ['--cookies', ck]
     try:
-        subprocess.run(['yt-dlp', '-q', '--no-playlist', '--max-filesize', '150M'] + extra + ['-f',
+        r = subprocess.run(['yt-dlp', '-q', '--no-playlist', '--max-filesize', '150M'] + extra + ['-f',
                         'bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[height<=1080][ext=mp4]/bv*[height<=1080]+ba/b',
                         '--merge-output-format', 'mp4', '-o', ruta, url], capture_output=True, timeout=300)
+        if r.returncode:
+            print('yt-dlp:', r.stderr[-400:], file=sys.stderr)
     except Exception:
         return False
     return os.path.exists(ruta) and os.path.getsize(ruta) > 50000
