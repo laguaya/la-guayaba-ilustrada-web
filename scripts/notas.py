@@ -1484,7 +1484,8 @@ def queue_tiktok(n):
     q = load(TTQ) if os.path.exists(TTQ) else []
     if any(i['id'] == n['id'] for i in q):
         return True
-    cap = re.sub(r'\n?Nota completa en el link de la bio\.?\n?', '\n', n['ig'].get('caption', '')).strip()
+    cap = (n['ig'].get('caption_tiktok') or '').strip() or \
+        re.sub(r'\n?Nota completa en el link de la bio\.?\n?', '\n', n['ig'].get('caption', '')).strip()
     q.append({'id': n['id'], 'caption': cap, 'reply': n.get('tg')})
     save(TTQ, q)
     return True
