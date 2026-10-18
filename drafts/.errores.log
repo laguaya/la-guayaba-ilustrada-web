@@ -46,3 +46,15 @@ Traceback (most recent call last):
     raise RuntimeError('La nota no tiene video de la campaña para el Reel')
 RuntimeError: La nota no tiene video de la campaña para el Reel
 
+2026-10-18T18:28:09.391131 reel aora-mexico-maquillaje-sin-plastico-time
+ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
+ElevenLabs usó eleven_v4
+Pausas recortadas: 18 5.6s
+
+Traceback (most recent call last):
+  File "/home/runner/work/la-guayaba-ilustrada-web/la-guayaba-ilustrada-web/scripts/notas.py", line 586, in build_reel
+    reel.make(data, out)
+  File "/home/runner/work/la-guayaba-ilustrada-web/la-guayaba-ilustrada-web/scripts/reel.py", line 870, in make
+    raise RuntimeError('La nota no tiene video de la campaña para el Reel')
+RuntimeError: La nota no tiene video de la campaña para el Reel
+
