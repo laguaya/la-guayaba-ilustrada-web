@@ -1434,6 +1434,23 @@ def limite_ig(e):
                                 'request limit', "'is_transient': True", 'action is blocked'))
 
 
+def ya_publicado(api, uid, tok, item):
+    """¿Ya está en el perfil? (Meta a veces publica y aun así responde con error). Así nunca se repite una publicación."""
+    clave = re.sub(r'\s+', ' ', item.get('caption') or '').strip()[:80]
+    if not clave:
+        return False
+    try:
+        r = requests.get(f'{api}/{uid}/media', params={'fields': 'caption,timestamp,media_type', 'limit': 12, 'access_token': tok}, timeout=30).json()
+        for m in r.get('data', []):
+            if re.sub(r'\s+', ' ', m.get('caption') or '').strip()[:80] == clave:
+                que = 'el Reel' if item.get('kind') == 'reel' else 'el carrusel'
+                tg('sendMessage', chat_id=CHAT, text=f'📲 Listo, {que} ya está publicado en Instagram.', reply_to_message_id=item.get('reply'))
+                return True
+    except Exception as e:
+        print('Revisión de publicados:', e, file=sys.stderr)
+    return False
+
+
 def reintentar_ig(item, e, que):
     """Programa otro intento en vez de rendirse. Regresa True si se vuelve a intentar."""
     if limite_ig(e):
@@ -1474,6 +1491,8 @@ def instagram():
         if time.time() < float(item.get('despues') or 0) or time.time() - ult < IG_ESPACIO:
             rest.append(item)
             continue
+        if (item.get('intentos') or item.get('esperas')) and ya_publicado(api, uid, tok, item):
+            continue                             # el intento anterior sí salió aunque Meta respondió con error
         ult = time.time()
         save(IG_ULTIMO, {'t': ult})
         if item.get('kind') == 'reel':
@@ -1482,7 +1501,8 @@ def instagram():
                 tg('sendMessage', chat_id=CHAT, text='🎬 Listo, el Reel ya está publicado en Instagram.', reply_to_message_id=item.get('reply'))
             except Exception as e:
                 print('Reel falló:', e, file=sys.stderr)
-                if reintentar_ig(item, e, 'el Reel'):
+                time.sleep(20)
+                if not ya_publicado(api, uid, tok, item) and reintentar_ig(item, e, 'el Reel'):
                     rest.append(item)
             continue
         if item.get('animado'):
@@ -1526,7 +1546,8 @@ def instagram():
             tg('sendMessage', chat_id=CHAT, text='📲 Listo, el carrusel ya está publicado en Instagram.', reply_to_message_id=item.get('reply'))
         except Exception as e:
             print('Instagram falló:', e, file=sys.stderr)
-            if reintentar_ig(item, e, 'el carrusel'):
+            time.sleep(20)
+            if not ya_publicado(api, uid, tok, item) and reintentar_ig(item, e, 'el carrusel'):
                 rest.append(item)
     if json.dumps(rest, sort_keys=True) == antes:
         return                                   # solo esperando: nada cambió, no hace falta commit
