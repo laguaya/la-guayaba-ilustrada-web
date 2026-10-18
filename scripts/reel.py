@@ -255,6 +255,22 @@ def bajar_video(data, tmp):
     return None
 
 
+def normalizar(ruta, salida):
+    """Los videos de YouTube suelen venir en AV1 o VP9: al saltar a media toma ffmpeg a veces no saca cuadros.
+    Se pasan una sola vez a H.264 (mismo tamaño y velocidad) para que cada corte sea exacto."""
+    try:
+        codec = subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=codec_name',
+                                '-of', 'csv=p=0', ruta], capture_output=True, text=True, timeout=60).stdout.strip()
+    except Exception:
+        codec = ''
+    if codec == 'h264':
+        return ruta
+    r = subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', ruta, '-an', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '17',
+                        '-pix_fmt', 'yuv420p', '-vf', 'scale=min(1920\\,iw):-2', salida], capture_output=True, text=True, timeout=1200)
+    print('Video', codec, '-> h264', 'ok' if r.returncode == 0 else r.stderr[-300:], file=sys.stderr)
+    return salida if r.returncode == 0 and os.path.exists(salida) else ruta
+
+
 class Fuente:
     """Un video (la campaña o uno extra) con sus tomas reales, su recorte sin franjas y su encuadre fijo."""
     n = 0
@@ -262,6 +278,7 @@ class Fuente:
     def __init__(self, ruta, tmp, nombre=''):
         import tomas as TM, encuadre
         Fuente.n += 1
+        ruta = normalizar(ruta, f'{tmp}/norm{Fuente.n}.mp4')
         self.id, self.ruta, self.tmp, self.nombre = Fuente.n, ruta, tmp, nombre
         self.tomas, self.dur = TM.cortes(ruta, maximo=10 ** 6)       # solo cortes reales: nunca saltos dentro de una toma
         self.usados = []
@@ -543,6 +560,8 @@ def plan(escenas, ini, fin_cuerpo, total, principal, extras, data, tmp):
         cola = max(0.0, min(0.6, fin_toma - (desde + largo * vel)))
         cs = F.cuadros(k[0], desde, largo * vel + cola); k[0] += 1
         if len(cs) < 3:
+            print('Sin cuadros:', F.id, f'{desde:.2f}', f'{largo:.2f}', file=sys.stderr)
+            F.usados.append((desde - margen, desde + largo * vel + margen))   # no volver a intentar ese tramo
             return 0.0
         tramos.append(dict(a=a, b=a + largo, tipo='video', cuadros=cs, vel=vel, F=F, desde=desde, fin_toma=fin_toma, off=0.0))
         F.usados.append((desde - margen, desde + largo * vel + cola + margen))
