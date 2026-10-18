@@ -1,21 +1,7 @@
-2026-10-18T03:36:08.045911 rivian-ghostbusters-bill-murray-halloween
+2026-10-18T03:42:25.570309 rivian-ghostbusters-bill-murray-halloween
 ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
 ElevenLabs usó eleven_v4
+Fuente 1 campana 71.3s 24 tomas
 yt-dlp: b'WARNING: [generic] Falling back on generic information extractor\nERROR: [youtube] Y5ZT7wPQhj8: Video unavailable\nERROR: [youtube] 7Hd_TIEWmH8: Video unavailable\nERROR: [youtube] FrDvg9KhDBY: Video unavailable\n'
-yt-dlp: b'ERROR: [youtube] 7Hd_TIEWmH8: Video unavailable\n'
-Invidious https://invidious.f5.si 500
-Invidious https://inv.nadeko.net 403
-Invidious https://yewtu.be 403
-Invidious https://invidious.nerdvpn.de 401
-yt-dlp: b'ERROR: [youtube] Y5ZT7wPQhj8: Video unavailable\n'
-Invidious https://invidious.f5.si 500
-Invidious https://inv.nadeko.net 403
-Invidious https://yewtu.be 403
-Invidious https://invidious.nerdvpn.de 401
-yt-dlp: b'ERROR: [youtube] FrDvg9KhDBY: Video unavailable\n'
-Invidious https://invidious.f5.si 500
-Invidious https://inv.nadeko.net 403
-Invidious https://yewtu.be 403
-Invidious https://invidious.nerdvpn.de 401
-Reel: [(0.0, 5.9, 'video1'), (5.9, 8.8, 'video1'), (8.8, 12.2, 'video1'), (12.2, 14.1, 'video1'), (14.1, 15.1, 'video1'), (15.1, 17.8, 'video2'), (17.8, 19.1, 'video2'), (19.1, 22.0, 'video2'), (22.0, 26.4, 'video2'), (26.4, 28.4, 'video2'), (28.4, 30.1, 'video2'), (30.1, 31.9, 'video2'), (31.9, 33.6, 'video2'), (33.6, 35.7, 'video2'), (35.7, 36.8, 'video2'), (36.8, 39.1, 'video2'), (39.1, 39.8, 'video1'), (39.8, 40.9, 'video2'), (40.9, 42.4, 'video2'), (42.4, 45.8, 'video2'), (45.8, 46.9, 'video2'), (46.9, 52.3, 'video2'), (52.3, 57.4, 'video2'), (57.4, 60.0, 'video1')]
+Reel: [(0.0, 5.9, 'video1'), (5.9, 8.8, 'video1'), (8.8, 12.1, 'video1'), (12.1, 14.0, 'video1'), (14.0, 15.1, 'video1'), (15.1, 17.7, 'foto'), (17.7, 22.0, 'foto'), (22.0, 26.3, 'video1'), (26.3, 31.7, 'video1'), (31.7, 35.4, 'video1'), (35.4, 39.6, 'video1'), (39.6, 43.7, 'video1'), (43.7, 45.6, 'video1'), (45.6, 48.4, 'video1'), (48.4, 50.8, 'video1'), (50.8, 52.3, 'video1'), (52.3, 54.3, 'video1'), (54.3, 56.0, 'video1'), (56.0, 57.5, 'video1'), (57.5, 60.0, 'video1')]
 
