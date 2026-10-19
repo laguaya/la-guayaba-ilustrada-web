@@ -124,3 +124,23 @@ def iniciar(video, caption):
 def estado(publish_id):
     d = _post('/post/publish/status/fetch/', {'publish_id': publish_id}, _access())
     return d.get('status'), d.get('fail_reason')
+
+
+def iniciar_fotos(urls, titulo, descripcion):
+    """Publicación de fotos (carrusel). TikTok las baja de la web (prefijo de URL verificado en la app)."""
+    tok = _access()
+    info = _post('/post/publish/creator_info/query/', {}, tok)
+    opciones = info.get('privacy_level_options') or ['SELF_ONLY']
+    fuente = {'source': 'PULL_FROM_URL', 'photo_cover_index': 0, 'photo_images': urls}
+    for priv in (['PUBLIC_TO_EVERYONE'] if 'PUBLIC_TO_EVERYONE' in opciones else []) + ['SELF_ONLY']:
+        body = {'post_info': {'title': titulo[:90], 'description': descripcion[:4000], 'privacy_level': priv,
+                              'disable_comment': False, 'auto_add_music': True},
+                'source_info': fuente, 'post_mode': 'DIRECT_POST', 'media_type': 'PHOTO'}
+        try:
+            return _post('/post/publish/content/init/', body, tok)['publish_id'], priv
+        except RuntimeError as e:
+            if 'unaudited' not in str(e):
+                raise
+    body = {'post_info': {'title': titulo[:90], 'description': descripcion[:4000]},
+            'source_info': fuente, 'post_mode': 'MEDIA_UPLOAD', 'media_type': 'PHOTO'}
+    return _post('/post/publish/content/init/', body, tok)['publish_id'], 'BORRADOR'

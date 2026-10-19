@@ -1116,13 +1116,15 @@ def send_pending():
         body = '\n\n'.join(esc(p) for p in n['b'])
         if n.get('src'):
             body += f'\n\nFuente: {esc(n["src"])}'
-        kb = [[{'text': '✅ Publicar en la web', 'callback_data': 'pub:' + n['id']}]]
+        kb = [[{'text': '🌐 Solo web', 'callback_data': 'pub:' + n['id']}]]
         if n.get('ig'):
             if 'animado' not in n and toca_animado(n):
                 n['animado'] = True
                 reservar_animado(n['id'])
             if send_carousel(n):
                 kb.append([{'text': '📲 Web + Instagram', 'callback_data': 'pig:' + n['id']}])
+                if tiktok_ok():
+                    kb.append([{'text': '🚀 Web + Instagram + TikTok', 'callback_data': 'ptt:' + n['id']}])
                 kb.append([{'text': '🖼 Mejor fijo (rosa)' if n.get('animado') else '🎬 Hacerlo animado',
                             'callback_data': 'anim:' + n['id']}])
                 if 'reel' not in n and toca_reel(n):
@@ -1313,7 +1315,10 @@ def poll():
                 otra_foto(nid, (cq.get('message') or {}).get('message_id'))
             changed = True
             continue
-        if accion in ('pub', 'pig', 'prl', 'pall'):
+        if accion in ('pub', 'pig', 'prl', 'pall', 'ptt'):
+            con_tiktok = accion == 'ptt'
+            if con_tiktok:
+                accion = 'pig'
             publish(n)
             set_last(nid)
             os.remove(path)
@@ -1342,7 +1347,8 @@ def poll():
                 elif os.environ.get('IG_TOKEN'):
                     for k in kinds:
                         queue_instagram(n, k)
-                    mark(cq, f'✅ Publicada en la web. En unos minutos sale {nombre} en Instagram.')
+                    tt = con_tiktok and 'carousel' in kinds and queue_tiktok_fotos(n, (cq.get('message') or {}).get('message_id'))
+                    mark(cq, f'✅ Publicada en la web. En unos minutos sale {nombre} en Instagram' + (' y en TikTok.' if tt else '.'))
                 else:
                     mark(cq, '✅ Publicada en la web. Instagram todavía no está conectado.')
             else:
@@ -1487,6 +1493,37 @@ def tiktok_mensaje(mid, code):
         reply(mid, f'⚠️ TikTok no aceptó ese código ({str(e)[:200]}). Escribe "tiktok" para pedir un link nuevo; el código solo sirve unos minutos.')
 
 
+def tiktok_ok():
+    try:
+        sys.path.insert(0, 'scripts')
+        import tiktok
+        return tiktok.conectado()
+    except Exception:
+        return False
+
+
+def queue_tiktok_fotos(n, reply_id=None):
+    """El carrusel (láminas 1080x1350) como publicación de fotos en TikTok."""
+    if not tiktok_ok():
+        return False
+    import hashlib
+    site = os.environ.get('SITE', 'https://guayabailustrada.com.mx')
+    nums = [i for i in (1, 2, 3, 4) if os.path.exists(f'assets/ig/{n["id"]}/{i}.jpg')]
+    if not nums:
+        return False
+    urls = [f'{site}/assets/ig/{n["id"]}/{i}.jpg?v=' + hashlib.md5(open(f'assets/ig/{n["id"]}/{i}.jpg', 'rb').read()).hexdigest()[:8] for i in nums]
+    ig = n.get('ig') or {}
+    cap = (ig.get('caption_tiktok') or '').strip() or \
+        re.sub(r'\n?Nota completa en el link de la bio\.?\n?', '\n', ig.get('caption', '')).strip()
+    q = load(TTQ) if os.path.exists(TTQ) else []
+    if any(i['id'] == n['id'] for i in q):
+        return True
+    q.append({'id': n['id'], 'tipo': 'fotos', 'urls': urls, 'titulo': (n.get('t') or '')[:90], 'caption': cap,
+              'reply': reply_id, 'despues': time.time() + 240})   # espera a que la web publique las láminas
+    save(TTQ, q)
+    return True
+
+
 def queue_tiktok(n):
     sys.path.insert(0, 'scripts')
     import tiktok
@@ -1517,17 +1554,20 @@ def tiktok_cola():
         return
     try:
         if not it.get('publish_id'):
-            it['publish_id'], it['priv'] = tiktok.iniciar(f'assets/ig/{it["id"]}/reel.mp4', it['caption'])
+            if it.get('tipo') == 'fotos':
+                it['publish_id'], it['priv'] = tiktok.iniciar_fotos(it['urls'], it.get('titulo', ''), it['caption'])
+            else:
+                it['publish_id'], it['priv'] = tiktok.iniciar(f'assets/ig/{it["id"]}/reel.mp4', it['caption'])
             it['despues'] = time.time() + 30
         else:
             st, motivo = tiktok.estado(it['publish_id'])
             if st == 'PUBLISH_COMPLETE':
                 extra = '' if it.get('priv') == 'PUBLIC_TO_EVERYONE' else ' (en privado, mientras TikTok aprueba la app)'
-                tg('sendMessage', chat_id=CHAT, text=f'🎵 Listo, el Reel ya está en TikTok{extra}.', reply_to_message_id=it.get('reply'))
+                tg('sendMessage', chat_id=CHAT, text=('🎵 Listo, el carrusel ya está en TikTok' if it.get('tipo') == 'fotos' else '🎵 Listo, el Reel ya está en TikTok') + f'{extra}.', reply_to_message_id=it.get('reply'))
                 q.pop(0)
             elif st == 'SEND_TO_USER_INBOX':
                 tg('sendMessage', chat_id=CHAT, reply_to_message_id=it.get('reply'),
-                   text='🎵 El Reel ya está en tu TikTok como BORRADOR (mientras TikTok aprueba la app no deja publicar directo en una cuenta pública). '
+                   text=('🎵 El carrusel' if it.get('tipo') == 'fotos' else '🎵 El Reel') + ' ya está en tu TikTok como BORRADOR (mientras TikTok aprueba la app no deja publicar directo en una cuenta pública). '
                         'Abre TikTok, toca la notificación o ve a tu bandeja, y publícalo. Este es el texto:\n\n' + it['caption'])
                 q.pop(0)
             elif st == 'FAILED':
