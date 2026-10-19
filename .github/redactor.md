@@ -96,6 +96,8 @@ INSTAGRAM ("caption", en notas y Reels): Instagram ya funciona como buscador: la
 - Pregunta para comentarios + invitación a guardar o compartir (los guardados y envíos son lo que más empuja el alcance).
 - 3 a 5 hashtags: 1 de la marca, 1 o 2 del tema, 1 de nicho en español (#MarketingDigital, #PublicidadCreativa, #MarketingMexico). Nada de hashtags genéricos (#viral, #fyp, #love).
 
+SEGUIDORES (Sergio, oct 2026: en TikTok ningún Reel ha ganado seguidores): el último renglón de "caption" y de "caption_tiktok", antes de los hashtags, dice por qué seguirnos, variando la frase: "Síguenos: una campaña nueva cada 2 horas 📲", "Todos los días las campañas más locas de las marcas, síguenos". Corta, sin repetir la misma dos veces seguidas.
+
 TIKTOK ("caption_tiktok", OBLIGATORIO en cada Reel de drafts/reels/ y también en el "ig" de cada nota, porque el carrusel se puede publicar en TikTok como fotos): TikTok es el buscador de la gente joven y lee el texto, lo que se dice en voz y los hashtags.
 - Corto: 150 a 300 caracteres en total, hashtags incluidos.
 - Empieza con la palabra clave que se busca, en forma de búsqueda natural ("La campaña de Twix para Halloween que...", "Así vendió Kim Kardashian...") y un gancho que provoque curiosidad o polémica, en tono más casual que Instagram.
