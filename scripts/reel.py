@@ -108,7 +108,8 @@ def vertical(im, foco=(0.5, 0.45), zoom=1.0):
 PANTALLA_COMPLETA = False   # versión TikTok: video horizontal recortado a pantalla completa (nunca el rectángulo al centro)
 SALTO_INTRO = 7.0           # versión TikTok: se brincan los primeros segundos de tráileres (clasificación ESRB, logos, avisos)
 SALTO_FINAL = 8.0           # y los últimos (logo, fechas y avisos legales: en los tráilers suelen ser 6 a 8 s)
-TOTAL = 60.0          # todos los Reels duran exactamente un minuto
+TOTAL = 40.0          # Sergio (oct 2026, por las estadísticas): Reels de unos 40 s; la gente se va antes del minuto
+TOTAL_MAX = 60.0      # si un guion viejo es más largo, el Reel se alarga hasta un minuto (nunca se corta la voz)
 SONIDO_ORIGINAL = False   # Sergio no quiere el audio de fondo de los clips: solo voz y música
 CIERRE_MIN = 2.6      # segundos mínimos del cierre con el CTA
 TOMA_MIN = 1.0        # ningún clip dura menos de esto (los clips cortitos se ven como glitch)
@@ -848,6 +849,15 @@ def disenar(tramos):
                 v = toma_nueva(dur)
                 if v and (lambda im: im.width > im.height)(v['F'].abrir(v['cuadros'][0])):
                     extra.append(v)
+            # ya no quedan tomas nuevas: se usa otra toma del Reel que esté lejos (no la anterior ni la siguiente),
+            # que dure lo mismo y que no se haya usado antes en un panel; así tampoco hay bucles
+            for m, o in enumerate(vids):
+                if len(extra) >= n:
+                    break
+                largo = (len(o['cuadros']) - 1) / FPS / max(0.01, o['vel']) - o.get('off', 0.0)
+                if abs(m - n_) > 1 and largo >= dur and not o.get('en_panel') and o['F'] is not None:
+                    o['en_panel'] = True
+                    extra.append(o)
         if len(extra) >= 2 and d == 'tres':
             t['diseno'], t['vecinos'] = 'tres', extra[:2]
         elif len(extra) >= 1:
@@ -1033,8 +1043,9 @@ def make(data, out, tiktok=False):
                     json.dump({'palabras': [list(x) for x in palabras], 'dvoz': dvoz}, open(cache_js, 'w', encoding='utf-8'))
                 except Exception as e:
                     print('No guardé la voz:', e, file=sys.stderr)
-        total = TOTAL
-        # la voz tiene que caber en el minuto: si se pasa, se acelera un poco (máx. 25 %) sin cambiar el tono
+        # duración: 40 s; solo si la voz no cabe (guion largo) se alarga, hasta un minuto
+        total = round(min(TOTAL_MAX, max(TOTAL, INICIO_VOZ + dvoz + CIERRE_MIN + 0.6)), 2) if mp3 else TOTAL
+        # la voz tiene que caber: si se pasa, se acelera un poco (máx. 25 %) sin cambiar el tono: si se pasa, se acelera un poco (máx. 25 %) sin cambiar el tono
         cabe = total - CIERRE_MIN - INICIO_VOZ - 0.4
         if grabada:            # con voz grabada, la última frase (el CTA hablado) puede sonar debajo del cierre
             cabe = total - INICIO_VOZ - 0.5

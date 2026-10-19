@@ -20,7 +20,7 @@ Guía para copiar este sistema a otra marca (por ejemplo Fandom Focus). Repo de 
 | Archivo | Para qué |
 |---|---|
 | `scripts/notas.py` | Bot de Telegram, publicación web, Instagram, TikTok y colas |
-| `scripts/reel.py` | Reel de 60 s: video real, cortes en tomas reales, voz ElevenLabs, subtítulos, música bajita y CTA |
+| `scripts/reel.py` | Reel de 40 s: video real, cortes en tomas reales, voz ElevenLabs, subtítulos, música bajita y CTA |
 | `scripts/voz.py` | ElevenLabs (voice id fijo, modelo eleven_v4) y alineación con faster-whisper |
 | `scripts/tomas.py` | Detecta tomas del video y arma la hoja de contactos |
 | `scripts/carrusel.py`, `carrusel_video.py`, `ig_estilos.py`, `portada.py`, `encuadre.py` | Carrusel fijo o animado y portada (aquí van la plantilla y los colores de la marca) |
@@ -41,7 +41,7 @@ Guía para copiar este sistema a otra marca (por ejemplo Fandom Focus). Repo de 
 
 ## Reglas de Sergio que hay que conservar
 - **Formato del Reel:**
-  - Dura exactamente 60 s.
+  - Dura unos 40 s (se alarga hasta 60 s solo si el guion no cabe).
   - Todo lo que dice la voz se ve en pantalla.
   - Solo video real de esa misma noticia: nunca stock ni videos de la marca sobre otro tema.
   - Cortes limpios sin efectos y tomas de al menos 1 s.
