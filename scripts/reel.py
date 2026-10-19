@@ -764,7 +764,8 @@ def videos_extra(data, escenas, tmp):
 
 
 # palabras que la voz de IA acentúa mal en cualquier nota (verbos en -iar que se conjugan como "cambiar")
-PRON_FIJA = {'financian': 'finánsian', 'financia': 'finánsia', 'financiamos': 'finansiámos'}
+PRON_FIJA = {'financian': 'finánsian', 'financia': 'finánsia', 'financiamos': 'finansiámos',
+             'Beetlejuice': 'Bítelyus'}
 
 
 def pronunciado(texto, pron):
