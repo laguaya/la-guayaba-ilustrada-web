@@ -109,7 +109,7 @@ def vertical(im, foco=(0.5, 0.45), zoom=1.0):
 
 PANTALLA_COMPLETA = False   # versión TikTok: video horizontal recortado a pantalla completa (nunca el rectángulo al centro)
 SALTO_INTRO = 7.0           # versión TikTok: se brincan los primeros segundos de tráileres (clasificación ESRB, logos, avisos)
-SALTO_FINAL = 4.0           # y los últimos (logos, fechas y avisos legales)
+SALTO_FINAL = 8.0           # y los últimos (logo, fechas y avisos legales: en los tráilers suelen ser 6 a 8 s)
 TOTAL = 60.0          # todos los Reels duran exactamente un minuto
 SONIDO_ORIGINAL = False   # Sergio no quiere el audio de fondo de los clips: solo voz y música
 CIERRE_MIN = 2.6      # segundos mínimos del cierre con el CTA
