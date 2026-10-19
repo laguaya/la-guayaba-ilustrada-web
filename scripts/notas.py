@@ -712,6 +712,15 @@ def reels_sueltos():
         return
 
 
+SALIDA_NOTA = 'drafts/.salida_nota.json'
+
+
+def hora_de_nota():
+    """Las notas (web + carrusel) salen en punto a las horas impares: 9, 11, 13, 15, 17, 19 y 21 h."""
+    h = datetime.now(timezone(timedelta(hours=-6))).hour
+    return 9 <= h <= 21 and h % 2 == 1
+
+
 def hora_de_salir():
     """Los Reels salen en punto: de 8 a 22 h, cada 2 horas (hora de Ciudad de México)."""
     if os.path.exists(RETENER):   # {"hasta": segundos}: nada sale antes de esa hora (para no encimar dos Reels)
@@ -1083,6 +1092,12 @@ def send_pending():
                 if otra != n['id']:
                     PREVIEW.add(otra)
             n = load(path)
+        if n.get('ig') and not n.get('reel') and not n.get('urgente'):
+            # notas (web + carrusel) también en punto: una por hora impar, 9 a 21 h
+            sal = load(SALIDA_NOTA) if os.path.exists(SALIDA_NOTA) else {}
+            if not hora_de_nota() or sal.get('turno') == turno_actual():
+                continue
+            save(SALIDA_NOTA, {'turno': turno_actual(), 'id': n['id']})
         if n.get('ig') and n.get('reel') and not n.get('urgente') and not hora_de_salir():
             # se arma el Reel antes y se manda a Telegram en punto (8, 10, 12, 14, 16, 18, 20 y 22 h)
             if not n.get('reel_listo'):
