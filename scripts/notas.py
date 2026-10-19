@@ -1566,9 +1566,10 @@ def tiktok_cola():
                 tg('sendMessage', chat_id=CHAT, text=('🎵 Listo, el carrusel ya está en TikTok' if it.get('tipo') == 'fotos' else '🎵 Listo, el Reel ya está en TikTok') + f'{extra}.', reply_to_message_id=it.get('reply'))
                 q.pop(0)
             elif st == 'SEND_TO_USER_INBOX':
+                que = 'El carrusel' if it.get('tipo') == 'fotos' else 'El Reel'
                 tg('sendMessage', chat_id=CHAT, reply_to_message_id=it.get('reply'),
-                   text=('🎵 El carrusel' if it.get('tipo') == 'fotos' else '🎵 El Reel') + ' ya está en tu TikTok como BORRADOR (mientras TikTok aprueba la app no deja publicar directo en una cuenta pública). '
-                        'Abre TikTok, toca la notificación o ve a tu bandeja, y publícalo. Este es el texto:\n\n' + it['caption'])
+                   text=f'🎵 {que} ya está en tu TikTok como borrador. Ábrelo desde la notificación y publícalo. El texto para TikTok va en el siguiente mensaje 👇')
+                tg('sendMessage', chat_id=CHAT, text=it['caption'])
                 q.pop(0)
             elif st == 'FAILED':
                 tg('sendMessage', chat_id=CHAT, text=f'⚠️ TikTok rechazó el Reel ({motivo}).', reply_to_message_id=it.get('reply'))
