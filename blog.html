@@ -95,6 +95,7 @@ body::before{content:"";position:fixed;z-index:89;top:-120px;left:0;right:0;heig
 .kind{border-radius:999px;padding:7px 14px;font-weight:700;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;line-height:1}
 time{font-size:14px;color:var(--gray)}
 .empty{text-align:center;color:var(--gray);padding:40px 0}
+.tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}.tags a{border:1.5px solid var(--line);border-radius:999px;padding:7px 14px;font-weight:700;font-size:13px}.tags a:hover{background:var(--pink-wash)}
 
 /* nota completa */
 .article{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;padding-top:20px}
@@ -233,6 +234,7 @@ footer small{font-size:13px;color:var(--gray)}
 
 <script>addEventListener("pageshow",e=>{if(e.persisted)location.reload()})</script>
 <script>document.write('<script src="/posts.js?t='+Math.floor(Date.now()/60000)+'"><\/script>')</script>
+<script>document.write('<script src="/temas.js?t='+Math.floor(Date.now()/60000)+'"><\/script>')</script>
 <script src="chat.js"></script>
 <script>
 const P=window.POSTS||[];
@@ -253,6 +255,7 @@ function list(){
       <h1>Noticias e <i class="it">inspiración</i>.</h1>
       <p>Lo más relevante de la publicidad, el diseño y las marcas, contado por nuestro equipo.</p>
       <div class="clock"><b id="ctime"></b><span><span id="cdate"></span> · Ciudad de México</span></div>
+      ${window.TEMA_NOMBRE?`<nav class="tags" aria-label="Temas">${Object.entries(window.TEMA_NOMBRE).map(([k,v])=>`<a href="/temas/${k}">${v}</a>`).join('')}</nav>`:''}
       <div class="tabs" role="group" aria-label="Filtrar notas">${['todo','Noticias','Tendencias','Inspiración'].map(k=>`<button type="button" data-k="${k}" aria-pressed="${k===filter}">${k==='todo'?'Todo':k}</button>`).join('')}</div>
     </section>
     ${first?`<a class="feature" href="notas/${first.id}"><div class="pic">${thumb(first)}</div><div class="in"><span class="kind" style="background:${first.c}">${first.k}</span><time>${first.d}</time><h2>${first.t}</h2><p>${first.x}</p><span class="cta">Leer nota</span></div></a>`:'<p class="empty">Todavía no hay notas en esta categoría.</p>'}
@@ -290,7 +293,10 @@ function fitCover(im){
 
 function article(p){
   document.title=p.t+' · La Guayaba Ilustrada';
-  const others=P.filter(x=>x.id!==p.id).slice(0,3);
+  const T=window.TEMAS||{},TN=window.TEMA_NOMBRE||{},mis=T[p.id]||[];
+  const score=x=>(T[x.id]||[]).filter(t=>mis.includes(t)).length;
+  const others=P.filter(x=>x.id!==p.id).map((x,i)=>[score(x),i,x]).sort((a,b)=>b[0]-a[0]||a[1]-b[1]).slice(0,3).map(o=>o[2]);
+  const tags=mis.length?`<nav class="tags" aria-label="Temas de esta nota">${mis.map(t=>`<a href="/temas/${t}">${TN[t]||t}</a>`).join('')}</nav>`:'';
   view.innerHTML=`<article class="article fade">
     <a class="cta light sm back" href="blog.html">Volver a Noticias</a>
     <div class="clock"><b id="ctime"></b><span><span id="cdate"></span> · Ciudad de México</span></div>
@@ -302,11 +308,12 @@ function article(p){
     ${p.mp4&&!(p.yt||p.vm)?`<div class="cover video"><video src="${p.mp4}" poster="${p.img}" controls playsinline preload="metadata"></video></div>`:p.vm?`<div class="cover video"><iframe src="https://player.vimeo.com/video/${p.vm}?dnt=1&title=0&byline=0" title="${p.t}" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>`:p.yt?`<div class="cover video"><iframe src="https://www.youtube-nocookie.com/embed/${p.yt}?rel=0" title="${p.t}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>`:`<div class="cover"><img src="${p.img}" alt="${p.alt}" onload="fitCover(this)"></div>${p.cr?`<p class="credit">${p.cr}</p>`:''}`}
     <div class="body">${body(p)}</div>
     ${p.src?`<p class="source">Fuente: <a href="${p.src}" target="_blank" rel="noopener">${p.sn||host(p.src)}</a></p>`:''}
+    ${tags}
     <div class="share">
       <a class="cta" href="https://wa.me/?text=${encodeURIComponent(p.t+' · La Guayaba Ilustrada '+SITE+'/notas/'+p.id)}" target="_blank" rel="noopener">Compartir por WhatsApp</a>
       <a class="cta light" href="index.html#cotizador">Cotizar un proyecto</a>
     </div>
-    <div class="more">${others.length?`<h2>Más <i class="it" style="color:var(--pink)">notas</i></h2><div class="grid">${others.map(card).join('')}</div>`:''}<div class="loadmore"><a class="cta" href="blog.html">Ver todas las notas</a></div></div>
+    <div class="more">${others.length?`<h2>Notas <i class="it" style="color:var(--pink)">relacionadas</i></h2><div class="grid">${others.map(card).join('')}</div>`:''}<div class="loadmore"><a class="cta" href="blog.html">Ver todas las notas</a></div></div>
   </article>`;
   tickClock();
 }

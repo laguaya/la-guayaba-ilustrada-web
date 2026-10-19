@@ -125,18 +125,84 @@ def faq_html():
     return '\n'.join(f'<details class="qa"><summary>{e(q)}</summary><p>{e(a)}</p></details>' for q, a in faq_items())
 
 
+
+# ---------------------------------------------------------------- temas (SEO por intención de búsqueda)
+# Cada nota se etiqueta sola con los temas que trata. Cada tema tiene su página /temas/<slug> con texto propio
+# y todas sus notas: así Google manda a cada persona a lo que de verdad busca ("campañas creativas", "publicidad
+# con celebridades", "marketing con IA"...), y las notas se enlazan entre sí por tema.
+TEMAS = [
+    ('campanas-publicitarias', 'Campañas publicitarias', 'Campañas publicitarias creativas',
+     'Las campañas publicitarias más creativas del mundo explicadas en corto: qué hicieron las marcas, quién estuvo detrás y qué puede copiar tu negocio.',
+     r'campañ|campaign'),
+    ('comerciales', 'Comerciales y anuncios', 'Comerciales y anuncios que están dando de qué hablar',
+     'Los comerciales, spots y anuncios más comentados: Super Bowl, Halloween, Navidad, lanzamientos y piezas que se volvieron virales.',
+     r'comercial|anuncio|\bspot|super bowl|cortometraje'),
+    ('publicidad', 'Publicidad', 'Noticias de publicidad',
+     'Noticias de publicidad y agencias: lo que están haciendo las marcas grandes, las agencias creativas y los festivales como Cannes Lions.',
+     r'publicidad|publicitari|agencia|cannes lions|creativ'),
+    ('marketing', 'Marketing y casos de éxito', 'Casos de éxito de marketing',
+     'Casos de éxito de marketing explicados con datos: cómo vendieron, cuánto crecieron y la lección práctica para emprendedores y marcas en México.',
+     r'marketing|mercadotecnia|ventas|vendi[óo]|estrategia|caso de éxito|consumidor'),
+    ('inspiracion-creativa', 'Inspiración creativa', 'Inspiración creativa para marcas',
+     'Ideas de diseño, publicidad y branding para inspirarte: campañas hechas a mano, conceptos inesperados y ejecuciones que vale la pena guardar.',
+     None),
+    ('celebridades-y-marcas', 'Celebridades y marcas', 'Celebridades en la publicidad',
+     'Cuando una celebridad protagoniza una campaña: actores, cantantes, deportistas y creadores que se convierten en la cara de una marca.',
+     r'actriz|actor\b|cantante|futbolista|celebridad|kardashian|messi|mbapp|embajador'),
+    ('redes-sociales', 'Redes sociales', 'Marketing en redes sociales',
+     'Lo que funciona hoy en Instagram, TikTok y YouTube: tendencias, creadores de contenido, influencers y campañas pensadas para redes.',
+     r'redes sociales|instagram|tiktok|youtube|influencer|creador(es)? de contenido|viral'),
+    ('inteligencia-artificial', 'Inteligencia artificial', 'Inteligencia artificial en publicidad y marketing',
+     'Cómo las marcas usan la inteligencia artificial en publicidad, contenido y redes sociales, y cuándo apostar por lo hecho a mano.',
+     r'inteligencia artificial|\bIA\b|\bAI\b|chatgpt|generativ|algoritmo'),
+    ('branding', 'Branding y diseño', 'Branding, logotipos y empaques',
+     'Rediseños de marca, logotipos, empaques y lanzamientos de producto: cómo las marcas construyen identidad y se vuelven memorables.',
+     r'branding|logotipo|\blogo\b|rebrand|rediseñ|identidad|empaque|edición limitada|colaboraci'),
+]
+TEMA_NOMBRE = {t[0]: t[1] for t in TEMAS}
+
+
+def temas_de(n):
+    texto = ' '.join([strip(n.get('t')), strip(n.get('x'))] + [strip(b) for b in (n.get('b') or [])[:4]])
+    out = [slug for slug, _, _, _, rx in TEMAS if rx and re.search(rx, texto, re.I)]
+    if n.get('k') == 'Inspiración':
+        out.insert(0, 'inspiracion-creativa')
+    return out[:6] or ['publicidad']
+
+
+def tags_html(n):
+    return ('<nav class="tags" aria-label="Temas de esta nota">' +
+            ''.join(f'<a href="/temas/{t}">{e(TEMA_NOMBRE[t])}</a>' for t in temas_de(n)) + '</nav>')
+
+
+def relacionadas(n, k=3):
+    mis = set(temas_de(n))
+    otros = [(len(mis & set(temas_de(x))), i, x) for i, x in enumerate(POSTS) if x['id'] != n['id']]
+    otros.sort(key=lambda o: (-o[0], o[1]))
+    return [x for c, _, x in otros[:k] if c]
+
+
+def tarjeta(x):
+    return (f'<a class="post" href="/notas/{x["id"]}"><div class="pic"><img src="/{e(x["img"])}" alt="{e(x.get("alt") or strip(x["t"]))}" loading="lazy"></div>'
+            f'<div class="in"><span class="kind" style="background:{e(x.get("c"))}">{e(x.get("k"))}</span><time>{e(x.get("d"))}</time>'
+            f'<h3>{x["t"]}</h3><p>{x.get("x", "")}</p><span class="cta sm">Leer nota</span></div></a>')
+
+
 def article_ld(n, url):
     img = n['img'].split('?')[0]
     return {'@context': 'https://schema.org', '@graph': [
         {'@type': 'NewsArticle', '@id': url + '#nota', 'mainEntityOfPage': url, 'headline': strip(n['t'])[:110],
          'description': strip(n.get('x')), 'image': [SITE + '/' + img], 'datePublished': iso(n.get('d')), 'dateModified': iso(n.get('d')),
          'inLanguage': 'es-MX', 'articleSection': n.get('k', 'Noticias'),
+         'keywords': ', '.join(TEMA_NOMBRE[t] for t in temas_de(n)),
+         'about': [{'@type': 'Thing', 'name': TEMA_NOMBRE[t], 'url': f'{SITE}/temas/{t}'} for t in temas_de(n)],
          'author': {'@type': 'Organization', 'name': NAME, 'url': SITE + '/'}, 'publisher': {'@id': SITE + '/#negocio'},
          **({'isBasedOn': n['src']} if n.get('src') else {})},
         {'@type': 'BreadcrumbList', 'itemListElement': [
             {'@type': 'ListItem', 'position': 1, 'name': 'Inicio', 'item': SITE + '/'},
             {'@type': 'ListItem', 'position': 2, 'name': 'Noticias', 'item': SITE + '/blog'},
-            {'@type': 'ListItem', 'position': 3, 'name': strip(n['t']), 'item': url}]},
+            {'@type': 'ListItem', 'position': 3, 'name': TEMA_NOMBRE[temas_de(n)[0]], 'item': f'{SITE}/temas/{temas_de(n)[0]}'},
+            {'@type': 'ListItem', 'position': 4, 'name': strip(n['t']), 'item': url}]},
         {'@type': ['ProfessionalService', 'LocalBusiness'], '@id': SITE + '/#negocio', 'name': NAME,
                                               'url': SITE + '/', 'logo': SITE + '/assets/icon-512.png', 'telephone': PHONE,
                                               'address': ORG['address'], 'sameAs': [IG, FB]}]}
@@ -178,7 +244,9 @@ def static_article(n):
             f'<span class="kind" style="background:{e(n.get("c"))}">{e(n.get("k"))}</span><time datetime="{iso(n.get("d"))[:10]}">{e(n.get("d"))}</time>'
             f'<h1>{n["t"]}</h1><p class="dek">{n.get("x", "")}</p><span class="by">Por La Guayaba Ilustrada</span>'
             + (f'<div class="cover video"><iframe src="https://www.youtube-nocookie.com/embed/{e(n["yt"])}?rel=0" title="{e(strip(n["t"]))}" loading="lazy" allowfullscreen></iframe></div>' if n.get('yt') else (f'<div class="cover video"><iframe src="https://player.vimeo.com/video/{e(n["vm"])}?dnt=1" title="{e(strip(n["t"]))}" loading="lazy" allowfullscreen></iframe></div>' if n.get('vm') else (f'<div class="cover video"><video src="{e(n["mp4"])}" poster="{e(n["img"])}" controls playsinline preload="metadata"></video></div>' if n.get('mp4') else f'<div class="cover"><img src="{e(n["img"])}" alt="{e(n.get("alt"))}"></div>')))
-            + f'<div class="body">{body}</div>{("<div class=gal>" + g + "</div>") if g else ""}{src}</article>')
+            + f'<div class="body">{body}</div>{("<div class=gal>" + g + "</div>") if g else ""}{src}{tags_html(n)}'
+            + (f'<div class="more"><h2>Notas relacionadas</h2><div class="grid">{"".join(tarjeta(x) for x in relacionadas(n))}</div></div>' if relacionadas(n) else '')
+            + '</article>')
 
 
 def main():
@@ -190,11 +258,55 @@ def main():
         img = SITE + '/' + n['img'].split('?')[0]
         meta = head_meta(strip(n['t']) + ' · ' + NAME, strip(n.get('x')), url, 'article', img,
                          f'\n<meta property="article:published_time" content="{iso(n.get("d"))}">'
-                         f'\n<meta property="article:section" content="{e(n.get("k"))}">\n' + ld(article_ld(n, url)))
+                         f'\n<meta property="article:section" content="{e(n.get("k"))}">'
+                         + ''.join(f'\n<meta property="article:tag" content="{e(TEMA_NOMBRE[t])}">' for t in temas_de(n))
+                         + f'\n<meta name="keywords" content="{e(", ".join(TEMA_NOMBRE[t] for t in temas_de(n)))}, publicidad, marketing, marcas">\n'
+                         + ld(article_ld(n, url)))
         f = p('notas', n['id'] + '.html'); keep.add(f)
         write(f, from_template(tpl, meta, static_article(n), note_id=n['id']))
     for f in glob.glob(p('notas', '*.html')):
         if f not in keep:
+            os.remove(f)
+
+    # páginas de tema: /temas/<slug> (HTML estático, sin JavaScript, para que Google las lea completas)
+    os.makedirs(p('temas'), exist_ok=True)
+    temas_js = {n['id']: temas_de(n) for n in POSTS}
+    write(p('temas.js'), 'window.TEMAS=' + json.dumps(temas_js, ensure_ascii=False) + ';window.TEMA_NOMBRE='
+          + json.dumps(TEMA_NOMBRE, ensure_ascii=False) + ';\n')
+    css_t = ('<style>.tema{display:flex;flex-direction:column;align-items:center;gap:26px;padding:30px 0 60px;text-align:center}'
+             '.tema h1{font-weight:900;font-size:clamp(34px,5vw,60px);line-height:1;letter-spacing:-.03em;max-width:18ch}'
+             '.tema .intro{color:var(--gray);max-width:60ch;font-size:18px}.tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}'
+             '.tags a{border:1.5px solid var(--line);border-radius:999px;padding:7px 14px;font-weight:700;font-size:13px}'
+             '.tags a:hover,.tags a[aria-current]{background:var(--pink-wash)}</style>')
+    todos_temas = '<nav class="tags" aria-label="Temas">' + ''.join(
+        f'<a href="/temas/{t[0]}">{e(t[1])}</a>' for t in TEMAS) + '</nav>'
+    temas_urls = []
+    for slug, nombre, h1, intro, _ in TEMAS:
+        notas = [x for x in POSTS if slug in temas_js[x['id']]]
+        if not notas:
+            continue
+        url = f'{SITE}/temas/{slug}'
+        temas_urls.append((url, iso(notas[0].get('d'))[:10]))
+        nav = todos_temas.replace(f'href="/temas/{slug}"', f'href="/temas/{slug}" aria-current="page"')
+        main_t = (f'<div class="wrap tema"><span class="eyebrow">Tema</span><h1>{e(h1)}</h1><p class="intro">{e(intro)}</p>{nav}'
+                  f'<div class="grid">{"".join(tarjeta(x) for x in notas)}</div>'
+                  f'<div class="loadmore"><a class="cta" href="/blog">Ver todas las noticias</a></div></div>')
+        desc = f'{intro} {len(notas)} notas en español, actualizadas todos los días por La Guayaba Ilustrada.'
+        ld_t = {'@context': 'https://schema.org', '@graph': [
+            {'@type': 'CollectionPage', '@id': url, 'url': url, 'name': h1, 'description': intro, 'inLanguage': 'es-MX',
+             'isPartOf': {'@id': SITE + '/blog#blog'}, 'about': {'@type': 'Thing', 'name': nombre},
+             'mainEntity': {'@type': 'ItemList', 'itemListElement': [
+                 {'@type': 'ListItem', 'position': i + 1, 'url': f'{SITE}/notas/{x["id"]}', 'name': strip(x['t'])} for i, x in enumerate(notas[:30])]}},
+            {'@type': 'BreadcrumbList', 'itemListElement': [
+                {'@type': 'ListItem', 'position': 1, 'name': 'Inicio', 'item': SITE + '/'},
+                {'@type': 'ListItem', 'position': 2, 'name': 'Noticias', 'item': SITE + '/blog'},
+                {'@type': 'ListItem', 'position': 3, 'name': nombre, 'item': url}]}]}
+        meta = head_meta(f'{h1}: noticias y ejemplos · {NAME}', desc[:300], url, image=SITE + '/' + notas[0]['img'].split('?')[0],
+                         extra='\n' + ld(ld_t))
+        pg = from_template(tpl, meta, main_t, base=False, keep_scripts=False).replace('</style>', '</style>' + css_t, 1)
+        write(p('temas', slug + '.html'), pg.replace('aria-current="page"', '', 1) if 'nav-links' in pg else pg)
+    for f in glob.glob(p('temas', '*.html')):
+        if os.path.basename(f)[:-5] not in {u.rsplit('/', 1)[1] for u, _ in temas_urls}:
             os.remove(f)
 
     # precios.html
@@ -236,6 +348,7 @@ def main():
     # sitemap, robots, rss, llms
     today = datetime.now().strftime('%Y-%m-%d')
     urls = [(SITE + '/', today, '1.0'), (SITE + '/precios', today, '0.9'), (SITE + '/blog', iso(POSTS[0]['d'])[:10] if POSTS else today, '0.8')]
+    urls += [(u, d, '0.7') for u, d in temas_urls]
     urls += [(f'{SITE}/notas/{n["id"]}', iso(n.get('d'))[:10], '0.6') for n in POSTS]
     write(p('sitemap.xml'), '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
           ''.join(f'  <url><loc>{u}</loc><lastmod>{d}</lastmod><priority>{pr_}</priority></url>\n' for u, d, pr_ in urls) + '</urlset>\n')
@@ -246,7 +359,7 @@ def main():
           f'<title>{NAME} · Noticias</title><link>{SITE}/blog</link><description>Noticias de publicidad, diseño, marcas y redes sociales.</description>'
           f'<language>es-MX</language><atom:link href="{SITE}/feed.xml" rel="self" type="application/rss+xml"/>' +
           ''.join(f'<item><title>{e(strip(n["t"]))}</title><link>{SITE}/notas/{n["id"]}</link><guid>{SITE}/notas/{n["id"]}</guid>'
-                  f'<pubDate>{rfc(n.get("d"))}</pubDate><category>{e(n.get("k"))}</category><description>{e(strip(n.get("x")))}</description></item>'
+                  f'<pubDate>{rfc(n.get("d"))}</pubDate>{"".join(f"<category>{e(c)}</category>" for c in [n.get("k")] + [TEMA_NOMBRE[t] for t in temas_de(n)])}<description>{e(strip(n.get("x")))}</description></item>'
                   for n in POSTS[:30]) + '</channel></rss>\n')
     lines = [f'# {NAME}', '',
              '> Agencia creativa independiente en Cuernavaca, Morelos, México. Branding, páginas web, diseño gráfico, video y locución, '
@@ -260,7 +373,8 @@ def main():
     lines += ['### Planes mensuales', '- Esencial: $6,500 al mes', '- Profesional: $12,500 al mes', '- Marca completa: $22,000 al mes',
               '- Contrato mínimo de 3 meses, 10% de descuento pagando 6 meses, cancelación con 30 días de aviso.', '',
               '## Preguntas frecuentes', ''] + [f'**{q}** {a}\n' for q, a in faq_items()] + \
-             ['## Páginas', f'- [Precios]({SITE}/precios)', f'- [Noticias]({SITE}/blog)', f'- [RSS]({SITE}/feed.xml)', '', '## Notas recientes'] + \
+             ['## Páginas', f'- [Precios]({SITE}/precios)', f'- [Noticias]({SITE}/blog)', f'- [RSS]({SITE}/feed.xml)', '', '## Temas'] + \
+             [f'- [{t[2]}]({SITE}/temas/{t[0]}): {t[3]}' for t in TEMAS] + ['', '## Notas recientes'] + \
              [f'- [{strip(n["t"])}]({SITE}/notas/{n["id"]}): {strip(n.get("x"))}' for n in POSTS[:20]]
     write(p('llms.txt'), '\n'.join(lines) + '\n')
     print(f'SEO listo: {len(POSTS)} notas')
