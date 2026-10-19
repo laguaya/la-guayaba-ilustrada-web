@@ -249,6 +249,17 @@ REHACER = 'drafts/.rehacer_reel.json'   # notas publicadas a las que hay que reh
 REENVIAR = 'drafts/.reenviar_reel.json'   # Reels ya armados que hay que volver a mandar a Telegram (sin rehacerlos)
 
 
+def boton_reel():
+    try:
+        sys.path.insert(0, 'scripts')
+        import tiktok
+        if tiktok.conectado():
+            return '📲 Subir a Instagram y TikTok'
+    except Exception:
+        pass
+    return '📲 Subir este Reel a Instagram'
+
+
 def enviar_reel(nid, titulo=None):
     out = f'assets/ig/{nid}/reel.mp4'
     if not os.path.exists(out):
@@ -258,7 +269,7 @@ def enviar_reel(nid, titulo=None):
     with open(out, 'rb') as f:
         r = tg('sendVideo', files={'video': f}, chat_id=CHAT, supports_streaming='true', width=1080, height=1920,
                caption=f'🎬 Reel: {(titulo or (n or {}).get("t") or nid)[:120]}\nSi te gusta, súbelo con el botón.',
-               reply_markup={'inline_keyboard': [[{'text': '📲 Subir este Reel a Instagram', 'callback_data': f'subreel:{nid}'}]]})
+               reply_markup={'inline_keyboard': [[{'text': boton_reel(), 'callback_data': f'subreel:{nid}'}]]})
     if r.get('ok'):
         remember(r['result']['message_id'], nid)
 
@@ -283,7 +294,7 @@ def rehacer_reel(nid):
     with open(out, 'rb') as f:
         r = tg('sendVideo', files={'video': f}, chat_id=CHAT, supports_streaming='true', width=1080, height=1920,
                caption=f'🎬 Reel nuevo: {n.get("t", nid)[:120]}\nSi te gusta, súbelo con el botón (el anterior lo borras tú en Instagram).',
-               reply_markup={'inline_keyboard': [[{'text': '📲 Subir este Reel a Instagram', 'callback_data': f'subreel:{nid}'}]]})
+               reply_markup={'inline_keyboard': [[{'text': boton_reel(), 'callback_data': f'subreel:{nid}'}]]})
     if r.get('ok'):
         remember(r['result']['message_id'], nid)
 
@@ -691,7 +702,7 @@ def reels_sueltos():
         with open(f'assets/ig/{r["id"]}/reel.mp4', 'rb') as f:
             res = tg('sendVideo', files={'video': f}, chat_id=CHAT, supports_streaming='true', width=1080, height=1920,
                      caption=f'🎬 Reel: {r.get("t", r["id"])[:150]}\nSi te gusta, súbelo con el botón.',
-                     reply_markup={'inline_keyboard': [[{'text': '📲 Subir este Reel a Instagram', 'callback_data': f'subreel:{r["id"]}'}]]})
+                     reply_markup={'inline_keyboard': [[{'text': boton_reel(), 'callback_data': f'subreel:{r["id"]}'}]]})
         if res.get('ok'):
             r['tg'] = res['result']['message_id']
             remember(r['tg'], r['id'])
