@@ -1267,9 +1267,22 @@ def poll():
                 n['tg'] = (cq.get('message') or {}).get('message_id')
                 queue_instagram(n, 'reel')
                 tt = queue_tiktok(n)
-                mark(cq, '📲 Va. En unos minutos sale el Reel en Instagram' + (' y en TikTok' if tt else '') + '; te aviso aquí.')
+                mark(cq, '📲 Va. En unos minutos sale el Reel en Instagram; te aviso aquí.' + (' La versión para TikTok te la mando aparte para que la revises antes de subirla.' if tt else ''))
             else:
                 tg('answerCallbackQuery', callback_query_id=cq['id'], text='No encontré ese Reel.')
+            changed = True
+            continue
+        if (cq.get('data') or '').startswith('ttok:'):
+            sid = cq['data'].split(':', 1)[1]
+            q = load(TTQ) if os.path.exists(TTQ) else []
+            it = next((i for i in q if i['id'] == sid and not i.get('publish_id')), None)
+            if it:
+                it['aprobado'] = True
+                it['reply'] = (cq.get('message') or {}).get('message_id') or it.get('reply')
+                save(TTQ, q)
+                mark(cq, '🎵 Va. En unos minutos llega a tu TikTok como borrador, con el texto aparte.')
+            else:
+                tg('answerCallbackQuery', callback_query_id=cq['id'], text='Ese Reel ya se subió a TikTok.')
             changed = True
             continue
         if re.fullmatch(r'ajm:[a-z0-9-]+:(l|r|u|d|zi|zo|x|ok)', cq.get('data') or ''):
@@ -1582,11 +1595,23 @@ def tiktok_cola():
     q = load(TTQ)
     if not q or not tiktok.configurado():
         return
-    it = q[0]
-    if time.time() < float(it.get('despues') or 0):
+    # los Reels esperan a que Sergio vea la versión de TikTok y la apruebe (botón 🎵); mientras, la cola sigue con lo demás
+    espera = lambda i: not i.get('publish_id') and i.get('tipo') != 'fotos' and i.get('vista') and not i.get('aprobado')
+    it = next((i for i in q if not espera(i)), None)
+    if it is None or time.time() < float(it.get('despues') or 0):
         return
     try:
-        if not it.get('publish_id'):
+        if not it.get('publish_id') and it.get('tipo') != 'fotos' and not it.get('aprobado'):
+            video = video_tiktok(it['id'])
+            with open(video, 'rb') as f:
+                r = tg('sendVideo', files={'video': f}, chat_id=CHAT, supports_streaming='true', width=1080, height=1920,
+                       reply_to_message_id=it.get('reply'),
+                       caption='🎵 Versión para TikTok (pantalla completa). Revísala; si te gusta, súbela con el botón.',
+                       reply_markup={'inline_keyboard': [[{'text': '🎵 Subir a TikTok', 'callback_data': f'ttok:{it["id"]}'}]]})
+            if not r.get('ok'):
+                raise RuntimeError(f'Telegram: {r.get("description")}')
+            it['vista'] = True
+        elif not it.get('publish_id'):
             if it.get('tipo') == 'fotos':
                 it['publish_id'], it['priv'] = tiktok.iniciar_fotos(it['urls'], it.get('titulo', ''), it['caption'])
             else:
@@ -1597,22 +1622,22 @@ def tiktok_cola():
             if st == 'PUBLISH_COMPLETE':
                 extra = '' if it.get('priv') == 'PUBLIC_TO_EVERYONE' else ' (en privado, mientras TikTok aprueba la app)'
                 tg('sendMessage', chat_id=CHAT, text=('🎵 Listo, el carrusel ya está en TikTok' if it.get('tipo') == 'fotos' else '🎵 Listo, el Reel ya está en TikTok') + f'{extra}.', reply_to_message_id=it.get('reply'))
-                q.pop(0)
+                q.remove(it)
             elif st == 'SEND_TO_USER_INBOX':
                 que = 'El carrusel' if it.get('tipo') == 'fotos' else 'El Reel'
                 tg('sendMessage', chat_id=CHAT, reply_to_message_id=it.get('reply'),
                    text=f'🎵 {que} ya está en tu TikTok como borrador. Ábrelo desde la notificación y publícalo. El texto para TikTok va en el siguiente mensaje 👇')
                 tg('sendMessage', chat_id=CHAT, text=it['caption'])
-                q.pop(0)
+                q.remove(it)
             elif st == 'FAILED':
                 tg('sendMessage', chat_id=CHAT, text=f'⚠️ TikTok rechazó el Reel ({motivo}).', reply_to_message_id=it.get('reply'))
-                q.pop(0)
+                q.remove(it)
             else:
                 it['despues'] = time.time() + 30
                 it['revisiones'] = it.get('revisiones', 0) + 1
                 if it['revisiones'] > 120:
                     tg('sendMessage', chat_id=CHAT, text='⚠️ TikTok lleva una hora procesando el Reel; revísalo en la app.', reply_to_message_id=it.get('reply'))
-                    q.pop(0)
+                    q.remove(it)
     except Exception as e:
         print('TikTok:', e, file=sys.stderr)
         it['error'] = str(e)[:300]
@@ -1622,7 +1647,7 @@ def tiktok_cola():
             it['intentos'] = it.get('intentos', 0) + 1
             if it['intentos'] >= 3:
                 tg('sendMessage', chat_id=CHAT, text=f'⚠️ No pude subir el Reel a TikTok ({str(e)[:250]}).', reply_to_message_id=it.get('reply'))
-                q.pop(0)
+                q.remove(it)
             else:
                 it['despues'] = time.time() + 120
     if q:

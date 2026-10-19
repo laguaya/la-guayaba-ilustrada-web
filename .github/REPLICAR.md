@@ -12,7 +12,7 @@ Guía para copiar este sistema a otra marca (por ejemplo Fandom Focus). Repo de 
    - Arma cada Reel en cuanto llega y lo manda **en punto**, a las 8, 10, 12, 14, 16, 18, 20 y 22 h, con el botón 📲 Subir a Instagram y TikTok.
    - Publica en la web: `posts.js` y `notas/<id>.html` con SEO (`scripts/seo.py`). Si la fuente trae video de YouTube o Vimeo, lo incrusta.
    - Publica en Instagram (Graph API). Deja al menos 8 minutos entre publicaciones, reintenta con espera si Meta bloquea y revisa que no se haya publicado antes de reintentar, para nunca duplicar.
-   - Publica en TikTok (Content Posting API, `scripts/tiktok.py`). Mientras la app no esté aprobada, el video llega como borrador. El copy de TikTok se manda solo, en un mensaje aparte.
+   - Publica en TikTok (Content Posting API, `scripts/tiktok.py`) con una versión propia del Reel (pantalla completa, sin intro ni final del tráiler, titular desde el cuadro 1), que primero manda a Telegram para que Sergio la apruebe con 🎵 Subir a TikTok. Mientras la app no esté aprobada, el video llega como borrador. El copy de TikTok se manda solo, en un mensaje aparte.
    - Recibe pedidos de Sergio: links o texto en `inbox/`, fotos, "otra imagen", `tiktok` (conectar) y `tiktok prueba`.
 3. **Web estática** en Cloudflare Pages: cada push a `main` publica. Cada archivo debe pesar menos de 25 MiB.
 
