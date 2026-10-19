@@ -1,13 +1,21 @@
-2026-10-19T14:28:41.204347 alan-mbappe-la-salud-no-espera
-Video desde caché: https://www.youtube.com/watch?v=GhYbEmRgqds
+2026-10-19T15:28:06.616789 mint-mobile-julia-stiles-10-cosas-que-odio
+ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
+ElevenLabs usó eleven_v4
+Pausas recortadas: 18 4.7s
+Caché guardada: https://www.youtube.com/watch?v=TN_-oLpQa7s 201
 Video av1 -> h264 ok
-Fuente 1 campana 30.0s 22 tomas
-Video desde caché: https://www.youtube.com/watch?v=wXVTrQAytus
-Fuente 2 https://www.youtube.com/watch?v=wXVTrQAytus 30.1s 22 tomas
-Fuente 3 https://alan-health.cdn.prismic.io/alan-health/j4e8bk1ptVUG0jgl_30s_AL 30.0s 22 tomas
-Fuente 4 https://www.adsoftheworld.com/campaigns/health-can-t-wait 30.0s 22 tomas
-yt-dlp default : b'ERROR: [generic] Got HTTP Error 403 caused by Cloudflare anti-bot challenge; try again with  --extractor-args "generic:impersonate"\n'
-Toma de arranque: 18.4-19.7 puntaje 2.84
-Reel: [(0.0, 1.2, 'video1'), (1.2, 3.9, 'video1'), (3.9, 6.1, 'video2'), (6.1, 7.8, 'video3'), (7.8, 10.1, 'video4'), (10.1, 12.6, 'video1'), (12.6, 14.6, 'video2'), (14.6, 16.7, 'video3'), (16.7, 18.7, 'video4'), (18.7, 20.3, 'video1'), (20.3, 21.3, 'video2'), (21.3, 22.9, 'video3'), (22.9, 24.5, 'video4'), (24.5, 25.8, 'video2'), (25.8, 26.8, 'video3'), (26.8, 28.0, 'video4'), (28.0, 29.2, 'video1'), (29.2, 30.4, 'video2'), (30.4, 31.6, 'video3'), (31.6, 32.8, 'video4'), (32.8, 34.4, 'video1'), (34.4, 35.6, 'video2'), (35.6, 37.2, 'video3'), (37.2, 38.3, 'video4'), (38.3, 39.4, 'video1'), (39.4, 40.6, 'video2'), (40.6, 41.6, 'video3'), (41.6, 60.0, 'video4')]
-Diseños TikTok: ['original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original']
+Fuente 1 campana 30.0s 7 tomas
+Caché guardada: https://www.youtube.com/watch?v=OwFLXE5Mr18 201
+Video av1 -> h264 ok
+Fuente 2 https://www.youtube.com/watch?v=OwFLXE5Mr18 80.5s 10 tomas
+Fuente 3 https://www.ispot.tv/share/SnYd 30.0s 8 tomas
+Video  -> h264 [mov,mp4,m4a,3gp,3g2,mj2 @ 0x55ba49e33f80] moov atom not found
+[in#0 @ 0x55ba49e33e80] Error opening input: Invalid data found when processing input
+Error opening input file /tmp/tmpup63zia3/extra2.mp4.
+Error opening input files: Invalid data found when processing input
+
+Fuente 4 https://www.today.com/video/julia-stiles-revives-10-things-i-hate-abou 0.0s 1 tomas
+yt-dlp default : b'ERROR: [yahoo] julia-stiles-revives-10-things-124935890: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)\n'
+Toma de arranque: 7.0-8.5 puntaje 3.14
+Reel: [(0.0, 1.4, 'video1'), (1.4, 5.3, 'video1'), (5.3, 8.1, 'video1'), (8.1, 11.8, 'video2'), (11.8, 13.2, 'video1'), (13.2, 15.7, 'video1'), (15.7, 19.7, 'video3'), (19.7, 21.9, 'video1'), (21.9, 25.0, 'video1'), (25.0, 29.1, 'video1'), (29.1, 32.3, 'video1'), (32.3, 33.6, 'video1'), (33.6, 36.8, 'video2'), (36.8, 40.0, 'video2')]
 
