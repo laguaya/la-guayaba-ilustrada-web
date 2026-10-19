@@ -130,3 +130,33 @@ def recorte(im, size, f=None, zoom=1.0, destino=(0.5, 0.5), zoom_max=1.0, mover=
         x = max(0.0, min(tx, sw - W)); y = max(0.0, min(ty, sh - H))
     box = (x / s, y / s, min(im.width, (x + W) / s), min(im.height, (y + H) / s))
     return im.resize((W, H), Image.LANCZOS, box=box)
+
+
+def zona_horizontal(src):
+    """Dónde está lo importante a lo ancho: (centro, izquierda, derecha) entre 0 y 1.
+    Con caras manda la cara (o el grupo de caras); si no, lo llamativo (producto, logo, personaje)."""
+    im = Image.open(src).convert('RGB') if isinstance(src, str) else src.convert('RGB')
+    if cv2 is None:
+        return 0.5, 0.5, 0.5
+    k = 480 / max(im.size)
+    small = np.array(im.resize((max(1, int(im.width * k)), max(1, int(im.height * k)))))
+    h, w = small.shape[:2]
+    caras = _caras(cv2.cvtColor(small, cv2.COLOR_RGB2GRAY))
+    if caras:
+        izq = min(x for x, _, _, _ in caras) / w
+        der = max(x + cw for x, _, cw, _ in caras) / w
+        tot = sum(cw * ch for _, _, cw, ch in caras)
+        cx = sum((x + cw / 2) * cw * ch for x, _, cw, ch in caras) / tot / w
+        return cx, izq, der
+    m = _mapa(small)
+    top = m >= np.quantile(m, 0.93)
+    ys, xs = np.nonzero(top)
+    if not len(xs):
+        return 0.5, 0.5, 0.5
+    wts = m[top]
+    orden = np.argsort(xs)
+    acum = np.cumsum(wts[orden]) / wts.sum()
+    izq = xs[orden][np.searchsorted(acum, 0.12)] / w
+    der = xs[orden][min(len(xs) - 1, np.searchsorted(acum, 0.88))] / w
+    cx = float((xs * wts).sum() / wts.sum() / w)
+    return cx, float(izq), float(der)

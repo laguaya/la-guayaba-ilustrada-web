@@ -93,7 +93,7 @@ def vertical(im, foco=(0.5, 0.45), zoom=1.0):
     import encuadre
     im = im.convert('RGB')
     if PANTALLA_COMPLETA or im.height > im.width:    # video vertical (o versión TikTok): a pantalla completa
-        if PANTALLA_COMPLETA and im.height <= im.width:
+        if PANTALLA_COMPLETA and im.height <= im.width:      # fotos en la versión TikTok
             return encuadre.recorte(im, (W, H), foco, zoom=zoom, destino=(0.5, 0.45))
         return encuadre.recorte(im, (W, H), foco, zoom=zoom, destino=(0.5, 0.42))
     fondo = im.resize((54, 96)).filter(ImageFilter.GaussianBlur(4)).resize((W, H), Image.BILINEAR)
@@ -733,8 +733,55 @@ def ajustar_cortes(tramos):
             L['b'] = c; N['a'] = c
 
 
+def camara(tr):
+    """Versión TikTok: cómo se mueve la ventana vertical sobre una toma horizontal.
+    - Lo importante cabe en vertical: la ventana se queda centrada en eso (y lo sigue si se mueve en la toma).
+    - No cabe (grupo, paisaje, logo ancho): la ventana recorre la toma de izquierda a derecha, suave."""
+    import encuadre
+    F, cs = tr['F'], tr['cuadros']
+    d = max(0.1, tr['b'] - tr['a'])
+    i0 = int(tr.get('off', 0.0) * tr['vel'] * FPS)
+    i1 = min(len(cs) - 1, int((tr.get('off', 0.0) + d) * tr['vel'] * FPS))
+    muestras = [encuadre.zona_horizontal(F.abrir(cs[min(len(cs) - 1, i)])) for i in (i0, (i0 + i1) // 2, i1)]
+    im = F.abrir(cs[0])
+    ventana = min(1.0, (W / H) * im.height / im.width)          # ancho de la ventana vertical en fracción del cuadro
+    medio = ventana / 2
+    izq = min(m[1] for m in muestras); der = max(m[2] for m in muestras)
+    lim = lambda c: min(max(c, medio), 1 - medio)
+    if der - izq > ventana * 0.92 and d >= 1.5:                # no cabe: paneo de izquierda a derecha
+        return lim(izq + medio * 0.8), lim(der - medio * 0.8)
+    return lim(muestras[0][0] * .6 + muestras[1][0] * .4), lim(muestras[2][0] * .6 + muestras[1][0] * .4)
+
+
+def ventana_vertical(im, cx):
+    """Recorta una ventana 9:16 centrada en cx (fracción del ancho) y la lleva a 1080x1920."""
+    im = im.convert('RGB')
+    s = H / im.height
+    if im.width * s < W:                                       # más angosto que vertical: llenar a lo ancho
+        return vertical(im)
+    vw = W / s
+    x = min(max(cx * im.width - vw / 2, 0), im.width - vw)
+    return im.resize((W, H), Image.BICUBIC, box=(x, 0, x + vw, im.height))
+
+
 def imagen_tramo(tr, tl):
     """Imagen del tramo en su segundo local tl (siempre video o foto)."""
+    if tr['tipo'] == 'video' and PANTALLA_COMPLETA:
+        F, cs = tr['F'], tr['cuadros']
+        if 'cam' not in tr:
+            try:
+                tr['cam'] = camara(tr)
+            except Exception as e:
+                print('Cámara:', e, file=sys.stderr)
+                tr['cam'] = (F.foco[0], F.foco[0])
+        c0, c1 = tr['cam']
+        cx = c0 + (c1 - c0) * eio(tl / max(0.1, tr['b'] - tr['a']))
+        pos = (tl + tr.get('off', 0.0)) * tr['vel'] * FPS + 1e-6
+        i0 = min(len(cs) - 1, int(pos))
+        im = F.abrir(cs[i0])
+        if im.height > im.width:
+            return vertical(im, F.foco).convert('RGBA')
+        return ventana_vertical(im, cx).convert('RGBA')
     if tr['tipo'] == 'video':
         F, cs = tr['F'], tr['cuadros']
         pos = (tl + tr.get('off', 0.0)) * tr['vel'] * FPS + 1e-6
