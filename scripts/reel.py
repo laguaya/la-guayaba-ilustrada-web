@@ -778,16 +778,43 @@ PANEL_H = int(W * 9 / 16)                            # 1080 x 607: la toma horiz
 
 def disenar(tramos):
     """Versión TikTok: a cada toma le toca un diseño (plantilla original, pantalla en dos o en tres).
-    Los paneles extra muestran las tomas que siguen, completas. Nunca se recorta una toma horizontal."""
+    Cada panel extra es una toma NUEVA (que no sale en ningún otro lado del Reel) y que dura lo mismo que la
+    principal: nada se repite ni se queda en bucle. Si no alcanzan las tomas, se usa la plantilla original."""
     vids = [t for t in tramos if t['tipo'] == 'video']
-    for k, t in enumerate(vids):
-        d = DISENOS[k % len(DISENOS)]
+    fuentes = []
+    for t in vids:
+        if t['F'] not in fuentes:
+            fuentes.append(t['F'])
+    k = [5000]
+
+    def toma_nueva(d):
+        for F in fuentes:
+            tl = F.toma_libre(d + 0.1)
+            if tl:
+                desde = tl[0] + 1.0 / FPS
+                cs = F.cuadros(k[0], desde, d + 0.15); k[0] += 1
+                F.usados.append((tl[0], desde + d + 0.2))
+                if len(cs) >= int(d * FPS):
+                    return dict(F=F, cuadros=cs, vel=1.0, off=0.0)
+        return None
+
+    for n_, t in enumerate(vids):
+        d = DISENOS[n_ % len(DISENOS)]
         horizontal = (lambda im: im.width > im.height)(t['F'].abrir(t['cuadros'][0]))
-        resto = [v for v in vids[k + 1:] + vids[:k] if v is not t]
+        dur = t['b'] - t['a']
         n = {'dos': 1, 'tres': 2}.get(d, 0)
-        if not horizontal or t['b'] - t['a'] < 1.2 or len(resto) < n:
-            d, n = 'original', 0
-        t['diseno'], t['vecinos'] = d, resto[:n]
+        extra = []
+        if horizontal and dur >= 1.2 and n:
+            for _ in range(n):
+                v = toma_nueva(dur)
+                if v and (lambda im: im.width > im.height)(v['F'].abrir(v['cuadros'][0])):
+                    extra.append(v)
+        if len(extra) >= 2 and d == 'tres':
+            t['diseno'], t['vecinos'] = 'tres', extra[:2]
+        elif len(extra) >= 1:
+            t['diseno'], t['vecinos'] = 'dos', extra[:1]
+        else:
+            t['diseno'], t['vecinos'] = 'original', []
 
 
 def panel(im):
