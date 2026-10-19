@@ -1,14 +1,13 @@
-2026-10-19T13:42:48.662952 alan-mbappe-la-salud-no-espera
-ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
-ElevenLabs usó eleven_v4
-Pausas recortadas: 25 7.6s
-Caché guardada: https://www.youtube.com/watch?v=GhYbEmRgqds 201
+2026-10-19T14:28:41.204347 alan-mbappe-la-salud-no-espera
+Video desde caché: https://www.youtube.com/watch?v=GhYbEmRgqds
 Video av1 -> h264 ok
 Fuente 1 campana 30.0s 22 tomas
-Caché guardada: https://www.youtube.com/watch?v=wXVTrQAytus 201
+Video desde caché: https://www.youtube.com/watch?v=wXVTrQAytus
 Fuente 2 https://www.youtube.com/watch?v=wXVTrQAytus 30.1s 22 tomas
 Fuente 3 https://alan-health.cdn.prismic.io/alan-health/j4e8bk1ptVUG0jgl_30s_AL 30.0s 22 tomas
 Fuente 4 https://www.adsoftheworld.com/campaigns/health-can-t-wait 30.0s 22 tomas
 yt-dlp default : b'ERROR: [generic] Got HTTP Error 403 caused by Cloudflare anti-bot challenge; try again with  --extractor-args "generic:impersonate"\n'
-Reel: [(0.0, 1.2, 'video1'), (1.2, 2.5, 'video1'), (2.5, 3.9, 'video1'), (3.9, 5.1, 'video2'), (5.1, 6.4, 'video2'), (6.4, 7.8, 'video2'), (7.8, 9.0, 'video3'), (9.0, 10.3, 'video3'), (10.3, 12.6, 'video3'), (12.6, 13.9, 'video4'), (13.9, 15.1, 'video4'), (15.1, 16.7, 'video4'), (16.7, 19.3, 'video1'), (19.3, 21.8, 'video2'), (21.8, 23.9, 'video3'), (23.9, 25.6, 'video4'), (25.6, 27.5, 'video1'), (27.5, 30.0, 'video2'), (30.0, 30.8, 'video1'), (30.8, 32.4, 'video3'), (32.4, 34.4, 'video4'), (34.4, 36.8, 'video2'), (36.8, 37.5, 'video1'), (37.5, 39.0, 'video1'), (39.0, 40.9, 'video3'), (40.9, 42.4, 'video4'), (42.4, 44.0, 'video1'), (44.0, 45.6, 'video2'), (45.6, 47.2, 'video3'), (47.2, 48.8, 'video4'), (48.8, 60.0, 'video1')]
+Toma de arranque: 18.4-19.7 puntaje 2.84
+Reel: [(0.0, 1.2, 'video1'), (1.2, 3.9, 'video1'), (3.9, 6.1, 'video2'), (6.1, 7.8, 'video3'), (7.8, 10.1, 'video4'), (10.1, 12.6, 'video1'), (12.6, 14.6, 'video2'), (14.6, 16.7, 'video3'), (16.7, 18.7, 'video4'), (18.7, 20.3, 'video1'), (20.3, 21.3, 'video2'), (21.3, 22.9, 'video3'), (22.9, 24.5, 'video4'), (24.5, 25.8, 'video2'), (25.8, 26.8, 'video3'), (26.8, 28.0, 'video4'), (28.0, 29.2, 'video1'), (29.2, 30.4, 'video2'), (30.4, 31.6, 'video3'), (31.6, 32.8, 'video4'), (32.8, 34.4, 'video1'), (34.4, 35.6, 'video2'), (35.6, 37.2, 'video3'), (37.2, 38.3, 'video4'), (38.3, 39.4, 'video1'), (39.4, 40.6, 'video2'), (40.6, 41.6, 'video3'), (41.6, 60.0, 'video4')]
+Diseños TikTok: ['original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original']
 
