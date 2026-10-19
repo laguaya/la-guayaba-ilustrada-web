@@ -1,21 +1,19 @@
-2026-10-19T15:28:06.616789 mint-mobile-julia-stiles-10-cosas-que-odio
-ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
-ElevenLabs usó eleven_v4
-Pausas recortadas: 18 4.7s
-Caché guardada: https://www.youtube.com/watch?v=TN_-oLpQa7s 201
+2026-10-19T16:04:35.237138 mint-mobile-julia-stiles-10-cosas-que-odio
+Video desde caché: https://www.youtube.com/watch?v=TN_-oLpQa7s
 Video av1 -> h264 ok
-Fuente 1 campana 30.0s 7 tomas
-Caché guardada: https://www.youtube.com/watch?v=OwFLXE5Mr18 201
+Fuente 5 campana 30.0s 7 tomas
+Video desde caché: https://www.youtube.com/watch?v=OwFLXE5Mr18
 Video av1 -> h264 ok
-Fuente 2 https://www.youtube.com/watch?v=OwFLXE5Mr18 80.5s 10 tomas
-Fuente 3 https://www.ispot.tv/share/SnYd 30.0s 8 tomas
-Video  -> h264 [mov,mp4,m4a,3gp,3g2,mj2 @ 0x55ba49e33f80] moov atom not found
-[in#0 @ 0x55ba49e33e80] Error opening input: Invalid data found when processing input
-Error opening input file /tmp/tmpup63zia3/extra2.mp4.
+Fuente 6 https://www.youtube.com/watch?v=OwFLXE5Mr18 80.5s 10 tomas
+Fuente 7 https://www.ispot.tv/share/SnYd 30.0s 8 tomas
+Video  -> h264 [mov,mp4,m4a,3gp,3g2,mj2 @ 0x5592b9bd3f80] moov atom not found
+[in#0 @ 0x5592b9bd3e80] Error opening input: Invalid data found when processing input
+Error opening input file /tmp/tmpr86e0jyx/extra2.mp4.
 Error opening input files: Invalid data found when processing input
 
-Fuente 4 https://www.today.com/video/julia-stiles-revives-10-things-i-hate-abou 0.0s 1 tomas
+Fuente 8 https://www.today.com/video/julia-stiles-revives-10-things-i-hate-abou 0.0s 1 tomas
 yt-dlp default : b'ERROR: [yahoo] julia-stiles-revives-10-things-124935890: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)\n'
 Toma de arranque: 7.0-8.5 puntaje 3.14
-Reel: [(0.0, 1.4, 'video1'), (1.4, 5.3, 'video1'), (5.3, 8.1, 'video1'), (8.1, 11.8, 'video2'), (11.8, 13.2, 'video1'), (13.2, 15.7, 'video1'), (15.7, 19.7, 'video3'), (19.7, 21.9, 'video1'), (21.9, 25.0, 'video1'), (25.0, 29.1, 'video1'), (29.1, 32.3, 'video1'), (32.3, 33.6, 'video1'), (33.6, 36.8, 'video2'), (36.8, 40.0, 'video2')]
+Reel: [(0.0, 1.4, 'video5'), (1.4, 2.8, 'video5'), (2.8, 5.3, 'video5'), (5.3, 8.1, 'video5'), (8.1, 11.8, 'video6'), (11.8, 15.7, 'video5'), (15.7, 17.2, 'video7'), (17.2, 18.2, 'video5'), (18.2, 19.7, 'video6'), (19.7, 23.1, 'video6'), (23.1, 25.0, 'video6'), (25.0, 29.1, 'video6'), (29.1, 32.3, 'video6'), (32.3, 34.9, 'video6'), (34.9, 36.8, 'video6'), (36.8, 40.0, 'video6')]
+Diseños TikTok: ['tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original']
 
