@@ -1,23 +1,22 @@
-2026-10-19T17:40:09.814477 boost-mobile-mike-tyson-whats-your-plan
-ElevenLabs usó eleven_v4
-Pausas recortadas: 16 4.9s
-Caché guardada: https://www.youtube.com/watch?v=flnqbKCGTSs 201
-Video av1 -> h264 ok
-Fuente 9 campana 30.0s 14 tomas
+2026-10-19T18:06:29.970286 boost-mobile-mike-tyson-whats-your-plan
 Video desde caché: https://www.youtube.com/watch?v=flnqbKCGTSs
 Video av1 -> h264 ok
-Fuente 10 https://www.youtube.com/watch?v=flnqbKCGTSs 30.0s 14 tomas
-Caché guardada: https://www.youtube.com/watch?v=gZnEu6EX7No 201
+Fuente 15 campana 30.0s 14 tomas
+Video desde caché: https://www.youtube.com/watch?v=flnqbKCGTSs
 Video av1 -> h264 ok
-Fuente 11 https://www.youtube.com/watch?v=gZnEu6EX7No 30.0s 13 tomas
+Fuente 16 https://www.youtube.com/watch?v=flnqbKCGTSs 30.0s 14 tomas
+Video desde caché: https://www.youtube.com/watch?v=gZnEu6EX7No
 Video av1 -> h264 ok
-Fuente 12 https://www.adsoftheworld.com/campaigns/wireless-wake-up-call 30.0s 14 tomas
-Caché guardada: https://www.youtube.com/watch?v=4n3xW77JzxI 201
+Fuente 17 https://www.youtube.com/watch?v=gZnEu6EX7No 30.0s 13 tomas
 Video av1 -> h264 ok
-Fuente 13 https://www.youtube.com/watch?v=4n3xW77JzxI 30.0s 14 tomas
-Caché guardada: https://www.instagram.com/reel/Deh8YWJgNo7/ 201
+Fuente 18 https://www.adsoftheworld.com/campaigns/wireless-wake-up-call 30.0s 14 tomas
+Video desde caché: https://www.youtube.com/watch?v=4n3xW77JzxI
+Video av1 -> h264 ok
+Fuente 19 https://www.youtube.com/watch?v=4n3xW77JzxI 30.0s 14 tomas
+Video desde caché: https://www.instagram.com/reel/Deh8YWJgNo7/
 Video vp9 -> h264 ok
-Fuente 14 https://www.instagram.com/reel/Deh8YWJgNo7/ 30.0s 16 tomas
+Fuente 20 https://www.instagram.com/reel/Deh8YWJgNo7/ 30.0s 16 tomas
 Toma de arranque: 8.8-11.0 puntaje 3.06
-Reel: [(0.0, 2.6, 'video9'), (2.6, 3.5, 'video9'), (3.5, 4.9, 'video9'), (4.9, 7.1, 'video9'), (7.1, 10.9, 'video9'), (10.9, 13.1, 'video9'), (13.1, 14.7, 'video9'), (14.7, 16.0, 'video9'), (16.0, 17.9, 'video9'), (17.9, 19.0, 'video9'), (19.0, 20.2, 'video9'), (20.2, 26.9, 'video9'), (26.9, 28.3, 'video9'), (28.3, 30.3, 'video10'), (30.3, 35.3, 'video12'), (35.3, 40.0, 'video9')]
+Reel: [(0.0, 2.6, 'video15'), (2.6, 3.1, 'video15'), (3.1, 5.3, 'video15'), (5.3, 6.9, 'video15'), (6.9, 8.5, 'video17'), (8.5, 10.5, 'video15'), (10.5, 11.1, 'video15'), (11.1, 12.6, 'video18'), (12.6, 14.5, 'video15'), (14.5, 16.0, 'video19'), (16.0, 17.2, 'video15'), (17.2, 18.2, 'video15'), (18.2, 20.2, 'video16'), (20.2, 21.9, 'video20'), (21.9, 24.0, 'video16'), (24.0, 26.9, 'video16'), (26.9, 28.5, 'video16'), (28.5, 30.3, 'video16'), (30.3, 32.2, 'video16'), (32.2, 33.3, 'video16'), (33.3, 34.7, 'video16'), (34.7, 35.6, 'video15'), (35.6, 37.0, 'video17'), (37.0, 38.7, 'video17'), (38.7, 40.0, 'video17')]
+Diseños TikTok: ['tres', 'original', 'dos', 'original', 'tres', 'original', 'original', 'original', 'tres', 'original', 'original', 'original', 'tres', 'original', 'original', 'original', 'tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'tres']
 
