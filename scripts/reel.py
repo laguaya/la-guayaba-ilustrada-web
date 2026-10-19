@@ -92,9 +92,7 @@ def vertical(im, foco=(0.5, 0.45), zoom=1.0):
     la deja completa al centro sobre un fondo desenfocado de ella misma."""
     import encuadre
     im = im.convert('RGB')
-    if PANTALLA_COMPLETA or im.height > im.width:    # video vertical (o versión TikTok): a pantalla completa
-        if PANTALLA_COMPLETA and im.height <= im.width:      # fotos en la versión TikTok
-            return encuadre.recorte(im, (W, H), foco, zoom=zoom, destino=(0.5, 0.45))
+    if im.height > im.width:                         # video vertical: a pantalla completa
         return encuadre.recorte(im, (W, H), foco, zoom=zoom, destino=(0.5, 0.42))
     fondo = im.resize((54, 96)).filter(ImageFilter.GaussianBlur(4)).resize((W, H), Image.BILINEAR)
     fondo = Image.blend(fondo, Image.new('RGB', (W, H), UVA), 0.55)
@@ -764,24 +762,64 @@ def ventana_vertical(im, cx):
     return im.resize((W, H), Image.BICUBIC, box=(x, 0, x + vw, im.height))
 
 
+def cuadro_en(tr, tl):
+    """Cuadro (sin reencuadrar) del tramo de video en su segundo local tl; si se acaba, se queda en el último."""
+    cs = tr['cuadros']
+    pos = int((tl + tr.get('off', 0.0)) * tr['vel'] * FPS + 1e-6)
+    if pos >= len(cs):                               # panel extra más corto que la toma: vuelve a empezar (nunca congelado)
+        ini = int(tr.get('off', 0.0) * tr['vel'] * FPS)
+        pos = ini + (pos - ini) % max(1, len(cs) - ini)
+    return tr['F'].abrir(cs[max(0, min(len(cs) - 1, pos))]).convert('RGB')
+
+
+DISENOS = ['tres', 'original', 'dos', 'original']   # versión TikTok: se van turnando toma por toma
+PANEL_H = int(W * 9 / 16)                            # 1080 x 607: la toma horizontal completa, sin recortar nada
+
+
+def disenar(tramos):
+    """Versión TikTok: a cada toma le toca un diseño (plantilla original, pantalla en dos o en tres).
+    Los paneles extra muestran las tomas que siguen, completas. Nunca se recorta una toma horizontal."""
+    vids = [t for t in tramos if t['tipo'] == 'video']
+    for k, t in enumerate(vids):
+        d = DISENOS[k % len(DISENOS)]
+        horizontal = (lambda im: im.width > im.height)(t['F'].abrir(t['cuadros'][0]))
+        resto = [v for v in vids[k + 1:] + vids[:k] if v is not t]
+        n = {'dos': 1, 'tres': 2}.get(d, 0)
+        if not horizontal or t['b'] - t['a'] < 1.2 or len(resto) < n:
+            d, n = 'original', 0
+        t['diseno'], t['vecinos'] = d, resto[:n]
+
+
+def panel(im):
+    return im.resize((W, PANEL_H), Image.BICUBIC, box=_caja_169(im))
+
+
+def _caja_169(im):
+    """Caja 16:9 centrada (solo quita franjas si la toma es más ancha o más alta que 16:9)."""
+    w, h = im.size
+    if w / h > 16 / 9:
+        nw = h * 16 / 9; return ((w - nw) / 2, 0, (w + nw) / 2, h)
+    nh = w * 9 / 16; return (0, (h - nh) / 2, w, (h + nh) / 2)
+
+
 def imagen_tramo(tr, tl):
     """Imagen del tramo en su segundo local tl (siempre video o foto)."""
-    if tr['tipo'] == 'video' and PANTALLA_COMPLETA:
-        F, cs = tr['F'], tr['cuadros']
-        if 'cam' not in tr:
-            try:
-                tr['cam'] = camara(tr)
-            except Exception as e:
-                print('Cámara:', e, file=sys.stderr)
-                tr['cam'] = (F.foco[0], F.foco[0])
-        c0, c1 = tr['cam']
-        cx = c0 + (c1 - c0) * eio(tl / max(0.1, tr['b'] - tr['a']))
-        pos = (tl + tr.get('off', 0.0)) * tr['vel'] * FPS + 1e-6
-        i0 = min(len(cs) - 1, int(pos))
-        im = F.abrir(cs[i0])
-        if im.height > im.width:
-            return vertical(im, F.foco).convert('RGBA')
-        return ventana_vertical(im, cx).convert('RGBA')
+    if tr['tipo'] == 'video' and tr.get('diseno') in ('dos', 'tres'):
+        base = Image.new('RGB', (W, H), UVA)
+        fondo = cuadro_en(tr, tl).resize((54, 96)).filter(ImageFilter.GaussianBlur(4)).resize((W, H), Image.BILINEAR)
+        base = Image.blend(fondo, base, 0.6)
+        ims = [cuadro_en(tr, tl)] + [cuadro_en(v, tl) for v in tr['vecinos']]
+        if tr['diseno'] == 'tres':
+            sep = 12; y0 = (H - 3 * PANEL_H - 2 * sep) // 2
+            ys = [y0 + i * (PANEL_H + sep) for i in range(3)]
+            orden = [ims[1], ims[0], ims[2]]          # la toma principal va en medio
+        else:
+            sep = 12; y0 = 300
+            ys = [y0, y0 + PANEL_H + sep]
+            orden = ims
+        for im, y in zip(orden, ys):
+            base.paste(panel(im), (0, y))
+        return base.convert('RGBA')
     if tr['tipo'] == 'video':
         F, cs = tr['F'], tr['cuadros']
         pos = (tl + tr.get('off', 0.0)) * tr['vel'] * FPS + 1e-6
@@ -959,6 +997,9 @@ def make(data, out, tiktok=False):
         tramos = plan(escenas, ini, fin_cuerpo, total, principal, extras, data, tmp)
         print('Reel:', [(round(x['a'], 1), round(x['b'], 1), x['tipo'] + ('' if x['tipo'] == 'foto' else str(x['F'].id))) for x in tramos],
               file=sys.stderr)
+        if PANTALLA_COMPLETA:
+            disenar(tramos)
+            print('Diseños TikTok:', [t.get('diseno') for t in tramos], file=sys.stderr)
         G = [g for g in grupos(palabras)]
         cmd = ['ffmpeg', '-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', str(FPS), '-c:v', 'mjpeg', '-i', '-']
         # tope de bitrate: el Reel de 1 minuto queda en ~18 MB (Cloudflare Pages rechaza archivos de más de 25 MB
@@ -973,7 +1014,9 @@ def make(data, out, tiktok=False):
                 ti += 1
             tr = tramos[ti]
             im = imagen_tramo(tr, max(0.0, t - tr['a']))      # corte directo, limpio, al ritmo de la voz
-            im.alpha_composite(L['abajo']); im.alpha_composite(L['arriba'], (0, 0))
+            if tr.get('diseno') not in ('dos', 'tres'):   # en pantalla dividida no se oscurece abajo (se vería apagado)
+                im.alpha_composite(L['abajo'])
+            im.alpha_composite(L['arriba'], (0, 0))
             paste(im, L['brand'], M, 150)
             if t < GANCHO:
                 gancho(im, t + (1.0 if PANTALLA_COMPLETA else 0.0), L)
