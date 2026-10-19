@@ -688,6 +688,13 @@ def plan(escenas, ini, fin_cuerpo, total, principal, extras, data, tmp):
             L['vel'] *= (L['b'] - L['a']) / (b - L['a'])
         L['b'] = max(L['b'], b)
 
+    # PRIMER CUADRO (dato de Sergio, oct 2026: los Reels que funcionaron abren con una cara o una escena clara y
+    # luminosa; los que la gente se saltó en el segundo 1 abrían oscuros, con logo o con letreros): si el redactor no
+    # escogió la toma de arranque, se usa la más luminosa y con cara de la campaña.
+    if escenas and principal and escenas[0].get('desde') is None and not escenas[0].get('video'):
+        mejor = toma_gancho(principal)
+        if mejor:
+            escenas = [dict(escenas[0], desde=mejor[0], hasta=mejor[1])] + list(escenas[1:])
     for i, e in enumerate(escenas):
         a = 0.0 if i == 0 else max(0.0, ini[i] - 0.08)
         b = fin_cuerpo if i == len(escenas) - 1 else max(a + 0.3, ini[i + 1] - 0.08)
@@ -708,6 +715,38 @@ def plan(escenas, ini, fin_cuerpo, total, principal, extras, data, tmp):
     estirar(total)
     ajustar_cortes(tramos)
     return tramos
+
+
+def toma_gancho(F):
+    """La toma que mejor detiene el dedo: con cara, luminosa, con color y sin ser logo ni letrero del final."""
+    import encuadre
+    import numpy as np
+    mejor, pmax = None, -1e9
+    lim0 = max(SALTO_INTRO if F.dur > 20 else 1.0, getattr(F, 'salto', 0.0))    # nunca clasificaciones ni logos del inicio
+    lim1 = min(F.dur - (SALTO_FINAL if F.dur > 20 else 1.0), getattr(F, 'fin_util', F.dur))
+    for k, (t0, t1) in enumerate(F.tomas):
+        if t1 - t0 < 1.2 or t1 <= lim0 or t0 >= lim1:
+            continue
+        ruta = f'{F.tmp}/gancho{F.id}_{k}.jpg'
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{(t0 + t1) / 2:.2f}', '-i', F.ruta, '-frames:v', '1',
+                        '-vf', ESCALA, ruta], capture_output=True, timeout=60)   # misma escala que el recorte de franjas
+        if not os.path.exists(ruta):
+            continue
+        im = F.abrir(ruta).convert('RGB')
+        im = im.resize((480, max(1, int(im.height * 480 / max(1, im.width)))))
+        hsv = np.array(im.convert('HSV')).astype(float)
+        luz, sat = hsv[..., 2].mean() / 255, hsv[..., 1].mean() / 255
+        try:
+            import cv2
+            caras = encuadre._caras(cv2.cvtColor(np.array(im), cv2.COLOR_RGB2GRAY))
+        except Exception:
+            caras = []
+        p = (2.0 if caras else 0.0) + luz * 1.5 + sat * 0.5 - (1.0 if luz < 0.22 else 0.0)
+        if p > pmax:
+            pmax, mejor = p, (max(t0, lim0), t1)
+    if mejor:
+        print('Toma de arranque:', f'{mejor[0]:.1f}-{mejor[1]:.1f}', f'puntaje {pmax:.2f}', file=sys.stderr)
+    return mejor
 
 
 def ajustar_cortes(tramos):
