@@ -1609,7 +1609,7 @@ def tiktok_cola():
             with open(video, 'rb') as f:
                 r = tg('sendVideo', files={'video': f}, chat_id=CHAT, supports_streaming='true', width=1080, height=1920,
                        reply_to_message_id=it.get('reply'),
-                       caption='🎵 Versión para TikTok (pantalla completa). Revísala; si te gusta, súbela con el botón.',
+                       caption='🎵 Versión para TikTok. Revísala; si te gusta, súbela con el botón.',
                        reply_markup={'inline_keyboard': [[{'text': '🎵 Subir a TikTok', 'callback_data': f'ttok:{it["id"]}'}]]})
             if not r.get('ok'):
                 raise RuntimeError(f'Telegram: {r.get("description")}')
