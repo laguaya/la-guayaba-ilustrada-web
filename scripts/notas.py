@@ -587,7 +587,7 @@ def info_auto(n):
     return out
 
 
-def build_reel(n):
+def build_reel(n, tiktok=False):
     """Reel vertical con voz, subtítulos, fotos y clips del video de la campaña -> assets/ig/<id>/reel.mp4"""
     sys.path.insert(0, 'scripts')
     import reel
@@ -598,13 +598,13 @@ def build_reel(n):
     data['mp4'] = n.get('mp4', '')
     data['yt'], data['vm'] = n.get('yt', ''), n.get('vm', '')
     data['videos'] = n.get('videos') or n['ig'].get('videos') or []   # videos de apoyo (otras campañas, la marca, el producto)
-    out = f'assets/ig/{n["id"]}/reel.mp4'
+    out = f'assets/ig/{n["id"]}/reel{"_tt" if tiktok else ""}.mp4'
     os.makedirs(os.path.dirname(out), exist_ok=True)
     import io, contextlib, traceback
     buf = io.StringIO()
     try:
         with contextlib.redirect_stderr(buf):
-            reel.make(data, out)
+            reel.make(data, out, tiktok=tiktok)
     except Exception:
         with open('drafts/.errores.log', 'a') as f:
             f.write(f'{datetime.now().isoformat()} reel {n["id"]}\n{buf.getvalue()[-3000:]}\n{traceback.format_exc()}\n')
@@ -653,7 +653,7 @@ def turno_actual():
     return now.strftime('%Y-%m-%d-') + str(now.hour)
 
 
-def build_reel_solo(r):
+def build_reel_solo(r, tiktok=False):
     """Reel de una noticia propia (no la de la web): {"id","t","src","yt"|"mp4"|"vm","ig":{portada, escenas, videos, pronunciar, caption, marca, etiqueta}}"""
     sys.path.insert(0, 'scripts')
     import reel, io, contextlib, traceback
@@ -663,12 +663,12 @@ def build_reel_solo(r):
     data['videos'] = data.get('videos') or r.get('videos') or []
     data.setdefault('etiqueta', r.get('k') or 'Noticias')
     data.setdefault('portada', r.get('t', ''))
-    out = f'assets/ig/{r["id"]}/reel.mp4'
+    out = f'assets/ig/{r["id"]}/reel{"_tt" if tiktok else ""}.mp4'
     os.makedirs(os.path.dirname(out), exist_ok=True)
     buf = io.StringIO()
     try:
         with contextlib.redirect_stderr(buf):
-            reel.make(data, out)
+            reel.make(data, out, tiktok=tiktok)
     except Exception:
         with open('drafts/.errores.log', 'a') as f:
             f.write(f'{datetime.now().isoformat()} reel {r["id"]}\n{buf.getvalue()[-3000:]}\n{traceback.format_exc()}\n')
@@ -1554,6 +1554,24 @@ def queue_tiktok(n):
     return True
 
 
+def video_tiktok(nid):
+    """Versión para TikTok del Reel: pantalla completa, sin intro ni final del tráiler y titular desde el cuadro 1.
+    Instagram sigue con reel.mp4 tal cual. Si no se puede armar, se usa el de Instagram."""
+    tt, ig = f'assets/ig/{nid}/reel_tt.mp4', f'assets/ig/{nid}/reel.mp4'
+    if os.path.exists(tt):
+        return tt
+    try:
+        if os.path.exists(f'{REELS}/{nid}.json'):
+            build_reel_solo(load(f'{REELS}/{nid}.json'), tiktok=True)
+        elif os.path.exists(f'drafts/{nid}.json'):
+            build_reel(load(f'drafts/{nid}.json'), tiktok=True)
+        if os.path.exists(tt):
+            return tt
+    except Exception as e:
+        print('Versión TikTok:', e, file=sys.stderr)
+    return ig
+
+
 def tiktok_cola():
     """Sube a TikTok un Reel a la vez. Cada Reel se sube UNA sola vez: si ya tiene publish_id solo se revisa su estado."""
     global changed
@@ -1572,7 +1590,7 @@ def tiktok_cola():
             if it.get('tipo') == 'fotos':
                 it['publish_id'], it['priv'] = tiktok.iniciar_fotos(it['urls'], it.get('titulo', ''), it['caption'])
             else:
-                it['publish_id'], it['priv'] = tiktok.iniciar(f'assets/ig/{it["id"]}/reel.mp4', it['caption'])
+                it['publish_id'], it['priv'] = tiktok.iniciar(video_tiktok(it['id']), it['caption'])
             it['despues'] = time.time() + 30
         else:
             st, motivo = tiktok.estado(it['publish_id'])

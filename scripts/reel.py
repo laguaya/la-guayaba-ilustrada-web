@@ -1,5 +1,5 @@
 """Reel vertical (1080x1920, 30 fps, 15 a 75 s) de una nota, con branding de Newsbrand.
-# (YT_COOKIES renovado el 18 oct 2026; llaves de TikTok Sandbox 18 oct 14:58)
+# reinicio: version TikTok a pantalla completa (oct 18)
 
 Uso: python scripts/reel.py datos.json salida.mp4
 datos: img, img2, fotos (lista opcional), etiqueta, portada, titulo, marca, escenas o guion (texto de la voz),
@@ -92,7 +92,9 @@ def vertical(im, foco=(0.5, 0.45), zoom=1.0):
     la deja completa al centro sobre un fondo desenfocado de ella misma."""
     import encuadre
     im = im.convert('RGB')
-    if im.height > im.width:                         # video vertical: a pantalla completa
+    if PANTALLA_COMPLETA or im.height > im.width:    # video vertical (o versión TikTok): a pantalla completa
+        if PANTALLA_COMPLETA and im.height <= im.width:
+            return encuadre.recorte(im, (W, H), foco, zoom=zoom, destino=(0.5, 0.45))
         return encuadre.recorte(im, (W, H), foco, zoom=zoom, destino=(0.5, 0.42))
     fondo = im.resize((54, 96)).filter(ImageFilter.GaussianBlur(4)).resize((W, H), Image.BILINEAR)
     fondo = Image.blend(fondo, Image.new('RGB', (W, H), UVA), 0.55)
@@ -105,6 +107,9 @@ def vertical(im, foco=(0.5, 0.45), zoom=1.0):
     return fondo
 
 
+PANTALLA_COMPLETA = False   # versión TikTok: video horizontal recortado a pantalla completa (nunca el rectángulo al centro)
+SALTO_INTRO = 7.0           # versión TikTok: se brincan los primeros segundos de tráileres (clasificación ESRB, logos, avisos)
+SALTO_FINAL = 4.0           # y los últimos (logos, fechas y avisos legales)
 TOTAL = 60.0          # todos los Reels duran exactamente un minuto
 SONIDO_ORIGINAL = False   # Sergio no quiere el audio de fondo de los clips: solo voz y música
 CIERRE_MIN = 2.6      # segundos mínimos del cierre con el CTA
@@ -348,6 +353,10 @@ class Fuente:
         self.id, self.ruta, self.tmp, self.nombre = Fuente.n, ruta, tmp, nombre
         self.tomas, self.dur = TM.cortes(ruta, maximo=10 ** 6)       # solo cortes reales: nunca saltos dentro de una toma
         self.usados = []
+        self.salto, self.fin_util = 0.0, self.dur
+        if PANTALLA_COMPLETA and self.dur > 20:
+            self.salto, self.fin_util = SALTO_INTRO, self.dur - SALTO_FINAL
+            self.usados += [(0.0, self.salto), (self.fin_util, self.dur + 1)]
         self.audio = bool(subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'a', '-show_entries', 'stream=index',
                                           '-of', 'csv=p=0', ruta], capture_output=True, text=True, timeout=60).stdout.strip())
         m = self._muestras()
@@ -607,8 +616,8 @@ def plan(escenas, ini, fin_cuerpo, total, principal, extras, data, tmp):
     def poner_video(F, a, d, desde, hasta=None):
         """Pone un clip de la fuente F desde `desde` (sin pasarse de `hasta`). Regresa los segundos que cubrió."""
         margen = 1.0 / FPS                               # 1 cuadro de margen: nunca se cuela la toma vecina
-        desde = max(0.0, desde) + margen
-        fin = F.dur - margen
+        desde = max(0.0, desde, F.salto) + margen
+        fin = F.fin_util - margen
         if hasta is not None and hasta > desde + 0.3:
             fin = min(fin, hasta - margen)
         hay = fin - desde
@@ -693,7 +702,7 @@ def plan(escenas, ini, fin_cuerpo, total, principal, extras, data, tmp):
         rellenar(a, b, e)
     # cierre: la última toma de la campaña (normalmente el producto o el logo) detrás del CTA
     hecho = 0.0
-    if principal and principal.tomas:
+    if principal and principal.tomas and not PANTALLA_COMPLETA:   # en TikTok el final del tráiler son logos y avisos
         t0, t1 = principal.tomas[-1]
         hecho = poner_video(principal, fin_cuerpo, total - fin_cuerpo, t0, t1)
     if not hecho:
@@ -837,16 +846,25 @@ def restaurar(palabras, pron):
     return palabras
 
 
-def make(data, out):
+def make(data, out, tiktok=False):
+    """tiktok=True: misma voz y guion, pero video a pantalla completa, sin intro ni final del tráiler
+    y con el titular completo desde el primer cuadro (en TikTok la gente decide en el segundo 1)."""
     import voz
     tmp = tempfile.mkdtemp()
-    global FPS
+    global FPS, PANTALLA_COMPLETA
+    PANTALLA_COMPLETA = bool(tiktok)
     try:
         escenas = escenas_de(data)
         pron = dict(PRON_FIJA)
         pron.update({k: v for k, v in (data.get('pronunciar') or {}).items() if k and v})
         grabada = data.get('voz_audio') if data.get('voz_audio') and os.path.exists(data['voz_audio']) else None
-        if grabada:   # voz que Sergio ya generó (ElevenLabs): se le acortan los silencios largos y se alinea con el guion
+        cache_mp3, cache_js = os.path.join(os.path.dirname(out) or '.', 'voz.mp3'), os.path.join(os.path.dirname(out) or '.', 'voz.json')
+        reusar = tiktok and not grabada and os.path.exists(cache_mp3) and os.path.exists(cache_js)
+        if reusar:    # versión TikTok: la misma voz del Reel de Instagram (no se gastan créditos de ElevenLabs otra vez)
+            mp3 = f'{tmp}/voz_apretada.mp3'; shutil.copy(cache_mp3, mp3)
+            c = json.load(open(cache_js, encoding='utf-8'))
+            palabras, dvoz = [tuple(x) for x in c['palabras']], c['dvoz']
+        elif grabada:   # voz que Sergio ya generó (ElevenLabs): se le acortan los silencios largos y se alinea con el guion
             mp3 = f'{tmp}/voz.mp3'
             subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', grabada, '-af',
                             'silenceremove=stop_periods=-1:stop_duration=0.3:stop_threshold=-38dB:stop_silence=0.22',
@@ -854,10 +872,16 @@ def make(data, out):
             palabras, dvoz = voz.alinear(mp3, pronunciado(guion_de(data), pron))
         else:
             (palabras, dvoz), mp3 = voz.sintetizar(pronunciado(guion_de(data), pron), f'{tmp}/voz.mp3')
-        palabras = restaurar(palabras, pron)          # los subtítulos salen con la escritura correcta
-        if mp3:                                       # ritmo: sin silencios largos entre frases (la voz no se acelera)
-            mp3, palabras = apretar(mp3, palabras, f'{tmp}/voz_apretada.mp3')
-            dvoz = max([b for _, b, _ in palabras] + [0]) + 0.15
+        if not reusar:
+            palabras = restaurar(palabras, pron)      # los subtítulos salen con la escritura correcta
+            if mp3:                                   # ritmo: sin silencios largos entre frases (la voz no se acelera)
+                mp3, palabras = apretar(mp3, palabras, f'{tmp}/voz_apretada.mp3')
+                dvoz = max([b for _, b, _ in palabras] + [0]) + 0.15
+                try:                                  # se guarda para armar la versión de TikTok con la misma voz
+                    shutil.copy(mp3, cache_mp3)
+                    json.dump({'palabras': [list(x) for x in palabras], 'dvoz': dvoz}, open(cache_js, 'w', encoding='utf-8'))
+                except Exception as e:
+                    print('No guardé la voz:', e, file=sys.stderr)
         total = TOTAL
         # la voz tiene que caber en el minuto: si se pasa, se acelera un poco (máx. 25 %) sin cambiar el tono
         cabe = total - CIERRE_MIN - INICIO_VOZ - 0.4
@@ -905,7 +929,7 @@ def make(data, out):
             im.alpha_composite(L['abajo']); im.alpha_composite(L['arriba'], (0, 0))
             paste(im, L['brand'], M, 150)
             if t < GANCHO:
-                gancho(im, t, L)
+                gancho(im, t + (1.0 if PANTALLA_COMPLETA else 0.0), L)
             else:
                 if L['marca']:
                     paste(im, L['marca'], M, 230, eo(lin(t, GANCHO, GANCHO + .4)))
@@ -977,8 +1001,9 @@ def make(data, out):
             shutil.move(f'{tmp}/chico.mp4', out)
         return out
     finally:
+        PANTALLA_COMPLETA = False
         shutil.rmtree(tmp, ignore_errors=True)
 
 
 if __name__ == '__main__':
-    make(json.load(open(sys.argv[1], encoding='utf-8')), sys.argv[2])
+    make(json.load(open(sys.argv[1], encoding='utf-8')), sys.argv[2], tiktok='--tiktok' in sys.argv)
