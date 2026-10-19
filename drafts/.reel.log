@@ -1,17 +1,20 @@
-2026-10-19T04:28:40.920470 oura-wear-your-best-life-ciudad-a-mano
+2026-10-19T04:40:02.614675 fortnitemares-2026-freddy-krueger-fnaf
 ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
 ElevenLabs usó eleven_v4
-Pausas recortadas: 23 5.4s
-Video desde caché: https://www.youtube.com/watch?v=szmzlH_AaFU
+Pausas recortadas: 24 7.3s
+Video desde caché: https://www.youtube.com/watch?v=5lddZVFmxaw
 Video av1 -> h264 ok
-Fuente 1 campana 61.2s 11 tomas
-Video desde caché: https://www.youtube.com/watch?v=J6034KSc6Uk
+Fuente 1 campana 47.4s 18 tomas
+Video desde caché: https://www.youtube.com/watch?v=7qQFLL_DJ7Q
 Video av1 -> h264 ok
-Fuente 2 https://www.youtube.com/watch?v=J6034KSc6Uk 94.6s 47 tomas
+Fuente 2 https://www.youtube.com/watch?v=7qQFLL_DJ7Q 53.0s 18 tomas
+Video desde caché: https://www.youtube.com/watch?v=_Qt7HHBDdac
 Video av1 -> h264 ok
-Fuente 3 https://www.adsoftheworld.com/campaigns/wear-your-best-life 30.0s 8 tomas
-Video desde caché: https://www.youtube.com/watch?v=6nVyKaUVoMY
+Fuente 3 https://www.youtube.com/watch?v=_Qt7HHBDdac 24.6s 4 tomas
+Video desde caché: https://www.youtube.com/watch?v=zQMzYevbbH8
 Video av1 -> h264 ok
-Fuente 4 https://www.youtube.com/watch?v=6nVyKaUVoMY 30.0s 8 tomas
-Reel: [(0.0, 2.6, 'video1'), (2.6, 3.9, 'video1'), (3.9, 7.8, 'video1'), (7.8, 10.4, 'video1'), (10.4, 11.6, 'video1'), (11.6, 15.4, 'video1'), (15.4, 19.7, 'video3'), (19.7, 21.0, 'video2'), (21.0, 22.7, 'video1'), (22.7, 23.9, 'video2'), (23.9, 25.7, 'video1'), (25.7, 28.1, 'video1'), (28.1, 29.6, 'video2'), (29.6, 31.0, 'video1'), (31.0, 33.1, 'video1'), (33.1, 34.9, 'video2'), (34.9, 38.3, 'video1'), (38.3, 42.8, 'video4'), (42.8, 48.0, 'video1'), (48.0, 53.5, 'video1'), (53.5, 57.7, 'video1'), (57.7, 60.0, 'video2')]
+Fuente 4 https://www.youtube.com/watch?v=zQMzYevbbH8 40.4s 10 tomas
+Video av1 -> h264 ok
+Fuente 5 https://www.adsoftheworld.com/campaigns/fortnitemares 47.4s 18 tomas
+Reel: [(0.0, 2.0, 'video1'), (2.0, 3.8, 'video1'), (3.8, 9.1, 'video1'), (9.1, 10.1, 'video1'), (10.1, 12.2, 'video1'), (12.2, 18.7, 'video2'), (18.7, 23.9, 'video3'), (23.9, 28.3, 'video4'), (28.3, 30.4, 'video5'), (30.4, 34.0, 'video1'), (34.0, 38.1, 'video1'), (38.1, 42.5, 'video1'), (42.5, 47.2, 'video1'), (47.2, 48.6, 'video2'), (48.6, 50.7, 'video2'), (50.7, 53.5, 'video2'), (53.5, 55.5, 'video2'), (55.5, 56.9, 'video2'), (56.9, 60.0, 'video2')]
 
