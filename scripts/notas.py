@@ -799,11 +799,14 @@ def send_carousel(n):
 
 def queue_instagram(n, kind='carousel'):
     q = load(IGQ) if os.path.exists(IGQ) else []
+    if any(i.get('id') == n['id'] and i.get('kind', 'carousel') == kind for i in q):
+        return False                      # doble toque al botón: ya está en la cola, nunca se encola dos veces
     item = {'id': n['id'], 'caption': n['ig'].get('caption', ''), 'reply': n.get('tg'), 'kind': kind}
     if kind == 'carousel' and n.get('animado') and os.path.exists(f'assets/ig/{n["id"]}/anim/1.mp4'):
         item['animado'] = True
     q.append(item)
     save(IGQ, q)
+    return True
 
 
 def es_video(n):
@@ -1724,7 +1727,7 @@ def instagram():
         if time.time() < float(item.get('despues') or 0) or time.time() - ult < IG_ESPACIO:
             rest.append(item)
             continue
-        if (item.get('intentos') or item.get('esperas')) and ya_publicado(api, uid, tok, item):
+        if ya_publicado(api, uid, tok, item):   # siempre se revisa antes de publicar: nunca dos veces lo mismo
             continue                             # el intento anterior sí salió aunque Meta respondió con error
         ult = time.time()
         save(IG_ULTIMO, {'t': ult})
