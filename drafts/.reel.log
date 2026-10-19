@@ -1,19 +1,23 @@
-2026-10-19T16:04:35.237138 mint-mobile-julia-stiles-10-cosas-que-odio
-Video desde caché: https://www.youtube.com/watch?v=TN_-oLpQa7s
+2026-10-19T17:40:09.814477 boost-mobile-mike-tyson-whats-your-plan
+ElevenLabs usó eleven_v4
+Pausas recortadas: 16 4.9s
+Caché guardada: https://www.youtube.com/watch?v=flnqbKCGTSs 201
 Video av1 -> h264 ok
-Fuente 5 campana 30.0s 7 tomas
-Video desde caché: https://www.youtube.com/watch?v=OwFLXE5Mr18
+Fuente 9 campana 30.0s 14 tomas
+Video desde caché: https://www.youtube.com/watch?v=flnqbKCGTSs
 Video av1 -> h264 ok
-Fuente 6 https://www.youtube.com/watch?v=OwFLXE5Mr18 80.5s 10 tomas
-Fuente 7 https://www.ispot.tv/share/SnYd 30.0s 8 tomas
-Video  -> h264 [mov,mp4,m4a,3gp,3g2,mj2 @ 0x5592b9bd3f80] moov atom not found
-[in#0 @ 0x5592b9bd3e80] Error opening input: Invalid data found when processing input
-Error opening input file /tmp/tmpr86e0jyx/extra2.mp4.
-Error opening input files: Invalid data found when processing input
-
-Fuente 8 https://www.today.com/video/julia-stiles-revives-10-things-i-hate-abou 0.0s 1 tomas
-yt-dlp default : b'ERROR: [yahoo] julia-stiles-revives-10-things-124935890: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)\n'
-Toma de arranque: 7.0-8.5 puntaje 3.14
-Reel: [(0.0, 1.4, 'video5'), (1.4, 2.8, 'video5'), (2.8, 5.3, 'video5'), (5.3, 8.1, 'video5'), (8.1, 11.8, 'video6'), (11.8, 15.7, 'video5'), (15.7, 17.2, 'video7'), (17.2, 18.2, 'video5'), (18.2, 19.7, 'video6'), (19.7, 23.1, 'video6'), (23.1, 25.0, 'video6'), (25.0, 29.1, 'video6'), (29.1, 32.3, 'video6'), (32.3, 34.9, 'video6'), (34.9, 36.8, 'video6'), (36.8, 40.0, 'video6')]
-Diseños TikTok: ['tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original']
+Fuente 10 https://www.youtube.com/watch?v=flnqbKCGTSs 30.0s 14 tomas
+Caché guardada: https://www.youtube.com/watch?v=gZnEu6EX7No 201
+Video av1 -> h264 ok
+Fuente 11 https://www.youtube.com/watch?v=gZnEu6EX7No 30.0s 13 tomas
+Video av1 -> h264 ok
+Fuente 12 https://www.adsoftheworld.com/campaigns/wireless-wake-up-call 30.0s 14 tomas
+Caché guardada: https://www.youtube.com/watch?v=4n3xW77JzxI 201
+Video av1 -> h264 ok
+Fuente 13 https://www.youtube.com/watch?v=4n3xW77JzxI 30.0s 14 tomas
+Caché guardada: https://www.instagram.com/reel/Deh8YWJgNo7/ 201
+Video vp9 -> h264 ok
+Fuente 14 https://www.instagram.com/reel/Deh8YWJgNo7/ 30.0s 16 tomas
+Toma de arranque: 8.8-11.0 puntaje 3.06
+Reel: [(0.0, 2.6, 'video9'), (2.6, 3.5, 'video9'), (3.5, 4.9, 'video9'), (4.9, 7.1, 'video9'), (7.1, 10.9, 'video9'), (10.9, 13.1, 'video9'), (13.1, 14.7, 'video9'), (14.7, 16.0, 'video9'), (16.0, 17.9, 'video9'), (17.9, 19.0, 'video9'), (19.0, 20.2, 'video9'), (20.2, 26.9, 'video9'), (26.9, 28.3, 'video9'), (28.3, 30.3, 'video10'), (30.3, 35.3, 'video12'), (35.3, 40.0, 'video9')]
 
