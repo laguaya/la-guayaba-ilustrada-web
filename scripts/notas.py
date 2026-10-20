@@ -1856,13 +1856,13 @@ def sh(*a):
 def commit(msg):
     if sh('git', 'diff', '--quiet', '--', 'posts.js').returncode != 0:
         sh('python', 'scripts/seo.py')  # páginas de notas, sitemap, RSS y llms.txt
-    sh('git', 'add', '-A', 'drafts', 'inbox', 'posts.js', 'assets', 'notas', 'index.html', 'blog.html', 'precios.html',
+    sh('git', 'add', '-A', 'drafts', 'inbox', 'posts.js', 'assets', 'notas', 'temas', 'temas.js', 'index.html', 'blog.html', 'precios.html',
        'sitemap.xml', 'feed.xml', 'llms.txt', 'robots.txt')
     if sh('git', 'diff', '--cached', '--quiet').returncode == 0:
         return
     sh('git', 'commit', '-m', msg)
     for _ in range(4):
-        if sh('git', 'pull', '--rebase', '-q', 'origin', 'main').returncode == 0 and \
+        if sh('git', 'pull', '--rebase', '--autostash', '-q', 'origin', 'main').returncode == 0 and \
            sh('git', 'push', '-q', 'origin', 'main').returncode == 0:
             return
         import time; time.sleep(4)
