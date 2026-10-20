@@ -41,5 +41,22 @@
  ],
  "ig1": "assets/work/nota-aegon-comercial-seguros-inteligencia-artificial-foto-src1.webp",
  "ig2": "assets/work/nota-aegon-comercial-seguros-inteligencia-artificial-foto-src2.webp",
- "cands_v": 2
+ "cands_v": 2,
+ "_data": {
+  "etiqueta": "Noticias",
+  "portada": "Aegon hizo un comercial *100% con IA* y tiró el 80%",
+  "titulo": "El primer comercial de seguros hecho _solo con IA_",
+  "resumen": "Aegon estrenó en España un comercial con [26 personajes] que no existen, todos hechos con inteligencia artificial. Para lograrlo, su equipo descartó cerca del [80%] de lo que generó.",
+  "info": [
+   "[Magnific] es una plataforma de inteligencia artificial generativa: le describes por escrito lo que quieres ver y crea o mejora imágenes y videos. Aquí se usó para todo el comercial, desde las caras de los personajes hasta las locaciones y los anuncios impresos.",
+   "Aegon es un grupo asegurador de origen neerlandés. Su agencia en España, La Despensa, y la productora Glassy Films armaron antes un casting, vestuario y más de diez locaciones, y luego editaron color y sonido como en un [rodaje tradicional]."
+  ],
+  "marca": "Aegon",
+  "caption": "Aegon lanzó un comercial de seguros hecho 100% con inteligencia artificial y ninguno de sus 26 personajes existe 🤖\n\nLa campaña de publicidad se estrenó en España y la aseguradora la presenta como la primera de su sector en TV con todas las imágenes hechas con IA.\nPara lograrlo hicieron casting, vestuario y locaciones como en una filmación real, y tiraron casi el 80% de lo que generaron.\nIA en publicidad sí, pero con criterio creativo detrás.\n\n¿Confiarías en un anuncio de salud con personas que no existen?\nGuárdalo para tu próxima junta de marketing.\n🎥 Video: Aegon / La Despensa / Glassy Films\nNota completa en el link de la bio.\nSíguenos para las noticias de marcas, diseño y publicidad que sí importan, todos los días.\n\n#Aegon #IAenPublicidad #InteligenciaArtificial #PublicidadCreativa #MarketingDigital",
+  "caption_tiktok": "Comercial hecho con inteligencia artificial: Aegon inventó 26 personas para anunciar seguros de salud y tiró el 80% de lo que hizo la IA. ¿Le creerías? 🎥 Video: Aegon / La Despensa. Síguenos: una campaña nueva cada 2 horas #aegon #ia #publicidad #marketingtiktok #aprendeentiktok",
+  "img": "assets/work/nota-aegon-comercial-seguros-inteligencia-artificial-foto-src1.webp",
+  "img2": "assets/work/nota-aegon-comercial-seguros-inteligencia-artificial-foto-src2.webp",
+  "fecha": "20 OCTUBRE 2026"
+ },
+ "tg": 849
 }

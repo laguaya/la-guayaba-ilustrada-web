@@ -58,3 +58,5 @@ Traceback (most recent call last):
     raise RuntimeError('La nota no tiene video de la campaña para el Reel')
 RuntimeError: La nota no tiene video de la campaña para el Reel
 
+2026-10-20T15:01:41.942476 enviando Reel skims-kim-kardashian-brasier-pezones-cambio-climatico-2023
+2026-10-20T15:01:45.059252 Telegram sendVideo falló: Bad Request: BUTTON_DATA_INVALID
