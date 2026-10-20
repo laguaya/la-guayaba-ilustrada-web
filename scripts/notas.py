@@ -29,6 +29,11 @@ def tg(method, files=None, **data):
     j = r.json()
     if not j.get('ok'):
         print(f'Telegram {method} falló: {j.get("description")}', file=sys.stderr)
+        try:
+            with open('drafts/.errores.log', 'a') as f:
+                f.write(f'{datetime.now().isoformat()} Telegram {method} falló: {j.get("description")}\n')
+        except Exception:
+            pass
     return j
 
 
@@ -699,6 +704,8 @@ def reels_sueltos():
         sal = load(SALIDA) if os.path.exists(SALIDA) else {}
         if not r.get('urgente') and (not hora_de_salir() or sal.get('turno') == turno_actual()):
             continue
+        with open('drafts/.errores.log', 'a') as f:
+            f.write(f'{datetime.now().isoformat()} enviando Reel {r["id"]}\n')
         with open(f'assets/ig/{r["id"]}/reel.mp4', 'rb') as f:
             res = tg('sendVideo', files={'video': f}, chat_id=CHAT, supports_streaming='true', width=1080, height=1920,
                      caption=f'🎬 Reel: {r.get("t", r["id"])[:150]}\nSi te gusta, súbelo con el botón.',
