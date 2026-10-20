@@ -1,16 +1,20 @@
-2026-10-20T15:32:12.257889 chatgpt-voice-abuelos-uk-get-stuff-done
-ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
-ElevenLabs usó eleven_v4
-Pausas recortadas: 15 3.9s
-Caché guardada: https://www.youtube.com/watch?v=mEulEkuxCnM 201
-Video av1 -> h264 ok
-Fuente 1 campana 154.4s 59 tomas
-Caché guardada: https://www.youtube.com/watch?v=EAN5Cj347PY 201
-Video av1 -> h264 ok
-Fuente 2 https://www.youtube.com/watch?v=EAN5Cj347PY 214.0s 76 tomas
-Caché guardada: https://www.youtube.com/watch?v=96ogPwN9ykM 201
-Video av1 -> h264 ok
-Fuente 3 https://www.youtube.com/watch?v=96ogPwN9ykM 125.2s 67 tomas
-Toma de arranque: 117.7-119.3 puntaje 2.73
-Reel: [(0.0, 1.6, 'video1'), (1.6, 3.9, 'video1'), (3.9, 4.4, 'video1'), (4.4, 6.7, 'video1'), (6.7, 8.1, 'video1'), (8.1, 9.2, 'video1'), (9.2, 10.6, 'video1'), (10.6, 12.1, 'video1'), (12.1, 13.9, 'video1'), (13.9, 15.0, 'video1'), (15.0, 16.6, 'video1'), (16.6, 19.3, 'video2'), (19.3, 21.0, 'video1'), (21.0, 25.4, 'video3'), (25.4, 27.9, 'video2'), (27.9, 30.3, 'video1'), (30.3, 31.3, 'video1'), (31.3, 34.3, 'video1'), (34.3, 40.0, 'video1')]
+2026-10-20T17:02:36.189501 skims-kim-brasier-pezones-2023
+Fuente 1 campana 40.8s 3 tomas
+yt-dlp default : b"ERROR: [Instagram] Cy6cgdfO88d: This content isn't available to everyone: It can't be seen by certain audiences.\n"
+Video desde caché: https://www.youtube.com/watch?v=QjR2D5GelTo
+Fuente 2 https://www.youtube.com/watch?v=QjR2D5GelTo 165.5s 11 tomas
+yt-dlp default : b'ERROR: [youtube] HYU96IDIrRk: Video unavailable\n'
+yt-dlp ['youtube:player_client=tv'] : b'ERROR: [youtube] HYU96IDIrRk: Video unavailable\n'
+yt-dlp ['youtube:player_client=web_safari'] : b'ERROR: [youtube] HYU96IDIrRk: Video unavailable\n'
+yt-dlp ['youtube:player_client=mweb'] : b'ERROR: [youtube] HYU96IDIrRk: Video unavailable\n'
+yt-dlp ['youtube:player_client=android_vr'] : b'WARNING: [youtube] Skipping client "android_vr" since it does not support cookies\nERROR: [youtube] HYU96IDIrRk: Video unavailable\n'
+Invidious https://invidious.f5.si 500
+Invidious https://inv.nadeko.net 403
+Invidious https://yewtu.be 403
+Invidious https://invidious.nerdvpn.de 401
+Video desde caché: https://www.youtube.com/watch?v=-krHvIGY7fo
+Fuente 3 https://www.youtube.com/watch?v=-krHvIGY7fo 221.5s 1 tomas
+Toma de arranque: 7.0-38.7 puntaje 1.31
+Reel: [(0.0, 6.0, 'video1'), (6.0, 11.5, 'video1'), (11.5, 15.8, 'video1'), (15.8, 19.8, 'video1'), (19.8, 23.9, 'video1'), (23.9, 25.6, 'video2'), (25.6, 28.4, 'video2'), (28.4, 29.9, 'video2'), (29.9, 35.6, 'video2'), (35.6, 40.1, 'video2'), (40.1, 42.8, 'video2')]
+Diseños TikTok: ['tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'tres', 'original', 'dos']
 
