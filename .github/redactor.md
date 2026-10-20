@@ -52,6 +52,11 @@ Se publica en @lgi.newsbrand (Newsbrand, por La Guayaba Ilustrada). Objetivo: GA
   f) Una sola cifra de negocio, fácil de recordar ("vale cinco mil millones de dólares"). Agencia y director, máximo una mención y después del giro, nunca al inicio.
   g) Lección en una frase corta que se pueda citar ("Tu mejor anuncio puede ser algo que ya te pasó").
   h) Cierre: pide COMPARTIR con alguien concreto ("Mándaselo a alguien que…", "Etiqueta a tu amigo que…") + pregunta de dos opciones ("¿Genial o exagerado?").
+  ORIGINALIDAD (OBLIGATORIO, Sergio oct 2026). Instagram (política de abril 2026) y TikTok (desde septiembre 2025) dejan de recomendar las cuentas que solo resuben material ajeno; lo que cuenta como original es la OPINIÓN, el comentario y la edición propios, no el crédito ni las marcas de agua. Por eso cada Reel lleva:
+  - Voz en PRIMERA PERSONA, como Sergio contándole a un amigo, con opinión propia en al menos 2 frases ("A mí lo que me voló la cabeza es…", "Aquí la marca se equivocó en…", "Yo lo hubiera hecho…"). No narres como noticiero neutral.
+  - "veredicto" (en "ig"): {"cal": 1 a 10, "frase": "tu opinión en máx. 40 caracteres"}. Sale como sello "VEREDICTO LA GUAYABA" en pantalla antes del cierre. Sé honesto: no todo es 10; un 5 o un 6 con razón genera más comentarios. Ej.: {"cal": 9, "frase": "Convirtió un error en el anuncio"}.
+  - Una frase de la voz que diga el veredicto ("Le doy un nueve: convirtió un error en el anuncio").
+  - Nunca el mismo arranque de guion dos veces seguidas; varía la forma de contar (historia, pregunta, polémica, dato).
   Estructura dinámica:
   1. Gancho de los primeros 2 segundos (máx. 12 palabras). VARÍA el tipo de gancho de una nota a otra; NO empieces con "¿Sabías que?" salvo muy de vez en cuando. Opciones: escena que pone al espectador dentro ("Imagina que", "Estás en"), afirmación polémica pero verdadera, cifra impactante al inicio, pregunta directa al espectador, "Esta marca acaba de", contraste ("Todos hacen X; esta marca hizo lo contrario"), o empezar a media acción.
   2. Qué pasó, con detalles visuales concretos (lo que se ve en el video).
@@ -75,7 +80,7 @@ Se publica en @lgi.newsbrand (Newsbrand, por La Guayaba Ilustrada). Objetivo: GA
 
 ## 3b. El Reel de cada vuelta (archivo aparte, noticia distinta)
 - Archivo: `drafts/reels/<id>.json` (id único, a-z, 0-9 y guiones; que no exista en drafts/reels/, drafts/ ni posts.js). Formato:
-  {"id": "...", "t": "titular corto de la noticia", "k": "Noticias" | "Tendencias" | "Inspiración", "src": "URL exacta de la nota de un medio serio", "yt": "ID de YouTube del video de ESA noticia" (o "mp4": URL directa, o "vm": ID de Vimeo), "ig": {"etiqueta": "...", "portada": "gancho máx. 60 caracteres con *asteriscos*", "marca": "...", "caption": "...", "caption_tiktok": "...", "videos": [...], "pronunciar": {...}, "escenas": [...]}}
+  {"id": "...", "t": "titular corto de la noticia", "k": "Noticias" | "Tendencias" | "Inspiración", "src": "URL exacta de la nota de un medio serio", "yt": "ID de YouTube del video de ESA noticia" (o "mp4": URL directa, o "vm": ID de Vimeo), "ig": {"etiqueta": "...", "portada": "gancho máx. 60 caracteres con *asteriscos*", "marca": "...", "caption": "...", "caption_tiktok": "...", "veredicto": {"cal": 8, "frase": "..."}, "videos": [...], "pronunciar": {...}, "escenas": [...]}}
 - Es una noticia DISTINTA a la nota (A) de esta vuelta y a los Reels anteriores (revisa drafts/reels/ y la lista "reels" de .state.json). Mismos temas que las notas (marcas, publicidad, marketing, casos de éxito, redes sociales, IA en redes y publicidad, marcas que hicieron algo extraordinario). No tiene que estar en la web.
 - REGLA DE ORO DE SERGIO: todo lo que se ve en el Reel tiene que ser de ESA MISMA noticia. El video principal ("yt", "mp4" o "vm") es el video real de esa noticia: el comercial o la campaña misma, el video oficial del lanzamiento, o la nota de un noticiero o medio serio sobre exactamente ese hecho. Debe durar de 15 segundos a 10 minutos. Cada video de "videos" y de cada escena también debe mostrar esa misma noticia (otra versión del comercial, el making of de esa campaña, la cobertura de un medio sobre ese hecho, la publicación oficial de la marca sobre eso). NUNCA uses videos de la marca que hablen de otra cosa, entrevistas largas, conferencias ni videos genéricos. Si de una noticia no existe video real de eso, escoge OTRA noticia que sí lo tenga.
 - PERSONA EN PANTALLA: entre las noticias posibles, prefiere las que tienen una celebridad, creador o gente real en el video (ver "FÓRMULA QUE MÁS FUNCIONÓ" en la sección 3).
@@ -97,6 +102,8 @@ INSTAGRAM ("caption", en notas y Reels): Instagram ya funciona como buscador: la
 - 2 a 4 líneas cortas con palabras clave en español que la gente busca (marketing, publicidad, branding, campaña, la marca, el producto).
 - Pregunta para comentarios + invitación a guardar o compartir (los guardados y envíos son lo que más empuja el alcance).
 - 3 a 5 hashtags: 1 de la marca, 1 o 2 del tema, 1 de nicho en español (#MarketingDigital, #PublicidadCreativa, #MarketingMexico). Nada de hashtags genéricos (#viral, #fyp, #love).
+
+CRÉDITO: en "caption" y "caption_tiktok" agrega una línea "🎥 Video: <marca> / <agencia>" (dar crédito no hace original el contenido, pero es lo correcto y evita reportes de derechos).
 
 SEGUIDORES (Sergio, oct 2026: en TikTok ningún Reel ha ganado seguidores): el último renglón de "caption" y de "caption_tiktok", antes de los hashtags, dice por qué seguirnos, variando la frase: "Síguenos: una campaña nueva cada 2 horas 📲", "Todos los días las campañas más locas de las marcas, síguenos". Corta, sin repetir la misma dos veces seguidas.
 

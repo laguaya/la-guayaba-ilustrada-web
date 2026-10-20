@@ -1549,6 +1549,9 @@ def queue_tiktok_fotos(n, reply_id=None):
     q = load(TTQ) if os.path.exists(TTQ) else []
     if any(i['id'] == n['id'] for i in q):
         return True
+    hist = load(TT_HIST) if os.path.exists(TT_HIST) else []
+    if n['id'] in hist:                  # nunca el mismo Reel dos veces en TikTok (TikTok lo toma como spam)
+        return False
     q.append({'id': n['id'], 'tipo': 'fotos', 'urls': urls, 'titulo': (n.get('t') or '')[:90], 'caption': cap,
               'reply': reply_id, 'despues': time.time() + 240})   # espera a que la web publique las láminas
     save(TTQ, q)
@@ -1571,6 +1574,7 @@ def queue_tiktok(n):
 
 
 TT_DIA_F = 'drafts/.tiktok_dia.json'
+TT_HIST = 'drafts/.tiktok_hist.json'   # Reels que ya se subieron a TikTok
 TT_DIA = 3                 # videos al día en TikTok (cuenta nueva: más que eso y TikTok deja de repartirlos)
 TT_ESPACIO = 3 * 3600      # mínimo entre dos videos de TikTok
 
@@ -1649,6 +1653,8 @@ def tiktok_cola():
                     return
                 it['publish_id'], it['priv'] = tiktok.iniciar(video_tiktok(it['id']), it['caption'])
                 dia['n'] += 1; dia['ultimo'] = time.time(); save(TT_DIA_F, dia)
+                hist = load(TT_HIST) if os.path.exists(TT_HIST) else []
+                save(TT_HIST, (hist + [it['id']])[-500:])
             it['despues'] = time.time() + 30
         else:
             st, motivo = tiktok.estado(it['publish_id'])

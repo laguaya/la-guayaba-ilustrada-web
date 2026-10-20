@@ -464,10 +464,47 @@ def preparar(data):
         'cta': text_block('Síguenos para no perderte la próxima', W - 2 * M, 2, 'lg-black.woff2', 76, 56, WHITE),
         'bio': pill('@lgi.newsbrand', font('lg-black.woff2', 40), ROSA, UVA, 40, 22),
     }
+    L['veredicto'] = tarjeta_veredicto(data.get('veredicto'))
     d0 = ImageDraw.Draw(Image.new('RGB', (4, 4)))
     fonts, ls, size = C.fitted(d0, data['portada'], W - 2 * M, 4, 'lg-black.woff2', 112, 64)
     L['gancho'] = (fonts, ls, size)
     return L
+
+
+def tarjeta_veredicto(v):
+    """Sello editorial propio de La Guayaba: calificación y opinión en una frase (Sergio, oct 2026). Es lo que
+    hace que el Reel no sea solo un comercial ajeno: TikTok e Instagram premian la opinión y la edición propias."""
+    if not isinstance(v, dict) or v.get('cal') in (None, ''):
+        return None
+    try:
+        cal = max(1, min(10, int(round(float(v['cal'])))))
+    except Exception:
+        return None
+    frase = str(v.get('frase') or '').strip()[:48]
+    f_lab, f_cal, f_fr = font('lg-bold.woff2', 30), font('lg-black.woff2', 128), font('lg-black.woff2', 46)
+    d0 = ImageDraw.Draw(Image.new('RGB', (4, 4)))
+    ancho = int(max(d0.textlength('VEREDICTO LA GUAYABA', font=f_lab), d0.textlength(f'{cal}/10', font=f_cal),
+                    d0.textlength(frase, font=f_fr) if frase else 0)) + 96
+    ancho = min(ancho, W - 2 * M)
+    im, d = layer(ancho, 330 if frase else 250)
+    d.rounded_rectangle((0, 0, im.width - 1, im.height - 1), 44, fill=ROSA)
+    d.text((48, 74), 'VEREDICTO LA GUAYABA', font=f_lab, fill=UVA, anchor='ls')
+    d.text((44, 210), f'{cal}/10', font=f_cal, fill=UVA, anchor='ls')
+    if frase:
+        while d.textlength(frase, font=f_fr) > ancho - 96 and f_fr.size > 28:
+            f_fr = font('lg-black.woff2', f_fr.size - 2)
+        d.text((48, 290), frase, font=f_fr, fill=INK, anchor='ls')
+    return im
+
+
+def veredicto(base, t, L, ini, fin):
+    """Sale con un rebote corto arriba del video y se va antes del cierre."""
+    v = L.get('veredicto')
+    if not v or not (ini <= t <= fin):
+        return
+    a = eo(lin(t, ini, ini + .45)) * (1 - eo(lin(t, fin - .35, fin)))
+    y = 330 + (1 - eo(lin(t, ini, ini + .45))) * 40
+    paste(base, v, (W - v.width) / 2, y, a)
 
 
 def gancho(base, t, L):
@@ -1103,6 +1140,7 @@ def make(data, out, tiktok=False):
                 if t >= fin_cuerpo:
                     cierre(im, t - fin_cuerpo, L)
                 else:
+                    veredicto(im, t, L, max(GANCHO + 2, fin_cuerpo - 9.0), fin_cuerpo - 0.5)
                     g = next((g for g in G if g[0][0] - 0.05 <= t <= g[-1][1] + 0.25), None)
                     if g:
                         s = subtitulo(g, t)
