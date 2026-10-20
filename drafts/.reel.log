@@ -1,16 +1,18 @@
-2026-10-20T03:37:33.971564 chipotle-cancion-verduras-abbey-road
+2026-10-20T13:27:36.710641 peloton-miley-cyrus-tread-flex-let-yourself-run
+ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
 ElevenLabs usó eleven_v4
-Pausas recortadas: 17 4.2s
-Caché guardada: https://www.youtube.com/watch?v=Uoq8sdfgupk 201
+Pausas recortadas: 16 4.1s
+Caché guardada: https://www.youtube.com/watch?v=Vlt4-5Db-NA 201
 Video av1 -> h264 ok
-Fuente 5 campana 234.0s 103 tomas
-Caché guardada: https://www.instagram.com/reel/DeH_lHXRGvJ/ 201
+Fuente 1 campana 60.0s 32 tomas
+Caché guardada: https://www.instagram.com/reel/DdwaFeiDs2r/ 201
 Video vp9 -> h264 ok
-Fuente 6 https://www.instagram.com/reel/DeH_lHXRGvJ/ 36.1s 19 tomas
-Caché guardada: https://www.instagram.com/reel/DeHU3yyonYp/ 201
-Fuente 7 https://www.instagram.com/reel/DeHU3yyonYp/ 6.6s 1 tomas
-yt-dlp default : b'ERROR: [Instagram] DeJacp2yRfy: There is no video in this post\n'
-yt-dlp default : b'on using  yt-dlp -U\nERROR: [Instagram] DeJZrWLR_ZA: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U\n'
-Toma de arranque: 204.2-206.3 puntaje 3.05
-Reel: [(0.0, 2.0, 'video5'), (2.0, 4.8, 'video5'), (4.8, 7.8, 'video6'), (7.8, 11.8, 'video5'), (11.8, 13.5, 'video5'), (13.5, 17.3, 'video7'), (17.3, 21.5, 'video5'), (21.5, 25.7, 'video5'), (25.7, 27.5, 'video5'), (27.5, 29.0, 'video5'), (29.0, 30.3, 'video5'), (30.3, 32.2, 'video5'), (32.2, 33.7, 'video5'), (33.7, 40.0, 'video5')]
+Fuente 2 https://www.instagram.com/reel/DdwaFeiDs2r/ 9.3s 6 tomas
+Fuente 3 https://www.adsoftheworld.com/campaigns/let-yourself-run 60.0s 34 tomas
+Caché guardada: https://www.instagram.com/p/DduKXRDjLuL/ 201
+Video vp9 -> h264 ok
+Fuente 4 https://www.instagram.com/p/DduKXRDjLuL/ 3.3s 3 tomas
+yt-dlp default : b'on using  yt-dlp -U\nERROR: [Instagram] DdwM3XTFyxS: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U\n'
+Toma de arranque: 21.8-24.6 puntaje 2.90
+Reel: [(0.0, 2.8, 'video1'), (2.8, 3.9, 'video1'), (3.9, 5.2, 'video1'), (5.2, 6.4, 'video1'), (6.4, 8.3, 'video1'), (8.3, 10.6, 'video2'), (10.6, 12.8, 'video1'), (12.8, 13.2, 'video1'), (13.2, 15.9, 'video3'), (15.9, 17.6, 'video1'), (17.6, 19.0, 'video1'), (19.0, 20.1, 'video1'), (20.1, 22.9, 'video1'), (22.9, 24.8, 'video1'), (24.8, 26.1, 'video4'), (26.1, 28.5, 'video1'), (28.5, 30.1, 'video1'), (30.1, 32.2, 'video1'), (32.2, 33.4, 'video1'), (33.4, 35.6, 'video1'), (35.6, 36.8, 'video2'), (36.8, 40.0, 'video1')]
 
