@@ -1623,7 +1623,11 @@ def tiktok_cola():
         return
     # los Reels esperan a que Sergio vea la versión de TikTok y la apruebe (botón 🎵); mientras, la cola sigue con lo demás
     espera = lambda i: not i.get('publish_id') and i.get('tipo') != 'fotos' and i.get('vista') and not i.get('aprobado')
-    it = next((i for i in q if not espera(i)), None)
+    # un Reel aprobado que espera su turno (3 h entre videos) no frena las vistas previas de los demás
+    _d = load(TT_DIA_F) if os.path.exists(TT_DIA_F) else {}
+    turno_listo = time.time() - float(_d.get('ultimo') or 0) >= TT_ESPACIO
+    en_turno = lambda i: i.get('aprobado') and not i.get('publish_id') and i.get('tipo') != 'fotos' and not turno_listo
+    it = next((i for i in q if not espera(i) and not en_turno(i)), None) or next((i for i in q if not espera(i)), None)
     if it is None or time.time() < float(it.get('despues') or 0):
         return
     try:
