@@ -464,7 +464,7 @@ def preparar(data):
         'cta': text_block('Síguenos para no perderte la próxima', W - 2 * M, 2, 'lg-black.woff2', 76, 56, WHITE),
         'bio': pill('@lgi.newsbrand', font('lg-black.woff2', 40), ROSA, UVA, 40, 22),
     }
-    L['veredicto'] = tarjeta_veredicto(data.get('veredicto'))
+    L['veredicto'] = None      # Sergio, oct 2026: sin recuadro de calificación; la opinión va en la voz
     d0 = ImageDraw.Draw(Image.new('RGB', (4, 4)))
     fonts, ls, size = C.fitted(d0, data['portada'], W - 2 * M, 4, 'lg-black.woff2', 112, 64)
     L['gancho'] = (fonts, ls, size)
@@ -1140,7 +1140,6 @@ def make(data, out, tiktok=False):
                 if t >= fin_cuerpo:
                     cierre(im, t - fin_cuerpo, L)
                 else:
-                    veredicto(im, t, L, max(GANCHO + 2, fin_cuerpo - 9.0), fin_cuerpo - 0.5)
                     g = next((g for g in G if g[0][0] - 0.05 <= t <= g[-1][1] + 0.25), None)
                     if g:
                         s = subtitulo(g, t)
