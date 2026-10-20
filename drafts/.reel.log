@@ -1,13 +1,16 @@
-2026-10-20T14:36:04.864319 gap-ballet-opus-jazz-zac-posen
+2026-10-20T15:32:12.257889 chatgpt-voice-abuelos-uk-get-stuff-done
+ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
 ElevenLabs usó eleven_v4
-Pausas recortadas: 17 4.6s
-Fuente 11 campana 125.9s 45 tomas
-Video desde caché: https://www.youtube.com/watch?v=-mKClBri9eQ
+Pausas recortadas: 15 3.9s
+Caché guardada: https://www.youtube.com/watch?v=mEulEkuxCnM 201
 Video av1 -> h264 ok
-Fuente 12 https://www.youtube.com/watch?v=-mKClBri9eQ 125.9s 45 tomas
-Fuente 13 https://lbbonline.com/work/183780 125.9s 45 tomas
-Fuente 14 https://cdn.musebyclios.com/wp-content/uploads/2026/10/15154159/Opus-J 125.9s 45 tomas
-Toma de arranque: 25.0-26.6 puntaje 3.19
-Reel: [(0.0, 1.5, 'video11'), (1.5, 3.3, 'video11'), (3.3, 5.0, 'video13'), (5.0, 7.9, 'video11'), (7.9, 9.6, 'video12'), (9.6, 11.3, 'video11'), (11.3, 13.4, 'video11'), (13.4, 16.4, 'video11'), (16.4, 18.1, 'video14'), (18.1, 19.1, 'video11'), (19.1, 20.5, 'video11'), (20.5, 21.6, 'video11'), (21.6, 22.6, 'video11'), (22.6, 24.1, 'video11'), (24.1, 24.8, 'video11'), (24.8, 25.8, 'video11'), (25.8, 28.5, 'video11'), (28.5, 29.6, 'video11'), (29.6, 33.3, 'video12'), (33.3, 34.9, 'video12'), (34.9, 35.7, 'video11'), (35.7, 37.5, 'video12'), (37.5, 40.0, 'video12')]
-Diseños TikTok: ['tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'original', 'original', 'original', 'original', 'tres', 'original', 'dos', 'original', 'original', 'original', 'dos']
+Fuente 1 campana 154.4s 59 tomas
+Caché guardada: https://www.youtube.com/watch?v=EAN5Cj347PY 201
+Video av1 -> h264 ok
+Fuente 2 https://www.youtube.com/watch?v=EAN5Cj347PY 214.0s 76 tomas
+Caché guardada: https://www.youtube.com/watch?v=96ogPwN9ykM 201
+Video av1 -> h264 ok
+Fuente 3 https://www.youtube.com/watch?v=96ogPwN9ykM 125.2s 67 tomas
+Toma de arranque: 117.7-119.3 puntaje 2.73
+Reel: [(0.0, 1.6, 'video1'), (1.6, 3.9, 'video1'), (3.9, 4.4, 'video1'), (4.4, 6.7, 'video1'), (6.7, 8.1, 'video1'), (8.1, 9.2, 'video1'), (9.2, 10.6, 'video1'), (10.6, 12.1, 'video1'), (12.1, 13.9, 'video1'), (13.9, 15.0, 'video1'), (15.0, 16.6, 'video1'), (16.6, 19.3, 'video2'), (19.3, 21.0, 'video1'), (21.0, 25.4, 'video3'), (25.4, 27.9, 'video2'), (27.9, 30.3, 'video1'), (30.3, 31.3, 'video1'), (31.3, 34.3, 'video1'), (34.3, 40.0, 'video1')]
 
