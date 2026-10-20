@@ -1,20 +1,14 @@
-2026-10-20T17:02:36.189501 skims-kim-brasier-pezones-2023
-Fuente 1 campana 40.8s 3 tomas
-yt-dlp default : b"ERROR: [Instagram] Cy6cgdfO88d: This content isn't available to everyone: It can't be seen by certain audiences.\n"
-Video desde caché: https://www.youtube.com/watch?v=QjR2D5GelTo
-Fuente 2 https://www.youtube.com/watch?v=QjR2D5GelTo 165.5s 11 tomas
-yt-dlp default : b'ERROR: [youtube] HYU96IDIrRk: Video unavailable\n'
-yt-dlp ['youtube:player_client=tv'] : b'ERROR: [youtube] HYU96IDIrRk: Video unavailable\n'
-yt-dlp ['youtube:player_client=web_safari'] : b'ERROR: [youtube] HYU96IDIrRk: Video unavailable\n'
-yt-dlp ['youtube:player_client=mweb'] : b'ERROR: [youtube] HYU96IDIrRk: Video unavailable\n'
-yt-dlp ['youtube:player_client=android_vr'] : b'WARNING: [youtube] Skipping client "android_vr" since it does not support cookies\nERROR: [youtube] HYU96IDIrRk: Video unavailable\n'
-Invidious https://invidious.f5.si 500
-Invidious https://inv.nadeko.net 403
-Invidious https://yewtu.be 403
-Invidious https://invidious.nerdvpn.de 401
-Video desde caché: https://www.youtube.com/watch?v=-krHvIGY7fo
-Fuente 3 https://www.youtube.com/watch?v=-krHvIGY7fo 221.5s 1 tomas
-Toma de arranque: 7.0-38.7 puntaje 1.31
-Reel: [(0.0, 6.0, 'video1'), (6.0, 11.5, 'video1'), (11.5, 15.8, 'video1'), (15.8, 19.8, 'video1'), (19.8, 23.9, 'video1'), (23.9, 25.6, 'video2'), (25.6, 28.4, 'video2'), (28.4, 29.9, 'video2'), (29.9, 35.6, 'video2'), (35.6, 40.1, 'video2'), (40.1, 42.8, 'video2')]
-Diseños TikTok: ['tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'tres', 'original', 'dos']
+2026-10-20T18:05:08.989549 chatgpt-voice-abuelos-uk-get-stuff-done
+Video desde caché: https://www.youtube.com/watch?v=mEulEkuxCnM
+Video av1 -> h264 ok
+Fuente 4 campana 154.4s 59 tomas
+Video desde caché: https://www.youtube.com/watch?v=EAN5Cj347PY
+Video av1 -> h264 ok
+Fuente 5 https://www.youtube.com/watch?v=EAN5Cj347PY 214.0s 76 tomas
+Video desde caché: https://www.youtube.com/watch?v=96ogPwN9ykM
+Video av1 -> h264 ok
+Fuente 6 https://www.youtube.com/watch?v=96ogPwN9ykM 125.2s 67 tomas
+Toma de arranque: 117.7-119.3 puntaje 2.73
+Reel: [(0.0, 1.6, 'video4'), (1.6, 2.7, 'video4'), (2.7, 4.4, 'video4'), (4.4, 5.8, 'video4'), (5.8, 8.1, 'video4'), (8.1, 9.8, 'video4'), (9.8, 10.9, 'video4'), (10.9, 12.1, 'video4'), (12.1, 13.5, 'video4'), (13.5, 16.6, 'video4'), (16.6, 18.3, 'video5'), (18.3, 19.3, 'video4'), (19.3, 21.0, 'video4'), (21.0, 22.7, 'video6'), (22.7, 25.4, 'video4'), (25.4, 27.9, 'video5'), (27.9, 30.3, 'video4'), (30.3, 32.9, 'video4'), (32.9, 34.4, 'video4'), (34.4, 36.3, 'video4'), (36.3, 38.4, 'video4'), (38.4, 40.0, 'video4')]
+Diseños TikTok: ['tres', 'original', 'dos', 'original', 'tres', 'original', 'original', 'original', 'tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'tres', 'original']
 
