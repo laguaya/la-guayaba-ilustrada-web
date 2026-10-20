@@ -1,11 +1,21 @@
-2026-10-20T14:06:25.683351 gap-ballet-opus-jazz-zac-posen
-Fuente 10 campana 125.9s 45 tomas
-Video desde caché: https://www.youtube.com/watch?v=-mKClBri9eQ
-Video av1 -> h264 ok
-Fuente 11 https://www.youtube.com/watch?v=-mKClBri9eQ 125.9s 45 tomas
-Fuente 12 https://lbbonline.com/work/183780 125.9s 45 tomas
-Fuente 13 https://cdn.musebyclios.com/wp-content/uploads/2026/10/15154159/Opus-J 125.9s 45 tomas
-Toma de arranque: 25.0-26.6 puntaje 3.19
-Reel: [(0.0, 1.5, 'video10'), (1.5, 3.3, 'video10'), (3.3, 5.0, 'video12'), (5.0, 8.1, 'video10'), (8.1, 9.7, 'video11'), (9.7, 11.3, 'video10'), (11.3, 13.4, 'video10'), (13.4, 16.5, 'video10'), (16.5, 18.1, 'video13'), (18.1, 19.1, 'video10'), (19.1, 20.5, 'video10'), (20.5, 21.6, 'video10'), (21.6, 22.6, 'video10'), (22.6, 24.2, 'video10'), (24.2, 24.5, 'video10'), (24.5, 25.8, 'video10'), (25.8, 27.4, 'video10'), (27.4, 29.0, 'video10'), (29.0, 30.1, 'video10'), (30.1, 34.3, 'video11'), (34.3, 35.6, 'video11'), (35.6, 37.7, 'video11'), (37.7, 40.0, 'video11')]
-Diseños TikTok: ['tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'original', 'original', 'original', 'original', 'tres', 'original', 'original', 'original', 'tres', 'original', 'dos']
+2026-10-20T14:09:34.353981 skims-kim-kardashian-brasier-pezones-cambio-climatico-2023
+ElevenLabs usó eleven_v4
+Pausas recortadas: 17 5.2s
+Fuente 14 campana 40.8s 3 tomas
+yt-dlp default : b"ERROR: [Instagram] Cy6cgdfO88d: This content isn't available to everyone: It can't be seen by certain audiences.\n"
+Caché guardada: https://www.youtube.com/watch?v=QjR2D5GelTo 201
+Fuente 15 https://www.youtube.com/watch?v=QjR2D5GelTo 165.5s 11 tomas
+yt-dlp default : b'ERROR: [youtube] HYU96IDIrRk: Video unavailable\n'
+yt-dlp ['youtube:player_client=tv'] : b'ERROR: [youtube] HYU96IDIrRk: Video unavailable\n'
+yt-dlp ['youtube:player_client=web_safari'] : b'ERROR: [youtube] HYU96IDIrRk: Video unavailable\n'
+yt-dlp ['youtube:player_client=mweb'] : b'ERROR: [youtube] HYU96IDIrRk: Video unavailable\n'
+yt-dlp ['youtube:player_client=android_vr'] : b'WARNING: [youtube] Skipping client "android_vr" since it does not support cookies\nERROR: [youtube] HYU96IDIrRk: Video unavailable\n'
+Invidious https://invidious.f5.si 500
+Invidious https://inv.nadeko.net 403
+Invidious https://yewtu.be 403
+Invidious https://invidious.nerdvpn.de 401
+Caché guardada: https://www.youtube.com/watch?v=-krHvIGY7fo 201
+Fuente 16 https://www.youtube.com/watch?v=-krHvIGY7fo 221.5s 1 tomas
+Toma de arranque: 7.0-38.7 puntaje 1.31
+Reel: [(0.0, 5.7, 'video14'), (5.7, 7.8, 'video14'), (7.8, 11.4, 'video14'), (11.4, 13.4, 'video14'), (13.4, 15.6, 'video15'), (15.6, 19.6, 'video15'), (19.6, 20.8, 'video15'), (20.8, 23.6, 'video15'), (23.6, 29.4, 'video15'), (29.4, 33.8, 'video15'), (33.8, 38.4, 'video15'), (38.4, 41.1, 'video14')]
 
