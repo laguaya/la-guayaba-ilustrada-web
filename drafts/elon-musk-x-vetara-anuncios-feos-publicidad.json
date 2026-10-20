@@ -38,5 +38,22 @@
  ],
  "ig1": "assets/work/nota-elon-musk-x-vetara-anuncios-feos-publicidad-foto-src1.webp",
  "ig2": "assets/work/nota-elon-musk-x-vetara-anuncios-feos-publicidad-foto-src1.webp",
- "cands_v": 2
+ "cands_v": 2,
+ "_data": {
+  "etiqueta": "Noticias",
+  "portada": "Musk va a *vetar los anuncios feos* de X",
+  "titulo": "X ya no quiere publicidad _fea_ ni exagerada",
+  "resumen": "Elon Musk anunció que los anuncios en X deberán cumplir un [estándar estético]. Las marcas con piezas chillones o exageradas podrían quedar [vetadas] de la red social, y los usuarios podrán reportarlas.",
+  "info": [
+   "[X] es la red social que antes se llamaba Twitter y que Elon Musk compró en 2022. Un estándar estético es una regla sobre cómo debe verse algo: aquí, que el anuncio sea limpio y claro, sin gritos ni exageraciones, y no solo que respete las reglas de contenido.",
+   "La cuenta de negocios de X pide diseños sencillos, máximo [diez palabras] en la imagen y textos de hasta 100 caracteres. En junio de 2025 Musk ya había prohibido los hashtags en anuncios pagados. La meta es recuperar a las marcas que se fueron de la plataforma."
+  ],
+  "marca": "X y Elon Musk",
+  "caption": "Elon Musk quiere sacar de X a las marcas que hagan anuncios feos, chillones o exagerados 👀\n\nLa publicidad en X tendrá que cumplir un \"estándar estético razonable\".\nLa red social pide diseños limpios, máximo diez palabras en la imagen y textos cortos.\nY ojo: el castigo ya no sería bajar un anuncio, sino vetar a la marca.\n\n¿Quién debería decidir qué anuncio es bonito: la plataforma o la gente?\nGuárdalo para revisar tus anuncios antes de pagarlos.\nNota completa en el link de la bio.\nLas noticias de marketing que sí te sirven, todos los días. Síguenos.\n\n#ElonMusk #PublicidadDigital #RedesSociales #DiseñoGrafico #MarketingMexico",
+  "caption_tiktok": "Elon Musk va a vetar los anuncios feos en X. Diseños limpios, máximo diez palabras en la imagen y nada de promesas exageradas. ¿Buena idea o censura? Síguenos: una noticia de marketing cada 2 horas #elonmusk #marketingdigital #publicidad #emprendedores #aprendeentiktok",
+  "img": "assets/work/nota-elon-musk-x-vetara-anuncios-feos-publicidad-foto-src1.webp",
+  "img2": "assets/work/nota-elon-musk-x-vetara-anuncios-feos-publicidad-foto-src1.webp",
+  "fecha": "19 OCTUBRE 2026"
+ },
+ "tg": 827
 }
