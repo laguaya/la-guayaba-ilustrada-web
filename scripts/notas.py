@@ -1570,6 +1570,11 @@ def queue_tiktok(n):
     return True
 
 
+TT_DIA_F = 'drafts/.tiktok_dia.json'
+TT_DIA = 3                 # videos al día en TikTok (cuenta nueva: más que eso y TikTok deja de repartirlos)
+TT_ESPACIO = 3 * 3600      # mínimo entre dos videos de TikTok
+
+
 def video_tiktok(nid):
     """Versión para TikTok del Reel: pantalla completa, sin intro ni final del tráiler y titular desde el cuadro 1.
     Instagram sigue con reel.mp4 tal cual. Si no se puede armar, se usa el de Instagram."""
@@ -1605,6 +1610,19 @@ def tiktok_cola():
         return
     try:
         if not it.get('publish_id') and it.get('tipo') != 'fotos' and not it.get('aprobado'):
+            # Sergio, oct 2026: con 6 a 8 videos diarios TikTok dejó de mostrar la cuenta. Máximo TT_DIA al día y
+            # separados al menos TT_ESPACIO; lo demás se queda solo en Instagram.
+            hoy = datetime.now(timezone(timedelta(hours=-6))).strftime('%Y-%m-%d')
+            dia = load(TT_DIA_F) if os.path.exists(TT_DIA_F) else {}
+            if dia.get('fecha') != hoy:
+                dia = {'fecha': hoy, 'n': 0, 'ultimo': dia.get('ultimo', 0)}
+            if dia['n'] >= TT_DIA:
+                tg('sendMessage', chat_id=CHAT, reply_to_message_id=it.get('reply'),
+                   text=f'🎵 Hoy ya van {TT_DIA} videos en TikTok (el máximo para que TikTok no frene la cuenta). Este Reel se queda solo en Instagram.')
+                q.remove(it)
+                save(TTQ, q) if q else os.remove(TTQ)
+                changed = True
+                return
             video = video_tiktok(it['id'])
             with open(video, 'rb') as f:
                 r = tg('sendVideo', files={'video': f}, chat_id=CHAT, supports_streaming='true', width=1080, height=1920,
@@ -1618,7 +1636,19 @@ def tiktok_cola():
             if it.get('tipo') == 'fotos':
                 it['publish_id'], it['priv'] = tiktok.iniciar_fotos(it['urls'], it.get('titulo', ''), it['caption'])
             else:
+                hoy = datetime.now(timezone(timedelta(hours=-6))).strftime('%Y-%m-%d')
+                dia = load(TT_DIA_F) if os.path.exists(TT_DIA_F) else {}
+                if dia.get('fecha') != hoy:
+                    dia = {'fecha': hoy, 'n': 0, 'ultimo': dia.get('ultimo', 0)}
+                falta = TT_ESPACIO - (time.time() - float(dia.get('ultimo') or 0))
+                if falta > 0:                            # aprobado, pero espera su turno (3 h entre videos)
+                    if not it.get('avisado_espera'):
+                        it['avisado_espera'] = True; save(TTQ, q); changed = True
+                        tg('sendMessage', chat_id=CHAT, reply_to_message_id=it.get('reply'),
+                           text=f'🎵 Aprobado. Para que TikTok no frene la cuenta, sale en {int(falta // 3600)} h {int(falta % 3600 // 60)} min (dejamos 3 horas entre videos).')
+                    return
                 it['publish_id'], it['priv'] = tiktok.iniciar(video_tiktok(it['id']), it['caption'])
+                dia['n'] += 1; dia['ultimo'] = time.time(); save(TT_DIA_F, dia)
             it['despues'] = time.time() + 30
         else:
             st, motivo = tiktok.estado(it['publish_id'])
