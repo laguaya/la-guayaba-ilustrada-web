@@ -692,6 +692,13 @@ def reels_sueltos():
         r = load(path)
         if r.get('tg') or r.get('fallo'):
             continue
+        if len(r['id']) > 50:            # Telegram rechaza botones de más de 64 bytes ("subreel:" + id)
+            nuevo = r['id'][:50].rstrip('-')
+            if not os.path.exists(f'{REELS}/{nuevo}.json'):
+                if os.path.isdir(f'assets/ig/{r["id"]}'):
+                    os.rename(f'assets/ig/{r["id"]}', f'assets/ig/{nuevo}')
+                os.remove(path); r['id'] = nuevo; path = f'{REELS}/{nuevo}.json'
+                save(path, r); changed = True
         if not r.get('listo'):
             try:
                 build_reel_solo(r)
