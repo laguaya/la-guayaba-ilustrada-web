@@ -3,5 +3,7 @@
  "texto": "https://www.instagram.com/p/DdhLfbBIK19/?psln=MXZ2ZzZzbGZrOWxyYQ==",
  "nota": null,
  "urgente": false,
- "fecha": 1792523938
+ "fecha": 1792523938,
+ "intentos": 1,
+ "pendiente": "Intento 1: el link de Instagram sigue sin abrir desde la nube. Pedir a Sergio que pegue el texto del post o un link de un medio."
 }

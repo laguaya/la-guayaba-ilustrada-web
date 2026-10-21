@@ -68,3 +68,4 @@ RuntimeError: La nota no tiene video de la campaña para el Reel
 2026-10-20T21:12:35.582767 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
 2026-10-20T22:00:19.621082 enviando Reel visit-oslo-halfdan-musical-totally-even-a-city
 2026-10-21T00:00:16.186699 enviando Reel zendaya-on-pelea-praga-pantera
+2026-10-21T15:36:14.062579 redactor: Reel dollar-tree-tienda-arbol-gigante sin desde/hasta en la primera escena (el MP4 de musebyclios no se pudo bajar desde la nube para ver las tomas); 10 links de Instagram en inbox siguen sin abrir.
