@@ -1,14 +1,13 @@
-2026-10-22T17:24:00.427873 brett-goldstein-alexa-groserias-musica
-ElevenLabs usó eleven_v4
-Pausas recortadas: 17 5.1s
-Caché guardada: https://www.youtube.com/watch?v=P97MIfRwvrE 201
-Video av1 -> h264 ok
-Fuente 12 campana 15.0s 7 tomas
+2026-10-22T18:49:55.591406 brett-goldstein-alexa-groserias-musica
 Video desde caché: https://www.youtube.com/watch?v=P97MIfRwvrE
 Video av1 -> h264 ok
-Fuente 13 https://www.youtube.com/watch?v=P97MIfRwvrE 15.0s 7 tomas
+Fuente 14 campana 15.0s 7 tomas
+Video desde caché: https://www.youtube.com/watch?v=P97MIfRwvrE
+Video av1 -> h264 ok
+Fuente 15 https://www.youtube.com/watch?v=P97MIfRwvrE 15.0s 7 tomas
 yt-dlp default : b'ERROR: [generic] Got HTTP Error 403 caused by Cloudflare anti-bot challenge; try again with  --extractor-args "generic:impersonate"\n'
 yt-dlp default : b'ERROR: [generic] Got HTTP Error 403 caused by Cloudflare anti-bot challenge; try again with  --extractor-args "generic:impersonate"\n'
 Toma de arranque: 7.6-11.1 puntaje 2.67
-Reel: [(0.0, 4.3, 'video12'), (4.3, 5.3, 'video12'), (5.3, 7.2, 'video12'), (7.2, 8.6, 'video12'), (8.6, 10.0, 'video12'), (10.0, 11.3, 'video12'), (11.3, 14.8, 'video12'), (14.8, 15.8, 'video13'), (15.8, 17.3, 'video13'), (17.3, 17.7, 'video13'), (17.7, 19.1, 'video13'), (19.1, 21.2, 'video13'), (21.2, 22.3, 'video13'), (22.3, 24.0, 'video13'), (24.0, 25.9, 'video13'), (25.9, 27.1, 'video13'), (27.1, 31.2, 'video12'), (31.2, 34.6, 'video12'), (34.6, 35.7, 'video12'), (35.7, 40.0, 'video12')]
+Reel: [(0.0, 4.3, 'video14'), (4.3, 5.3, 'video14'), (5.3, 7.2, 'video14'), (7.2, 8.6, 'video14'), (8.6, 10.0, 'video14'), (10.0, 11.3, 'video14'), (11.3, 14.8, 'video14'), (14.8, 15.8, 'video15'), (15.8, 17.3, 'video15'), (17.3, 17.7, 'video15'), (17.7, 19.1, 'video15'), (19.1, 21.2, 'video15'), (21.2, 22.3, 'video15'), (22.3, 24.0, 'video15'), (24.0, 25.9, 'video15'), (25.9, 27.1, 'video15'), (27.1, 31.2, 'video14'), (31.2, 34.6, 'video14'), (34.6, 35.7, 'video14'), (35.7, 37.8, 'video15'), (37.8, 39.6, 'video14'), (39.6, 40.0, 'video15')]
+Diseños TikTok: ['original', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'original', 'original', 'dos', 'original', 'original', 'original', 'original', 'original', 'tres', 'original']
 
