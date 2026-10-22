@@ -1,15 +1,17 @@
-2026-10-22T19:40:36.283013 whatnot-cam-skattebo-rompe-paredes
+2026-10-22T21:22:45.187547 beats-360-kendall-jenner-cafe-de-kendalls
+ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
 ElevenLabs usó eleven_v4
-Pausas recortadas: 14 3.9s
-Caché guardada: https://www.youtube.com/watch?v=jZ3qHonTMy8 201
+Pausas recortadas: 17 4.4s
+Caché guardada: https://www.youtube.com/watch?v=WiDpX3w-KJE 201
 Video av1 -> h264 ok
-Fuente 16 campana 30.0s 12 tomas
-Video desde caché: https://www.youtube.com/watch?v=jZ3qHonTMy8
+Fuente 1 campana 76.2s 36 tomas
+Caché guardada: https://www.tiktok.com/@beatsbydre/video/7688375415416589599 201
+Video hevc -> h264 ok
+Fuente 2 https://www.tiktok.com/@beatsbydre/video/7688375415416589599 76.2s 36 tomas
 Video av1 -> h264 ok
-Fuente 17 https://www.youtube.com/watch?v=jZ3qHonTMy8 30.0s 12 tomas
+Fuente 3 https://www.adsoftheworld.com/campaigns/beats-360-ft-kendall-jenner-ke 76.2s 36 tomas
+Caché guardada: https://m.youtube.com/watch?pp=ugUEEgJlbtIHCQkgDAGHKiGM7w%3D 201
 Video av1 -> h264 ok
-Fuente 18 https://blog.teamwhatnot.com/unitedstates/takeashoppingtrip 30.0s 12 tomas
-yt-dlp default : b'ERROR: [generic] Got HTTP Error 403 caused by Cloudflare anti-bot challenge; try again with  --extractor-args "generic:impersonate"\n'
-Fuente 19 https://www.adweek.com/brand-marketing/whatnot-launches-its-first-nati 30.0s 12 tomas
-Reel: [(0.0, 2.9, 'video16'), (2.9, 4.1, 'video16'), (4.1, 7.9, 'video16'), (7.9, 9.0, 'video16'), (9.0, 11.8, 'video16'), (11.8, 15.7, 'video18'), (15.7, 17.2, 'video16'), (17.2, 19.3, 'video16'), (19.3, 23.4, 'video19'), (23.4, 28.2, 'video17'), (28.2, 31.4, 'video17'), (31.4, 32.7, 'video17'), (32.7, 40.0, 'video16')]
+Fuente 4 https://m.youtube.com/watch?pp=ugUEEgJlbtIHCQkgDAGHKiGM7w%3D%3D&v=WiDp 76.2s 36 tomas
+Reel: [(0.0, 3.7, 'video1'), (3.7, 5.5, 'video1'), (5.5, 7.1, 'video1'), (7.1, 8.1, 'video1'), (8.1, 12.4, 'video2'), (12.4, 14.5, 'video1'), (14.5, 16.7, 'video1'), (16.7, 20.1, 'video3'), (20.1, 21.4, 'video1'), (21.4, 25.5, 'video4'), (25.5, 27.3, 'video1'), (27.3, 28.6, 'video1'), (28.6, 29.7, 'video1'), (29.7, 31.6, 'video1'), (31.6, 32.6, 'video1'), (32.6, 33.9, 'video1'), (33.9, 40.0, 'video1')]
 
