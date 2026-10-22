@@ -1,0 +1,24 @@
+name: Fotos libres
+on:
+  workflow_dispatch:
+    inputs:
+      consultas:
+        description: 'JSON {"slug": "consulta"}'
+        required: true
+      n:
+        default: '6'
+permissions:
+  contents: write
+jobs:
+  fotos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 1 }
+      - run: pip install requests pillow
+      - run: python scripts/fotos_libres.py '${{ inputs.consultas }}' '${{ inputs.n }}'
+      - run: |
+          git config user.name "LGI Bot"; git config user.email "bot@guayabailustrada.com.mx"
+          git add assets/libres && git commit -m "Fotos libres para Guías" || exit 0
+          for i in 1 2 3; do git pull --rebase --autostash && git push && break; sleep 5; done
