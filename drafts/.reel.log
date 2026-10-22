@@ -1,15 +1,18 @@
-2026-10-21T23:18:39.418541 sprite-jokic-comediante-jokes-aside
-ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
+2026-10-22T01:21:30.491004 robert-downey-jr-specs-lentes-snap
 ElevenLabs usó eleven_v4
-Pausas recortadas: 20 5.5s
-Caché guardada: https://www.youtube.com/watch?v=81dQggAAVCU 201
+Pausas recortadas: 14 4.4s
+Caché guardada: https://www.youtube.com/watch?v=ycLnk0iUBCo 201
 Video av1 -> h264 ok
-Fuente 1 campana 60.1s 10 tomas
-Caché guardada: https://www.youtube.com/watch?v=ew10RYTp210 201
+Fuente 4 campana 30.0s 5 tomas
+Caché guardada: https://www.youtube.com/watch?v=FFd0BPbG9wc 201
 Video av1 -> h264 ok
-Fuente 2 https://www.youtube.com/watch?v=ew10RYTp210 147.6s 32 tomas
-Caché guardada: https://www.youtube.com/shorts/uM7McqOgIKs 201
+Fuente 5 https://www.youtube.com/watch?v=FFd0BPbG9wc 30.0s 8 tomas
+Caché guardada: https://www.youtube.com/watch?v=TNg1ooCr-gE 201
 Video av1 -> h264 ok
-Fuente 3 https://www.youtube.com/shorts/uM7McqOgIKs 37.2s 4 tomas
-Reel: [(0.0, 3.6, 'video1'), (3.6, 5.1, 'video1'), (5.1, 7.1, 'video1'), (7.1, 9.9, 'video1'), (9.9, 14.5, 'video2'), (14.5, 18.9, 'video1'), (18.9, 23.1, 'video3'), (23.1, 26.2, 'video2'), (26.2, 27.6, 'video1'), (27.6, 29.9, 'video1'), (29.9, 30.9, 'video1'), (30.9, 35.8, 'video1'), (35.8, 40.0, 'video1')]
+Fuente 6 https://www.youtube.com/watch?v=TNg1ooCr-gE 30.0s 9 tomas
+Caché guardada: https://www.youtube.com/watch?v=3uVJ5ElXoh8 201
+Video av1 -> h264 ok
+Fuente 7 https://www.youtube.com/watch?v=3uVJ5ElXoh8 30.0s 12 tomas
+Toma de arranque: 21.4-22.7 puntaje 2.74
+Reel: [(0.0, 1.2, 'video4'), (1.2, 4.1, 'video4'), (4.1, 6.5, 'video5'), (6.5, 8.4, 'video4'), (8.4, 11.9, 'video6'), (11.9, 14.7, 'video7'), (14.7, 15.1, 'video4'), (15.1, 22.0, 'video4'), (22.0, 27.8, 'video4'), (27.8, 29.9, 'video4'), (29.9, 32.7, 'video4'), (32.7, 34.7, 'video4'), (34.7, 37.4, 'video5'), (37.4, 40.1, 'video4')]
 
