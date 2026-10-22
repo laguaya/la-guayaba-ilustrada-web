@@ -1,12 +1,14 @@
-2026-10-22T16:19:42.446840 chris-hemsworth-archie-rose-whisky-ia
-Fuente 8 campana 3.0s 1 tomas
-Video desde caché: https://www.youtube.com/watch?v=ZKdENDd3azw
+2026-10-22T17:24:00.427873 brett-goldstein-alexa-groserias-musica
+ElevenLabs usó eleven_v4
+Pausas recortadas: 17 5.1s
+Caché guardada: https://www.youtube.com/watch?v=P97MIfRwvrE 201
 Video av1 -> h264 ok
-Fuente 9 https://www.youtube.com/watch?v=ZKdENDd3azw 106.8s 47 tomas
-Video desde caché: https://player.vimeo.com/video/1237725529?h=5b8442c1c4
-Fuente 10 https://player.vimeo.com/video/1237725529?h=5b8442c1c4 106.9s 47 tomas
-Fuente 11 https://d1ko11x0ybxl0h.cloudfront.net/shotsmag/production/clips/41122/ 3.0s 1 tomas
-Toma de arranque: 1.0-3.0 puntaje 0.65
-Reel: [(0.0, 1.9, 'video8'), (1.9, 3.5, 'video9'), (3.5, 4.4, 'video8'), (4.4, 8.7, 'video9'), (8.7, 13.8, 'video9'), (13.8, 15.1, 'video10'), (15.1, 18.3, 'video10'), (18.3, 24.3, 'video10'), (24.3, 27.8, 'video11'), (27.8, 30.3, 'video9'), (30.3, 34.1, 'video10'), (34.1, 35.1, 'video9'), (35.1, 38.2, 'video10'), (38.2, 40.0, 'video9')]
-Diseños TikTok: ['tres', 'original', 'original', 'original', 'tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'tres', 'original']
+Fuente 12 campana 15.0s 7 tomas
+Video desde caché: https://www.youtube.com/watch?v=P97MIfRwvrE
+Video av1 -> h264 ok
+Fuente 13 https://www.youtube.com/watch?v=P97MIfRwvrE 15.0s 7 tomas
+yt-dlp default : b'ERROR: [generic] Got HTTP Error 403 caused by Cloudflare anti-bot challenge; try again with  --extractor-args "generic:impersonate"\n'
+yt-dlp default : b'ERROR: [generic] Got HTTP Error 403 caused by Cloudflare anti-bot challenge; try again with  --extractor-args "generic:impersonate"\n'
+Toma de arranque: 7.6-11.1 puntaje 2.67
+Reel: [(0.0, 4.3, 'video12'), (4.3, 5.3, 'video12'), (5.3, 7.2, 'video12'), (7.2, 8.6, 'video12'), (8.6, 10.0, 'video12'), (10.0, 11.3, 'video12'), (11.3, 14.8, 'video12'), (14.8, 15.8, 'video13'), (15.8, 17.3, 'video13'), (17.3, 17.7, 'video13'), (17.7, 19.1, 'video13'), (19.1, 21.2, 'video13'), (21.2, 22.3, 'video13'), (22.3, 24.0, 'video13'), (24.0, 25.9, 'video13'), (25.9, 27.1, 'video13'), (27.1, 31.2, 'video12'), (31.2, 34.6, 'video12'), (34.6, 35.7, 'video12'), (35.7, 40.0, 'video12')]
 

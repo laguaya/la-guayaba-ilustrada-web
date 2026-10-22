@@ -1,36 +1,67 @@
 {
-  "id": "brett-goldstein-alexa-groserias-musica",
-  "t": "Amazon usa la música clásica de Alexa+ para tapar las groserías de Brett Goldstein",
-  "k": "Noticias",
-  "src": "https://news.designrush.com/amazon-alexa-plus-brett-goldstein-uk-launch-alexa-plus-gets-you",
-  "yt": "P97MIfRwvrE",
-  "ig": {
-    "etiqueta": "Noticias",
-    "portada": "Alexa *tapa las groserías* de Brett Goldstein",
-    "marca": "Amazon Alexa",
-    "caption": "Brett Goldstein, el Roy Kent de Ted Lasso, no puede dejar de decir groserías y Alexa le pone música clásica para taparlas 🎻\n\nAsí es el comercial de Amazon para lanzar Alexa+ en Reino Unido, su asistente con inteligencia artificial.\nLo dirigió Tom Kuntz, el mismo del clásico de Old Spice.\nUna campaña de publicidad que convierte el defecto más famoso de su estrella en el argumento de venta.\n\n¿Genial o exagerado?\nMándaselo a tu amigo que no habla sin groserías.\n\n🎥 Video: Amazon / Amazon XCM\nSíguenos: una campaña nueva cada 2 horas 📲\n\n#AmazonAlexa #BrettGoldstein #PublicidadCreativa #MarketingConCelebridades #InteligenciaArtificial",
-    "caption_tiktok": "El comercial de Alexa con Brett Goldstein: está por recibir a su familia, se le salen las groserías y Alexa las tapa con música clásica. ¿Lo hubieras aprobado? 🎥 Video: Amazon / Amazon XCM. Todos los días las campañas más locas, síguenos #alexa #tedlasso #marketingtiktok #publicidad #parati",
-    "videos": [
-      "https://www.youtube.com/watch?v=P97MIfRwvrE",
-      "https://lbbonline.com/news/amazon-alexa-brett-goldstein-uk-launch-tom-kuntz",
-      "https://news.designrush.com/amazon-alexa-plus-brett-goldstein-uk-launch-alexa-plus-gets-you"
-    ],
-    "pronunciar": {
-      "Brett Goldstein": "Bret Góldstain",
-      "Roy Kent": "Rói Kent",
-      "Kuntz": "Kunts",
-      "Old Spice": "Old Spáis"
-    },
-    "escenas": [
-      {"voz": "Brett Goldstein está por soltar groserías y su familia ya viene.", "ver": "video"},
-      {"voz": "Acomoda la casa, pero las palabrotas se le salen.", "ver": "video"},
-      {"voz": "Entonces Alexa pone música clásica y él se desahoga a gusto.", "ver": "video"},
-      {"voz": "Y otra vez, y otra, como quien le grita al Periférico.", "ver": "video"},
-      {"voz": "Suena el timbre y vuelve a ser el anfitrión perfecto.", "ver": "video"},
-      {"voz": "Lo más loco: Brett es Roy Kent de Ted Lasso, rey de las groserías.", "ver": "video", "video": "https://lbbonline.com/news/amazon-alexa-brett-goldstein-uk-launch-tom-kuntz"},
-      {"voz": "Lo dirigió Tom Kuntz, el mismo del clásico de Old Spice.", "ver": "video", "video": "https://news.designrush.com/amazon-alexa-plus-brett-goldstein-uk-launch-alexa-plus-gets-you"},
-      {"voz": "Me encantó: no explica la tecnología, la actúa. Usa el defecto famoso de tu estrella.", "ver": "video", "video": "https://lbbonline.com/news/amazon-alexa-brett-goldstein-uk-launch-tom-kuntz"},
-      {"voz": "Mándaselo a tu amigo que no habla sin groserías. ¿Genial o exagerado?", "ver": "video"}
-    ]
-  }
+ "id": "brett-goldstein-alexa-groserias-musica",
+ "t": "Amazon usa la música clásica de Alexa+ para tapar las groserías de Brett Goldstein",
+ "k": "Noticias",
+ "src": "https://news.designrush.com/amazon-alexa-plus-brett-goldstein-uk-launch-alexa-plus-gets-you",
+ "yt": "P97MIfRwvrE",
+ "ig": {
+  "etiqueta": "Noticias",
+  "portada": "Alexa *tapa las groserías* de Brett Goldstein",
+  "marca": "Amazon Alexa",
+  "caption": "Brett Goldstein, el Roy Kent de Ted Lasso, no puede dejar de decir groserías y Alexa le pone música clásica para taparlas 🎻\n\nAsí es el comercial de Amazon para lanzar Alexa+ en Reino Unido, su asistente con inteligencia artificial.\nLo dirigió Tom Kuntz, el mismo del clásico de Old Spice.\nUna campaña de publicidad que convierte el defecto más famoso de su estrella en el argumento de venta.\n\n¿Genial o exagerado?\nMándaselo a tu amigo que no habla sin groserías.\n\n🎥 Video: Amazon / Amazon XCM\nSíguenos: una campaña nueva cada 2 horas 📲\n\n#AmazonAlexa #BrettGoldstein #PublicidadCreativa #MarketingConCelebridades #InteligenciaArtificial",
+  "caption_tiktok": "El comercial de Alexa con Brett Goldstein: está por recibir a su familia, se le salen las groserías y Alexa las tapa con música clásica. ¿Lo hubieras aprobado? 🎥 Video: Amazon / Amazon XCM. Todos los días las campañas más locas, síguenos #alexa #tedlasso #marketingtiktok #publicidad #parati",
+  "videos": [
+   "https://www.youtube.com/watch?v=P97MIfRwvrE",
+   "https://lbbonline.com/news/amazon-alexa-brett-goldstein-uk-launch-tom-kuntz",
+   "https://news.designrush.com/amazon-alexa-plus-brett-goldstein-uk-launch-alexa-plus-gets-you"
+  ],
+  "pronunciar": {
+   "Brett Goldstein": "Bret Góldstain",
+   "Roy Kent": "Rói Kent",
+   "Kuntz": "Kunts",
+   "Old Spice": "Old Spáis"
+  },
+  "escenas": [
+   {
+    "voz": "Brett Goldstein está por soltar groserías y su familia ya viene.",
+    "ver": "video"
+   },
+   {
+    "voz": "Acomoda la casa, pero las palabrotas se le salen.",
+    "ver": "video"
+   },
+   {
+    "voz": "Entonces Alexa pone música clásica y él se desahoga a gusto.",
+    "ver": "video"
+   },
+   {
+    "voz": "Y otra vez, y otra, como quien le grita al Periférico.",
+    "ver": "video"
+   },
+   {
+    "voz": "Suena el timbre y vuelve a ser el anfitrión perfecto.",
+    "ver": "video"
+   },
+   {
+    "voz": "Lo más loco: Brett es Roy Kent de Ted Lasso, rey de las groserías.",
+    "ver": "video",
+    "video": "https://lbbonline.com/news/amazon-alexa-brett-goldstein-uk-launch-tom-kuntz"
+   },
+   {
+    "voz": "Lo dirigió Tom Kuntz, el mismo del clásico de Old Spice.",
+    "ver": "video",
+    "video": "https://news.designrush.com/amazon-alexa-plus-brett-goldstein-uk-launch-alexa-plus-gets-you"
+   },
+   {
+    "voz": "Me encantó: no explica la tecnología, la actúa. Usa el defecto famoso de tu estrella.",
+    "ver": "video",
+    "video": "https://lbbonline.com/news/amazon-alexa-brett-goldstein-uk-launch-tom-kuntz"
+   },
+   {
+    "voz": "Mándaselo a tu amigo que no habla sin groserías. ¿Genial o exagerado?",
+    "ver": "video"
+   }
+  ]
+ },
+ "listo": true
 }
