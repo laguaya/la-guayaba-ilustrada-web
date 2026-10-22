@@ -75,3 +75,4 @@ RuntimeError: La nota no tiene video de la campaña para el Reel
 2026-10-21T20:00:12.089507 enviando Reel michelob-ultra-knicks-destapador-bartenders
 2026-10-21T22:00:13.546059 enviando Reel ben-stiller-gato-cats-katz-deli-soda
 2026-10-21T22:32:58.291055 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
+2026-10-22T00:00:03.390024 enviando Reel sheba-haley-lu-richardson-gata-tatuaje
