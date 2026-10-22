@@ -78,3 +78,4 @@ RuntimeError: La nota no tiene video de la campaña para el Reel
 2026-10-22T00:00:03.390024 enviando Reel sheba-haley-lu-richardson-gata-tatuaje
 2026-10-22T02:00:15.703645 enviando Reel robert-downey-jr-specs-lentes-snap
 2026-10-22T02:47:59.180169 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
+2026-10-22T04:00:06.077815 enviando Reel otp-bank-astronauta-tarjeta-saturno
