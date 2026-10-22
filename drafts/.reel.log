@@ -1,13 +1,14 @@
-2026-10-22T14:50:12.245001 sprite-jokic-comediante-jokes-aside
-Video desde caché: https://www.youtube.com/watch?v=81dQggAAVCU
+2026-10-22T15:26:09.066948 chris-hemsworth-archie-rose-whisky-ia
+ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
+ElevenLabs usó eleven_v4
+Pausas recortadas: 17 4.6s
+Fuente 4 campana 3.0s 1 tomas
+Caché guardada: https://www.youtube.com/watch?v=ZKdENDd3azw 201
 Video av1 -> h264 ok
-Fuente 1 campana 60.1s 10 tomas
-Video desde caché: https://www.youtube.com/watch?v=ew10RYTp210
-Video av1 -> h264 ok
-Fuente 2 https://www.youtube.com/watch?v=ew10RYTp210 147.6s 32 tomas
-Video desde caché: https://www.youtube.com/shorts/uM7McqOgIKs
-Video av1 -> h264 ok
-Fuente 3 https://www.youtube.com/shorts/uM7McqOgIKs 37.2s 4 tomas
-Reel: [(0.0, 3.8, 'video1'), (3.8, 5.1, 'video1'), (5.1, 7.1, 'video1'), (7.1, 9.9, 'video1'), (9.9, 14.5, 'video2'), (14.5, 18.9, 'video1'), (18.9, 23.1, 'video3'), (23.1, 25.5, 'video2'), (25.5, 27.3, 'video1'), (27.3, 27.9, 'video1'), (27.9, 31.3, 'video1'), (31.3, 35.8, 'video1'), (35.8, 40.0, 'video1')]
-Diseños TikTok: ['tres', 'original', 'dos', 'original', 'tres', 'original', 'original', 'original', 'tres', 'original', 'dos', 'original', 'tres']
+Fuente 5 https://www.youtube.com/watch?v=ZKdENDd3azw 106.8s 47 tomas
+Caché guardada: https://player.vimeo.com/video/1237725529?h=5b8442c1c4 201
+Fuente 6 https://player.vimeo.com/video/1237725529?h=5b8442c1c4 106.9s 47 tomas
+Fuente 7 https://d1ko11x0ybxl0h.cloudfront.net/shotsmag/production/clips/41122/ 3.0s 1 tomas
+Toma de arranque: 1.0-3.0 puntaje 0.65
+Reel: [(0.0, 1.9, 'video4'), (1.9, 3.7, 'video5'), (3.7, 4.6, 'video4'), (4.6, 8.7, 'video5'), (8.7, 10.2, 'video5'), (10.2, 13.8, 'video5'), (13.8, 15.2, 'video6'), (15.2, 18.3, 'video5'), (18.3, 19.9, 'video5'), (19.9, 24.3, 'video6'), (24.3, 25.9, 'video6'), (25.9, 27.8, 'video6'), (27.8, 30.3, 'video6'), (30.3, 35.1, 'video6'), (35.1, 40.0, 'video4')]
 
