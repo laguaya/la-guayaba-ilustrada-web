@@ -1,9 +1,1 @@
-{
- "tipo": "texto",
- "texto": "https://www.instagram.com/p/DemHi8PjbmN/?img_index=9&rpxt=MW1lZWhvdGNkMnE2OA==",
- "nota": null,
- "urgente": false,
- "fecha": 1792336950,
- "intentos": 30,
- "pendiente": "Intento 30: el link de Instagram sigue sin abrir desde la nube. Pedir a Sergio que pegue el texto del post o un link de un medio."
-}
+{"tipo": "texto", "texto": "https://www.instagram.com/p/DemHi8PjbmN/?img_index=9&rpxt=MW1lZWhvdGNkMnE2OA==", "nota": null, "urgente": false, "fecha": 1792336950, "intentos": 31, "pendiente": "Intento 31: el link de Instagram sigue sin abrir desde la nube. Pedir a Sergio que pegue el texto del post o un link de un medio."}
