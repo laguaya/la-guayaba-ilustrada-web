@@ -80,3 +80,4 @@ RuntimeError: La nota no tiene video de la campaña para el Reel
 2026-10-22T02:47:59.180169 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
 2026-10-22T04:00:06.077815 enviando Reel otp-bank-astronauta-tarjeta-saturno
 2026-10-22T14:00:07.722625 enviando Reel sprite-jokic-comediante-jokes-aside
+2026-10-22T16:00:06.295724 enviando Reel chris-hemsworth-archie-rose-whisky-ia
