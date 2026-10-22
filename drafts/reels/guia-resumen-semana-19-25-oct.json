@@ -1,0 +1,59 @@
+{
+ "id": "guia-resumen-semana-19-25-oct",
+ "t": "Guía: las 3 campañas más creativas de la semana",
+ "k": "Inspiración",
+ "urgente": true,
+ "ig": {
+  "formato": "guia",
+  "pronunciar": {
+   "SIXT": "Sixt",
+   "Baileys": "Béilis"
+  },
+  "escenas": [
+   {
+    "tipo": "portada",
+    "etiqueta": "RESUMEN DE LA SEMANA",
+    "titulo": "Las 3 campañas *más creativas* de la semana",
+    "sub": "Del 19 al 25 de octubre",
+    "fotos": [
+     "assets/work/nota-liquid-death-sixt-primera-vez-energy-foto-src1.webp",
+     "assets/work/nota-mcdonalds-spooky-sauces-maquillaje-halloween-foto-src1.webp",
+     "assets/work/nota-baileys-aretes-bring-on-the-baileys-navidad-foto-src1.webp"
+    ],
+    "voz": "Las tres campañas más creativas de la semana. Guárdalas como inspiración."
+   },
+   {
+    "tipo": "item",
+    "foto": "assets/work/nota-liquid-death-sixt-primera-vez-energy-foto-src1.webp",
+    "marca": "Liquid Death x SIXT",
+    "titulo": "Tu \"primera vez\" en un *SIXT*",
+    "cuerpo": "Todos cuentan su primera vez en un auto… y hablaban de su primera lata de bebida energética.",
+    "voz": "Uno: Liquid Death y SIXT. Todos cuentan su primera vez en un auto, y resulta que hablaban de su primera lata de bebida energética."
+   },
+   {
+    "tipo": "item",
+    "foto": "assets/work/nota-mcdonalds-spooky-sauces-maquillaje-halloween-foto-src1.webp",
+    "marca": "McDonald's",
+    "titulo": "Salsas que son *maquillaje*",
+    "cuerpo": "Para Halloween convirtió sus salsas en pinturas para la cara, con brochas y todo.",
+    "voz": "Dos: McDonald's convirtió sus salsas en maquillaje de Halloween, con brochas y todo."
+   },
+   {
+    "tipo": "item",
+    "foto": "assets/work/nota-baileys-aretes-bring-on-the-baileys-navidad-foto-src1.webp",
+    "marca": "Baileys",
+    "titulo": "Botellitas que son *aretes*",
+    "cuerpo": "Para Navidad, aretes con mini botellas que de verdad sirven licor.",
+    "voz": "Tres: Baileys hizo aretes con mini botellas que de verdad sirven licor."
+   },
+   {
+    "tipo": "cierre",
+    "titulo": "¿Cuál fue *tu favorita*?",
+    "sub": "Guárdalo como inspiración.",
+    "voz": "¿Cuál fue tu favorita? Dímelo en comentarios."
+   }
+  ],
+  "caption": "Las 3 campañas más creativas de la semana ✨\n\n1. Liquid Death x SIXT: tu \"primera vez\"\n2. McDonald's: salsas que son maquillaje\n3. Baileys: botellitas que son aretes\n\n¿Cuál fue tu favorita? Guárdalo como inspiración 🔖\n\nSíguenos: una idea nueva cada día 📲\n\n#PublicidadCreativa #MarketingDigital #Branding #Inspiracion",
+  "caption_tiktok": "Las 3 campañas más creativas de la semana ✨ ¿Cuál fue tu favorita? #publicidad #marketingtiktok #inspiracion #emprendedores"
+ }
+}

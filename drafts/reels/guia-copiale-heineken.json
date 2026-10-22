@@ -1,0 +1,52 @@
+{
+ "id": "guia-copiale-heineken",
+ "t": "Guía: la idea de Heineken que tu negocio puede copiar",
+ "k": "Inspiración",
+ "urgente": true,
+ "ig": {
+  "formato": "guia",
+  "pronunciar": {
+   "Pubscription": "Pab-scrípshon",
+   "Heineken": "Jáineken"
+  },
+  "escenas": [
+   {
+    "tipo": "portada",
+    "etiqueta": "CÓPIALE A HEINEKEN",
+    "titulo": "La idea de Heineken que *tu negocio* puede copiar",
+    "sub": "3 pasos para aplicarla mañana",
+    "foto": "assets/work/nota-heineken-pubscription-streaming-de-bares-foto-src2.webp",
+    "voz": "Esta idea de Heineken la puede copiar tu negocio mañana. Te la explico en tres pasos, guárdala."
+   },
+   {
+    "tipo": "paso",
+    "titulo": "Vende la *experiencia*, no el producto",
+    "cuerpo": "Heineken no vendió cerveza: vendió una suscripción para ver el futbol en bares.",
+    "ejemplo": "Una cafetería en Cuernavaca: \"Plan oficina\" de $399 al mes con café y wifi para trabajar.",
+    "voz": "Uno: vende la experiencia, no el producto. Heineken no vendió cerveza, vendió una suscripción para ver el futbol en bares. Una cafetería podría vender un plan oficina con café y wifi."
+   },
+   {
+    "tipo": "paso",
+    "titulo": "Cóbralo por *suscripción*",
+    "cuerpo": "Un pago fijo al mes hace que el cliente regrese y te da un ingreso seguro.",
+    "ejemplo": "Una barbería: membresía de 4 cortes al mes con lugar apartado los sábados.",
+    "voz": "Dos: cóbralo por suscripción. Un pago fijo al mes hace que el cliente regrese. Una barbería podría vender cuatro cortes al mes con lugar apartado."
+   },
+   {
+    "tipo": "paso",
+    "titulo": "Ponle un *nombre* que se recuerde",
+    "cuerpo": "\"Pubscription\" junta pub y suscripción. Un buen nombre se comenta y se comparte.",
+    "ejemplo": "\"Cafeína Club\", \"Corte Fijo\", \"Taco Pass\": corto y fácil de decir.",
+    "voz": "Tres: ponle un nombre que se recuerde. Pubscription junta pub y suscripción. Algo como Taco Pass se comenta solo."
+   },
+   {
+    "tipo": "cierre",
+    "titulo": "Guárdalo para cuando lo *armes*",
+    "sub": "Y mándaselo a tu socio.",
+    "voz": "Guárdalo para cuando lo armes, y mándaselo a tu socio."
+   }
+  ],
+  "caption": "La idea de Heineken que tu negocio puede copiar mañana, en 3 pasos 🍺\n\n1. Vende la experiencia, no el producto.\n2. Cóbralo por suscripción.\n3. Ponle un nombre que se recuerde.\n\nGuárdalo para cuando lo armes y mándaselo a tu socio 🔖\n\n🎥 Campaña: Heineken\nSíguenos: una idea nueva cada día 📲\n\n#MarketingDigital #Emprendedores #IdeasDeNegocio #Heineken #NegociosEnMexico",
+  "caption_tiktok": "La idea de Heineken que tu negocio puede copiar mañana 🍺 Guárdalo 🔖 #emprendedores #ideasdenegocio #marketingtiktok #negociosenmexico"
+ }
+}

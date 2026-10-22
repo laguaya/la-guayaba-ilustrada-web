@@ -5,7 +5,7 @@
 
 Corre dentro de GitHub Actions. Necesita el secreto TELEGRAM_TOKEN.
 """
-import glob, io, json, os, re, sys, time
+import glob, io, json, os, re, shutil, sys, time
 from datetime import datetime, timezone, timedelta
 import requests
 from urllib.parse import urlparse
@@ -670,6 +670,20 @@ def build_reel_solo(r, tiktok=False):
     data.setdefault('portada', r.get('t', ''))
     out = f'assets/ig/{r["id"]}/reel{"_tt" if tiktok else ""}.mp4'
     os.makedirs(os.path.dirname(out), exist_ok=True)
+    if data.get('formato') == 'guia':            # Guías LGI: diseño propio, sirve igual para Instagram y TikTok
+        ig_mp4 = f'assets/ig/{r["id"]}/reel.mp4'
+        if tiktok and os.path.exists(ig_mp4):
+            shutil.copy(ig_mp4, out); return out
+        import guias
+        buf = io.StringIO()
+        with contextlib.redirect_stderr(buf):
+            guias.make(data, ig_mp4)
+        sys.stderr.write(buf.getvalue())
+        with open('drafts/.reel.log', 'w') as f:
+            f.write(f'{datetime.now().isoformat()} guia {r["id"]}\n{buf.getvalue()[-4000:]}\n')
+        if tiktok:
+            shutil.copy(ig_mp4, out)
+        return out
     buf = io.StringIO()
     try:
         with contextlib.redirect_stderr(buf):
