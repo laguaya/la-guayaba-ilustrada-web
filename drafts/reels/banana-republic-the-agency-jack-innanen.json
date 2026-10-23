@@ -24,14 +24,43 @@
    "Jack Innanen": "Yák Ínanen"
   },
   "escenas": [
-   {"voz": "Jack Innanen trabaja en la última agencia de viajes de Nueva York.", "ver": "video"},
-   {"voz": "Y hace cuatro personajes: el gerente nervioso, el de cruceros, el aventurero y el falso francés.", "ver": "video"},
-   {"voz": "Todo funciona con fax, hasta que llega una consultora a modernizarlos.", "ver": "video", "video": "https://cdn.musebyclios.com/wp-content/uploads/2026/10/21131739/EP-2-Mobile.mp4"},
-   {"voz": "Es la primera serie de comedia de Banana Republic, cinco capítulos en TikTok.", "ver": "video", "video": "https://www.tiktok.com/@bananarepublic/video/7696523270023171359"},
-   {"voz": "Lo más loco: la marca nació en 1978 vendiendo ropa de viaje y safari.", "ver": "video"},
-   {"voz": "A mí me encantó: la ropa nunca se anuncia, solo la llevan los personajes.", "ver": "video", "video": "https://cdn.musebyclios.com/wp-content/uploads/2026/10/21131739/EP-2-Mobile.mp4"},
-   {"voz": "La lección: que te vean por gusto, no por anuncio.", "ver": "video", "video": "https://www.tiktok.com/@bananarepublic/video/7696523270023171359"},
-   {"voz": "Mándaselo a tu amigo que hace mil voces. ¿Genial o muy raro?", "ver": "video"}
+   {
+    "voz": "Jack Innanen trabaja en la última agencia de viajes de Nueva York.",
+    "ver": "video"
+   },
+   {
+    "voz": "Y hace cuatro personajes: el gerente nervioso, el de cruceros, el aventurero y el falso francés.",
+    "ver": "video"
+   },
+   {
+    "voz": "Todo funciona con fax, hasta que llega una consultora a modernizarlos.",
+    "ver": "video",
+    "video": "https://cdn.musebyclios.com/wp-content/uploads/2026/10/21131739/EP-2-Mobile.mp4"
+   },
+   {
+    "voz": "Es la primera serie de comedia de Banana Republic, cinco capítulos en TikTok.",
+    "ver": "video",
+    "video": "https://www.tiktok.com/@bananarepublic/video/7696523270023171359"
+   },
+   {
+    "voz": "Lo más loco: la marca nació en 1978 vendiendo ropa de viaje y safari.",
+    "ver": "video"
+   },
+   {
+    "voz": "A mí me encantó: la ropa nunca se anuncia, solo la llevan los personajes.",
+    "ver": "video",
+    "video": "https://cdn.musebyclios.com/wp-content/uploads/2026/10/21131739/EP-2-Mobile.mp4"
+   },
+   {
+    "voz": "La lección: que te vean por gusto, no por anuncio.",
+    "ver": "video",
+    "video": "https://www.tiktok.com/@bananarepublic/video/7696523270023171359"
+   },
+   {
+    "voz": "Mándaselo a tu amigo que hace mil voces. ¿Genial o muy raro?",
+    "ver": "video"
+   }
   ]
- }
+ },
+ "listo": true
 }
