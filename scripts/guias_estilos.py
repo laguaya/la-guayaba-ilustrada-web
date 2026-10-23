@@ -85,15 +85,30 @@ def avion(color, s=60):
     return im
 
 
+def pill_icono(icono, texto_, size, bg=PINK, fg=INK, padx=34, alto=None, gap=14):
+    """Píldora con ícono + texto centrados de verdad (usa la caja real de las letras, no las métricas)."""
+    f = font('lg-black.woff2', size); d0 = ImageDraw.Draw(Image.new('RGB', (4, 4)))
+    x0, y0, x1, y1 = d0.textbbox((0, 0), texto_, font=f)
+    ic = icono.resize((int(size * 0.9), int(size * 0.9 * icono.height / icono.width)))
+    alto = alto or int(size * 2.1)
+    ancho = padx * 2 + ic.width + gap + (x1 - x0)
+    im = Image.new('RGBA', (ancho, alto), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
+    d.rounded_rectangle((0, 0, ancho - 1, alto - 1), alto // 2, fill=bg)
+    im.alpha_composite(ic, (padx, (alto - ic.height) // 2))
+    d.text((padx + ic.width + gap - x0, (alto - (y1 - y0)) // 2 - y0), texto_, font=f, fill=fg)
+    return im
+
+
 def boton(icono, texto_, size=44, bg=WHITE, fg=INK, w=None):
     f = font('lg-black.woff2', size); d0 = ImageDraw.Draw(Image.new('RGB', (4, 4)))
-    tw = int(d0.textlength(texto_, font=f)); ic = icono.resize((size + 14, size + 14))
+    bx0, by0, bx1, by1 = d0.textbbox((0, 0), texto_, font=f); tw = bx1 - bx0
+    ic = icono.resize((size, int(size * icono.height / icono.width)))
     ancho = w or tw + ic.width + 110; alto = size + 70
     im = Image.new('RGBA', (ancho, alto), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
     d.rounded_rectangle((0, 0, ancho - 1, alto - 1), 30, fill=bg)
     x0 = (ancho - tw - ic.width - 24) // 2
     im.alpha_composite(ic, (x0, (alto - ic.height) // 2))
-    d.text((x0 + ic.width + 24, alto // 2), texto_, font=f, fill=fg, anchor='lm')
+    d.text((x0 + ic.width + 24 - bx0, (alto - (by1 - by0)) // 2 - by0), texto_, font=f, fill=fg)
     return im
 
 
@@ -318,8 +333,7 @@ def hoja(dia, mes, semana, w=330, h=390, ang=-4):
 def sello(lam, n, total):
     d = ImageDraw.Draw(lam)
     p = G.pill('GUÍAS LGI', 26); lam.alpha_composite(p, (60, 56))
-    g = G.pill('GUÁRDALO', 26, bg=PINK, fg=INK, padx=60); lam.alpha_composite(g, (CW - 60 - g.width, 56))
-    lam.alpha_composite(G.marcador(INK).resize((24, 31)), (CW - 60 - g.width + 22, 56 + (g.height - 31) // 2))
+    g = pill_icono(G.marcador(INK), 'GUÁRDALO', 26, alto=p.height); lam.alpha_composite(g, (CW - 60 - g.width, 56))
     if total:
         d.text((CW // 2, CH - 50), f'{n} / {total}', font=font('lg-bold.woff2', 28), fill=(120, 110, 100), anchor='mm')
 
