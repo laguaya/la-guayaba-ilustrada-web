@@ -19,14 +19,42 @@
    "Five Below": "Fáiv Bilóu"
   },
   "escenas": [
-   {"voz": "Serena Neel se metió de noche a una tienda Five Below.", "ver": "video"},
-   {"voz": "Dice que encontró unas llaves y va directo al cuarto de los empleados.", "ver": "video"},
-   {"voz": "Lo decora todo de Halloween, como quien arregla la casa para Día de Muertos.", "ver": "video", "video": "https://www.tiktok.com/@fivebelow/video/7677987986931305742"},
-   {"voz": "Todo sale de la misma tienda, donde casi todo cuesta cinco dólares o menos.", "ver": "video", "video": "https://www.tiktok.com/@fivebelow/video/7410875113802911019"},
-   {"voz": "Lo más loco: en la mañana recibe a los empleados disfrazada de tiranosaurio inflable.", "ver": "video"},
-   {"voz": "A mí me encantó: no parece anuncio, parece travesura, y ya pasa 18 millones de vistas.", "ver": "video"},
-   {"voz": "La lección: deja que el creador juegue con tu marca.", "ver": "video", "video": "https://www.tiktok.com/@fivebelow/video/7677987986931305742"},
-   {"voz": "Mándaselo a tu amigo que trabaja en tienda. ¿Genial o te daría miedo?", "ver": "video"}
+   {
+    "voz": "Serena Neel se metió de noche a una tienda Five Below.",
+    "ver": "video"
+   },
+   {
+    "voz": "Dice que encontró unas llaves y va directo al cuarto de los empleados.",
+    "ver": "video"
+   },
+   {
+    "voz": "Lo decora todo de Halloween, como quien arregla la casa para Día de Muertos.",
+    "ver": "video",
+    "video": "https://www.tiktok.com/@fivebelow/video/7677987986931305742"
+   },
+   {
+    "voz": "Todo sale de la misma tienda, donde casi todo cuesta cinco dólares o menos.",
+    "ver": "video",
+    "video": "https://www.tiktok.com/@fivebelow/video/7410875113802911019"
+   },
+   {
+    "voz": "Lo más loco: en la mañana recibe a los empleados disfrazada de tiranosaurio inflable.",
+    "ver": "video"
+   },
+   {
+    "voz": "A mí me encantó: no parece anuncio, parece travesura, y ya pasa 18 millones de vistas.",
+    "ver": "video"
+   },
+   {
+    "voz": "La lección: deja que el creador juegue con tu marca.",
+    "ver": "video",
+    "video": "https://www.tiktok.com/@fivebelow/video/7677987986931305742"
+   },
+   {
+    "voz": "Mándaselo a tu amigo que trabaja en tienda. ¿Genial o te daría miedo?",
+    "ver": "video"
+   }
   ]
- }
+ },
+ "listo": true
 }

@@ -1,11 +1,14 @@
-2026-10-23T14:43:40.411603 nba-prime-tatum-brunson-juegan-en-sala
-Fuente 4 campana 30.1s 20 tomas
-Video desde caché: https://www.youtube.com/watch?v=YHgRRRoqw70
+2026-10-23T15:29:08.708462 five-below-serena-neel-noche-halloween
+ElevenLabs usó eleven_v4
+Pausas recortadas: 15 4.2s
+Caché guardada: https://www.youtube.com/watch?v=u3SH-kpy-mo 201
 Video av1 -> h264 ok
-Fuente 5 https://www.youtube.com/watch?v=YHgRRRoqw70 41.7s 15 tomas
-Video desde caché: https://x.com/NBA/status/2105834793380311232
-Fuente 6 https://x.com/NBA/status/2105834793380311232 30.1s 20 tomas
-Toma de arranque: 14.6-15.8 puntaje 2.82
-Reel: [(0.0, 1.2, 'video4'), (1.2, 3.0, 'video4'), (3.0, 4.4, 'video5'), (4.4, 6.1, 'video6'), (6.1, 9.3, 'video5'), (9.3, 12.1, 'video4'), (12.1, 14.8, 'video6'), (14.8, 17.8, 'video5'), (17.8, 19.9, 'video5'), (19.9, 21.9, 'video6'), (21.9, 23.3, 'video4'), (23.3, 24.8, 'video6'), (24.8, 26.2, 'video4'), (26.2, 27.6, 'video6'), (27.6, 28.6, 'video4'), (28.6, 29.9, 'video5'), (29.9, 40.0, 'video6')]
-Diseños TikTok: ['original', 'original', 'original', 'original', 'original', 'original', 'dos', 'original', 'original', 'original', 'dos', 'original', 'tres', 'original', 'original', 'original', 'original']
+Fuente 7 campana 166.7s 71 tomas
+Caché guardada: https://www.tiktok.com/@fivebelow/video/7677987986931305742 201
+Video hevc -> h264 ok
+Fuente 8 https://www.tiktok.com/@fivebelow/video/7677987986931305742 27.9s 10 tomas
+Caché guardada: https://www.tiktok.com/@fivebelow/video/7410875113802911019 201
+Fuente 9 https://www.tiktok.com/@fivebelow/video/7410875113802911019 128.2s 82 tomas
+Toma de arranque: 49.1-50.4 puntaje 3.16
+Reel: [(0.0, 1.2, 'video7'), (1.2, 4.0, 'video7'), (4.0, 5.4, 'video7'), (5.4, 6.7, 'video7'), (6.7, 7.6, 'video7'), (7.6, 9.6, 'video8'), (9.6, 11.5, 'video7'), (11.5, 13.9, 'video9'), (13.9, 15.9, 'video7'), (15.9, 18.0, 'video7'), (18.0, 20.6, 'video7'), (20.6, 22.5, 'video7'), (22.5, 24.7, 'video7'), (24.7, 26.0, 'video7'), (26.0, 26.7, 'video7'), (26.7, 29.3, 'video8'), (29.3, 30.5, 'video7'), (30.5, 33.8, 'video8'), (33.8, 40.0, 'video7')]
 
