@@ -551,12 +551,40 @@ def _video(e, tmp, k):
     return None
 
 
+def _foto_busca(ref, tmp, k):
+    """"busca:altar de muertos" baja la primera foto libre (Openverse/Wikimedia) que sirva; "logo:Marca" busca su logo."""
+    if not isinstance(ref, str) or not (ref.startswith('busca:') or ref.startswith('logo:')): return ref
+    import fotos_libres as FL, requests
+    from io import BytesIO
+    q = ref[6:] if ref.startswith('busca:') else ref
+    for fuente in ((FL.commons,) if q.startswith('logo:') else (FL.openverse, FL.commons)):
+        try:
+            for url, meta in fuente(q, 4):
+                try:
+                    im = Image.open(BytesIO(requests.get(url, headers=FL.UA, timeout=40).content)).convert('RGB')
+                    if min(im.size) < (200 if q.startswith('logo:') else 700): continue
+                    p = os.path.join(tmp, f'busca_{k}.jpg'); im.save(p, quality=90); return p
+                except Exception:
+                    continue
+        except Exception as e:
+            print('Foto busca:', q, e, file=sys.stderr)
+    return None
+
+
+def _resolver_fotos(esc, tmp):
+    for k, e in enumerate(esc):
+        for c in ('foto', 'antes', 'despues', 'ejemplo_foto'):
+            if e.get(c): e[c] = _foto_busca(e[c], tmp, f'{k}{c}')
+        if e.get('fotos'): e['fotos'] = [f for f in (_foto_busca(x, tmp, f'{k}f{j}') for j, x in enumerate(e['fotos'])) if f]
+
+
 def make(data, out):
     import voz, reel
     tmp = tempfile.mkdtemp()
     try:
         pron = dict(reel.PRON_FIJA); pron.update({k: v for k, v in (data.get('pronunciar') or {}).items() if k and v})
         esc = data['escenas']; estilo = data['estilo']
+        _resolver_fotos(esc, tmp)
         mp3s, durs, pals = [], [], []
         for k, e in enumerate(esc):
             mp3, dv, pal = None, 0.0, []
