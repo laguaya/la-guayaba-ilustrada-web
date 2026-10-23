@@ -5,7 +5,7 @@
   (1080x1350) y en video (las mismas láminas dentro del vertical, pasando como si se deslizaran).
 Se elige con data["estilo"]. Las fotos van en assets/libres/<tema>/ (scripts/fotos_libres.py) o assets/work/.
 """
-import os, io, math, subprocess, tempfile, shutil, sys
+import os, io, math, subprocess, tempfile, shutil, sys, json
 from PIL import Image, ImageDraw, ImageFilter
 R = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(R, 'scripts'))
@@ -200,7 +200,7 @@ def pb_fondo(foto, dur, alto=1150, video=None, desde=0.0):
     base = Image.new('RGB', (W, H), NEGRO)
     cs = cuadros(video, W, alto, dur, desde) if video else None
     img = cubrir(foto, W, alto) if (foto and not cs) else None
-    grad = degradado(W, alto, alto * 0.45, alto, a1=255)
+    grad = degradado(W, alto, alto * 0.40, alto * 0.86, a1=255)
     top = degradado(W, 260, 0, 260, a0=150, a1=0)
 
     def f(t):
@@ -290,20 +290,31 @@ def top_encabezado(rotulo):
     return fx
 
 
-def top_fondo(foto, dur):
-    img = cubrir(foto, W, H, 0.4)
+def top_fondo(foto, dur, video=None, desde=0.0):
+    cs = cuadros(video, W, H, dur, desde) if video else None
+    img = cubrir(foto, W, H, 0.4) if not cs else None
     grad = degradado(W, H, 900, 1500, color=(0, 0, 0), a1=245)
-    return lambda t: (lambda b: (b.alpha_composite(grad), b)[1])(zoom(img, t, dur, 1.02, 1.12).convert('RGBA'))
+
+    def f(t):
+        b = (Image.open(cs[min(len(cs) - 1, int(t * FPS))]) if cs else zoom(img, t, dur, 1.02, 1.12)).convert('RGBA')
+        b.alpha_composite(grad); return b
+    return f
 
 
 def top_portada(e, dur, rotulo):
     fotos = [f for f in (e.get('fotos') or []) if ruta(f)][:3]
-    tiras = [cubrir(f, W // len(fotos) + 1, H) for f in fotos]
+    vids = e.get('_videos') or []
+    nt = max(len(fotos), len(vids)) or 1; tw = W // nt + 1
+    tiras = []
+    for k in range(nt):
+        v = vids[k] if k < len(vids) else None
+        tiras.append(('v', cuadros(v, tw, H, dur, (e.get('desdes') or [0] * 3)[k])) if v else ('f', cubrir(fotos[k], tw, H)))
 
     def fondo(t):
         im = Image.new('RGBA', (W, H), NEGRO)
-        for k, s in enumerate(tiras):
-            im.paste(zoom(s, t + k, dur + 3, 1.0, 1.1), (k * (W // len(tiras)), 0))
+        for k, (tipo, s) in enumerate(tiras):
+            fr = Image.open(s[min(len(s) - 1, int(t * FPS))]).convert('RGB') if tipo == 'v' else zoom(s, t + k, dur + 3, 1.0, 1.1)
+            im.paste(fr, (k * (W // nt), 0))
         im.alpha_composite(degradado(W, H, 700, 1300, (0, 0, 0), 60, 230))
         return im
     bloque = Image.new('RGBA', (W - 2 * M, 10), (0, 0, 0, 0))
@@ -321,7 +332,7 @@ def top_item(e, n, dur, rotulo):
     tt = txt(e['titulo'], 96, W - 2 * M, max_lines=3, min_size=60)
     cu = txt(e.get('cuerpo', ''), 46, W - 2 * M, 'lg-regular.woff2', '#E6E6E6', lh=1.3, max_lines=4)
     y_cu = H - 150 - cu.height; y_tt = y_cu - 20 - tt.height; y_m = y_tt - 30 - m.height; y_n = y_m - 560
-    return Esc(dur, top_fondo(e['foto'], dur), [(num, M - 30, y_n, 0.0, 'rebote'), (m, M, y_m, 0.35, 'izq'),
+    return Esc(dur, top_fondo(e['foto'], dur, e.get('_video'), e.get('desde', 0)), [(num, M - 30, y_n, 0.0, 'rebote'), (m, M, y_m, 0.35, 'izq'),
                                                  (tt, M, y_tt, 0.55, 'izq'), (cu, M, y_cu, 0.95, 'sube')], top_encabezado(rotulo), sub_y=300)
 
 
@@ -530,8 +541,9 @@ def _video(e, tmp, k):
     v = e.get('video')
     if not v: return None
     if isinstance(v, str) and ruta(v): return ruta(v)
-    import reel
-    dest = os.path.join(tmp, f'video{k}.mp4')
+    import reel, hashlib
+    dest = os.path.join(tmp, 'v_' + hashlib.md5(json.dumps(v).encode()).hexdigest()[:10] + '.mp4')
+    if os.path.exists(dest): return dest
     for u in (v if isinstance(v, list) else [v]):
         if reel.bajar_url(u, dest) and os.path.exists(dest) and os.path.getsize(dest) > 50000:
             return dest
@@ -552,6 +564,8 @@ def make(data, out):
                 (pal, dv), mp3 = voz.sintetizar(reel.pronunciado(e['voz'], pron), os.path.join(tmp, f'v{k}.mp3'))
             if pal: pal = reel.restaurar(pal, pron)          # subtítulos con la escritura real (Baileys, no Béilis)
             e['_video'] = _video(e, tmp, k)
+            if e.get('videos'):
+                e['_videos'] = [_video({'video': v}, tmp, f'{k}_{j}') for j, v in enumerate(e['videos'])]
             mp3s.append(mp3); durs.append(max(3.0, dv + 0.9)); pals.append(pal or [])
         serie = data.get('serie', 'GUÍA'); rot = data.get('rotulo', 'TOP 3 DE LA SEMANA')
         pasos = sum(1 for e in esc if e.get('tipo') in ('paso', 'item'))

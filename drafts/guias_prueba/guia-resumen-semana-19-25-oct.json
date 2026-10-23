@@ -16,7 +16,27 @@
    ],
    "titulo": "Las 3 campañas *más creativas* de la semana",
    "sub": "En cuenta regresiva. Quédate a la número 1.",
-   "voz": "Las tres campañas más creativas de la semana, en cuenta regresiva. Quédate a la número uno."
+   "voz": "Las tres campañas más creativas de la semana, en cuenta regresiva. Quédate a la número uno.",
+   "videos": [
+    [
+     "https://www.prnewswire.com/news-releases/baileys-original-irish-cream-says-why-not-to-a-little-more-holiday-indulgence-with-bring-on-the-baileys-302914033.html",
+     "ytsearch1:Bring on the Baileys earrings Baileys holiday 2026"
+    ],
+    [
+     "https://www.adsoftheworld.com/campaigns/spooky-sauces",
+     "https://creative.salon/articles/work/mcdonald-s-spooky-sauces-leo-uk",
+     "ytsearch1:McDonald's Spooky Sauces makeup Leo UK"
+    ],
+    [
+     "https://www.adsoftheworld.com/campaigns/lose-your-liquid-death-virgenergy",
+     "https://www.youtube.com/watch?v=jZ0Zjdp5nQY"
+    ]
+   ],
+   "desdes": [
+    3,
+    3,
+    3
+   ]
   },
   {
    "tipo": "item",
@@ -24,7 +44,12 @@
    "marca": "Baileys",
    "titulo": "Botellitas que son *aretes*",
    "cuerpo": "Para Navidad: aretes con mini botellas que de verdad sirven licor.",
-   "voz": "Número tres: Baileys hizo aretes con mini botellas que de verdad sirven licor."
+   "voz": "Número tres: Baileys hizo aretes con mini botellas que de verdad sirven licor.",
+   "video": [
+    "https://www.prnewswire.com/news-releases/baileys-original-irish-cream-says-why-not-to-a-little-more-holiday-indulgence-with-bring-on-the-baileys-302914033.html",
+    "ytsearch1:Bring on the Baileys earrings Baileys holiday 2026"
+   ],
+   "desde": 6
   },
   {
    "tipo": "item",
@@ -32,7 +57,13 @@
    "marca": "McDonald's",
    "titulo": "Salsas que son *maquillaje*",
    "cuerpo": "Para Halloween convirtió sus salsas en pinturas para la cara, con brochas y todo.",
-   "voz": "Número dos: McDonald's convirtió sus salsas en maquillaje de Halloween, con brochas y todo."
+   "voz": "Número dos: McDonald's convirtió sus salsas en maquillaje de Halloween, con brochas y todo.",
+   "video": [
+    "https://www.adsoftheworld.com/campaigns/spooky-sauces",
+    "https://creative.salon/articles/work/mcdonald-s-spooky-sauces-leo-uk",
+    "ytsearch1:McDonald's Spooky Sauces makeup Leo UK"
+   ],
+   "desde": 6
   },
   {
    "tipo": "item",
@@ -40,7 +71,12 @@
    "marca": "Liquid Death x SIXT",
    "titulo": "Tu \"primera vez\" en un *SIXT*",
    "cuerpo": "Todos cuentan su primera vez en un auto... y en realidad hablaban de su primera lata de bebida energética.",
-   "voz": "Y el número uno: Liquid Death y SIXT. Todos cuentan su primera vez en un auto, y en realidad hablaban de su primera lata de bebida energética."
+   "voz": "Y el número uno: Liquid Death y SIXT. Todos cuentan su primera vez en un auto, y en realidad hablaban de su primera lata de bebida energética.",
+   "video": [
+    "https://www.adsoftheworld.com/campaigns/lose-your-liquid-death-virgenergy",
+    "https://www.youtube.com/watch?v=jZ0Zjdp5nQY"
+   ],
+   "desde": 6
   },
   {
    "tipo": "cierre",
