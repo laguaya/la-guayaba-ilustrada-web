@@ -16,13 +16,15 @@ def openverse(q, n):
 
 
 def commons(q, n):
+    logo = q.startswith('logo:')          # "logo:Burger King" busca también SVG (Commons los entrega como PNG)
+    q = q[5:] if logo else q
     r = requests.get('https://commons.wikimedia.org/w/api.php', params={'action': 'query', 'format': 'json', 'generator': 'search',
-                     'gsrsearch': f'{q} filetype:bitmap', 'gsrnamespace': 6, 'gsrlimit': n * 2, 'prop': 'imageinfo',
+                     'gsrsearch': q if logo else f'{q} filetype:bitmap', 'gsrnamespace': 6, 'gsrlimit': n * 2, 'prop': 'imageinfo',
                      'iiprop': 'url|extmetadata', 'iiurlwidth': 1600}, headers=UA, timeout=30)
     for p in (r.json().get('query', {}).get('pages', {}) or {}).values():
         ii = (p.get('imageinfo') or [{}])[0]; md = ii.get('extmetadata', {})
         lic = md.get('LicenseShortName', {}).get('value', '')
-        if not re.search(r'CC0|Public domain|CC BY', lic, re.I): continue
+        if not logo and not re.search(r'CC0|Public domain|CC BY', lic, re.I): continue
         autor = re.sub('<[^>]+>', '', md.get('Artist', {}).get('value', ''))[:80]
         yield ii.get('thumburl') or ii.get('url'), {'fuente': ii.get('descriptionurl'), 'autor': autor, 'licencia': lic}
 
@@ -32,14 +34,14 @@ def main():
     for slug, q in consultas.items():
         dest = os.path.join(R, 'assets', 'libres', slug); os.makedirs(dest, exist_ok=True)
         cred, k = {}, 0
-        for fuente in (openverse, commons):
+        for fuente in ((commons,) if q.startswith('logo:') else (openverse, commons)):
             try:
                 for url, meta in fuente(q, n):
                     if k >= n * 2: break
                     try:
                         b = requests.get(url, headers=UA, timeout=40).content
                         im = Image.open(BytesIO(b)).convert('RGB')
-                        if min(im.size) < 700: continue
+                        if min(im.size) < (200 if q.startswith('logo:') else 700): continue
                         im.thumbnail((1600, 1600))
                         nom = f'{fuente.__name__[0]}{k}.jpg'; im.save(os.path.join(dest, nom), quality=86)
                         cred[nom] = meta; k += 1
