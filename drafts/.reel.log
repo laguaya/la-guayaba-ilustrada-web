@@ -1,13 +1,15 @@
-2026-10-23T16:59:42.812752 five-below-serena-neel-noche-halloween
-Video desde caché: https://www.youtube.com/watch?v=u3SH-kpy-mo
+2026-10-23T17:18:02.091157 greene-king-beer-slide-cerveza-227-anos
+ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
+ElevenLabs usó eleven_v4
+Pausas recortadas: 18 4.9s
+Caché guardada: https://www.youtube.com/watch?v=aJapeibyS8c 201
 Video av1 -> h264 ok
-Fuente 1 campana 166.7s 71 tomas
-Video desde caché: https://www.tiktok.com/@fivebelow/video/7677987986931305742
-Video hevc -> h264 ok
-Fuente 2 https://www.tiktok.com/@fivebelow/video/7677987986931305742 27.9s 11 tomas
-Video desde caché: https://www.tiktok.com/@fivebelow/video/7410875113802911019
-Fuente 3 https://www.tiktok.com/@fivebelow/video/7410875113802911019 128.2s 81 tomas
-Toma de arranque: 49.1-50.4 puntaje 3.16
-Reel: [(0.0, 1.2, 'video1'), (1.2, 3.5, 'video1'), (3.5, 5.6, 'video1'), (5.6, 7.7, 'video1'), (7.7, 9.1, 'video2'), (9.1, 11.3, 'video1'), (11.3, 13.7, 'video3'), (13.7, 16.1, 'video1'), (16.1, 18.1, 'video1'), (18.1, 19.1, 'video1'), (19.1, 20.6, 'video1'), (20.6, 22.1, 'video2'), (22.1, 23.6, 'video2'), (23.6, 24.8, 'video2'), (24.8, 26.3, 'video2'), (26.3, 29.6, 'video2'), (29.6, 30.6, 'video3'), (30.6, 33.9, 'video3'), (33.9, 37.4, 'video3'), (37.4, 40.0, 'video3')]
-Diseños TikTok: ['original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'original']
+Fuente 1 campana 30.0s 6 tomas
+Caché guardada: https://www.youtube.com/watch?v=sKyFIkpWsx4 201
+Fuente 2 https://www.youtube.com/watch?v=sKyFIkpWsx4 30.1s 6 tomas
+yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://lbbonline.com/news/greene-king-brewery-takes-the-perfect-beer-slide-on-centuries-long-journey\n'
+Video av1 -> h264 ok
+Fuente 3 https://roastbrief.us/greene-king-shines-a-light-on-its-brewing-herita 30.0s 6 tomas
+Fuente 4 https://mediashotz.co.uk/greene-king-celebrates-brewing-heritage-in-ne 30.1s 6 tomas
+Reel: [(0.0, 2.9, 'video1'), (2.9, 4.6, 'video1'), (4.6, 7.7, 'video1'), (7.7, 10.7, 'video2'), (10.7, 14.7, 'video1'), (14.7, 16.0, 'video1'), (16.0, 17.9, 'video1'), (17.9, 23.9, 'video3'), (23.9, 29.0, 'video4'), (29.0, 32.0, 'video1'), (32.0, 34.3, 'video1'), (34.3, 37.2, 'video1'), (37.2, 40.0, 'video1')]
 
