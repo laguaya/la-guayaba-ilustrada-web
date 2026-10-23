@@ -550,6 +550,7 @@ def make(data, out):
             mp3, dv, pal = None, 0.0, []
             if e.get('voz'):
                 (pal, dv), mp3 = voz.sintetizar(reel.pronunciado(e['voz'], pron), os.path.join(tmp, f'v{k}.mp3'))
+            if pal: pal = reel.restaurar(pal, pron)          # subtítulos con la escritura real (Baileys, no Béilis)
             e['_video'] = _video(e, tmp, k)
             mp3s.append(mp3); durs.append(max(3.0, dv + 0.9)); pals.append(pal or [])
         serie = data.get('serie', 'GUÍA'); rot = data.get('rotulo', 'TOP 3 DE LA SEMANA')
