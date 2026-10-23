@@ -529,7 +529,7 @@ def _video(e, tmp, k):
     """Resuelve "video": ruta local (assets/libres_v/...), URL directa o de página/YouTube (se baja con reel.bajar_url)."""
     v = e.get('video')
     if not v: return None
-    if ruta(v): return ruta(v)
+    if isinstance(v, str) and ruta(v): return ruta(v)
     import reel
     dest = os.path.join(tmp, f'video{k}.mp4')
     for u in (v if isinstance(v, list) else [v]):
