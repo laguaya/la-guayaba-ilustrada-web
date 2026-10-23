@@ -1,15 +1,13 @@
-2026-10-23T17:18:02.091157 greene-king-beer-slide-cerveza-227-anos
-ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
-ElevenLabs usó eleven_v4
-Pausas recortadas: 18 4.9s
-Caché guardada: https://www.youtube.com/watch?v=aJapeibyS8c 201
+2026-10-23T19:00:04.431537 greene-king-beer-slide-cerveza-227-anos
+Video desde caché: https://www.youtube.com/watch?v=aJapeibyS8c
 Video av1 -> h264 ok
-Fuente 1 campana 30.0s 6 tomas
-Caché guardada: https://www.youtube.com/watch?v=sKyFIkpWsx4 201
-Fuente 2 https://www.youtube.com/watch?v=sKyFIkpWsx4 30.1s 6 tomas
+Fuente 5 campana 30.0s 6 tomas
+Video desde caché: https://www.youtube.com/watch?v=sKyFIkpWsx4
+Fuente 6 https://www.youtube.com/watch?v=sKyFIkpWsx4 30.1s 6 tomas
 yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://lbbonline.com/news/greene-king-brewery-takes-the-perfect-beer-slide-on-centuries-long-journey\n'
 Video av1 -> h264 ok
-Fuente 3 https://roastbrief.us/greene-king-shines-a-light-on-its-brewing-herita 30.0s 6 tomas
-Fuente 4 https://mediashotz.co.uk/greene-king-celebrates-brewing-heritage-in-ne 30.1s 6 tomas
-Reel: [(0.0, 2.9, 'video1'), (2.9, 4.6, 'video1'), (4.6, 7.7, 'video1'), (7.7, 10.7, 'video2'), (10.7, 14.7, 'video1'), (14.7, 16.0, 'video1'), (16.0, 17.9, 'video1'), (17.9, 23.9, 'video3'), (23.9, 29.0, 'video4'), (29.0, 32.0, 'video1'), (32.0, 34.3, 'video1'), (34.3, 37.2, 'video1'), (37.2, 40.0, 'video1')]
+Fuente 7 https://roastbrief.us/greene-king-shines-a-light-on-its-brewing-herita 30.0s 6 tomas
+Fuente 8 https://mediashotz.co.uk/greene-king-celebrates-brewing-heritage-in-ne 30.1s 6 tomas
+Reel: [(0.0, 4.6, 'video5'), (4.6, 7.7, 'video5'), (7.7, 10.7, 'video6'), (10.7, 13.5, 'video5'), (13.5, 14.7, 'video5'), (14.7, 16.0, 'video5'), (16.0, 17.9, 'video6'), (17.9, 23.9, 'video7'), (23.9, 29.0, 'video8'), (29.0, 30.8, 'video6'), (30.8, 32.0, 'video6'), (32.0, 33.5, 'video7'), (33.5, 36.7, 'video7'), (36.7, 40.0, 'video7')]
+Diseños TikTok: ['tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'original', 'original', 'original', 'original', 'dos', 'original']
 
