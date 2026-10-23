@@ -1,0 +1,52 @@
+{
+ "id": "guia-resumen-semana-19-25-oct",
+ "estilo": "top",
+ "rotulo": "TOP 3 · SEMANA DEL 19 AL 25 DE OCTUBRE",
+ "pronunciar": {
+  "SIXT": "Sixt",
+  "Baileys": "Béilis"
+ },
+ "escenas": [
+  {
+   "tipo": "portada",
+   "fotos": [
+    "assets/work/nota-baileys-aretes-bring-on-the-baileys-navidad-foto-src1.webp",
+    "assets/work/nota-mcdonalds-spooky-sauces-maquillaje-halloween-foto-src1.webp",
+    "assets/work/nota-liquid-death-sixt-primera-vez-energy-foto-src1.webp"
+   ],
+   "titulo": "Las 3 campañas *más creativas* de la semana",
+   "sub": "En cuenta regresiva. Quédate a la número 1.",
+   "voz": "Las tres campañas más creativas de la semana, en cuenta regresiva. Quédate a la número uno."
+  },
+  {
+   "tipo": "item",
+   "foto": "assets/work/nota-baileys-aretes-bring-on-the-baileys-navidad-foto-src2.webp",
+   "marca": "Baileys",
+   "titulo": "Botellitas que son *aretes*",
+   "cuerpo": "Para Navidad: aretes con mini botellas que de verdad sirven licor.",
+   "voz": "Número tres: Baileys hizo aretes con mini botellas que de verdad sirven licor."
+  },
+  {
+   "tipo": "item",
+   "foto": "assets/work/nota-mcdonalds-spooky-sauces-maquillaje-halloween-foto-src1.webp",
+   "marca": "McDonald's",
+   "titulo": "Salsas que son *maquillaje*",
+   "cuerpo": "Para Halloween convirtió sus salsas en pinturas para la cara, con brochas y todo.",
+   "voz": "Número dos: McDonald's convirtió sus salsas en maquillaje de Halloween, con brochas y todo."
+  },
+  {
+   "tipo": "item",
+   "foto": "assets/work/nota-liquid-death-sixt-primera-vez-energy-foto-src2.webp",
+   "marca": "Liquid Death x SIXT",
+   "titulo": "Tu \"primera vez\" en un *SIXT*",
+   "cuerpo": "Todos cuentan su primera vez en un auto... y en realidad hablaban de su primera lata de bebida energética.",
+   "voz": "Y el número uno: Liquid Death y SIXT. Todos cuentan su primera vez en un auto, y en realidad hablaban de su primera lata de bebida energética."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "¿Cuál es *tu número 1*?",
+   "sub": "Comenta 1, 2 o 3. Cada domingo te traigo las 3 mejores.",
+   "voz": "¿Cuál es tu número uno? Comenta uno, dos o tres. Y síguenos: cada domingo te traigo las tres mejores."
+  }
+ ]
+}

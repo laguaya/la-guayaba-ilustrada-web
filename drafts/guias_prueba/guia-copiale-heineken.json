@@ -1,0 +1,51 @@
+{
+ "id": "guia-copiale-heineken",
+ "estilo": "playbook",
+ "serie": "CÓPIALE A HEINEKEN",
+ "pronunciar": {
+  "Pubscription": "Pab-scrípshon",
+  "Heineken": "Jáineken"
+ },
+ "escenas": [
+  {
+   "tipo": "portada",
+   "foto": "assets/work/nota-heineken-pubscription-streaming-de-bares-foto-src2.webp",
+   "titulo": "La idea de Heineken que *tu negocio* puede copiar mañana",
+   "sub": "3 pasos. Guárdalo antes de que se te olvide.",
+   "voz": "Heineken encontró la forma de que la gente regrese al bar cada semana. Y tu negocio puede copiarla mañana, en tres pasos."
+  },
+  {
+   "tipo": "paso",
+   "foto": "assets/libres/bar/c4.jpg",
+   "ejemplo_foto": "assets/libres/cafeteria/c10.jpg",
+   "titulo": "Vende la *experiencia*, no el producto",
+   "cuerpo": "Heineken no vendió cerveza: vendió una suscripción para ver el futbol en bares.",
+   "ejemplo": "Una cafetería: \"Plan oficina\" de $399 al mes con café ilimitado y wifi para trabajar.",
+   "voz": "Uno: vende la experiencia, no el producto. Heineken no vendió cerveza, vendió una suscripción para ver el futbol en bares. Una cafetería podría vender un plan oficina."
+  },
+  {
+   "tipo": "paso",
+   "foto": "assets/libres/barberia/o0.jpg",
+   "ejemplo_foto": "assets/libres/barberia/c5.jpg",
+   "titulo": "Cóbralo por *suscripción*",
+   "cuerpo": "Un pago fijo al mes hace que el cliente regrese y te da un ingreso seguro.",
+   "ejemplo": "Una barbería: 4 cortes al mes por un solo pago, con lugar apartado los sábados.",
+   "voz": "Dos: cóbralo por suscripción. Un pago fijo hace que el cliente regrese. Una barbería podría vender cuatro cortes al mes con lugar apartado."
+  },
+  {
+   "tipo": "paso",
+   "foto": "assets/libres/tacos/o0.jpg",
+   "ejemplo_foto": "assets/libres/tacos/o4.jpg",
+   "titulo": "Ponle un *nombre* que se recuerde",
+   "cuerpo": "\"Pubscription\" junta pub y suscripción. Un buen nombre se comenta solo.",
+   "ejemplo": "Una taquería: \"Taco Pass\", 10 órdenes al mes. Corto, fácil de decir y de presumir.",
+   "voz": "Tres: ponle un nombre que se recuerde. Pubscription junta pub y suscripción. Una taquería con su Taco Pass se comenta sola."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "¿Conoces a alguien con negocio que *siempre dice que no tiene ideas*?",
+   "sub": "Mándaselo hoy. Y guárdalo: lo vas a necesitar.",
+   "voz": "¿Conoces a alguien con negocio que siempre dice que no tiene ideas? Mándaselo hoy. Y guárdalo, lo vas a necesitar."
+  }
+ ]
+}
