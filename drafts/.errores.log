@@ -168,3 +168,4 @@ FileNotFoundError: [Errno 2] No such file or directory: 'ffmpeg'
 2026-10-23T16:12:05.328956 enviando Reel five-below-serena-neel-noche-halloween
 2026-10-23T17:00:18.254630 enviando Reel guia-calendario-noviembre-2026
 2026-10-23T17:00:52.098390 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
+2026-10-23T18:00:23.281610 enviando Reel greene-king-beer-slide-cerveza-227-anos
