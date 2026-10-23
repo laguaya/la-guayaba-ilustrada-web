@@ -1,0 +1,42 @@
+{
+ "estilo": "prompt",
+ "escenas": [
+  {
+   "tipo": "portada",
+   "titulo": "El prompt para encontrar el *nombre* de tu negocio",
+   "sub": "Cópialo y pruébalo con cualquier IA",
+   "voz": "Este es el prompt para encontrar el nombre de tu negocio. Cópialo y pruébalo con cualquier inteligencia artificial."
+  },
+  {
+   "tipo": "prompt",
+   "prompt": "Actúa como experto en nombres de marca. Mi negocio es [qué vendes] en [tu ciudad] para [tu cliente ideal]. Dame 10 nombres de máximo 2 palabras, fáciles de decir en español, y explica en una línea por qué funciona cada uno.",
+   "voz": "Pídele que actúe como experto en nombres de marca. Dile qué vendes, en qué ciudad y para quién. Y pide diez nombres de máximo dos palabras, fáciles de decir, con una línea de por qué funciona cada uno."
+  },
+  {
+   "tipo": "respuesta",
+   "pregunta": "Café para trabajar, en Cuernavaca, para freelancers",
+   "lineas": [
+    "1. Café Pendiente: invita a quedarse",
+    "2. La Oficina: se entiende al instante",
+    "3. Grano y Wifi: dice lo que ofreces",
+    "4. Mesa Larga: suena a comunidad"
+   ],
+   "voz": "Por ejemplo, para un café donde trabajar en Cuernavaca te puede salir: Café Pendiente, La Oficina, Grano y Wifi."
+  },
+  {
+   "tipo": "tip",
+   "titulo": "Antes de enamorarte del nombre...",
+   "cuerpo": "Revisa que esté libre en Instagram, en dominio .mx y en el registro de marcas del IMPI.",
+   "voz": "Antes de enamorarte del nombre, revisa que esté libre en Instagram, en dominio punto eme equis y en el registro de marcas del IMPI."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "Guárdalo y *pruébalo hoy*",
+   "sub": "Comenta qué nombre te salió.",
+   "voz": "Guárdalo y pruébalo hoy. Y comenta qué nombre te salió."
+  }
+ ],
+ "caption": "El prompt para encontrar el nombre de tu negocio 🤖\n\nCópialo:\n\"Actúa como experto en nombres de marca. Mi negocio es [qué vendes] en [tu ciudad] para [tu cliente ideal]. Dame 10 nombres de máximo 2 palabras, fáciles de decir en español, y explica en una línea por qué funciona cada uno.\"\n\nAntes de elegir: revisa que esté libre en Instagram, en dominio .mx y en el IMPI.\n\nComenta qué nombre te salió 👇\n\n#InteligenciaArtificial #Emprendedores #Branding #Naming",
+ "caption_tiktok": "El prompt para encontrar el nombre de tu negocio 🤖 Guárdalo #ia #emprendedores #branding",
+ "id": "formato-prompt-nombre-negocio"
+}

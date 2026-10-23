@@ -1,0 +1,52 @@
+{
+ "estilo": "marca_mx",
+ "pronunciar": {
+  "Hill": "Jil"
+ },
+ "escenas": [
+  {
+   "tipo": "portada",
+   "foto": "assets/libres/jarritos/o3.jpg",
+   "titulo": "Jarritos: el refresco que nació *sin etiqueta*",
+   "sub": "La historia de una marca mexicana",
+   "voz": "Jarritos, el refresco que nació sin etiqueta. Esta es su historia."
+  },
+  {
+   "tipo": "ano",
+   "ano": "Años 50",
+   "foto": "assets/libres/jarritos/c8.jpg",
+   "cuerpo": "Francisco *\"El Güero\" Hill Ávalos* empezó con un refresco de café. No funcionó.",
+   "voz": "En los años cincuenta, Francisco Hill Ávalos, el Güero, empezó con un refresco de café. No funcionó."
+  },
+  {
+   "tipo": "ano",
+   "ano": "Mandarina",
+   "foto": "assets/libres/jarritos/o4.jpg",
+   "cuerpo": "Probó con fruta. El primer sabor fue *mandarina*.",
+   "voz": "Entonces probó con fruta, y el primer sabor fue mandarina."
+  },
+  {
+   "tipo": "ano",
+   "ano": "El nombre",
+   "foto": "assets/libres/jarritos/o2.jpg",
+   "cuerpo": "Viene de los *jarritos de barro* para bebidas frescas. Las botellas no tenían etiqueta: el color decía el sabor.",
+   "voz": "El nombre viene de los jarritos de barro donde se servían bebidas frescas. Y las botellas no tenían etiqueta: el color te decía el sabor."
+  },
+  {
+   "tipo": "ano",
+   "ano": "1988",
+   "foto": "assets/libres/jarritos/o1.jpg",
+   "cuerpo": "Llegó a Estados Unidos y empezó a viajar por el mundo.",
+   "voz": "En mil novecientos ochenta y ocho llegó a Estados Unidos y empezó a viajar por el mundo."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "Lo que hizo bien: un nombre con *raíz mexicana* y colores que se ven de lejos",
+   "sub": "Fuente: Directo al Paladar. ¿Qué marca mexicana contamos el próximo sábado?",
+   "voz": "Lo que hizo bien: un nombre con raíz mexicana y colores que se reconocen de lejos. ¿Qué marca mexicana contamos el próximo sábado?"
+  }
+ ],
+ "caption": "Jarritos: el refresco que nació sin etiqueta 🇲🇽\n\n• Años 50: Francisco \"El Güero\" Hill Ávalos empezó con un refresco de café. No funcionó.\n• Probó con fruta: el primer sabor fue mandarina.\n• El nombre viene de los jarritos de barro. Las botellas no tenían etiqueta: el color decía el sabor.\n• 1988: llegó a Estados Unidos.\n\nLo que hizo bien: un nombre con raíz mexicana y colores que se ven de lejos.\n\n¿Qué marca mexicana contamos el próximo sábado? 👇\n\nFuente: Directo al Paladar. Fotos: Wikimedia Commons\n\n#MarcasMexicanas #Branding #Jarritos #HechoEnMexico",
+ "caption_tiktok": "La historia de Jarritos, el refresco que nació sin etiqueta 🇲🇽 #marcasmexicanas #branding #jarritos",
+ "id": "formato-marca-mexicana-jarritos"
+}

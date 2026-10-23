@@ -1,0 +1,56 @@
+{
+ "estilo": "leccion",
+ "pronunciar": {
+  "Tropicana": "Tropicána"
+ },
+ "escenas": [
+  {
+   "tipo": "portada",
+   "kicker": "ENERO DE 2009",
+   "titulo": "Tropicana cambió su empaque y *perdió 30 millones de dólares*",
+   "foto": "assets/libres/tropicana/c8.jpg",
+   "pie": "La naranja con popote, el símbolo que quitaron. Foto: Wikimedia Commons",
+   "voz": "Tropicana cambió su empaque y perdió treinta millones de dólares. Esta es la lección."
+  },
+  {
+   "tipo": "hecho",
+   "kicker": "QUÉ PASÓ",
+   "titulo": "Estrenó un empaque nuevo",
+   "cuerpo": "En enero de 2009 cambió el diseño de su jugo Pure Premium. En unos dos meses, sus ventas cayeron *20 %*.",
+   "foto": "assets/libres/tropicana/o1.jpg",
+   "voz": "En enero de dos mil nueve estrenó un empaque nuevo. En unos dos meses, sus ventas cayeron veinte por ciento."
+  },
+  {
+   "tipo": "hecho",
+   "kicker": "POR QUÉ",
+   "titulo": "Cambió *todo* al mismo tiempo",
+   "cuerpo": "Logo, letra, foto y tapa. Quitó la naranja con popote. La gente ya no reconocía su jugo en el anaquel.",
+   "voz": "¿Por qué? Cambió todo al mismo tiempo: logo, letra, foto y tapa. Quitó la naranja con popote, y la gente ya no reconocía su jugo en el anaquel.",
+   "foto": "assets/libres/tropicana/o3.jpg"
+  },
+  {
+   "tipo": "hecho",
+   "kicker": "CÓMO TERMINÓ",
+   "titulo": "Regresó al empaque anterior",
+   "cuerpo": "El 23 de febrero de 2009 anunció que volvía al diseño de siempre.",
+   "sello": "LECCIÓN",
+   "voz": "El veintitrés de febrero anunció que volvía al diseño de siempre."
+  },
+  {
+   "tipo": "hecho",
+   "kicker": "LA LECCIÓN",
+   "titulo": "Cambia *poco a poco*",
+   "cuerpo": "Tu empaque es tu vendedor silencioso: si tu cliente no lo reconoce en un segundo, se lleva otro.",
+   "voz": "La lección: cambia poco a poco. Tu empaque es tu vendedor silencioso. Si tu cliente no lo reconoce en un segundo, se lleva otro."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "¿Conoces otro cambio que *salió mal*?",
+   "sub": "Cuéntalo en comentarios. Fuente: The Branding Journal.",
+   "voz": "¿Conoces otro cambio que salió mal? Cuéntalo en comentarios, y guarda esta lección."
+  }
+ ],
+ "caption": "La lección de Tropicana 🍊\n\nEn enero de 2009 cambió su empaque: logo, letra, foto y tapa al mismo tiempo. En unos dos meses sus ventas cayeron 20 % (unos 30 millones de dólares) y el 23 de febrero anunció que regresaba al diseño anterior.\n\nLa lección: cambia poco a poco. Tu empaque es tu vendedor silencioso.\n\n¿Conoces otro cambio que salió mal? 👇\n\nFuente: The Branding Journal. Fotos: Wikimedia Commons\n\n#Branding #Packaging #Marketing #Emprendedores",
+ "caption_tiktok": "La lección de Tropicana: perdió 30 millones por cambiar su empaque 🍊 #branding #packaging #emprendedores",
+ "id": "formato-leccion-tropicana"
+}

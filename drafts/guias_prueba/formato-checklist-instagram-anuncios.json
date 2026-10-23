@@ -1,0 +1,39 @@
+{
+ "estilo": "checklist",
+ "escenas": [
+  {
+   "tipo": "portada",
+   "titulo": "Antes de pagar un anuncio, revisa *estas 6 cosas* en tu Instagram",
+   "voz": "Antes de pagar un anuncio, revisa estas seis cosas en tu Instagram."
+  },
+  {
+   "tipo": "items",
+   "titulo": "Tu perfil",
+   "items": [
+    "Cuenta profesional activada, para ver tus estadísticas",
+    "Foto de perfil: tu logo, que se lea en chiquito",
+    "Bio que diga qué vendes, dónde y cómo pedir"
+   ],
+   "voz": "Uno: cuenta profesional, para ver tus estadísticas. Dos: tu logo como foto, que se lea en chiquito. Tres: una bio que diga qué vendes, dónde y cómo pedir."
+  },
+  {
+   "tipo": "items",
+   "titulo": "Tu contenido",
+   "items": [
+    "Un link que funcione: WhatsApp o tu tienda",
+    "Historias destacadas con precios, catálogo y opiniones",
+    "Al menos 9 publicaciones recientes y bien hechas"
+   ],
+   "voz": "Cuatro: un link que funcione. Cinco: historias destacadas con precios y catálogo. Y seis: al menos nueve publicaciones recientes y bien hechas."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "¿Te faltan 2 o más? *Todavía no gastes* en anuncios",
+   "sub": "Primero arregla tu perfil: ahí es donde llega la gente que da clic.",
+   "voz": "¿Te faltan dos o más? Todavía no gastes en anuncios. Guárdalo, y mándaselo a quien ya se quiere anunciar."
+  }
+ ],
+ "caption": "Checklist: antes de pagar un anuncio, revisa tu Instagram ✅\n\n1. Cuenta profesional activada\n2. Foto de perfil = tu logo, legible\n3. Bio: qué vendes, dónde y cómo pedir\n4. Un link que funcione\n5. Destacadas con precios y catálogo\n6. Al menos 9 publicaciones recientes\n\n¿Te faltan 2 o más? Todavía no gastes en anuncios.\n\nGuárdalo y mándaselo a quien ya se quiere anunciar 🔖\n\n#MarketingDigital #Instagram #Emprendedores #NegociosEnMexico",
+ "caption_tiktok": "6 cosas que revisar en tu Instagram antes de pagar un anuncio ✅ #marketingdigital #emprendedores #instagram",
+ "id": "formato-checklist-instagram-anuncios"
+}

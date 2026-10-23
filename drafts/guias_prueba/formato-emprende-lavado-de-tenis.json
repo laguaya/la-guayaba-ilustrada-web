@@ -1,0 +1,86 @@
+{
+ "estilo": "emprende",
+ "escenas": [
+  {
+   "tipo": "portada",
+   "foto": "assets/libres/tenis2/c5.jpg",
+   "etiqueta": "LAVADO DE TENIS",
+   "titulo": "Un negocio que puedes *empezar desde tu casa*",
+   "sub": "Precios reales, qué necesitas y cómo darle marca",
+   "voz": "Lavado de tenis: un negocio que puedes empezar desde tu casa. Te digo cuánto se cobra, qué necesitas y cómo darle marca."
+  },
+  {
+   "tipo": "ticket",
+   "titulo": "LO QUE COBRA EL MERCADO",
+   "filas": [
+    [
+     "Los Mochis, a domicilio",
+     "desde $50"
+    ],
+    [
+     "CDMX, lavado estándar",
+     "$150"
+    ],
+    [
+     "CDMX, lavado profundo",
+     "$320"
+    ]
+   ],
+   "nota": "Fuentes: Luz Noticias (2025) y Time Out México. Precios por par.",
+   "voz": "En Los Mochis hay lavado a domicilio desde cincuenta pesos. En la Ciudad de México, un lavado estándar anda en ciento cincuenta y uno profundo hasta en trescientos veinte.",
+   "foto": "assets/libres/tenis2/c11.jpg"
+  },
+  {
+   "tipo": "pasos",
+   "titulo": "PARA ARRANCAR",
+   "filas": [
+    "Cepillos de varias durezas, shampoo para calzado y microfibra",
+    "Un rincón con buena luz para fotos de antes y después",
+    "Recolección y entrega en tu colonia, con día fijo"
+   ],
+   "voz": "Para arrancar necesitas cepillos de varias durezas, shampoo para calzado y microfibra. Un rincón con buena luz para las fotos. Y una ruta de recolección en tu colonia.",
+   "foto": "assets/libres/tenis2/c4.jpg"
+  },
+  {
+   "tipo": "nombres",
+   "titulo": "Ponle un nombre que *se quede*",
+   "nombres": [
+    "Suela Limpia",
+    "Tenis Spa",
+    "Paso Blanco"
+   ],
+   "cuerpo": "Publica cada antes y después: es tu mejor anuncio.",
+   "voz": "Ponle un nombre que se quede, como Suela Limpia o Tenis Spa. Y publica cada antes y después: es tu mejor anuncio."
+  },
+  {
+   "tipo": "ticket",
+   "titulo": "¿Y SI QUIERES FRANQUICIA?",
+   "filas": [
+    [
+     "Clean Walkers",
+     "$135,000 a $160,000"
+    ],
+    [
+     "Sneaker Wash",
+     "desde $200,000"
+    ],
+    [
+     "Cleanton",
+     "$400,000 aprox."
+    ]
+   ],
+   "nota": "Inversión total aproximada. Fuente: Emprendedor.com, marzo 2026.",
+   "voz": "Y si prefieres una franquicia, la inversión va de unos ciento treinta y cinco mil a cuatrocientos mil pesos.",
+   "foto": "assets/libres/tenis2/c9.jpg"
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "¿Qué negocio quieres que analicemos *el próximo miércoles*?",
+   "sub": "Coméntalo y guarda este para cuando arranques.",
+   "voz": "¿Qué negocio quieres que analicemos el próximo miércoles? Coméntalo, y guarda este para cuando arranques."
+  }
+ ],
+ "caption": "Emprende con: lavado de tenis 👟\n\nLo que cobra el mercado (por par):\n• Los Mochis, a domicilio: desde $50\n• CDMX, estándar: $150\n• CDMX, profundo: $320\n\nPara arrancar: cepillos, shampoo para calzado, microfibra, buena luz para fotos y una ruta en tu colonia.\n\nFranquicias del giro: de $135,000 a $400,000 aprox.\n\nFuentes: Luz Noticias, Time Out México, Emprendedor.com\n\n¿Qué negocio analizamos el próximo miércoles? 👇\n\n#Emprendedores #IdeasDeNegocio #NegociosEnMexico #Emprender",
+ "caption_tiktok": "Emprende con: lavado de tenis 👟 cuánto cobrar y qué necesitas #emprendedores #ideasdenegocio #negociosenmexico",
+ "id": "formato-emprende-lavado-de-tenis"
+}

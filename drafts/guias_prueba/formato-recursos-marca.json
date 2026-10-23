@@ -1,0 +1,81 @@
+{
+ "estilo": "recursos",
+ "pronunciar": {
+  "Austin Kleon": "Óstin Clíon",
+  "Seth Godin": "Set Góudin",
+  "StoryBrand": "Stori Brand",
+  "Donald Miller": "Dónald Míler",
+  "Oso Trava": "Oso Trava",
+  "How I Built This": "Jáu ai bilt dis",
+  "Guy Raz": "Gai Ras",
+  "The Futur": "De Fiúchur",
+  "Chris Do": "Cris Du"
+ },
+ "escenas": [
+  {
+   "tipo": "portada",
+   "titulo": "Libros, podcasts y canales para *hacer crecer tu marca*",
+   "sub": "Para aprender sin pagar un curso",
+   "voz": "Libros, podcasts y canales para hacer crecer tu marca. Guárdalos."
+  },
+  {
+   "tipo": "tarjetas",
+   "titulo": "Para leer",
+   "items": [
+    {
+     "tipo": "LIBRO",
+     "nombre": "Roba como un artista",
+     "autor": "Austin Kleon",
+     "para": "Para perderle el miedo a crear."
+    },
+    {
+     "tipo": "LIBRO",
+     "nombre": "Esto es marketing",
+     "autor": "Seth Godin",
+     "para": "Para entender a quién le hablas."
+    },
+    {
+     "tipo": "LIBRO",
+     "nombre": "StoryBrand",
+     "autor": "Donald Miller",
+     "para": "Para explicar tu negocio en una frase."
+    }
+   ],
+   "voz": "Para leer: Roba como un artista, de Austin Kleon. Esto es marketing, de Seth Godin. Y StoryBrand, de Donald Miller."
+  },
+  {
+   "tipo": "tarjetas",
+   "titulo": "Para escuchar y ver",
+   "items": [
+    {
+     "tipo": "PODCAST",
+     "nombre": "Cracks",
+     "autor": "Oso Trava",
+     "para": "Entrevistas con emprendedores, en español."
+    },
+    {
+     "tipo": "PODCAST",
+     "nombre": "How I Built This",
+     "autor": "Guy Raz",
+     "para": "Cómo nacieron marcas famosas. En inglés."
+    },
+    {
+     "tipo": "YOUTUBE",
+     "nombre": "The Futur",
+     "autor": "Chris Do",
+     "para": "Diseño, marca y cómo cobrar. En inglés."
+    }
+   ],
+   "voz": "Para escuchar: Cracks, de Oso Trava, en español, y How I Built This, de Guy Raz. Y para ver: The Futur, de Chris Do."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "¿Cuál vas a empezar *primero*?",
+   "sub": "Recomienda uno más en comentarios y guárdalo.",
+   "voz": "¿Cuál vas a empezar primero? Recomienda uno más en comentarios."
+  }
+ ],
+ "caption": "Libros, podcasts y canales para hacer crecer tu marca 📚🎧\n\nPara leer:\n• Roba como un artista, Austin Kleon\n• Esto es marketing, Seth Godin\n• StoryBrand, Donald Miller\n\nPara escuchar:\n• Cracks, Oso Trava (español)\n• How I Built This, Guy Raz (inglés)\n\nPara ver:\n• The Futur, Chris Do (YouTube, inglés)\n\n¿Cuál empiezas primero? Recomienda uno más 👇\n\n#Branding #Emprendedores #Libros #Podcast",
+ "caption_tiktok": "Libros, podcasts y canales para hacer crecer tu marca 📚 #branding #emprendedores #libros",
+ "id": "formato-recursos-marca"
+}

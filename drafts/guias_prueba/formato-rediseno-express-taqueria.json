@@ -1,0 +1,78 @@
+{
+ "estilo": "rediseno",
+ "escenas": [
+  {
+   "tipo": "portada",
+   "titulo": "Le hice marca a una taquería *en 30 segundos*",
+   "sub": "Rediseño express · negocio ficticio",
+   "voz": "Le hice marca a una taquería en treinta segundos. Mira el proceso."
+  },
+  {
+   "tipo": "brief",
+   "titulo": "Primero, el brief",
+   "cuerpo": "Sin brief no hay diseño: qué vende, a quién y cómo se quiere sentir.",
+   "datos": [
+    [
+     "Cliente",
+     "Taquería La Lumbre"
+    ],
+    [
+     "Qué vende",
+     "Tacos al carbón en Cuernavaca"
+    ],
+    [
+     "Cómo se quiere ver",
+     "Familiar, pero moderna"
+    ]
+   ],
+   "voz": "Primero, el brief: Taquería La Lumbre, tacos al carbón en Cuernavaca. Quiere verse familiar, pero moderna."
+  },
+  {
+   "tipo": "boceto",
+   "titulo": "Después, el boceto",
+   "cuerpo": "Una flama dentro de un sello redondo, como los de las taquerías de siempre.",
+   "voz": "Después, el boceto: una flama dentro de un sello redondo, como los de las taquerías de siempre."
+  },
+  {
+   "tipo": "paleta",
+   "titulo": "Colores y letra",
+   "cuerpo": "Rojo brasa, crema tortilla y negro carbón. Letra gruesa, que se lea de lejos.",
+   "colores": [
+    [
+     "Rojo brasa",
+     "#D7261E"
+    ],
+    [
+     "Crema tortilla",
+     "#F4E3C1"
+    ],
+    [
+     "Negro carbón",
+     "#1A1A1A"
+    ]
+   ],
+   "voz": "Los colores salen del negocio: rojo brasa, crema tortilla y negro carbón. Y una letra gruesa que se lea de lejos."
+  },
+  {
+   "tipo": "logo",
+   "titulo": "El logo final",
+   "cuerpo": "Funciona en grande, en chiquito y en un solo color.",
+   "voz": "Y este es el logo final."
+  },
+  {
+   "tipo": "aplicaciones",
+   "titulo": "Y así se ve en la vida real",
+   "cuerpo": "Vaso, bolsa y letrero: la marca tiene que vivir fuera de la pantalla.",
+   "voz": "Así se ve en la vida real: en el vaso, en la bolsa y en el letrero."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "¿Quieres que le haga marca *a tu negocio*?",
+   "sub": "Escríbeme MARCA por mensaje.",
+   "voz": "¿Quieres que le haga marca a tu negocio? Escríbeme marca por mensaje."
+  }
+ ],
+ "caption": "Le hice marca a una taquería en 30 segundos 🌮🔥 (negocio ficticio)\n\n1. Brief: tacos al carbón en Cuernavaca, familiar pero moderna.\n2. Boceto: una flama dentro de un sello redondo.\n3. Colores: rojo brasa, crema tortilla y negro carbón.\n4. Logo final.\n5. Aplicaciones: vaso, bolsa y letrero.\n\n¿Quieres que le haga marca a tu negocio? Escríbeme MARCA por mensaje 📩\n\n#Branding #DiseñoDeLogo #IdentidadVisual #Cuernavaca",
+ "caption_tiktok": "Le hice marca a una taquería en 30 segundos 🌮🔥 #branding #diseñodelogo #identidadvisual",
+ "id": "formato-rediseno-express-taqueria"
+}

@@ -572,6 +572,9 @@ def make(data, out):
         escenas, n = [], 0
         if estilo == 'calendario':
             escenas = cal_escenas(data, durs)
+        elif estilo not in ('playbook', 'top'):
+            import guias_formatos
+            escenas = guias_formatos.escenas(data, durs)
         else:
             orden = list(range(pasos, 0, -1)) if estilo == 'top' else list(range(1, pasos + 1))
             for k, e in enumerate(esc):

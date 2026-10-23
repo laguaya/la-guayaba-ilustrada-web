@@ -1,0 +1,74 @@
+{
+ "estilo": "antes_despues",
+ "pronunciar": {
+  "Burger King": "Bérguer King",
+  "Jones Knowles Ritchie": "Yons Nouls Ríchi",
+  "Flame": "Fléim",
+  "Colophon": "Cólofon"
+ },
+ "escenas": [
+  {
+   "tipo": "portada",
+   "video": [
+    "ytsearch1:Burger King rebrand 2021 Jones Knowles Ritchie"
+   ],
+   "desde": 2,
+   "foto": "assets/libres/bk_tienda/c5.jpg",
+   "titulo": "El cambio de imagen de *Burger King* que todos quisieron copiar",
+   "sub": "Antes y después, explicado en 30 segundos",
+   "voz": "Este es el cambio de imagen de Burger King que todos quisieron copiar. Te lo explico en treinta segundos."
+  },
+  {
+   "tipo": "compara",
+   "antes": "assets/libres/bk_logo/c2.jpg",
+   "despues": "assets/libres/bk_logo/c3.jpg",
+   "fondo_antes": "#000000",
+   "fondo_despues": "#000000",
+   "antes_txt": "1999",
+   "despues_txt": "2021",
+   "titulo": "Volvió a su logo *más querido*",
+   "cuerpo": "Quitó el brillo y el giro azul de 1999 y regresó al logo plano de 1969 a 1994, ajustado para pantallas.",
+   "voz": "En dos mil veintiuno quitó el brillo y el giro azul de su logo de mil novecientos noventa y nueve, y regresó al logo plano que usó de mil novecientos sesenta y nueve a mil novecientos noventa y cuatro."
+  },
+  {
+   "tipo": "punto",
+   "video": [
+    "ytsearch1:Burger King rebrand 2021 Jones Knowles Ritchie"
+   ],
+   "desde": 14,
+   "foto": "assets/libres/bk_tienda/c7.jpg",
+   "titulo": "Una letra propia: *Flame*",
+   "cuerpo": "Diseñada por Colophon Foundry, con curvas gruesas que recuerdan a la comida.",
+   "voz": "Creó su propia letra, Flame, con curvas gruesas que recuerdan a la comida."
+  },
+  {
+   "tipo": "colores",
+   "colores": [
+    [
+     "Rojo fuego",
+     "#D62300"
+    ],
+    [
+     "Naranja flama",
+     "#FF8732"
+    ],
+    [
+     "Café barbacoa",
+     "#502314"
+    ]
+   ],
+   "titulo": "Colores que *dan hambre*",
+   "cuerpo": "Rojo fuego, naranja flama y café barbacoa: todos salen de la parrilla.",
+   "voz": "Y sus colores salen de la parrilla: rojo fuego, naranja flama y café barbacoa."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "La lección: a veces lo nuevo *ya está en tu archivo*",
+   "sub": "Fuente: Design Week, enero 2021. ¿Qué marca quieres que analicemos el próximo martes?",
+   "voz": "La lección: a veces lo nuevo ya está en tu archivo. ¿Qué marca quieres que analicemos el próximo martes? Escríbela en comentarios."
+  }
+ ],
+ "caption": "El cambio de imagen de Burger King que todos quisieron copiar 🍔\n\nAntes: el logo brillante de 1999.\nDespués (2021): regresó al logo plano de 1969 a 1994, con letra propia (Flame) y colores de parrilla.\n\nLa lección: a veces lo nuevo ya está en tu archivo.\n\n¿Qué marca analizamos el próximo martes? Escríbela 👇\n\nFuente: Design Week. Diseño: Jones Knowles Ritchie.\n\n#Branding #Rebranding #DiseñoGrafico #BurgerKing #AntesYDespues",
+ "caption_tiktok": "Antes y después: el rebranding de Burger King 🍔 ¿Qué marca sigue? #branding #rebranding #diseñografico",
+ "id": "formato-antes-despues-burger-king"
+}

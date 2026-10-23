@@ -1,0 +1,72 @@
+{
+ "estilo": "cobrar",
+ "escenas": [
+  {
+   "tipo": "portada",
+   "titulo": "¿Cuánto cobrar por un *logo* en México?",
+   "sub": "Rangos de referencia y qué sube el precio",
+   "voz": "¿Cuánto cobrar por un logo en México? Estos son los rangos de referencia."
+  },
+  {
+   "tipo": "rangos",
+   "titulo": "Lo que se cobra hoy",
+   "tope": 25000,
+   "filas": [
+    [
+     "Generador en línea",
+     0,
+     1200,
+     false
+    ],
+    [
+     "Diseñador que empieza",
+     300,
+     10000,
+     false
+    ],
+    [
+     "Diseñador con experiencia",
+     500,
+     15000,
+     false
+    ],
+    [
+     "Agencia",
+     700,
+     25000,
+     true
+    ]
+   ],
+   "nota": "Pesos mexicanos. Fuente: Tiendanube, \"¿Cuánto cuesta un logo en México?\"",
+   "voz": "Un generador en línea va de cero a mil doscientos pesos. Un diseñador que empieza, de trescientos a diez mil. Con experiencia, hasta quince mil. Y una agencia, de setecientos a más de veinticinco mil."
+  },
+  {
+   "tipo": "chips",
+   "titulo": "Lo que *sube* el precio",
+   "chips": [
+    "Investigación",
+    "Número de propuestas",
+    "Manual de uso",
+    "Aplicaciones",
+    "Urgencia",
+    "Registro de marca"
+   ],
+   "voz": "Lo que sube el precio: la investigación, cuántas propuestas das, el manual de uso, las aplicaciones y la urgencia."
+  },
+  {
+   "tipo": "tip",
+   "titulo": "Cobra por proyecto, no por hora",
+   "cuerpo": "Y pon por escrito cuántas rondas de cambios incluye.",
+   "voz": "Un consejo: cobra por proyecto, no por hora, y pon por escrito cuántas rondas de cambios incluye."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "Guárdalo para tu *próxima cotización*",
+   "sub": "Y mándaselo a un diseñador que cobra muy poco.",
+   "voz": "Guárdalo para tu próxima cotización, y mándaselo a un diseñador que cobra muy poco."
+  }
+ ],
+ "caption": "¿Cuánto cobrar por un logo en México? 💸\n\n• Generador en línea: $0 a $1,200\n• Diseñador que empieza: $300 a $10,000\n• Diseñador con experiencia: $500 a $15,000\n• Agencia: $700 a más de $25,000\n\nLo que sube el precio: investigación, número de propuestas, manual de uso, aplicaciones, urgencia.\n\nConsejo: cobra por proyecto y pon por escrito cuántos cambios incluye.\n\nFuente: Tiendanube\n\n#DiseñoGrafico #Freelance #Branding #Logo",
+ "caption_tiktok": "¿Cuánto cobrar por un logo en México? 💸 #diseñografico #freelance #branding",
+ "id": "formato-cuanto-cobrar-logo"
+}
