@@ -1,12 +1,11 @@
-2026-10-23T21:37:52.394413 asics-human-nature-documental-humanos
-ElevenLabs usó eleven_v4
-Pausas recortadas: 15 4.7s
-Caché guardada: https://www.youtube.com/watch?v=tTuMUWlVFZI 201
+2026-10-23T22:43:11.672561 asics-human-nature-documental-humanos
+Video desde caché: https://www.youtube.com/watch?v=tTuMUWlVFZI
 Video av1 -> h264 ok
-Fuente 15 campana 641.7s 161 tomas
-Fuente 16 https://www.adweek.com/creativity/asics-enlists-sigourney-weaver-to-do 60.0s 38 tomas
+Fuente 17 campana 641.7s 161 tomas
+Fuente 18 https://www.adweek.com/creativity/asics-enlists-sigourney-weaver-to-do 60.0s 38 tomas
 yt-dlp default : b"WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://corp.asics.com/en/press/article/asics-issues-world's-first-conservation-warning-for-movement-as-new-research-reveals-we're-moving-less-\n"
 yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://worldathletics.org/news/news/asics-movement-research-mental-wellbeing-human-nature\n'
 yt-dlp default : b'nformation extractor\nERROR: [vk] 456247301: Unable to extract player params; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U\n'
-Reel: [(0.0, 2.9, 'video15'), (2.9, 5.7, 'video15'), (5.7, 8.2, 'video15'), (8.2, 9.2, 'video15'), (9.2, 12.0, 'video16'), (12.0, 14.0, 'video15'), (14.0, 15.9, 'video15'), (15.9, 17.3, 'video15'), (17.3, 19.0, 'video15'), (19.0, 20.6, 'video15'), (20.6, 22.2, 'video16'), (22.2, 24.0, 'video16'), (24.0, 25.5, 'video16'), (25.5, 27.1, 'video16'), (27.1, 29.0, 'video16'), (29.0, 30.3, 'video16'), (30.3, 32.0, 'video15'), (32.0, 36.4, 'video15'), (36.4, 40.0, 'video15')]
+Reel: [(0.0, 5.7, 'video17'), (5.7, 7.0, 'video17'), (7.0, 8.8, 'video17'), (8.8, 9.2, 'video17'), (9.2, 10.8, 'video18'), (10.8, 12.0, 'video17'), (12.0, 13.6, 'video18'), (13.6, 15.2, 'video18'), (15.2, 16.0, 'video18'), (16.0, 20.6, 'video17'), (20.6, 25.5, 'video17'), (25.5, 29.0, 'video17'), (29.0, 32.0, 'video17'), (32.0, 36.4, 'video17'), (36.4, 40.0, 'video17')]
+Diseños TikTok: ['tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'original', 'original', 'dos', 'original', 'tres', 'original', 'dos']
 
