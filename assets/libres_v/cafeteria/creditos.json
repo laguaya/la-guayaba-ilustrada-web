@@ -1,0 +1,26 @@
+{
+ "v0.mp4": {
+  "fuente": "https://commons.wikimedia.org/wiki/File:I_Am_CDC_-_Amanda_MacGurn.webm",
+  "autor": "Centers for Disease Control and Prevention",
+  "licencia": "Public domain",
+  "titulo": "File:I Am CDC - Amanda MacGurn.webm"
+ },
+ "v1.mp4": {
+  "fuente": "https://commons.wikimedia.org/wiki/File:Know_Your_Crew...Four!.webm",
+  "autor": "NASA Johnson",
+  "licencia": "Public domain",
+  "titulo": "File:Know Your Crew...Four!.webm"
+ },
+ "v2.mp4": {
+  "fuente": "https://commons.wikimedia.org/wiki/File:Latte_art_flower_-_01.ogv",
+  "autor": "Anna Frodesiak",
+  "licencia": "CC0",
+  "titulo": "File:Latte art flower - 01.ogv"
+ },
+ "v3.mp4": {
+  "fuente": "https://commons.wikimedia.org/wiki/File:The_bean_that_could_save_coffee_from_climate_change.webm",
+  "autor": "Context_news",
+  "licencia": "CC BY-SA 4.0",
+  "titulo": "File:The bean that could save coffee from climate change.webm"
+ }
+}
