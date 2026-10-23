@@ -91,3 +91,28 @@ RuntimeError: La nota no tiene video de la campaña para el Reel
 2026-10-23T00:00:20.006016 enviando Reel screwfix-mo-farah-notificacion-humana
 2026-10-23T02:00:10.353181 enviando Reel lisa-playstation-tarantino-control-dualsense
 2026-10-23T04:00:13.378912 enviando Reel banana-republic-the-agency-jack-innanen
+2026-10-23T13:19:54.018840 reel nba-prime-tatum-brunson-juegan-en-sala
+ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
+ElevenLabs usó eleven_v4
+
+Traceback (most recent call last):
+  File "/home/runner/work/la-guayaba-ilustrada-web/la-guayaba-ilustrada-web/scripts/notas.py", line 690, in build_reel_solo
+    reel.make(data, out, tiktok=tiktok)
+  File "/home/runner/work/la-guayaba-ilustrada-web/la-guayaba-ilustrada-web/scripts/reel.py", line 1106, in make
+    principal = Fuente(vid, tmp, 'campana')
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/la-guayaba-ilustrada-web/la-guayaba-ilustrada-web/scripts/reel.py", line 351, in __init__
+    ruta = normalizar(ruta, f'{tmp}/norm{Fuente.n}.mp4')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/la-guayaba-ilustrada-web/la-guayaba-ilustrada-web/scripts/reel.py", line 338, in normalizar
+    r = subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', ruta, '-an', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '17',
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'ffmpeg'
+
