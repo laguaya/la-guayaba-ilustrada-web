@@ -27,7 +27,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ELEVENLABS_VOICE_ID: ${{ secrets.ELEVENLABS_VOICE_ID || vars.ELEVENLABS_VOICE_ID }}
         run: python -u scripts/guias_prueba.py ${{ inputs.ids }}
-      - run: |
+      - if: always()
+        run: |
           git config user.name "LGI Bot"; git config user.email "bot@guayabailustrada.com.mx"
           git add assets/prueba && git commit -m "Guías de prueba" || exit 0
           for i in 1 2 3; do git pull --rebase --autostash && git push && break; sleep 5; done

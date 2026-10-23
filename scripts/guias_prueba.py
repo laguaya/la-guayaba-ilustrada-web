@@ -9,7 +9,12 @@ for p in sorted(glob.glob(os.path.join(R, 'drafts', 'guias_prueba', '*.json'))):
     d = json.load(open(p))
     if solo and d['id'] not in solo: continue
     out = os.path.join(R, 'assets', 'prueba', d['id']); os.makedirs(out, exist_ok=True)
-    if d.get('estilo') == 'calendario':
-        E.carrusel(d, os.path.join(out, 'carrusel'))
-    E.make(d, os.path.join(out, 'reel.mp4'))
-    print('listo', d['id'])
+    try:
+        if d.get('estilo') == 'calendario':
+            E.carrusel(d, os.path.join(out, 'carrusel'))
+        E.make(d, os.path.join(out, 'reel.mp4'))
+        print('listo', d['id'])
+    except Exception:
+        import traceback
+        open(os.path.join(R, 'assets', 'prueba', 'log.txt'), 'a').write(d['id'] + '\n' + traceback.format_exc() + '\n')
+        traceback.print_exc()
