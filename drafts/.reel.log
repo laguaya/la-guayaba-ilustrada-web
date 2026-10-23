@@ -1,11 +1,16 @@
-2026-10-23T22:43:11.672561 asics-human-nature-documental-humanos
-Video desde caché: https://www.youtube.com/watch?v=tTuMUWlVFZI
+2026-10-23T23:26:54.831888 visit-flanders-selfie-hijo-ciego-bingo
+ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
+ElevenLabs usó eleven_v4
+Pausas recortadas: 13 3.7s
+Caché guardada: https://www.youtube.com/watch?v=NHbpAclgXh8 201
 Video av1 -> h264 ok
-Fuente 17 campana 641.7s 161 tomas
-Fuente 18 https://www.adweek.com/creativity/asics-enlists-sigourney-weaver-to-do 60.0s 38 tomas
-yt-dlp default : b"WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://corp.asics.com/en/press/article/asics-issues-world's-first-conservation-warning-for-movement-as-new-research-reveals-we're-moving-less-\n"
-yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://worldathletics.org/news/news/asics-movement-research-mental-wellbeing-human-nature\n'
-yt-dlp default : b'nformation extractor\nERROR: [vk] 456247301: Unable to extract player params; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U\n'
-Reel: [(0.0, 5.7, 'video17'), (5.7, 7.0, 'video17'), (7.0, 8.8, 'video17'), (8.8, 9.2, 'video17'), (9.2, 10.8, 'video18'), (10.8, 12.0, 'video17'), (12.0, 13.6, 'video18'), (13.6, 15.2, 'video18'), (15.2, 16.0, 'video18'), (16.0, 20.6, 'video17'), (20.6, 25.5, 'video17'), (25.5, 29.0, 'video17'), (29.0, 32.0, 'video17'), (32.0, 36.4, 'video17'), (36.4, 40.0, 'video17')]
-Diseños TikTok: ['tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'original', 'original', 'dos', 'original', 'tres', 'original', 'dos']
+Fuente 1 campana 102.0s 35 tomas
+Caché guardada: https://www.youtube.com/watch?v=azbkw85-600 201
+Video av1 -> h264 ok
+Fuente 2 https://www.youtube.com/watch?v=azbkw85-600 102.0s 35 tomas
+Video av1 -> h264 ok
+Fuente 3 https://www.adsoftheworld.com/campaigns/selfieforall 102.0s 35 tomas
+yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://www.rtv.be/actualiteit-en-nieuws/selfie-all-voorgesteld-mechelen-geslaagde-selfie-voor-blinden-en\n'
+yt-dlp default : b"foto: An extractor error has occurred. (caused by KeyError('data-videoid')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U\n"
+Reel: [(0.0, 2.9, 'video1'), (2.9, 4.5, 'video1'), (4.5, 6.6, 'video1'), (6.6, 7.7, 'video1'), (7.7, 9.0, 'video1'), (9.0, 10.7, 'video1'), (10.7, 12.3, 'video1'), (12.3, 16.8, 'video1'), (16.8, 20.8, 'video2'), (20.8, 24.8, 'video1'), (24.8, 30.3, 'video3'), (30.3, 31.8, 'video1'), (31.8, 35.5, 'video1'), (35.5, 40.0, 'video1')]
 
