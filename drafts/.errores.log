@@ -164,3 +164,4 @@ Traceback (most recent call last):
     raise child_exception_type(errno_num, err_msg, err_filename)
 FileNotFoundError: [Errno 2] No such file or directory: 'ffmpeg'
 
+2026-10-23T14:00:20.134681 enviando Reel nba-prime-tatum-brunson-juegan-en-sala
