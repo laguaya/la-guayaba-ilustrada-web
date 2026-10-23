@@ -1,7 +1,1 @@
-{
- "tipo": "texto",
- "texto": "https://www.instagram.com/p/De1_ZHrAb08/?img_index=4&srtk=cDl1ZDhoczduMXV3",
- "nota": null,
- "urgente": false,
- "fecha": 1792789580
-}
+{"tipo": "texto", "texto": "https://www.instagram.com/p/De1_ZHrAb08/?img_index=4&srtk=cDl1ZDhoczduMXV3", "nota": null, "urgente": false, "fecha": 1792789580, "intentos": 1, "pendiente": "Intento 1: el link de Instagram sigue sin abrir desde la nube. Pedir a Sergio que pegue el texto del post o un link de un medio."}
