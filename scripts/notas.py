@@ -748,7 +748,7 @@ def reels_sueltos():
             if len(car) >= 2:          # también como carrusel, para subirlo así a Instagram
                 fs = {f'f{k}': open(c, 'rb') for k, c in enumerate(car)}
                 media = [{'type': 'photo', 'media': f'attach://f{k}'} for k in range(len(car))]
-                media[0]['caption'] = '🖼️ Versión carrusel (guárdalas y súbelas como carrusel a Instagram)'
+                media[0]['caption'] = '🖼️ Versión carrusel. Con el botón del video se suben a Instagram el Reel y este carrusel.'
                 tg('sendMediaGroup', files=fs, chat_id=CHAT, media=media)
                 for f in fs.values(): f.close()
             save(path, r)
@@ -1315,8 +1315,16 @@ def poll():
                     n['ig'] = load(igp)
                 n['tg'] = (cq.get('message') or {}).get('message_id')
                 queue_instagram(n, 'reel')
+                car = sorted(glob.glob(f'assets/ig/{sid}/carrusel/*.jpg'))
+                if len(car) >= 2:          # Guías con carrusel (calendario): también se sube el carrusel a Instagram
+                    q = load(IGQ) if os.path.exists(IGQ) else []
+                    if not any(i.get('id') == sid and i.get('carpeta') for i in q):
+                        cap = n['ig'].get('caption_carrusel') or ('Desliza y guárdalo 👉 ' + n['ig'].get('caption', ''))
+                        q.append({'id': sid, 'caption': cap, 'reply': n['tg'], 'kind': 'carousel', 'carpeta': True})
+                        save(IGQ, q)
                 tt = queue_tiktok(n)
-                mark(cq, '📲 Va. En unos minutos sale el Reel en Instagram; te aviso aquí.' + (' La versión para TikTok te la mando aparte para que la revises antes de subirla.' if tt else ''))
+                mark(cq, ('📲 Va. En unos minutos salen el Reel y el carrusel en Instagram; te aviso aquí.' if len(car) >= 2 else
+                          '📲 Va. En unos minutos sale el Reel en Instagram; te aviso aquí.') + (' La versión para TikTok te la mando aparte para que la revises antes de subirla.' if tt else ''))
             else:
                 tg('answerCallbackQuery', callback_query_id=cq['id'], text='No encontré ese Reel.')
             changed = True
@@ -1837,10 +1845,13 @@ def instagram():
                 print('Carrusel animado falló, va el fijo:', e, file=sys.stderr)
                 tg('sendMessage', chat_id=CHAT, text=f'⚠️ Instagram no aceptó los videos ({str(e)[:200]}). Subo el carrusel fijo en rosa.', reply_to_message_id=item.get('reply'))
                 item.pop('animado', None)
-        nums = [i for i in (1, 2, 3, 4) if os.path.exists(f'assets/ig/{item["id"]}/{i}.jpg')]
-        urls = [f'{site}/assets/ig/{item["id"]}/{i}.jpg' for i in nums]
+        if item.get('carpeta'):        # carrusel de una Guía: assets/ig/<id>/carrusel/01.jpg ... (hasta 10)
+            rutas = sorted(glob.glob(f'assets/ig/{item["id"]}/carrusel/*.jpg'))[:10]
+        else:
+            rutas = [f'assets/ig/{item["id"]}/{i}.jpg' for i in (1, 2, 3, 4) if os.path.exists(f'assets/ig/{item["id"]}/{i}.jpg')]
+        urls = [f'{site}/{r}' for r in rutas]
         import hashlib
-        local = [hashlib.md5(open(f'assets/ig/{item["id"]}/{i}.jpg', 'rb').read()).hexdigest() for i in nums]
+        local = [hashlib.md5(open(r, 'rb').read()).hexdigest() for r in rutas]
         for _ in range(40):  # espera a que la web publique las láminas nuevas (no las de antes)
             try:
                 live = [hashlib.md5(requests.get(u + f'?t={time.time():.0f}', timeout=30).content).hexdigest() for u in urls]
