@@ -1,13 +1,9 @@
-2026-10-23T19:00:04.431537 greene-king-beer-slide-cerveza-227-anos
-Video desde caché: https://www.youtube.com/watch?v=aJapeibyS8c
-Video av1 -> h264 ok
-Fuente 5 campana 30.0s 6 tomas
-Video desde caché: https://www.youtube.com/watch?v=sKyFIkpWsx4
-Fuente 6 https://www.youtube.com/watch?v=sKyFIkpWsx4 30.1s 6 tomas
-yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://lbbonline.com/news/greene-king-brewery-takes-the-perfect-beer-slide-on-centuries-long-journey\n'
-Video av1 -> h264 ok
-Fuente 7 https://roastbrief.us/greene-king-shines-a-light-on-its-brewing-herita 30.0s 6 tomas
-Fuente 8 https://mediashotz.co.uk/greene-king-celebrates-brewing-heritage-in-ne 30.1s 6 tomas
-Reel: [(0.0, 4.6, 'video5'), (4.6, 7.7, 'video5'), (7.7, 10.7, 'video6'), (10.7, 13.5, 'video5'), (13.5, 14.7, 'video5'), (14.7, 16.0, 'video5'), (16.0, 17.9, 'video6'), (17.9, 23.9, 'video7'), (23.9, 29.0, 'video8'), (29.0, 30.8, 'video6'), (30.8, 32.0, 'video6'), (32.0, 33.5, 'video7'), (33.5, 36.7, 'video7'), (36.7, 40.0, 'video7')]
-Diseños TikTok: ['tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'original', 'original', 'original', 'original', 'dos', 'original']
+2026-10-23T19:26:48.006432 greater-anglia-familia-robot-tren-en-la-sala
+ElevenLabs usó eleven_v4
+Pausas recortadas: 18 4.7s
+Fuente 9 campana 40.0s 27 tomas
+Fuente 10 https://shots.net/news/view/great-anglia-railway-drops-the-robot 1.4s 1 tomas
+yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://lbbonline.com/news/greater-anglia-s-robot-family-returns-for-a-london-adventure\n'
+Fuente 11 https://lbbonline.com/work/185188 40.0s 27 tomas
+Reel: [(0.0, 2.9, 'video9'), (2.9, 4.6, 'video9'), (4.6, 5.7, 'video9'), (5.7, 7.4, 'video11'), (7.4, 8.0, 'video9'), (8.0, 9.0, 'video9'), (9.0, 11.0, 'video9'), (11.0, 12.5, 'video9'), (12.5, 13.5, 'video9'), (13.5, 15.2, 'video9'), (15.2, 16.5, 'video9'), (16.5, 17.6, 'video9'), (17.6, 18.8, 'video9'), (18.8, 21.1, 'video9'), (21.1, 21.9, 'video9'), (21.9, 23.6, 'video11'), (23.6, 24.9, 'video9'), (24.9, 26.7, 'video11'), (26.7, 27.8, 'video11'), (27.8, 29.0, 'video9'), (29.0, 33.6, 'video11'), (33.6, 40.0, 'video9')]
 
