@@ -126,8 +126,34 @@ def polaroid(ref, w, h, ang=0, pie=None):
 
 
 class Esc:
-    def __init__(self, dur, fondo, piezas, encabezado=None):
+    def __init__(self, dur, fondo, piezas, encabezado=None, sub_y=1700, salida=True):
         self.dur, self.fondo, self.piezas, self.encabezado = dur, fondo, piezas, encabezado
+        self.sub_y, self.salida, self.subs = sub_y, salida, []
+
+
+_TMPS = []
+
+
+def cuadros(video, w, h, dur, desde=0.0):
+    """Saca los cuadros de un video (recortado a w x h, en bucle si es corto) a una carpeta temporal."""
+    d = tempfile.mkdtemp(); _TMPS.append(d)
+    subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-stream_loop', '-1', '-ss', str(desde), '-i', video, '-t', f'{dur + 0.5:.2f}',
+                    '-vf', f'scale={w}:{h}:force_original_aspect_ratio=increase,crop={w}:{h},fps={FPS}', '-q:v', '3',
+                    os.path.join(d, '%05d.jpg')], check=True)
+    fs = sorted(os.listdir(d))
+    return [os.path.join(d, f) for f in fs]
+
+
+def subtitulo_en(im, e, t):
+    if not e.subs: return
+    import reel
+    tv = t - 0.25
+    for k, g in enumerate(e.subs):
+        fin = e.subs[k + 1][0][0] if k + 1 < len(e.subs) else g[-1][1] + 0.6
+        if g[0][0] - 0.05 <= tv < fin:
+            c = reel.subtitulo(g, tv)
+            im.alpha_composite(c, (int((W - c.width) / 2), int(e.sub_y)))
+            return
 
 
 def render(escenas, out, voces):
@@ -139,16 +165,19 @@ def render(escenas, out, voces):
         for i in range(n):
             t = i / FPS
             im = e.fondo(t).convert('RGBA')
-            sale = cl((t - (e.dur - 0.3)) / 0.3)
+            sale = cl((t - (e.dur - 0.3)) / 0.3) if e.salida else 0.0
             for capa, x, y, te, ef in e.piezas:
                 p = (t - te) / 0.5
+                if callable(capa): capa = capa(t)
                 if ef == 'rebote': pinta(im, capa, x, y, cl(p * 2) * (1 - sale), 0, 0.6 + 0.4 * back(p))
                 elif ef == 'izq': pinta(im, capa, x - (1 - eo(p)) * 160, y, cl(p * 1.6) * (1 - sale))
                 elif ef == 'fijo': pinta(im, capa, x, y, 1.0)
+                elif ef == 'flota': pinta(im, capa, x, y, cl(p * 2) * (1 - sale), (1 - eo(p)) * 70 + math.sin(t * 1.4 + x) * 7)
                 elif ef == 'desliza':   # lámina de carrusel que entra desde la derecha
                     pinta(im, capa, x + (1 - eo(p * 0.8)) * W, y, 1.0)
                 else: pinta(im, capa, x, y, eo(p) * (1 - sale), (1 - eo(p)) * 50 - sale * 30)
             if e.encabezado: im.alpha_composite(e.encabezado(t), (0, 0))
+            subtitulo_en(im, e, t)
             b = io.BytesIO(); im.convert('RGB').save(b, 'JPEG', quality=90); pr.stdin.write(b.getvalue())
     pr.stdin.close(); pr.wait()
     total = sum(e.dur for e in escenas)
@@ -167,16 +196,21 @@ def render(escenas, out, voces):
 
 
 # ---------- PLAYBOOK (Cópiale a...) ----------
-def pb_fondo(foto, dur, alto=1150):
+def pb_fondo(foto, dur, alto=1150, video=None, desde=0.0):
     base = Image.new('RGB', (W, H), NEGRO)
-    img = cubrir(foto, W, alto) if foto else None
+    cs = cuadros(video, W, alto, dur, desde) if video else None
+    img = cubrir(foto, W, alto) if (foto and not cs) else None
     grad = degradado(W, alto, alto * 0.45, alto, a1=255)
     top = degradado(W, 260, 0, 260, a0=150, a1=0)
 
     def f(t):
         im = base.copy().convert('RGBA')
-        if img:
-            im.paste(zoom(img, t, dur), (0, 0)); im.alpha_composite(grad, (0, 0)); im.alpha_composite(top, (0, 0))
+        if cs:
+            im.paste(Image.open(cs[min(len(cs) - 1, int(t * FPS))]).convert('RGB'), (0, 0))
+        elif img:
+            im.paste(zoom(img, t, dur), (0, 0))
+        if cs or img:
+            im.alpha_composite(grad, (0, 0)); im.alpha_composite(top, (0, 0))
         return im
     return f
 
@@ -193,38 +227,41 @@ def pb_encabezado(serie, paso, pasos):
 
 
 def tarjeta_ejemplo(texto_, foto, w, etiqueta='ASÍ LO HARÍA UN NEGOCIO EN MÉXICO'):
-    th = 250
-    t = txt(texto_, 42, w - th - 110, 'lg-medium.woff2', INK, lh=1.25, max_lines=6, min_size=30)
-    alto = max(th + 60, t.height + 120)
+    th, pad = 250, 30
+    x = pad + th + 34 if foto else 40
+    t = txt(texto_, 42, w - x - 40, 'lg-medium.woff2', INK, lh=1.25, max_lines=6, min_size=30)
+    fl = font('lg-black.woff2', 24); lx0, ly0, lx1, ly1 = ImageDraw.Draw(Image.new('RGB', (4, 4))).textbbox((0, 0), etiqueta, font=fl)
+    bloque = (ly1 - ly0) + 18 + t.height - int(42 * 0.3)      # etiqueta + espacio + texto (sin el aire de abajo)
+    alto = max(th + 2 * pad, bloque + 2 * 44)
     im = Image.new('RGBA', (w, alto), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
     d.rounded_rectangle((0, 0, w - 1, alto - 1), 30, fill=WHITE)
-    x = 34
     if foto:
-        f = cubrir(foto, th, alto - 60); mk = Image.new('L', f.size, 0)
+        f = cubrir(foto, th, alto - 2 * pad); mk = Image.new('L', f.size, 0)
         ImageDraw.Draw(mk).rounded_rectangle((0, 0, f.width - 1, f.height - 1), 20, fill=255)
-        im.paste(f, (30, 30), mk); x = th + 64
-    d.text((x, 34), etiqueta, font=font('lg-black.woff2', 24), fill=PINK)
-    im.alpha_composite(t, (x, 80))
-    return im.rotate(-1.5, resample=Image.BICUBIC, expand=True)
+        im.paste(f, (pad, pad), mk)
+    y0 = (alto - bloque) // 2
+    d.text((x - lx0, y0 - ly0), etiqueta, font=fl, fill=PINK)
+    im.alpha_composite(t, (x, y0 + (ly1 - ly0) + 18 - int(42 * 0.08)))
+    return im
 
 
 def pb_portada(e, dur, serie):
     tt = txt(e['titulo'], 112, W - 2 * M, max_lines=4, min_size=70)
     sb = txt(e.get('sub', ''), 46, W - 2 * M, 'lg-medium.woff2', GRIS, lh=1.25)
     y = 1170
-    return Esc(dur, pb_fondo(e.get('foto'), dur, 1300), [(tt, M, y, 0.2, 'izq'), (sb, M, y + tt.height + 20, 0.7, 'sube')],
-               pb_encabezado(serie, 0, 0))
+    return Esc(dur, pb_fondo(e.get('foto'), dur, 1300, e.get('_video'), e.get('desde', 0)),
+               [(tt, M, y, 0.2, 'izq'), (sb, M, y + tt.height + 20, 0.7, 'sube')], pb_encabezado(serie, 0, 0), sub_y=880)
 
 
 def pb_paso(e, n, pasos, dur, serie):
     num = txt(f'{n:02d}', 300, 700, 'lg-black.woff2', PINK, max_lines=1)
     tt = txt(e['titulo'], 92, W - 2 * M, max_lines=3, min_size=60)
     cu = txt(e.get('cuerpo', ''), 44, W - 2 * M, 'lg-regular.woff2', GRIS, lh=1.3, max_lines=4, min_size=32)
-    cj = tarjeta_ejemplo(e.get('ejemplo', ''), e.get('ejemplo_foto'), W - 2 * M + 20)
+    cj = tarjeta_ejemplo(e.get('ejemplo', ''), e.get('ejemplo_foto'), W - 2 * M)
     y = 820
     pz = [(num, M - 14, y, 0.0, 'rebote'), (tt, M, y + 290, 0.3, 'izq'), (cu, M, y + 310 + tt.height, 0.7, 'sube')]
-    pz.append((cj, M - 20, min(H - cj.height - 70, y + 340 + tt.height + cu.height), 1.3, 'sube'))
-    return Esc(dur, pb_fondo(e.get('foto'), dur, 1000), pz, pb_encabezado(serie, n, pasos))
+    pz.append((cj, M, min(H - cj.height - 70, y + 340 + tt.height + cu.height), 1.3, 'sube'))
+    return Esc(dur, pb_fondo(e.get('foto'), dur, 1000, e.get('_video'), e.get('desde', 0)), pz, pb_encabezado(serie, n, pasos), sub_y=600)
 
 
 def pb_cierre(e, dur, serie, pasos):
@@ -233,9 +270,9 @@ def pb_cierre(e, dur, serie, pasos):
     b1 = boton(avion(INK), 'MÁNDASELO', 46, PINK, INK, W - 2 * M)
     b2 = boton(G.marcador(WHITE), 'GUÁRDALO', 46, (40, 40, 40), WHITE, W - 2 * M)
     ys = G.centrar([tt, sb, b1, b2], gap=46, y_min=300, y_max=1700)
-    return Esc(dur, pb_fondo(e.get('foto'), dur, 900) if e.get('foto') else (lambda t: Image.new('RGB', (W, H), NEGRO)),
+    return Esc(dur, pb_fondo(e.get('foto'), dur, 900, e.get('_video'), e.get('desde', 0)) if (e.get('foto') or e.get('_video')) else (lambda t: Image.new('RGB', (W, H), NEGRO)),
                [(tt, M, ys[0], 0.1, 'izq'), (sb, M, ys[1], 0.6, 'sube'), (b1, M, ys[2], 1.0, 'rebote'), (b2, M, ys[3], 1.3, 'rebote')],
-               pb_encabezado(serie, pasos, pasos))
+               pb_encabezado(serie, pasos, pasos), sub_y=1730)
 
 
 # ---------- TOP (resumen de la semana, cuenta regresiva) ----------
@@ -271,10 +308,11 @@ def top_portada(e, dur, rotulo):
         return im
     bloque = Image.new('RGBA', (W - 2 * M, 10), (0, 0, 0, 0))
     tt = txt(e['titulo'], 120, W - 2 * M - 60, 'lg-black.woff2', INK, acento=WHITE, max_lines=4, min_size=70)
-    caja = Image.new('RGBA', (W - 2 * M, tt.height + 80), PINK); caja.alpha_composite(tt, (30, 40))
+    caja = Image.new('RGBA', (W - 2 * M, tt.height + 80), (0, 0, 0, 0))
+    ImageDraw.Draw(caja).rounded_rectangle((0, 0, caja.width - 1, caja.height - 1), 44, fill=PINK); caja.alpha_composite(tt, (30, 40))
     sb = txt(e.get('sub', ''), 48, W - 2 * M, 'lg-bold.woff2', WHITE)
     y = 1050
-    return Esc(dur, fondo, [(caja, M, y, 0.2, 'rebote'), (sb, M, y + caja.height + 30, 0.7, 'sube')], top_encabezado(rotulo))
+    return Esc(dur, fondo, [(caja, M, y, 0.2, 'rebote'), (sb, M, y + caja.height + 30, 0.7, 'sube')], top_encabezado(rotulo), sub_y=840)
 
 
 def top_item(e, n, dur, rotulo):
@@ -284,7 +322,7 @@ def top_item(e, n, dur, rotulo):
     cu = txt(e.get('cuerpo', ''), 46, W - 2 * M, 'lg-regular.woff2', '#E6E6E6', lh=1.3, max_lines=4)
     y_cu = H - 150 - cu.height; y_tt = y_cu - 20 - tt.height; y_m = y_tt - 30 - m.height; y_n = y_m - 560
     return Esc(dur, top_fondo(e['foto'], dur), [(num, M - 30, y_n, 0.0, 'rebote'), (m, M, y_m, 0.35, 'izq'),
-                                                 (tt, M, y_tt, 0.55, 'izq'), (cu, M, y_cu, 0.95, 'sube')], top_encabezado(rotulo))
+                                                 (tt, M, y_tt, 0.55, 'izq'), (cu, M, y_cu, 0.95, 'sube')], top_encabezado(rotulo), sub_y=300)
 
 
 def top_cierre(e, dur, rotulo):
@@ -298,10 +336,10 @@ def top_cierre(e, dur, rotulo):
     b = boton(G.marcador(PINK), 'SÍGUENOS · @lgi.newsbrand', 40, INK, WHITE, W - 2 * M)
     ys = G.centrar([tt, circ, sb, b], gap=60, y_min=260)
     return Esc(dur, lambda t: Image.new('RGB', (W, H), PINK),
-               [(tt, M, ys[0], 0.1, 'izq'), (circ, M, ys[1], 0.6, 'rebote'), (sb, M, ys[2], 1.0, 'sube'), (b, M, ys[3], 1.4, 'rebote')])
+               [(tt, M, ys[0], 0.1, 'izq'), (circ, M, ys[1], 0.6, 'rebote'), (sb, M, ys[2], 1.0, 'sube'), (b, M, ys[3], 1.4, 'rebote')], sub_y=1720)
 
 
-# ---------- CALENDARIO (carrusel 4:5 y video) ----------
+# ---------- CALENDARIO (carrusel 4:5 y video animado) ----------
 CW, CH = 1080, 1350
 DIAS = ['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM']
 
@@ -330,110 +368,148 @@ def hoja(dia, mes, semana, w=330, h=390, ang=-4):
     return s.rotate(ang, resample=Image.BICUBIC, expand=True)
 
 
-def sello(lam, n, total):
-    d = ImageDraw.Draw(lam)
+def polaroid_viva(ref, w, h, ang=0, dur=6.0, fase=0.0):
+    """Polaroid cuya foto se mueve (acercamiento + paneo) y que se mece un poco. Devuelve f(t) -> capa."""
+    big = cubrir(ref, int(w * 1.22), int(h * 1.22))
+    marco = Image.new('RGBA', (w + 48, h + 48), WHITE)
+    s0 = Image.new('RGBA', (marco.width + 60, marco.height + 60), (0, 0, 0, 0))
+    sm = Image.new('L', s0.size, 0); ImageDraw.Draw(sm).rectangle((30, 42, 30 + marco.width, 42 + marco.height), fill=80)
+    s0.putalpha(sm.filter(ImageFilter.GaussianBlur(16)))
+    dx = (1 if int(fase * 10) % 2 else -1)
+
+    def f(t):
+        p = eo(cl(t / max(dur, 1)))
+        z = 1.0 + 0.16 * p                                  # acerca
+        cw, ch = big.width / (1.0 * z) / 1.0, big.height / z
+        cw, ch = min(cw, big.width), min(ch, big.height)
+        cx = (big.width - cw) / 2 + dx * (big.width - cw) / 2 * (p - 0.5)   # panea
+        cy = (big.height - ch) / 2
+        foto = big.crop((int(cx), int(cy), int(cx + cw), int(cy + ch))).resize((w, h), Image.BILINEAR)
+        m = marco.copy(); m.paste(foto, (24, 24))
+        c = s0.copy(); c.alpha_composite(m, (30, 30))
+        return c.rotate(ang + math.sin(t * 1.1 + fase) * 1.4, resample=Image.BICUBIC, expand=True)
+    return f
+
+
+def _sello():
+    lam = papel(CW, CH)
     p = G.pill('GUÍAS LGI', 26); lam.alpha_composite(p, (60, 56))
     g = pill_icono(G.marcador(INK), 'GUÁRDALO', 26, alto=p.height); lam.alpha_composite(g, (CW - 60 - g.width, 56))
+    return lam
+
+
+def _num(lam, n, total):
     if total:
-        d.text((CW // 2, CH - 50), f'{n} / {total}', font=font('lg-bold.woff2', 28), fill=(120, 110, 100), anchor='mm')
+        ImageDraw.Draw(lam).text((CW // 2, CH - 50), f'{n} / {total}', font=font('lg-bold.woff2', 28), fill=(120, 110, 100), anchor='mm')
+    return lam
 
 
-def lam_portada(e, total):
-    lam = papel(CW, CH); sello(lam, 1, total)
+def pz_portada(e, total, dur):
+    fondo = _num(_sello(), 1, total); pz = []
     fotos = [f for f in (e.get('fotos') or []) if ruta(f)][:3]
     for k, f in enumerate(fotos):
-        p = polaroid(f, 290, 300, [-7, 5, -3][k])
-        lam.alpha_composite(p, ([20, 345, 670][k], [160, 215, 150][k]))
-    h = hoja(e.get('dia', 'NOV'), e.get('mes', '2026'), e.get('semana', ''), 260, 300, 6)
+        pz.append((polaroid_viva(f, 290, 300, [-7, 5, -3][k], dur, k * 1.3), [20, 345, 670][k], [160, 215, 150][k], 0.5 + k * 0.2, 'flota'))
     tt = G.texto(e['titulo'], 104, CW - 120, max_lines=4, min_size=60)
-    lam.alpha_composite(tt, (60, 680))
     sb = G.texto(e.get('sub', ''), 40, CW - 120, 'lg-medium.woff2', lh=1.3)
-    lam.alpha_composite(sb, (60, 700 + tt.height))
-    dz = G.pill('DESLIZA  →', 30, bg=INK, fg=PAPEL, padx=36); lam.alpha_composite(dz, (CW - 60 - dz.width, CH - 130))
-    return lam
+    dz = G.pill('DESLIZA  →', 30, bg=INK, fg=PAPEL, padx=36)
+    pz += [(tt, 60, 680, 1.1, 'sube'), (sb, 60, 700 + tt.height, 1.5, 'sube'), (dz, CW - 60 - dz.width, CH - 130, 1.9, 'rebote')]
+    return fondo, pz
 
 
-def lam_fecha(e, n, total):
-    lam = papel(CW, CH); sello(lam, n, total)
-    f = ruta(e.get('foto'))
-    if f:
-        p = polaroid(f, 620, 480, 3); lam.alpha_composite(p, (CW - p.width - 20, 140))
-    h = hoja(e['dia'], e.get('mes', 'NOV'), e.get('semana', ''), 330, 400, -5)
-    lam.alpha_composite(h, (30, 200))
+def pz_fecha(e, n, total, dur):
+    fondo = _num(_sello(), n, total); pz = []
+    if ruta(e.get('foto')):
+        pv = polaroid_viva(e['foto'], 620, 480, 3, dur, n)
+        pz.append((pv, CW - pv(0).width - 20, 140, 0.45, 'flota'))
+    pz.append((hoja(e['dia'], e.get('mes', 'NOV'), e.get('semana', ''), 330, 400, -5), 30, 200, 0.75, 'rebote'))
     tt = G.texto(e['titulo'], 82, CW - 120, max_lines=2, min_size=56)
-    y = 750; lam.alpha_composite(tt, (60, y)); y += tt.height + 4
+    y = 750; pz.append((tt, 60, y, 1.05, 'izq')); y += tt.height + 4
     if e.get('nota'):
-        nt = G.texto(e['nota'], 36, CW - 120, 'lg-medium.woff2', lh=1.25, max_lines=2); lam.alpha_composite(nt, (60, y)); y += nt.height + 10
+        nt = G.texto(e['nota'], 36, CW - 120, 'lg-medium.woff2', lh=1.25, max_lines=2); pz.append((nt, 60, y, 1.3, 'sube')); y += nt.height + 10
     cj = G.caja('IDEA PARA TU MARCA', e.get('idea', ''), CW - 120)
-    lam.alpha_composite(cj, (60, y + 14))
-    return lam
+    pz.append((cj, 60, y + 14, 1.5, 'sube'))
+    return fondo, pz
 
 
-def lam_mes(e, n, total):
-    """Mini calendario del mes con las fechas marcadas: la lámina que más se guarda."""
-    lam = papel(CW, CH); sello(lam, n, total)
-    tt = G.texto(e['titulo'], 84, CW - 120, max_lines=2); lam.alpha_composite(tt, (60, 150))
-    d = ImageDraw.Draw(lam)
+def pz_mes(e, n, total, dur):
+    fondo = _num(_sello(), n, total); pz = []
+    tt = G.texto(e['titulo'], 84, CW - 120, max_lines=2); pz.append((tt, 60, 150, 0.45, 'izq'))
     x0, y0, cw, chh = 60, 170 + tt.height + 30, (CW - 120) / 7, 104
+    rejilla = Image.new('RGBA', (CW, CH), (0, 0, 0, 0)); d = ImageDraw.Draw(rejilla)
     for k, s in enumerate(DIAS):
         d.text((x0 + cw * k + cw / 2, y0), s, font=font('lg-black.woff2', 28), fill=INK, anchor='mm')
     marcados = {int(k): v for k, v in (e.get('marcados') or {}).items()}
     col0, dias_mes = e.get('inicio', 6), e.get('dias', 30)
+    circulos = []
     for dnum in range(1, dias_mes + 1):
         i = col0 + dnum - 1; r_, c = divmod(i, 7)
         cx, cy = x0 + cw * c + cw / 2, y0 + 70 + r_ * chh
-        if dnum in marcados:
-            d.ellipse((cx - 44, cy - 44, cx + 44, cy + 44), fill=PINK if marcados[dnum] != 'rango' else '#FFC2D4')
         d.text((cx, cy), str(dnum), font=font('serif.woff2', 50), fill=INK, anchor='mm')
-    filas = (col0 + dias_mes - 1) // 7 + 1
-    yl = y0 + 70 + filas * chh - 30
+        if dnum in marcados:
+            ci = Image.new('RGBA', (96, 96), (0, 0, 0, 0)); dc = ImageDraw.Draw(ci)
+            dc.ellipse((4, 4, 92, 92), fill=PINK if marcados[dnum] != 'rango' else '#FFC2D4')
+            dc.text((48, 48), str(dnum), font=font('serif.woff2', 50), fill=INK, anchor='mm')
+            circulos.append((ci, cx - 48, cy - 48))
+    pz.append((rejilla, 0, 0, 0.7, 'sube'))
+    for k, (ci, x, y) in enumerate(circulos): pz.append((ci, x, y, 1.1 + k * 0.18, 'rebote'))
+    filas = (col0 + dias_mes - 1) // 7 + 1; yl = y0 + 70 + filas * chh - 30
     for k, ln in enumerate(e.get('leyenda', [])):
-        t_ = G.texto(ln, 34, CW - 120, 'lg-medium.woff2', lh=1.2, max_lines=1, min_size=26); lam.alpha_composite(t_, (60, yl + k * 50))
-    return lam
+        t_ = G.texto(ln, 34, CW - 120, 'lg-medium.woff2', lh=1.2, max_lines=1, min_size=26)
+        pz.append((t_, 60, yl + k * 50, 1.4 + k * 0.25, 'izq'))
+    return fondo, pz
 
 
-def lam_cierre(e, n, total):
-    lam = Image.new('RGBA', (CW, CH), INK); d = ImageDraw.Draw(lam)
+def pz_cierre(e, n, total, dur):
+    fondo = Image.new('RGBA', (CW, CH), INK)
+    ImageDraw.Draw(fondo).text((CW // 2, CH - 60), '@lgi.newsbrand', font=font('lg-black.woff2', 30), fill=PINK, anchor='mm')
     tt = txt(e['titulo'], 96, CW - 120, 'serif.woff2', PAPEL, acento=PINK, lh=1.1, max_lines=5)
     sb = txt(e.get('sub', ''), 42, CW - 120, 'lg-medium.woff2', '#CFC8BC', lh=1.3)
     b1 = boton(G.marcador(INK), 'GUÁRDALO', 44, PINK, INK, CW - 120)
     b2 = boton(avion(PAPEL), 'MÁNDASELO A QUIEN LLEVA TUS REDES', 34, (45, 45, 45), PAPEL, CW - 120)
     ys = G.centrar([tt, sb, b1, b2], gap=44, y_min=120, y_max=CH - 120)
-    for c, y in zip([tt, sb, b1, b2], ys): lam.alpha_composite(c, (60, int(y)))
-    d.text((CW // 2, CH - 60), '@lgi.newsbrand', font=font('lg-black.woff2', 30), fill=PINK, anchor='mm')
-    return lam
+    return fondo, [(tt, 60, ys[0], 0.45, 'izq'), (sb, 60, ys[1], 0.9, 'sube'), (b1, 60, ys[2], 1.3, 'rebote'), (b2, 60, ys[3], 1.6, 'rebote')]
 
 
-def laminas(data):
+def laminas_pz(data, durs=None):
     esc = data['escenas']; total = len(esc); out = []
+    durs = durs or [6.0] * total
     for k, e in enumerate(esc):
         t = e.get('tipo')
-        if t == 'portada': out.append(lam_portada(e, total))
-        elif t == 'fecha': out.append(lam_fecha(e, k + 1, total))
-        elif t == 'mes': out.append(lam_mes(e, k + 1, total))
-        else: out.append(lam_cierre(e, k + 1, total))
+        if t == 'portada': out.append(pz_portada(e, total, durs[k]))
+        elif t == 'fecha': out.append(pz_fecha(e, k + 1, total, durs[k]))
+        elif t == 'mes': out.append(pz_mes(e, k + 1, total, durs[k]))
+        else: out.append(pz_cierre(e, k + 1, total, durs[k]))
     return out
+
+
+def componer(fondo, pz, t=0.0):
+    lam = fondo.copy()
+    for capa, x, y, te, ef in pz:
+        c = capa(t) if callable(capa) else capa
+        lam.alpha_composite(c, (int(x), int(y)))
+    return lam
 
 
 def carrusel(data, carpeta):
     os.makedirs(carpeta, exist_ok=True); rutas = []
-    for k, lam in enumerate(laminas(data), 1):
-        p = os.path.join(carpeta, f'{k:02d}.jpg'); lam.convert('RGB').save(p, quality=93); rutas.append(p)
+    for k, (fondo, pz) in enumerate(laminas_pz(data), 1):
+        p = os.path.join(carpeta, f'{k:02d}.jpg'); componer(fondo, pz).convert('RGB').save(p, quality=93); rutas.append(p)
     return rutas
 
 
 def cal_escenas(data, durs):
-    """Video: cada lámina entra deslizándose sobre papel vertical, con barra de avance arriba."""
-    lams = laminas(data); n = len(lams); esc = []
-    fondo0 = papel(W, H).convert('RGB')
-    y = (H - CH) // 2 + 40
-    for k, lam in enumerate(lams):
-        prev = lams[k - 1] if k else None
+    """Video: la lámina entra deslizándose y luego cada elemento entra por su lado; las fotos se mueven todo el tiempo."""
+    lams = laminas_pz(data, durs); n = len(lams); esc = []
+    fondo0 = papel(W, H)
+    y0 = 200
+    for k, (fondo, pz) in enumerate(lams):
+        prev = componer(*lams[k - 1], durs[k - 1]) if k else None
 
-        def fondo(t, prev=prev):
-            im = fondo0.copy().convert('RGBA')
-            if prev is not None:
-                im.alpha_composite(prev, (int(-eo(t / 0.4) * W), y))
+        def fondo_f(t, prev=prev, fondo=fondo):
+            im = fondo0.copy()
+            a = eo(cl(t / 0.45))
+            if prev is not None: im.alpha_composite(prev, (int(-a * W), y0))
+            im.alpha_composite(fondo, (int((1 - a) * W) if prev is not None else 0, y0))
             return im
 
         def enc(t, k=k):
@@ -441,25 +517,41 @@ def cal_escenas(data, durs):
             ancho = (W - 2 * M - (n - 1) * 10) / n
             for i in range(n):
                 x = M + i * (ancho + 10)
-                d.rounded_rectangle((x, 150, x + ancho, 160), 5, fill=INK if i <= k else LINEA)
+                d.rounded_rectangle((x, 120, x + ancho, 130), 5, fill=INK if i < k or (i == k and t > 0.3) else LINEA)
             return im
-        esc.append(Esc(durs[k], fondo, [(lam, 0, y, 0.0, 'desliza')], enc))
+        piezas = [(c, x, y + y0, max(0.0, te - (0.45 if k == 0 else 0)), ef) for c, x, y, te, ef in pz]
+        esc.append(Esc(durs[k], fondo_f, piezas, enc, sub_y=y0 + CH + 50, salida=False))
     return esc
 
 
 # ---------- armado ----------
+def _video(e, tmp, k):
+    """Resuelve "video": ruta local (assets/libres_v/...), URL directa o de página/YouTube (se baja con reel.bajar_url)."""
+    v = e.get('video')
+    if not v: return None
+    if ruta(v): return ruta(v)
+    import reel
+    dest = os.path.join(tmp, f'video{k}.mp4')
+    for u in (v if isinstance(v, list) else [v]):
+        if reel.bajar_url(u, dest) and os.path.exists(dest) and os.path.getsize(dest) > 50000:
+            return dest
+    print('Guía: sin video para escena', k, v, file=sys.stderr)
+    return None
+
+
 def make(data, out):
     import voz, reel
     tmp = tempfile.mkdtemp()
     try:
         pron = dict(reel.PRON_FIJA); pron.update({k: v for k, v in (data.get('pronunciar') or {}).items() if k and v})
         esc = data['escenas']; estilo = data['estilo']
-        mp3s, durs = [], []
+        mp3s, durs, pals = [], [], []
         for k, e in enumerate(esc):
-            mp3, dv = None, 0.0
+            mp3, dv, pal = None, 0.0, []
             if e.get('voz'):
                 (pal, dv), mp3 = voz.sintetizar(reel.pronunciado(e['voz'], pron), os.path.join(tmp, f'v{k}.mp3'))
-            mp3s.append(mp3); durs.append(max(3.0, dv + 0.9))
+            e['_video'] = _video(e, tmp, k)
+            mp3s.append(mp3); durs.append(max(3.0, dv + 0.9)); pals.append(pal or [])
         serie = data.get('serie', 'GUÍA'); rot = data.get('rotulo', 'TOP 3 DE LA SEMANA')
         pasos = sum(1 for e in esc if e.get('tipo') in ('paso', 'item'))
         escenas, n = [], 0
@@ -478,6 +570,9 @@ def make(data, out):
                     elif t == 'item': sc = top_item(e, orden[n], d, rot); n += 1
                     else: sc = top_cierre(e, d, rot)
                 escenas.append(sc)
+        if data.get('subtitulos', True):
+            for sc, pal in zip(escenas, pals):
+                sc.subs = reel.grupos(pal) if pal else []
         voces, t0 = [], 0.0
         for sc, mp3 in zip(escenas, mp3s):
             voces.append((mp3, t0 + 0.25)); t0 += sc.dur
@@ -485,3 +580,4 @@ def make(data, out):
         return out
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
+        while _TMPS: shutil.rmtree(_TMPS.pop(), ignore_errors=True)

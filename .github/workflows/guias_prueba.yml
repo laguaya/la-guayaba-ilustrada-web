@@ -17,9 +17,14 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: '3.12' }
       - run: (timeout 300 sudo apt-get update -qq; timeout 300 sudo apt-get install -y -qq ffmpeg) >/dev/null 2>&1 || true
-      - run: pip install -q requests pillow fonttools brotli edge-tts
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: pip install -q requests pillow fonttools brotli edge-tts "yt-dlp[default,curl-cffi]"
       - env:
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          YT_COOKIES: ${{ secrets.YT_COOKIES }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ELEVENLABS_VOICE_ID: ${{ secrets.ELEVENLABS_VOICE_ID || vars.ELEVENLABS_VOICE_ID }}
         run: python -u scripts/guias_prueba.py ${{ inputs.ids }}
       - run: |

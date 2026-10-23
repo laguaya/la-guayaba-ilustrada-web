@@ -12,7 +12,12 @@
    "foto": "assets/work/nota-heineken-pubscription-streaming-de-bares-foto-src2.webp",
    "titulo": "La idea de Heineken que *tu negocio* puede copiar mañana",
    "sub": "3 pasos. Guárdalo antes de que se te olvide.",
-   "voz": "Heineken encontró la forma de que la gente regrese al bar cada semana. Y tu negocio puede copiarla mañana, en tres pasos."
+   "voz": "Heineken encontró la forma de que la gente regrese al bar cada semana. Y tu negocio puede copiarla mañana, en tres pasos.",
+   "video": [
+    "https://www.adsoftheworld.com/campaigns/pubscription",
+    "https://www.youtube.com/watch?v=opHLBYPrfY0"
+   ],
+   "desde": 1
   },
   {
    "tipo": "paso",
@@ -21,7 +26,12 @@
    "titulo": "Vende la *experiencia*, no el producto",
    "cuerpo": "Heineken no vendió cerveza: vendió una suscripción para ver el futbol en bares.",
    "ejemplo": "Una cafetería: \"Plan oficina\" de $399 al mes con café ilimitado y wifi para trabajar.",
-   "voz": "Uno: vende la experiencia, no el producto. Heineken no vendió cerveza, vendió una suscripción para ver el futbol en bares. Una cafetería podría vender un plan oficina."
+   "voz": "Uno: vende la experiencia, no el producto. Heineken no vendió cerveza, vendió una suscripción para ver el futbol en bares. Una cafetería podría vender un plan oficina.",
+   "video": [
+    "https://www.adsoftheworld.com/campaigns/pubscription",
+    "https://www.youtube.com/watch?v=opHLBYPrfY0"
+   ],
+   "desde": 8
   },
   {
    "tipo": "paso",
@@ -30,7 +40,8 @@
    "titulo": "Cóbralo por *suscripción*",
    "cuerpo": "Un pago fijo al mes hace que el cliente regrese y te da un ingreso seguro.",
    "ejemplo": "Una barbería: 4 cortes al mes por un solo pago, con lugar apartado los sábados.",
-   "voz": "Dos: cóbralo por suscripción. Un pago fijo hace que el cliente regrese. Una barbería podría vender cuatro cortes al mes con lugar apartado."
+   "voz": "Dos: cóbralo por suscripción. Un pago fijo hace que el cliente regrese. Una barbería podría vender cuatro cortes al mes con lugar apartado.",
+   "video": "assets/libres_v/barberia/v1.mp4"
   },
   {
    "tipo": "paso",
@@ -39,7 +50,12 @@
    "titulo": "Ponle un *nombre* que se recuerde",
    "cuerpo": "\"Pubscription\" junta pub y suscripción. Un buen nombre se comenta solo.",
    "ejemplo": "Una taquería: \"Taco Pass\", 10 órdenes al mes. Corto, fácil de decir y de presumir.",
-   "voz": "Tres: ponle un nombre que se recuerde. Pubscription junta pub y suscripción. Una taquería con su Taco Pass se comenta sola."
+   "voz": "Tres: ponle un nombre que se recuerde. Pubscription junta pub y suscripción. Una taquería con su Taco Pass se comenta sola.",
+   "video": [
+    "https://www.adsoftheworld.com/campaigns/pubscription",
+    "https://www.youtube.com/watch?v=opHLBYPrfY0"
+   ],
+   "desde": 16
   },
   {
    "tipo": "cierre",
