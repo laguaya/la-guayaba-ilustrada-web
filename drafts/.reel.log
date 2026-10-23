@@ -1,8 +1,12 @@
-2026-10-23T20:39:33.410355 greater-anglia-familia-robot-tren-en-la-sala
-Fuente 12 campana 40.0s 27 tomas
-Fuente 13 https://shots.net/news/view/great-anglia-railway-drops-the-robot 1.4s 1 tomas
-yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://lbbonline.com/news/greater-anglia-s-robot-family-returns-for-a-london-adventure\n'
-Fuente 14 https://lbbonline.com/work/185188 40.0s 27 tomas
-Reel: [(0.0, 4.6, 'video12'), (4.6, 5.6, 'video12'), (5.6, 6.7, 'video12'), (6.7, 8.1, 'video12'), (8.1, 9.3, 'video12'), (9.3, 10.7, 'video12'), (10.7, 11.0, 'video12'), (11.0, 12.2, 'video12'), (12.2, 14.1, 'video12'), (14.1, 15.2, 'video12'), (15.2, 16.2, 'video14'), (16.2, 17.8, 'video14'), (17.8, 19.3, 'video14'), (19.3, 20.4, 'video14'), (20.4, 21.8, 'video14'), (21.8, 22.9, 'video14'), (22.9, 24.3, 'video14'), (24.3, 24.9, 'video12'), (24.9, 26.1, 'video12'), (26.1, 29.0, 'video12'), (29.0, 30.4, 'video12'), (30.4, 31.6, 'video14'), (31.6, 33.6, 'video14'), (33.6, 34.7, 'video14'), (34.7, 37.2, 'video14'), (37.2, 38.7, 'video14'), (38.7, 40.0, 'video14')]
-Diseños TikTok: ['original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'tres', 'original', 'original', 'original', 'tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'original', 'original', 'dos']
+2026-10-23T21:37:52.394413 asics-human-nature-documental-humanos
+ElevenLabs usó eleven_v4
+Pausas recortadas: 15 4.7s
+Caché guardada: https://www.youtube.com/watch?v=tTuMUWlVFZI 201
+Video av1 -> h264 ok
+Fuente 15 campana 641.7s 161 tomas
+Fuente 16 https://www.adweek.com/creativity/asics-enlists-sigourney-weaver-to-do 60.0s 38 tomas
+yt-dlp default : b"WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://corp.asics.com/en/press/article/asics-issues-world's-first-conservation-warning-for-movement-as-new-research-reveals-we're-moving-less-\n"
+yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://worldathletics.org/news/news/asics-movement-research-mental-wellbeing-human-nature\n'
+yt-dlp default : b'nformation extractor\nERROR: [vk] 456247301: Unable to extract player params; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U\n'
+Reel: [(0.0, 2.9, 'video15'), (2.9, 5.7, 'video15'), (5.7, 8.2, 'video15'), (8.2, 9.2, 'video15'), (9.2, 12.0, 'video16'), (12.0, 14.0, 'video15'), (14.0, 15.9, 'video15'), (15.9, 17.3, 'video15'), (17.3, 19.0, 'video15'), (19.0, 20.6, 'video15'), (20.6, 22.2, 'video16'), (22.2, 24.0, 'video16'), (24.0, 25.5, 'video16'), (25.5, 27.1, 'video16'), (27.1, 29.0, 'video16'), (29.0, 30.3, 'video16'), (30.3, 32.0, 'video15'), (32.0, 36.4, 'video15'), (36.4, 40.0, 'video15')]
 
