@@ -21,7 +21,13 @@ jobs:
         with: { fetch-depth: 1 }
       - run: pip install requests pillow
       - if: inputs.tipo == 'videos'
-        run: (timeout 300 sudo apt-get update -qq; timeout 300 sudo apt-get install -y -qq ffmpeg) >/dev/null 2>&1 || true
+        run: |
+          for i in 1 2 3; do (timeout 240 sudo apt-get update -qq && timeout 300 sudo apt-get install -y -qq ffmpeg) && break; sleep 10; done
+          if ! command -v ffmpeg; then
+            curl -sL https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz | tar xJ -C /tmp
+            sudo cp /tmp/ffmpeg-*-static/ffmpeg /tmp/ffmpeg-*-static/ffprobe /usr/local/bin/
+          fi
+          ffmpeg -version | head -1
       - if: inputs.tipo == 'videos'
         run: python scripts/fotos_libres.py videos '${{ inputs.consultas }}' '${{ inputs.n }}'
       - if: inputs.tipo != 'videos'

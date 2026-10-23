@@ -28,7 +28,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: (timeout 300 sudo apt-get update -qq; timeout 300 sudo apt-get install -y -qq tesseract-ocr ffmpeg) >/dev/null 2>&1 || true
+      - run: |
+          for i in 1 2 3; do (timeout 240 sudo apt-get update -qq && timeout 300 sudo apt-get install -y -qq tesseract-ocr ffmpeg) && break; sleep 10; done
+          if ! command -v ffmpeg; then
+            curl -sL https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz | tar xJ -C /tmp
+            sudo cp /tmp/ffmpeg-*-static/ffmpeg /tmp/ffmpeg-*-static/ffprobe /usr/local/bin/
+          fi
+          ffmpeg -version | head -1
       - uses: denoland/setup-deno@v2   # yt-dlp lo necesita para YouTube
         with:
           deno-version: v2.x

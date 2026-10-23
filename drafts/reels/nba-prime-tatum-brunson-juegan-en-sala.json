@@ -58,6 +58,5 @@
     "ver": "video"
    }
   ]
- },
- "fallo": "[Errno 2] No such file or directory: 'ffmpeg'"
+ }
 }
