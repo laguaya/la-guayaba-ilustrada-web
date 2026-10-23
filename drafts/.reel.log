@@ -1,9 +1,8 @@
-2026-10-23T19:26:48.006432 greater-anglia-familia-robot-tren-en-la-sala
-ElevenLabs usó eleven_v4
-Pausas recortadas: 18 4.7s
-Fuente 9 campana 40.0s 27 tomas
-Fuente 10 https://shots.net/news/view/great-anglia-railway-drops-the-robot 1.4s 1 tomas
+2026-10-23T20:39:33.410355 greater-anglia-familia-robot-tren-en-la-sala
+Fuente 12 campana 40.0s 27 tomas
+Fuente 13 https://shots.net/news/view/great-anglia-railway-drops-the-robot 1.4s 1 tomas
 yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://lbbonline.com/news/greater-anglia-s-robot-family-returns-for-a-london-adventure\n'
-Fuente 11 https://lbbonline.com/work/185188 40.0s 27 tomas
-Reel: [(0.0, 2.9, 'video9'), (2.9, 4.6, 'video9'), (4.6, 5.7, 'video9'), (5.7, 7.4, 'video11'), (7.4, 8.0, 'video9'), (8.0, 9.0, 'video9'), (9.0, 11.0, 'video9'), (11.0, 12.5, 'video9'), (12.5, 13.5, 'video9'), (13.5, 15.2, 'video9'), (15.2, 16.5, 'video9'), (16.5, 17.6, 'video9'), (17.6, 18.8, 'video9'), (18.8, 21.1, 'video9'), (21.1, 21.9, 'video9'), (21.9, 23.6, 'video11'), (23.6, 24.9, 'video9'), (24.9, 26.7, 'video11'), (26.7, 27.8, 'video11'), (27.8, 29.0, 'video9'), (29.0, 33.6, 'video11'), (33.6, 40.0, 'video9')]
+Fuente 14 https://lbbonline.com/work/185188 40.0s 27 tomas
+Reel: [(0.0, 4.6, 'video12'), (4.6, 5.6, 'video12'), (5.6, 6.7, 'video12'), (6.7, 8.1, 'video12'), (8.1, 9.3, 'video12'), (9.3, 10.7, 'video12'), (10.7, 11.0, 'video12'), (11.0, 12.2, 'video12'), (12.2, 14.1, 'video12'), (14.1, 15.2, 'video12'), (15.2, 16.2, 'video14'), (16.2, 17.8, 'video14'), (17.8, 19.3, 'video14'), (19.3, 20.4, 'video14'), (20.4, 21.8, 'video14'), (21.8, 22.9, 'video14'), (22.9, 24.3, 'video14'), (24.3, 24.9, 'video12'), (24.9, 26.1, 'video12'), (26.1, 29.0, 'video12'), (29.0, 30.4, 'video12'), (30.4, 31.6, 'video14'), (31.6, 33.6, 'video14'), (33.6, 34.7, 'video14'), (34.7, 37.2, 'video14'), (37.2, 38.7, 'video14'), (38.7, 40.0, 'video14')]
+Diseños TikTok: ['original', 'original', 'original', 'original', 'original', 'original', 'original', 'original', 'tres', 'original', 'original', 'original', 'tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'original', 'original', 'dos']
 
