@@ -51,5 +51,44 @@ def main():
         print(slug, k, 'fotos')
 
 
+
+
+
+def commons_videos(q, n, dest):
+    """Videos libres de Wikimedia Commons: baja la versión 720p, recorta a 12 s y la guarda en mp4."""
+    import subprocess
+    r = requests.get('https://commons.wikimedia.org/w/api.php', params={'action': 'query', 'format': 'json', 'generator': 'search',
+                     'gsrsearch': f'{q} filetype:video', 'gsrnamespace': 6, 'gsrlimit': n * 3, 'prop': 'videoinfo',
+                     'viprop': 'url|derivatives|extmetadata|size'}, headers=UA, timeout=30)
+    cred, k = {}, 0
+    for p in (r.json().get('query', {}).get('pages', {}) or {}).values():
+        if k >= n: break
+        vi = (p.get('videoinfo') or [{}])[0]; md = vi.get('extmetadata', {})
+        lic = md.get('LicenseShortName', {}).get('value', '')
+        if not re.search(r'CC0|Public domain|CC BY', lic, re.I) or (vi.get('width') or 0) < 640: continue
+        ders = sorted(vi.get('derivatives') or [], key=lambda d: abs((d.get('height') or 0) - 720))
+        url = (ders[0]['src'] if ders else vi.get('url'))
+        try:
+            src = os.path.join(dest, f'tmp{k}'); open(src, 'wb').write(requests.get(url, headers=UA, timeout=120).content)
+            nom = f'v{k}.mp4'
+            subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-ss', '1', '-i', src, '-t', '12', '-an', '-vf', 'scale=-2:720',
+                            '-c:v', 'libx264', '-crf', '23', '-preset', 'fast', os.path.join(dest, nom)], check=True)
+            os.remove(src)
+            autor = re.sub('<[^>]+>', '', md.get('Artist', {}).get('value', ''))[:80]
+            cred[nom] = {'fuente': vi.get('descriptionurl'), 'autor': autor, 'licencia': lic, 'titulo': p.get('title')}; k += 1
+        except Exception as e:
+            print('video falló', e)
+    return cred
+
+
+def main_videos():
+    consultas = json.loads(sys.argv[2]); n = int(sys.argv[3]) if len(sys.argv) > 3 else 5
+    for slug, q in consultas.items():
+        dest = os.path.join(R, 'assets', 'libres_v', slug); os.makedirs(dest, exist_ok=True)
+        cred = commons_videos(q, n, dest)
+        json.dump(cred, open(os.path.join(dest, 'creditos.json'), 'w'), ensure_ascii=False, indent=1)
+        print(slug, len(cred), 'videos')
+
+
 if __name__ == '__main__':
-    main()
+    main_videos() if sys.argv[1] == 'videos' else main()
