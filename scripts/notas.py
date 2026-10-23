@@ -674,10 +674,17 @@ def build_reel_solo(r, tiktok=False):
         ig_mp4 = f'assets/ig/{r["id"]}/reel.mp4'
         if tiktok and os.path.exists(ig_mp4):
             shutil.copy(ig_mp4, out); return out
-        import guias
+        if r.get('hecho') and os.path.exists(ig_mp4):      # ya armado y aprobado (p. ej. desde Guías de prueba)
+            return out if not tiktok else shutil.copy(ig_mp4, out)
+        import guias, guias_estilos
         buf = io.StringIO()
         with contextlib.redirect_stderr(buf):
-            guias.make(data, ig_mp4)
+            if data.get('estilo'):
+                guias_estilos.make(data, ig_mp4)
+                if data['estilo'] == 'calendario':
+                    guias_estilos.carrusel(data, f'assets/ig/{r["id"]}/carrusel')
+            else:
+                guias.make(data, ig_mp4)
         sys.stderr.write(buf.getvalue())
         with open('drafts/.reel.log', 'w') as f:
             f.write(f'{datetime.now().isoformat()} guia {r["id"]}\n{buf.getvalue()[-4000:]}\n')
@@ -723,7 +730,10 @@ def reels_sueltos():
             save(path, r); changed = True
             continue
         sal = load(SALIDA) if os.path.exists(SALIDA) else {}
-        if not r.get('urgente') and (not hora_de_salir() or sal.get('turno') == turno_actual()):
+        if r.get('sale'):            # Guías con fecha y hora fija: "AAAA-MM-DD HH" (hora de Ciudad de México)
+            if datetime.now(timezone(timedelta(hours=-6))).strftime('%Y-%m-%d %H') < r['sale']:
+                continue
+        elif not r.get('urgente') and (not hora_de_salir() or sal.get('turno') == turno_actual()):
             continue
         with open('drafts/.errores.log', 'a') as f:
             f.write(f'{datetime.now().isoformat()} enviando Reel {r["id"]}\n')
@@ -734,8 +744,16 @@ def reels_sueltos():
         if res.get('ok'):
             r['tg'] = res['result']['message_id']
             remember(r['tg'], r['id'])
+            car = sorted(glob.glob(f'assets/ig/{r["id"]}/carrusel/*.jpg'))[:10]
+            if len(car) >= 2:          # también como carrusel, para subirlo así a Instagram
+                fs = {f'f{k}': open(c, 'rb') for k, c in enumerate(car)}
+                media = [{'type': 'photo', 'media': f'attach://f{k}'} for k in range(len(car))]
+                media[0]['caption'] = '🖼️ Versión carrusel (guárdalas y súbelas como carrusel a Instagram)'
+                tg('sendMediaGroup', files=fs, chat_id=CHAT, media=media)
+                for f in fs.values(): f.close()
             save(path, r)
-            save(SALIDA, {'turno': turno_actual(), 'id': r['id']})
+            if not r.get('sale'):
+                save(SALIDA, {'turno': turno_actual(), 'id': r['id']})
             changed = True
         return
 

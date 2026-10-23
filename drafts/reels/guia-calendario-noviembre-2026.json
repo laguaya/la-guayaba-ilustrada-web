@@ -2,73 +2,103 @@
  "id": "guia-calendario-noviembre-2026",
  "t": "Guía: calendario de noviembre para marcas",
  "k": "Inspiración",
- "urgente": true,
  "ig": {
-  "formato": "guia",
-  "pronunciar": {
-   "Black Friday": "Blac Fráidei",
-   "Cyber Monday": "Sáiber Mándei"
-  },
+  "estilo": "calendario",
   "escenas": [
    {
     "tipo": "portada",
-    "etiqueta": "CALENDARIO PARA MARCAS",
-    "titulo": "Noviembre: *5 fechas* que tu marca no puede dejar pasar",
-    "sub": "Con una idea de contenido para cada una",
     "fotos": [
-     "assets/work/nota-mcdonalds-spooky-sauces-maquillaje-halloween-foto-src1.webp",
-     "assets/work/nota-baileys-aretes-bring-on-the-baileys-navidad-foto-src1.webp",
-     "assets/work/nota-liquid-death-sixt-primera-vez-energy-foto-src1.webp"
+     "assets/libres/muertos/c2.jpg",
+     "assets/libres/revolucion/c8.jpg",
+     "assets/libres/gastronomia/c11.jpg"
     ],
-    "voz": "Cinco fechas de noviembre que tu marca no puede dejar pasar. Guarda este calendario."
+    "titulo": "Noviembre: *5 fechas en México* que tu marca no puede dejar pasar",
+    "sub": "Con una idea lista para cada una.",
+    "voz": "Cinco fechas de noviembre en México que tu marca no puede dejar pasar. Con una idea para cada una."
    },
    {
-    "tipo": "lista",
-    "titulo": "Noviembre para *tu marca*",
-    "filas": [
-     [
-      "1-2",
-      "NOV",
-      "Día de Muertos",
-      "Un altar con tus productos. Pide que te etiqueten."
-     ],
-     [
-      "13-17",
-      "NOV",
-      "El Buen Fin",
-      "Anuncia tu oferta desde el 10, con cuenta regresiva."
-     ],
-     [
-      "16",
-      "LUNES",
-      "Puente de Revolución",
-      "\"Pide hoy y llega antes del puente\"."
-     ],
-     [
-      "27",
-      "NOV",
-      "Black Friday",
-      "Tu segunda oportunidad si no entraste al Buen Fin."
-     ],
-     [
-      "30",
-      "NOV",
-      "Cyber Monday",
-      "Descuento solo en línea y solo por 24 horas."
-     ]
+    "tipo": "fecha",
+    "dia": "1-2",
+    "semana": "DOM - LUN",
+    "titulo": "Día de Muertos",
+    "foto": "assets/libres/muertos/c8.jpg",
+    "idea": "Arma un altar con tus productos y pide a tus clientes que te etiqueten en el suyo.",
+    "voz": "Uno y dos: Día de Muertos. Arma un altar con tus productos y pide que te etiqueten en el suyo."
+   },
+   {
+    "tipo": "fecha",
+    "dia": "12",
+    "semana": "JUEVES",
+    "titulo": "Día Nacional del Libro",
+    "foto": "assets/libres/libro/c10.jpg",
+    "idea": "Recomienda el libro que inspiró tu negocio. Es contenido fácil que la gente guarda.",
+    "voz": "Doce: Día Nacional del Libro. Recomienda el libro que inspiró tu negocio."
+   },
+   {
+    "tipo": "fecha",
+    "dia": "13-17",
+    "semana": "VIE - MAR",
+    "titulo": "El Buen Fin",
+    "foto": "assets/libres/compras/c6.jpg",
+    "idea": "Anuncia tu oferta desde el día 10 con cuenta regresiva en historias. El que avisa primero, vende primero.",
+    "voz": "Del trece al diecisiete: el Buen Fin. Anuncia tu oferta desde el diez, con cuenta regresiva."
+   },
+   {
+    "tipo": "fecha",
+    "dia": "16",
+    "semana": "LUNES",
+    "titulo": "Día de la Gastronomía Mexicana",
+    "foto": "assets/libres/gastronomia/c11.jpg",
+    "nota": "Y es el descanso oficial por la Revolución: puente.",
+    "idea": "Cuenta qué ingrediente o receta mexicana hay detrás de tu producto. Y aprovecha el puente para tu oferta.",
+    "voz": "Dieciséis: Día de la Gastronomía Mexicana, y además es puente. Cuenta qué hay de México detrás de tu producto."
+   },
+   {
+    "tipo": "fecha",
+    "dia": "20",
+    "semana": "VIERNES",
+    "titulo": "Revolución Mexicana",
+    "foto": "assets/libres/revolucion/c7.jpg",
+    "idea": "Presenta un cambio en tu negocio: un producto nuevo, un horario nuevo o tu nueva imagen.",
+    "voz": "Veinte: aniversario de la Revolución. Buen día para presentar un cambio en tu negocio."
+   },
+   {
+    "tipo": "mes",
+    "titulo": "Noviembre *de un vistazo*",
+    "inicio": 6,
+    "dias": 30,
+    "marcados": {
+     "1": "dia",
+     "2": "dia",
+     "12": "dia",
+     "13": "rango",
+     "14": "rango",
+     "15": "rango",
+     "16": "dia",
+     "17": "rango",
+     "20": "dia"
+    },
+    "leyenda": [
+     "1-2  Día de Muertos",
+     "12  Día Nacional del Libro",
+     "13-17  El Buen Fin",
+     "16  Gastronomía Mexicana y puente",
+     "20  Revolución Mexicana"
     ],
-    "voz": "Uno y dos: Día de Muertos, haz un altar con tus productos. Del trece al diecisiete: el Buen Fin, anuncia tu oferta desde antes. Dieciséis: puente de Revolución. Veintisiete: Black Friday, tu segunda oportunidad. Y treinta: Cyber Monday, descuento solo en línea."
+    "voz": "Aquí lo tienes todo de un vistazo. Tómale captura."
    },
    {
     "tipo": "cierre",
-    "titulo": "Guárdalo y *planea* tu mes",
-    "sub": "Cada mes, el calendario para marcas en México.",
-    "voz": "Guárdalo y planea tu mes."
+    "titulo": "El Buen Fin empieza el 13. *Si lo planeas ese día, ya llegaste tarde.*",
+    "sub": "Guárdalo para planear tu mes y mándaselo a quien lleva las redes de tu negocio.",
+    "voz": "El Buen Fin empieza el trece. Si lo planeas ese día, ya llegaste tarde. Guárdalo, y mándaselo a quien lleva las redes de tu negocio."
    }
   ],
-  "caption": "Noviembre: 5 fechas que tu marca no puede dejar pasar 📅\n\n1-2: Día de Muertos\n13-17: El Buen Fin\n16: Puente de Revolución\n27: Black Friday\n30: Cyber Monday\n\nGuárdalo y planea tu mes 🔖\n\nSíguenos: una idea nueva cada día 📲\n\n#MarketingDigital #BuenFin #Emprendedores #NegociosEnMexico #CalendarioDeMarketing",
-  "caption_tiktok": "Calendario de noviembre para tu marca 📅 Buen Fin, Black Friday y más. Guárdalo 🔖 #buenfin #emprendedores #marketingtiktok #negociosenmexico"
+  "formato": "guia",
+  "caption": "Noviembre: 5 fechas en México que tu marca no puede dejar pasar 📅\n\n1-2: Día de Muertos\n12: Día Nacional del Libro\n13-17: El Buen Fin\n16: Día de la Gastronomía Mexicana (y puente)\n20: Revolución Mexicana\n\nEl Buen Fin empieza el 13: si lo planeas ese día, ya llegaste tarde. Guárdalo y mándaselo a quien lleva las redes de tu negocio 🔖\n\nFotos: Wikimedia Commons\nSíguenos: una idea nueva cada día 📲\n\n#MarketingDigital #BuenFin #DiaDeMuertos #Emprendedores #NegociosEnMexico",
+  "caption_tiktok": "Noviembre para tu marca: 5 fechas en México 📅 Guárdalo 🔖 #buenfin #diademuertos #emprendedores #negociosenmexico"
  },
  "listo": true,
- "tg": 1088
+ "hecho": true,
+ "sale": "2026-10-23 11"
 }

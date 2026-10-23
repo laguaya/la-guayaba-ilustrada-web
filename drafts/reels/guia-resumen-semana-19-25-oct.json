@@ -2,9 +2,9 @@
  "id": "guia-resumen-semana-19-25-oct",
  "t": "Guía: las 3 campañas más creativas de la semana",
  "k": "Inspiración",
- "urgente": true,
  "ig": {
-  "formato": "guia",
+  "estilo": "top",
+  "rotulo": "TOP 3 · SEMANA DEL 19 AL 25 DE OCTUBRE",
   "pronunciar": {
    "SIXT": "Sixt",
    "Baileys": "Béilis"
@@ -12,23 +12,47 @@
   "escenas": [
    {
     "tipo": "portada",
-    "etiqueta": "RESUMEN DE LA SEMANA",
-    "titulo": "Las 3 campañas *más creativas* de la semana",
-    "sub": "Del 19 al 25 de octubre",
     "fotos": [
-     "assets/work/nota-liquid-death-sixt-primera-vez-energy-foto-src1.webp",
+     "assets/work/nota-baileys-aretes-bring-on-the-baileys-navidad-foto-src1.webp",
      "assets/work/nota-mcdonalds-spooky-sauces-maquillaje-halloween-foto-src1.webp",
-     "assets/work/nota-baileys-aretes-bring-on-the-baileys-navidad-foto-src1.webp"
+     "assets/work/nota-liquid-death-sixt-primera-vez-energy-foto-src1.webp"
     ],
-    "voz": "Las tres campañas más creativas de la semana. Guárdalas como inspiración."
+    "titulo": "Las 3 campañas *más creativas* de la semana",
+    "sub": "En cuenta regresiva. Quédate a la número 1.",
+    "voz": "Las tres campañas más creativas de la semana, en cuenta regresiva. Quédate a la número uno.",
+    "videos": [
+     [
+      "https://www.prnewswire.com/news-releases/baileys-original-irish-cream-says-why-not-to-a-little-more-holiday-indulgence-with-bring-on-the-baileys-302914033.html",
+      "ytsearch1:Bring on the Baileys earrings Baileys holiday 2026"
+     ],
+     [
+      "https://www.adsoftheworld.com/campaigns/spooky-sauces",
+      "https://creative.salon/articles/work/mcdonald-s-spooky-sauces-leo-uk",
+      "ytsearch1:McDonald's Spooky Sauces makeup Leo UK"
+     ],
+     [
+      "https://www.adsoftheworld.com/campaigns/lose-your-liquid-death-virgenergy",
+      "https://www.youtube.com/watch?v=jZ0Zjdp5nQY"
+     ]
+    ],
+    "desdes": [
+     3,
+     3,
+     3
+    ]
    },
    {
     "tipo": "item",
-    "foto": "assets/work/nota-liquid-death-sixt-primera-vez-energy-foto-src1.webp",
-    "marca": "Liquid Death x SIXT",
-    "titulo": "Tu \"primera vez\" en un *SIXT*",
-    "cuerpo": "Todos cuentan su primera vez en un auto… y hablaban de su primera lata de bebida energética.",
-    "voz": "Uno: Liquid Death y SIXT. Todos cuentan su primera vez en un auto, y resulta que hablaban de su primera lata de bebida energética."
+    "foto": "assets/work/nota-baileys-aretes-bring-on-the-baileys-navidad-foto-src2.webp",
+    "marca": "Baileys",
+    "titulo": "Botellitas que son *aretes*",
+    "cuerpo": "Para Navidad: aretes con mini botellas que de verdad sirven licor.",
+    "voz": "Número tres: Baileys hizo aretes con mini botellas que de verdad sirven licor.",
+    "video": [
+     "https://www.prnewswire.com/news-releases/baileys-original-irish-cream-says-why-not-to-a-little-more-holiday-indulgence-with-bring-on-the-baileys-302914033.html",
+     "ytsearch1:Bring on the Baileys earrings Baileys holiday 2026"
+    ],
+    "desde": 6
    },
    {
     "tipo": "item",
@@ -36,26 +60,39 @@
     "marca": "McDonald's",
     "titulo": "Salsas que son *maquillaje*",
     "cuerpo": "Para Halloween convirtió sus salsas en pinturas para la cara, con brochas y todo.",
-    "voz": "Dos: McDonald's convirtió sus salsas en maquillaje de Halloween, con brochas y todo."
+    "voz": "Número dos: McDonald's convirtió sus salsas en maquillaje de Halloween, con brochas y todo.",
+    "video": [
+     "https://www.adsoftheworld.com/campaigns/spooky-sauces",
+     "https://creative.salon/articles/work/mcdonald-s-spooky-sauces-leo-uk",
+     "ytsearch1:McDonald's Spooky Sauces makeup Leo UK"
+    ],
+    "desde": 6
    },
    {
     "tipo": "item",
-    "foto": "assets/work/nota-baileys-aretes-bring-on-the-baileys-navidad-foto-src1.webp",
-    "marca": "Baileys",
-    "titulo": "Botellitas que son *aretes*",
-    "cuerpo": "Para Navidad, aretes con mini botellas que de verdad sirven licor.",
-    "voz": "Tres: Baileys hizo aretes con mini botellas que de verdad sirven licor."
+    "foto": "assets/work/nota-liquid-death-sixt-primera-vez-energy-foto-src2.webp",
+    "marca": "Liquid Death x SIXT",
+    "titulo": "Tu \"primera vez\" en un *SIXT*",
+    "cuerpo": "Todos cuentan su primera vez en un auto... y en realidad hablaban de su primera lata de bebida energética.",
+    "voz": "Y el número uno: Liquid Death y SIXT. Todos cuentan su primera vez en un auto, y en realidad hablaban de su primera lata de bebida energética.",
+    "video": [
+     "https://www.adsoftheworld.com/campaigns/lose-your-liquid-death-virgenergy",
+     "https://www.youtube.com/watch?v=jZ0Zjdp5nQY"
+    ],
+    "desde": 6
    },
    {
     "tipo": "cierre",
-    "titulo": "¿Cuál fue *tu favorita*?",
-    "sub": "Guárdalo como inspiración.",
-    "voz": "¿Cuál fue tu favorita? Dímelo en comentarios."
+    "titulo": "¿Cuál es *tu número 1*?",
+    "sub": "Comenta 1, 2 o 3. Cada domingo te traigo las 3 mejores.",
+    "voz": "¿Cuál es tu número uno? Comenta uno, dos o tres. Y síguenos: cada domingo te traigo las tres mejores."
    }
   ],
-  "caption": "Las 3 campañas más creativas de la semana ✨\n\n1. Liquid Death x SIXT: tu \"primera vez\"\n2. McDonald's: salsas que son maquillaje\n3. Baileys: botellitas que son aretes\n\n¿Cuál fue tu favorita? Guárdalo como inspiración 🔖\n\nSíguenos: una idea nueva cada día 📲\n\n#PublicidadCreativa #MarketingDigital #Branding #Inspiracion",
-  "caption_tiktok": "Las 3 campañas más creativas de la semana ✨ ¿Cuál fue tu favorita? #publicidad #marketingtiktok #inspiracion #emprendedores"
+  "formato": "guia",
+  "caption": "Las 3 campañas más creativas de la semana, en cuenta regresiva ✨\n\n3. Baileys: botellitas que son aretes\n2. McDonald's: salsas que son maquillaje\n1. Liquid Death x SIXT: tu \"primera vez\"\n\n¿Cuál es tu número 1? Comenta 1, 2 o 3 👇\nCada domingo te traigo las 3 mejores.\n\n🎥 Campañas: Baileys, McDonald's UK, Liquid Death y SIXT\nSíguenos: una idea nueva cada día 📲\n\n#PublicidadCreativa #MarketingDigital #Branding #Inspiracion",
+  "caption_tiktok": "Las 3 campañas más creativas de la semana ✨ ¿Cuál es tu número 1? Comenta 1, 2 o 3 #publicidad #marketingtiktok #inspiracion"
  },
  "listo": true,
- "tg": 1090
+ "hecho": true,
+ "sale": "2026-10-25 11"
 }
