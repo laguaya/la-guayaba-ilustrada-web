@@ -1,16 +1,15 @@
-2026-10-23T23:26:54.831888 visit-flanders-selfie-hijo-ciego-bingo
-ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
+2026-10-24T01:24:02.672133 jcrew-please-dont-destroy-tienda-de-trajes
 ElevenLabs usó eleven_v4
-Pausas recortadas: 13 3.7s
-Caché guardada: https://www.youtube.com/watch?v=NHbpAclgXh8 201
+Pausas recortadas: 15 4.0s
+Caché guardada: https://www.youtube.com/watch?v=hV_dkS-RF2k 201
 Video av1 -> h264 ok
-Fuente 1 campana 102.0s 35 tomas
-Caché guardada: https://www.youtube.com/watch?v=azbkw85-600 201
+Fuente 4 campana 105.7s 50 tomas
+Caché guardada: https://www.youtube.com/shorts/eT2moFcUNbE 201
 Video av1 -> h264 ok
-Fuente 2 https://www.youtube.com/watch?v=azbkw85-600 102.0s 35 tomas
+Fuente 5 https://www.youtube.com/shorts/eT2moFcUNbE 105.7s 51 tomas
 Video av1 -> h264 ok
-Fuente 3 https://www.adsoftheworld.com/campaigns/selfieforall 102.0s 35 tomas
-yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://www.rtv.be/actualiteit-en-nieuws/selfie-all-voorgesteld-mechelen-geslaagde-selfie-voor-blinden-en\n'
-yt-dlp default : b"foto: An extractor error has occurred. (caused by KeyError('data-videoid')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U\n"
-Reel: [(0.0, 2.9, 'video1'), (2.9, 4.5, 'video1'), (4.5, 6.6, 'video1'), (6.6, 7.7, 'video1'), (7.7, 9.0, 'video1'), (9.0, 10.7, 'video1'), (10.7, 12.3, 'video1'), (12.3, 16.8, 'video1'), (16.8, 20.8, 'video2'), (20.8, 24.8, 'video1'), (24.8, 30.3, 'video3'), (30.3, 31.8, 'video1'), (31.8, 35.5, 'video1'), (35.5, 40.0, 'video1')]
+Fuente 6 https://latenighter.com/videos/please-dont-destroy-jcrew-campaign/ 105.7s 50 tomas
+Video av1 -> h264 ok
+Fuente 7 https://theimpression.com/j-crew-fall-2026-ad-campaign-review/ 105.7s 50 tomas
+Reel: [(0.0, 2.9, 'video4'), (2.9, 4.4, 'video4'), (4.4, 4.9, 'video4'), (4.9, 8.9, 'video4'), (8.9, 12.0, 'video5'), (12.0, 15.2, 'video4'), (15.2, 18.1, 'video4'), (18.1, 20.6, 'video6'), (20.6, 22.9, 'video4'), (22.9, 23.4, 'video4'), (23.4, 25.2, 'video7'), (25.2, 26.9, 'video4'), (26.9, 29.7, 'video4'), (29.7, 32.5, 'video4'), (32.5, 35.2, 'video4'), (35.2, 36.3, 'video4'), (36.3, 38.3, 'video4'), (38.3, 39.6, 'video4'), (39.6, 40.0, 'video5')]
 
