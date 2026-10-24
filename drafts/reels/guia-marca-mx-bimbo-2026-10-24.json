@@ -2,7 +2,7 @@
  "id": "guia-marca-mx-bimbo-2026-10-24",
  "t": "Guía: la historia de Bimbo, el pan que nació de Bambi y Bingo",
  "k": "Inspiración",
- "listo": false,
+ "listo": true,
  "sale": "2026-10-24 13",
  "ig": {
   "formato": "guia",
@@ -11,51 +11,58 @@
   "escenas": [
    {
     "tipo": "portada",
-    "foto": "busca:Bimbo bread Mexico",
+    "foto": "/tmp/tmpyr0yylvo/busca_0foto.jpg",
     "titulo": "Bimbo: el pan que nació de *Bambi y Bingo*",
     "sub": "La historia de una marca mexicana",
-    "voz": "Bimbo, el pan que nació de mezclar Bambi y Bingo. Esta es su historia."
+    "voz": "Bimbo, el pan que nació de mezclar Bambi y Bingo. Esta es su historia.",
+    "_video": null
    },
    {
     "tipo": "ano",
     "ano": "1945",
-    "foto": "busca:Mexico City 1940s",
+    "foto": "/tmp/tmpyr0yylvo/busca_1foto.jpg",
     "cuerpo": "Lorenzo y Roberto *Servitje* fundan Bimbo en la Ciudad de México con 34 trabajadores.",
-    "voz": "En mil novecientos cuarenta y cinco, Lorenzo y Roberto Servitje fundaron Bimbo en la Ciudad de México, con treinta y cuatro trabajadores."
+    "voz": "En mil novecientos cuarenta y cinco, Lorenzo y Roberto Servitje fundaron Bimbo en la Ciudad de México, con treinta y cuatro trabajadores.",
+    "_video": null
    },
    {
     "tipo": "ano",
     "ano": "El nombre",
-    "foto": "busca:Bimbo bakery truck",
+    "foto": null,
     "cuerpo": "Descartaron Pan Rex y Pan Azteca. Ganó una mezcla de *Bambi* y *Bingo*.",
-    "voz": "Pensaron en Pan Rex y Pan Azteca. Al final ganó una mezcla de Bambi, la película, y Bingo, el juego."
+    "voz": "Pensaron en Pan Rex y Pan Azteca. Al final ganó una mezcla de Bambi, la película, y Bingo, el juego.",
+    "_video": null
    },
    {
     "tipo": "ano",
     "ano": "El osito",
-    "foto": "logo:Bimbo",
+    "foto": "/tmp/tmpyr0yylvo/busca_3foto.jpg",
     "cuerpo": "El osito salió de una *tarjeta de Navidad* que tenía un osito dibujado.",
-    "voz": "Y el osito salió de una tarjeta de Navidad que tenía un osito dibujado."
+    "voz": "Y el osito salió de una tarjeta de Navidad que tenía un osito dibujado.",
+    "_video": null
    },
    {
     "tipo": "ano",
     "ano": "1958",
-    "foto": "busca:Gansito Marinela",
+    "foto": "/tmp/tmpyr0yylvo/busca_4foto.jpg",
     "cuerpo": "Nace el *Gansito*, uno de los pastelitos más famosos de México.",
-    "voz": "En mil novecientos cincuenta y ocho nació el Gansito, uno de los pastelitos más famosos de México."
+    "voz": "En mil novecientos cincuenta y ocho nació el Gansito, uno de los pastelitos más famosos de México.",
+    "_video": null
    },
    {
     "tipo": "ano",
     "ano": "Hoy",
-    "foto": "busca:Grupo Bimbo",
+    "foto": "/tmp/tmpyr0yylvo/busca_5foto.jpg",
     "cuerpo": "Grupo Bimbo está en *91 países* y vendió 408 mil millones de pesos en 2024.",
-    "voz": "Hoy Grupo Bimbo está en noventa y un países y en dos mil veinticuatro vendió cuatrocientos ocho mil millones de pesos."
+    "voz": "Hoy Grupo Bimbo está en noventa y un países y en dos mil veinticuatro vendió cuatrocientos ocho mil millones de pesos.",
+    "_video": null
    },
    {
     "tipo": "cierre",
     "titulo": "Lo que hizo bien: un nombre *fácil de decir* y un personaje que da confianza",
     "sub": "Fuente: El CEO y El Financiero. ¿Qué marca mexicana contamos el próximo sábado?",
-    "voz": "Lo que hizo bien: un nombre fácil de decir y un osito que da confianza. Comenta qué marca mexicana contamos el próximo sábado."
+    "voz": "Lo que hizo bien: un nombre fácil de decir y un osito que da confianza. Comenta qué marca mexicana contamos el próximo sábado.",
+    "_video": null
    }
   ],
   "caption": "Bimbo: el pan que nació de mezclar Bambi y Bingo 🇲🇽\n\n• 1945: Lorenzo y Roberto Servitje fundan Bimbo en la Ciudad de México con 34 trabajadores.\n• El nombre: descartaron Pan Rex y Pan Azteca; ganó la mezcla de Bambi y Bingo.\n• El osito salió de una tarjeta de Navidad.\n• 1958: nace el Gansito.\n• Hoy: Grupo Bimbo está en 91 países y vendió 408 mil millones de pesos en 2024.\n\nLo que hizo bien: un nombre fácil de decir y un personaje que da confianza. Branding que ya cumplió 80 años.\n\n¿Qué marca mexicana contamos el próximo sábado? Escríbela en comentarios 👇\nSíguenos: cada sábado una marca mexicana y cómo se hizo grande.\n\nFuente: El CEO y El Financiero. Fotos: Wikimedia Commons\n\n#MarcasMexicanas #Branding #Bimbo #HechoEnMexico",
