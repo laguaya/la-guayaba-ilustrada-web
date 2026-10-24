@@ -186,3 +186,7 @@ FileNotFoundError: [Errno 2] No such file or directory: 'ffmpeg'
 2026-10-24T01:12:06.931843 Telegram getUpdates falló: Bad Gateway
 2026-10-24T01:12:07.529451 Telegram getUpdates falló: Bad Gateway
 2026-10-24T02:00:22.757517 enviando Reel jcrew-please-dont-destroy-tienda-de-trajes
+2026-10-24T02:25:50.004959 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
+2026-10-24T02:25:51.389968 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
+2026-10-24T02:25:52.778633 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
+2026-10-24T02:25:53.248657 Telegram editMessageReplyMarkup falló: Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
