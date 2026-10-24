@@ -1,13 +1,15 @@
-2026-10-24T17:23:35.947911 subway-get-your-own-way-caprichos
-ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
+2026-10-24T19:29:56.750626 angry-orchard-sarah-michelle-gellar-scream
 ElevenLabs usó eleven_v4
-Pausas recortadas: 16 4.4s
-Fuente 1 campana 20.1s 5 tomas
-Fuente 2 https://www.adsoftheworld.com/campaigns/get-your-own-way 20.0s 5 tomas
-Fuente 3 https://video.adsoftheworld.com/heshnu3rkwo6sk3q0ayqt01quiui.mp4 20.0s 5 tomas
-Fuente 4 https://video.adsoftheworld.com/xf9qdt2wkc2r9s5g96xvixxxwtly.mp4 20.0s 5 tomas
-Fuente 5 https://video.adsoftheworld.com/9swh2j8m0w6rhveixwieuyi0vxt4.mp4 10.0s 1 tomas
-Fuente 6 https://video.adsoftheworld.com/jzvrzpydo0tp070kybaii8wbjz1j.mp4 17.0s 5 tomas
-Toma de arranque: 8.7-12.2 puntaje 2.96
-Reel: [(0.0, 4.1, 'video1'), (4.1, 7.6, 'video2'), (7.6, 11.8, 'video3'), (11.8, 16.8, 'video5'), (16.8, 21.6, 'video6'), (21.6, 26.2, 'video1'), (26.2, 29.9, 'video1'), (29.9, 32.3, 'video1'), (32.3, 34.7, 'video1'), (34.7, 40.0, 'video1')]
+Pausas recortadas: 16 4.3s
+Caché guardada: https://www.youtube.com/watch?v=LDE2zIDfJ-Q 201
+Video av1 -> h264 ok
+Fuente 7 campana 60.1s 13 tomas
+Video desde caché: https://www.youtube.com/watch?v=LDE2zIDfJ-Q
+Video av1 -> h264 ok
+Fuente 8 https://www.youtube.com/watch?v=LDE2zIDfJ-Q 60.1s 13 tomas
+Caché guardada: https://www.youtube.com/watch?v=uqk1xSBfynU 201
+Fuente 9 https://www.youtube.com/watch?v=uqk1xSBfynU 341.2s 4 tomas
+yt-dlp default : b'ERROR: [generic] Got HTTP Error 403 caused by Cloudflare anti-bot challenge; try again with  --extractor-args "generic:impersonate"\n'
+yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://www.angryorchard.com/halloween\n'
+Reel: [(0.0, 2.9, 'video7'), (2.9, 3.9, 'video7'), (3.9, 6.9, 'video7'), (6.9, 10.6, 'video7'), (10.6, 12.8, 'video7'), (12.8, 15.7, 'video7'), (15.7, 20.6, 'video7'), (20.6, 24.9, 'video9'), (24.9, 28.9, 'video7'), (28.9, 30.7, 'video7'), (30.7, 34.1, 'video7'), (34.1, 40.0, 'video7')]
 
