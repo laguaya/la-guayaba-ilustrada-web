@@ -1,12 +1,14 @@
-2026-10-24T21:34:53.605072 timberwolves-real-loud-anthony-edwards
-ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
+2026-10-24T23:27:53.821861 heb-spurs-hardball-nino-negocia-tenis
 ElevenLabs usó eleven_v4
-Pausas recortadas: 16 3.6s
-Fuente 1 campana 30.0s 23 tomas
-Fuente 2 https://www.adsoftheworld.com/campaigns/real-loud 30.0s 23 tomas
-Fuente 3 https://www.nba.com/timberwolves/videos/its-about-to-get-realloud 30.0s 25 tomas
-Fuente 4 https://shots.net/news/view/minnesota-timberwolves-get-real-loud-in-ne 2.0s 2 tomas
-yt-dlp default : b'ERROR: [twitter] 2063803486135845124: No video could be found in this tweet\n'
-yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: [Instagram] DexVyhnlDQB: There is no video in this post\n'
-Reel: [(0.0, 2.9, 'video1'), (2.9, 4.1, 'video1'), (4.1, 5.4, 'video1'), (5.4, 7.0, 'video1'), (7.0, 8.1, 'video1'), (8.1, 9.6, 'video3'), (9.6, 11.1, 'video2'), (11.1, 12.8, 'video2'), (12.8, 13.5, 'video1'), (13.5, 15.2, 'video2'), (15.2, 16.5, 'video2'), (16.5, 18.1, 'video2'), (18.1, 19.2, 'video4'), (19.2, 20.4, 'video2'), (20.4, 21.7, 'video3'), (21.7, 22.2, 'video1'), (22.2, 23.3, 'video3'), (23.3, 24.3, 'video3'), (24.3, 25.8, 'video3'), (25.8, 27.5, 'video3'), (27.5, 28.5, 'video3'), (28.5, 29.8, 'video3'), (29.8, 31.6, 'video3'), (31.6, 35.0, 'video3'), (35.0, 36.8, 'video3'), (36.8, 40.0, 'video1')]
+Pausas recortadas: 16 4.7s
+Caché guardada: https://www.youtube.com/watch?v=y9VMieZU4ZM 201
+Video av1 -> h264 ok
+Fuente 5 campana 30.0s 16 tomas
+Video av1 -> h264 ok
+Fuente 6 https://news4sanantonio.com/news/local/spurs-stars-return-in-new-h-e-b 30.0s 16 tomas
+Caché guardada: https://www.instagram.com/p/DeuiMkVvzwt/ 201
+Video vp9 -> h264 ok
+Fuente 7 https://www.instagram.com/p/DeuiMkVvzwt/ 28.1s 17 tomas
+yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://hoodline.com/2026/10/spurs-stars-trade-jerseys-for-chips-in-new-h-e-b-season-opener-ad/\n'
+Reel: [(0.0, 3.3, 'video5'), (3.3, 5.8, 'video5'), (5.8, 7.9, 'video5'), (7.9, 10.0, 'video5'), (10.0, 11.6, 'video5'), (11.6, 14.0, 'video5'), (14.0, 15.2, 'video5'), (15.2, 16.3, 'video6'), (16.3, 18.7, 'video5'), (18.7, 20.1, 'video5'), (20.1, 21.2, 'video7'), (21.2, 23.1, 'video5'), (23.1, 24.7, 'video5'), (24.7, 26.7, 'video5'), (26.7, 28.6, 'video5'), (28.6, 29.4, 'video5'), (29.4, 30.8, 'video6'), (30.8, 34.1, 'video6'), (34.1, 40.0, 'video5')]
 
