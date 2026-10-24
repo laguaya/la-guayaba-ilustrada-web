@@ -190,3 +190,15 @@ FileNotFoundError: [Errno 2] No such file or directory: 'ffmpeg'
 2026-10-24T02:25:51.389968 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
 2026-10-24T02:25:52.778633 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
 2026-10-24T02:25:53.248657 Telegram editMessageReplyMarkup falló: Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+2026-10-24T03:22:09.100555 reel loewe-on-tenis-artistas-joan-jonas
+ElevenLabs usó eleven_v4
+Pausas recortadas: 17 4.4s
+Fuente 12 campana 1.5s 1 tomas
+
+Traceback (most recent call last):
+  File "/home/runner/work/la-guayaba-ilustrada-web/la-guayaba-ilustrada-web/scripts/notas.py", line 697, in build_reel_solo
+    reel.make(data, out, tiktok=tiktok)
+  File "/home/runner/work/la-guayaba-ilustrada-web/la-guayaba-ilustrada-web/scripts/reel.py", line 1108, in make
+    raise RuntimeError('No pude sacar el video de la campaña')
+RuntimeError: No pude sacar el video de la campaña
+
