@@ -220,3 +220,7 @@ RuntimeError: No pude sacar el video de la campaña
 2026-10-25T18:00:04.664070 enviando Reel estonia-folk-mask-off-born-from-culture
 2026-10-25T20:00:17.472653 enviando Reel belle-tire-compra-aire-gasolineras-gratis
 2026-10-25T22:00:03.323820 enviando Reel rogers-michael-cera-backstreet-boys
+2026-10-25T23:36:03.134767 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
+2026-10-25T23:36:04.336549 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
+2026-10-25T23:36:05.888348 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
+2026-10-25T23:36:07.197260 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
