@@ -16,7 +16,6 @@
  "cr": "Foto: adweek.com",
  "src": "https://www.adweek.com/brand-marketing/mcdonalds-ends-32-year-fifa-world-cup-sponsorship-amid-marketing-overhaul/",
  "sn": "Con información de Adweek",
- "yt": "p-_qNvWqtXU",
  "buscar": "McDonald's FIFA World Cup 26",
  "fuentes": [
   "https://campaignlive.com/article/mcdonalds-taps-beckham-pulisic-world-cup-collectible-cup-campaign/1960190",
@@ -40,5 +39,6 @@
  ],
  "ig1": "assets/work/nota-mcdonalds-deja-patrocinio-mundial-fifa-32-anos-foto-src1.webp",
  "ig2": "assets/work/nota-mcdonalds-deja-patrocinio-mundial-fifa-32-anos-foto-src1.webp",
- "cands_v": 2
+ "cands_v": 2,
+ "sin_video": true
 }
