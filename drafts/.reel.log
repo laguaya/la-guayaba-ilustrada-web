@@ -1,11 +1,16 @@
-2026-10-25T19:27:42.474323 belle-tire-compra-aire-gasolineras-gratis
+2026-10-25T21:26:27.103536 rogers-michael-cera-backstreet-boys
+ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
 ElevenLabs usó eleven_v4
-Pausas recortadas: 15 3.5s
-Fuente 16 campana 5.9s 5 tomas
-Fuente 17 https://d1ko11x0ybxl0h.cloudfront.net/shotsmag/production/clips/41160/ 5.9s 5 tomas
-Fuente 18 https://shots.net/news/view/belle-tires-air-apparent 5.9s 5 tomas
-yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://lbbonline.com/news/belle-tire-takes-over-midwest-gas-stations-to-get-free-air-to-drivers-this-winter\n'
+Pausas recortadas: 14 4.6s
+Caché guardada: https://www.youtube.com/watch?v=hoxt2owck5Y 201
+Fuente 1 campana 30.1s 15 tomas
+Video desde caché: https://www.youtube.com/watch?v=hoxt2owck5Y
+Fuente 2 https://www.youtube.com/watch?v=hoxt2owck5Y 30.1s 15 tomas
+Caché guardada: https://www.youtube.com/watch?v=LGGjAHsNsPw 201
+Fuente 3 https://www.youtube.com/watch?v=LGGjAHsNsPw 30.1s 13 tomas
+Caché guardada: https://www.youtube.com/watch?v=Cgljn6g4X3U 201
 Video av1 -> h264 ok
-Fuente 19 https://reel360.com/article/belle-tire-makes-gas-station-air-free-acro 78.0s 31 tomas
-Reel: [(0.0, 2.9, 'video16'), (2.9, 4.2, 'video17'), (4.2, 5.2, 'video17'), (5.2, 6.7, 'video18'), (6.7, 7.7, 'video18'), (7.7, 9.2, 'video19'), (9.2, 11.2, 'video19'), (11.2, 13.0, 'video19'), (13.0, 14.1, 'video19'), (14.1, 18.5, 'video19'), (18.5, 22.2, 'video19'), (22.2, 23.6, 'video19'), (23.6, 25.2, 'video19'), (25.2, 27.0, 'video19'), (27.0, 29.0, 'video19'), (29.0, 30.2, 'video19'), (30.2, 31.4, 'video19'), (31.4, 34.2, 'video19'), (34.2, 35.6, 'video19'), (35.6, 40.0, 'video16')]
+Fuente 4 https://www.youtube.com/watch?v=Cgljn6g4X3U 30.0s 15 tomas
+yt-dlp default : b'ERROR: [generic] Got HTTP Error 403 caused by Cloudflare anti-bot challenge; try again with  --extractor-args "generic:impersonate"\n'
+Reel: [(0.0, 3.7, 'video1'), (3.7, 4.9, 'video1'), (4.9, 7.0, 'video1'), (7.0, 7.7, 'video1'), (7.7, 12.8, 'video3'), (12.8, 15.7, 'video4'), (15.7, 17.4, 'video1'), (17.4, 18.9, 'video1'), (18.9, 22.0, 'video1'), (22.0, 22.3, 'video1'), (22.3, 26.6, 'video1'), (26.6, 27.6, 'video1'), (27.6, 30.0, 'video1'), (30.0, 34.2, 'video2'), (34.2, 40.0, 'video1')]
 
