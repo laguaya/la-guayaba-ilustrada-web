@@ -1,17 +1,16 @@
-2026-10-25T03:29:55.121954 helvetia-caser-nombres-conchita-neo
+2026-10-25T13:23:05.147721 foot-locker-cooper-flagg-vive-en-bodega
 ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
 ElevenLabs usó eleven_v4
-Pausas recortadas: 18 5.9s
-Caché guardada: https://www.youtube.com/watch?v=bbnMsfSbNcQ 201
+Pausas recortadas: 15 4.0s
+Caché guardada: https://www.youtube.com/watch?v=9wzuTRYsFUM 201
 Video av1 -> h264 ok
-Fuente 1 campana 120.5s 74 tomas
-Video desde caché: https://www.youtube.com/watch?v=bbnMsfSbNcQ
+Fuente 1 campana 30.1s 13 tomas
+Video desde caché: https://www.youtube.com/watch?v=9wzuTRYsFUM
 Video av1 -> h264 ok
-Fuente 2 https://www.youtube.com/watch?v=bbnMsfSbNcQ 120.5s 74 tomas
-yt-dlp default : b'ed-in. Use --cookies, --cookies-from-browser, --username and --password, --netrc-cmd, or --netrc (vimeo) to provide account credentials. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies\n'
-yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: [vimeo] 1238675784: Unable to download webpage: HTTP Error 401: Unauthorized (caused by <HTTPError 401: Unauthorized>)\n'
+Fuente 2 https://www.youtube.com/watch?v=9wzuTRYsFUM 30.1s 13 tomas
+yt-dlp default : b'ERROR: [yahoo] watch-cooper-flagg-comically-helps-120259597: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)\n'
 Video av1 -> h264 ok
-Fuente 3 https://roastbrief.com.mx/2026/10/en-espana-caser-anuncia-su-transicio 120.5s 74 tomas
-yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://www.periodicopublicidad.com/articulo/spots/llames-como-llames-bienvenido-helvetia/20261022115944179813.html\n'
-Reel: [(0.0, 3.9, 'video1'), (3.9, 9.2, 'video1'), (9.2, 10.7, 'video1'), (10.7, 11.8, 'video2'), (11.8, 12.8, 'video2'), (12.8, 13.9, 'video2'), (13.9, 17.4, 'video2'), (17.4, 19.1, 'video2'), (19.1, 20.2, 'video3'), (20.2, 21.2, 'video3'), (21.2, 24.5, 'video3'), (24.5, 25.8, 'video3'), (25.8, 27.6, 'video3'), (27.6, 28.6, 'video1'), (28.6, 31.9, 'video2'), (31.9, 36.4, 'video3'), (36.4, 40.0, 'video1')]
+Fuente 3 https://abancommercials.com/foot-locker/-quotcooper-flagg-moves-into-f 30.1s 13 tomas
+yt-dlp default : b'NING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://www.prnewswire.com/news-releases/foot-locker-tips-off-the-basketball-season-with-the-next-chapter-of-hoops-lives-here-featuring-cooper-flagg-302913138.html\n'
+Reel: [(0.0, 2.9, 'video1'), (2.9, 4.2, 'video1'), (4.2, 5.2, 'video1'), (5.2, 8.0, 'video1'), (8.0, 9.0, 'video1'), (9.0, 10.5, 'video1'), (10.5, 12.6, 'video1'), (12.6, 14.6, 'video1'), (14.6, 16.0, 'video3'), (16.0, 18.3, 'video1'), (18.3, 21.6, 'video1'), (21.6, 22.8, 'video1'), (22.8, 24.6, 'video1'), (24.6, 26.5, 'video1'), (26.5, 28.7, 'video1'), (28.7, 30.1, 'video2'), (30.1, 33.4, 'video2'), (33.4, 40.0, 'video1')]
 
