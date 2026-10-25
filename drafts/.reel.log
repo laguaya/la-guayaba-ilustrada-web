@@ -1,16 +1,14 @@
-2026-10-25T13:23:05.147721 foot-locker-cooper-flagg-vive-en-bodega
-ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
-ElevenLabs usó eleven_v4
-Pausas recortadas: 15 4.0s
-Caché guardada: https://www.youtube.com/watch?v=9wzuTRYsFUM 201
+2026-10-25T14:38:52.081253 angry-orchard-sarah-michelle-gellar-scream
+Video desde caché: https://www.youtube.com/watch?v=LDE2zIDfJ-Q
 Video av1 -> h264 ok
-Fuente 1 campana 30.1s 13 tomas
-Video desde caché: https://www.youtube.com/watch?v=9wzuTRYsFUM
+Fuente 1 campana 60.1s 13 tomas
+Video desde caché: https://www.youtube.com/watch?v=LDE2zIDfJ-Q
 Video av1 -> h264 ok
-Fuente 2 https://www.youtube.com/watch?v=9wzuTRYsFUM 30.1s 13 tomas
-yt-dlp default : b'ERROR: [yahoo] watch-cooper-flagg-comically-helps-120259597: Unable to download JSON metadata: HTTP Error 404: Not Found (caused by <HTTPError 404: Not Found>)\n'
-Video av1 -> h264 ok
-Fuente 3 https://abancommercials.com/foot-locker/-quotcooper-flagg-moves-into-f 30.1s 13 tomas
-yt-dlp default : b'NING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://www.prnewswire.com/news-releases/foot-locker-tips-off-the-basketball-season-with-the-next-chapter-of-hoops-lives-here-featuring-cooper-flagg-302913138.html\n'
-Reel: [(0.0, 2.9, 'video1'), (2.9, 4.2, 'video1'), (4.2, 5.2, 'video1'), (5.2, 8.0, 'video1'), (8.0, 9.0, 'video1'), (9.0, 10.5, 'video1'), (10.5, 12.6, 'video1'), (12.6, 14.6, 'video1'), (14.6, 16.0, 'video3'), (16.0, 18.3, 'video1'), (18.3, 21.6, 'video1'), (21.6, 22.8, 'video1'), (22.8, 24.6, 'video1'), (24.6, 26.5, 'video1'), (26.5, 28.7, 'video1'), (28.7, 30.1, 'video2'), (30.1, 33.4, 'video2'), (33.4, 40.0, 'video1')]
+Fuente 2 https://www.youtube.com/watch?v=LDE2zIDfJ-Q 60.1s 13 tomas
+Video desde caché: https://www.youtube.com/watch?v=uqk1xSBfynU
+Fuente 3 https://www.youtube.com/watch?v=uqk1xSBfynU 341.2s 4 tomas
+yt-dlp default : b'ERROR: [generic] Got HTTP Error 403 caused by Cloudflare anti-bot challenge; try again with  --extractor-args "generic:impersonate"\n'
+yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://www.angryorchard.com/halloween\n'
+Reel: [(0.0, 3.9, 'video1'), (3.9, 7.3, 'video1'), (7.3, 10.6, 'video1'), (10.6, 13.8, 'video1'), (13.8, 15.7, 'video1'), (15.7, 17.4, 'video1'), (17.4, 20.8, 'video1'), (20.8, 24.9, 'video3'), (24.9, 26.4, 'video1'), (26.4, 28.9, 'video1'), (28.9, 33.9, 'video1'), (33.9, 37.7, 'video1'), (37.7, 38.8, 'video1'), (38.8, 40.0, 'video1')]
+Diseños TikTok: ['tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'original', 'original']
 
