@@ -215,3 +215,4 @@ RuntimeError: No pude sacar el video de la campaña
 2026-10-25T04:00:25.596087 enviando Reel helvetia-caser-nombres-conchita-neo
 2026-10-25T14:00:05.119686 enviando Reel foot-locker-cooper-flagg-vive-en-bodega
 2026-10-25T16:00:03.688466 enviando Reel air-wick-aroma-eterno-dia-de-muertos
+2026-10-25T16:47:30.868545 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
