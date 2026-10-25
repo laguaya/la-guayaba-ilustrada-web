@@ -1,18 +1,16 @@
-2026-10-25T15:32:48.740563 air-wick-aroma-eterno-dia-de-muertos
-ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
-ElevenLabs usó eleven_v4
-Pausas recortadas: 17 6.0s
-Caché guardada: https://www.youtube.com/watch?v=6vJWxRxY16Q 201
-Video av1 -> h264 ok
-Fuente 4 campana 183.4s 34 tomas
+2026-10-25T16:55:04.181743 air-wick-aroma-eterno-dia-de-muertos
 Video desde caché: https://www.youtube.com/watch?v=6vJWxRxY16Q
 Video av1 -> h264 ok
-Fuente 5 https://www.youtube.com/watch?v=6vJWxRxY16Q 183.4s 34 tomas
+Fuente 8 campana 183.4s 34 tomas
+Video desde caché: https://www.youtube.com/watch?v=6vJWxRxY16Q
 Video av1 -> h264 ok
-Fuente 6 https://www.posta.com.mx/share/video-air-wick-mexico-conmueve-con-su-c 183.4s 34 tomas
+Fuente 9 https://www.youtube.com/watch?v=6vJWxRxY16Q 183.4s 34 tomas
 Video av1 -> h264 ok
-Fuente 7 https://belatina.com/the-dia-de-muertos-commercial-from-air-wick-mexic 180.0s 5 tomas
+Fuente 10 https://www.posta.com.mx/share/video-air-wick-mexico-conmueve-con-su-c 183.4s 34 tomas
+Video av1 -> h264 ok
+Fuente 11 https://belatina.com/the-dia-de-muertos-commercial-from-air-wick-mexic 180.0s 5 tomas
 yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://roastbrief.com.mx/2026/09/en-mexico-air-wick-conmueve-las-redes-sociales-rindiendo-homenaje-al-dia-de-muertos-con-su-coleccion-especial-aroma-eterno/\n'
 Toma de arranque: 64.4-66.5 puntaje 2.91
-Reel: [(0.0, 2.0, 'video4'), (2.0, 3.6, 'video4'), (3.6, 6.3, 'video4'), (6.3, 9.8, 'video4'), (9.8, 13.7, 'video4'), (13.7, 17.4, 'video6'), (17.4, 22.6, 'video7'), (22.6, 26.2, 'video4'), (26.2, 29.1, 'video4'), (29.1, 33.6, 'video4'), (33.6, 40.0, 'video4')]
+Reel: [(0.0, 2.0, 'video8'), (2.0, 3.6, 'video8'), (3.6, 6.3, 'video8'), (6.3, 9.8, 'video8'), (9.8, 13.7, 'video8'), (13.7, 17.4, 'video10'), (17.4, 22.6, 'video11'), (22.6, 26.2, 'video8'), (26.2, 29.1, 'video8'), (29.1, 31.6, 'video8'), (31.6, 33.6, 'video8'), (33.6, 36.6, 'video8'), (36.6, 40.0, 'video8')]
+Diseños TikTok: ['tres', 'original', 'dos', 'original', 'tres', 'original', 'original', 'original', 'tres', 'original', 'dos', 'original', 'tres']
 
