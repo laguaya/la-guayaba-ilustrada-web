@@ -1,14 +1,16 @@
-2026-10-24T23:27:53.821861 heb-spurs-hardball-nino-negocia-tenis
+2026-10-25T01:33:08.159428 debenhams-navidad-pelicula-emily-atack
 ElevenLabs usó eleven_v4
-Pausas recortadas: 16 4.7s
-Caché guardada: https://www.youtube.com/watch?v=y9VMieZU4ZM 201
+Pausas recortadas: 14 4.0s
+Caché guardada: https://www.youtube.com/watch?v=4F4SysWDC0Q 201
 Video av1 -> h264 ok
-Fuente 5 campana 30.0s 16 tomas
+Fuente 8 campana 258.2s 73 tomas
+Video desde caché: https://www.youtube.com/watch?v=4F4SysWDC0Q
 Video av1 -> h264 ok
-Fuente 6 https://news4sanantonio.com/news/local/spurs-stars-return-in-new-h-e-b 30.0s 16 tomas
-Caché guardada: https://www.instagram.com/p/DeuiMkVvzwt/ 201
-Video vp9 -> h264 ok
-Fuente 7 https://www.instagram.com/p/DeuiMkVvzwt/ 28.1s 17 tomas
-yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://hoodline.com/2026/10/spurs-stars-trade-jerseys-for-chips-in-new-h-e-b-season-opener-ad/\n'
-Reel: [(0.0, 3.3, 'video5'), (3.3, 5.8, 'video5'), (5.8, 7.9, 'video5'), (7.9, 10.0, 'video5'), (10.0, 11.6, 'video5'), (11.6, 14.0, 'video5'), (14.0, 15.2, 'video5'), (15.2, 16.3, 'video6'), (16.3, 18.7, 'video5'), (18.7, 20.1, 'video5'), (20.1, 21.2, 'video7'), (21.2, 23.1, 'video5'), (23.1, 24.7, 'video5'), (24.7, 26.7, 'video5'), (26.7, 28.6, 'video5'), (28.6, 29.4, 'video5'), (29.4, 30.8, 'video6'), (30.8, 34.1, 'video6'), (34.1, 40.0, 'video5')]
+Fuente 9 https://www.youtube.com/watch?v=4F4SysWDC0Q 258.2s 73 tomas
+yt-dlp default : b'ERROR: [generic] Got HTTP Error 403 caused by Cloudflare anti-bot challenge; try again with  --extractor-args "generic:impersonate"\n'
+Video av1 -> h264 ok
+Fuente 10 https://www.nationalworld.com/recommended/debenhams-first-christmas-20 258.2s 73 tomas
+yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://www.retail-week.com/fashion/watch-debenhams-unveils-star-studded-christmas-ad-campaign/7052370.article\n'
+Toma de arranque: 197.1-199.1 puntaje 2.80
+Reel: [(0.0, 1.9, 'video8'), (1.9, 5.3, 'video8'), (5.3, 8.8, 'video8'), (8.8, 11.8, 'video8'), (11.8, 14.4, 'video8'), (14.4, 18.5, 'video10'), (18.5, 20.1, 'video8'), (20.1, 21.6, 'video8'), (21.6, 22.4, 'video8'), (22.4, 25.5, 'video8'), (25.5, 29.1, 'video8'), (29.1, 32.1, 'video8'), (32.1, 33.7, 'video8'), (33.7, 34.2, 'video8'), (34.2, 40.0, 'video8')]
 
