@@ -1,16 +1,17 @@
-2026-10-25T01:33:08.159428 debenhams-navidad-pelicula-emily-atack
+2026-10-25T03:29:55.121954 helvetia-caser-nombres-conchita-neo
+ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
 ElevenLabs usó eleven_v4
-Pausas recortadas: 14 4.0s
-Caché guardada: https://www.youtube.com/watch?v=4F4SysWDC0Q 201
+Pausas recortadas: 18 5.9s
+Caché guardada: https://www.youtube.com/watch?v=bbnMsfSbNcQ 201
 Video av1 -> h264 ok
-Fuente 8 campana 258.2s 73 tomas
-Video desde caché: https://www.youtube.com/watch?v=4F4SysWDC0Q
+Fuente 1 campana 120.5s 74 tomas
+Video desde caché: https://www.youtube.com/watch?v=bbnMsfSbNcQ
 Video av1 -> h264 ok
-Fuente 9 https://www.youtube.com/watch?v=4F4SysWDC0Q 258.2s 73 tomas
-yt-dlp default : b'ERROR: [generic] Got HTTP Error 403 caused by Cloudflare anti-bot challenge; try again with  --extractor-args "generic:impersonate"\n'
+Fuente 2 https://www.youtube.com/watch?v=bbnMsfSbNcQ 120.5s 74 tomas
+yt-dlp default : b'ed-in. Use --cookies, --cookies-from-browser, --username and --password, --netrc-cmd, or --netrc (vimeo) to provide account credentials. See  https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp  for how to manually pass cookies\n'
+yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: [vimeo] 1238675784: Unable to download webpage: HTTP Error 401: Unauthorized (caused by <HTTPError 401: Unauthorized>)\n'
 Video av1 -> h264 ok
-Fuente 10 https://www.nationalworld.com/recommended/debenhams-first-christmas-20 258.2s 73 tomas
-yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://www.retail-week.com/fashion/watch-debenhams-unveils-star-studded-christmas-ad-campaign/7052370.article\n'
-Toma de arranque: 197.1-199.1 puntaje 2.80
-Reel: [(0.0, 1.9, 'video8'), (1.9, 5.3, 'video8'), (5.3, 8.8, 'video8'), (8.8, 11.8, 'video8'), (11.8, 14.4, 'video8'), (14.4, 18.5, 'video10'), (18.5, 20.1, 'video8'), (20.1, 21.6, 'video8'), (21.6, 22.4, 'video8'), (22.4, 25.5, 'video8'), (25.5, 29.1, 'video8'), (29.1, 32.1, 'video8'), (32.1, 33.7, 'video8'), (33.7, 34.2, 'video8'), (34.2, 40.0, 'video8')]
+Fuente 3 https://roastbrief.com.mx/2026/10/en-espana-caser-anuncia-su-transicio 120.5s 74 tomas
+yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://www.periodicopublicidad.com/articulo/spots/llames-como-llames-bienvenido-helvetia/20261022115944179813.html\n'
+Reel: [(0.0, 3.9, 'video1'), (3.9, 9.2, 'video1'), (9.2, 10.7, 'video1'), (10.7, 11.8, 'video2'), (11.8, 12.8, 'video2'), (12.8, 13.9, 'video2'), (13.9, 17.4, 'video2'), (17.4, 19.1, 'video2'), (19.1, 20.2, 'video3'), (20.2, 21.2, 'video3'), (21.2, 24.5, 'video3'), (24.5, 25.8, 'video3'), (25.8, 27.6, 'video3'), (27.6, 28.6, 'video1'), (28.6, 31.9, 'video2'), (31.9, 36.4, 'video3'), (36.4, 40.0, 'video1')]
 
