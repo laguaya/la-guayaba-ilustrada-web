@@ -243,3 +243,4 @@ Traceback (most recent call last):
     raise RuntimeError('La nota no tiene video de la campaña para el Reel')
 RuntimeError: La nota no tiene video de la campaña para el Reel
 
+2026-10-26T14:00:00.839567 enviando Reel doordash-nhl-sala-en-pista-de-hielo
