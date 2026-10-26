@@ -1,0 +1,61 @@
+{
+ "id": "doordash-nhl-sala-en-pista-de-hielo",
+ "t": "DoorDash monta salas familiares sobre una pista de hielo en su comercial con la NHL",
+ "k": "Inspiración",
+ "src": "https://www.thedrum.com/news/behind-the-carefully-choreographed-chaos-of-doordash-s-hockey-campaign",
+ "yt": "gc7HzJHCrJ4",
+ "ig": {
+  "etiqueta": "Inspiración",
+  "portada": "Su sala está *en una pista de hielo*",
+  "marca": "DoorDash",
+  "caption": "Una familia ve el partido en su sala y la sala está en medio de una pista de hielo: así es el comercial de DoorDash con la NHL 🏒\n\nWhat's For Hockey es la campaña de DoorDash en Canadá, de la agencia Broken Heart Love Affair.\nJugadores patinan entre sillones, los repartidores llegan en patines y la mesa de vidrio que se rompe era real.\nPublicidad que vende la noche en familia, no el envío.\n\n¿Tú lo hubieras aprobado o es demasiado caos?\nMándaselo a tu amigo que nunca cocina en día de partido y guárdalo para tu próxima idea.\n\n🎥 Video: DoorDash / Broken Heart Love Affair\nTodos los días las campañas más locas de las marcas, síguenos\n\n#DoorDash #PublicidadCreativa #MarketingDeportivo #MarketingDigital",
+  "caption_tiktok": "El comercial de DoorDash donde la sala de una familia está en plena pista de hockey 🏒 La mesa de vidrio era real. ¿Genial o exagerado? 🎥 Video: DoorDash / Broken Heart Love Affair. Síguenos: una campaña nueva cada 2 horas #doordash #hockey #publicidad #marketingtiktok",
+  "videos": [
+   "https://www.youtube.com/watch?v=WuyBWnk3fHs",
+   "https://www.youtube.com/watch?v=CqxhFFLgZ-E",
+   "https://lbbonline.com/work/183096"
+  ],
+  "pronunciar": {
+   "DoorDash": "Dórdash"
+  },
+  "escenas": [
+   {
+    "voz": "Esta familia puso su sala en medio de una pista de hielo.",
+    "ver": "video",
+    "desde": 0,
+    "hasta": 3
+   },
+   {
+    "voz": "Ella pregunta qué hay para el hockey. Su hermano contesta: pizza.",
+    "ver": "video"
+   },
+   {
+    "voz": "Y alrededor patinan jugadores de hockey y repartidores de DoorDash con la comida.",
+    "ver": "video"
+   },
+   {
+    "voz": "Uno frena junto al perrito y lo baña de hielo.",
+    "ver": "video",
+    "video": "https://www.youtube.com/watch?v=WuyBWnk3fHs"
+   },
+   {
+    "voz": "Lo más loco: la mesa de vidrio que rompe era real. Tres tomas.",
+    "ver": "video",
+    "video": "https://www.youtube.com/watch?v=CqxhFFLgZ-E"
+   },
+   {
+    "voz": "Es DoorDash con la NHL, y los repartidores son patinadores artísticos.",
+    "ver": "video",
+    "video": "https://lbbonline.com/work/183096"
+   },
+   {
+    "voz": "A mí me encantó: no te vende el envío, te vende la noche en familia, como los tacos del domingo.",
+    "ver": "video"
+   },
+   {
+    "voz": "Mándaselo a tu amigo que nunca cocina en día de partido. ¿Genial o exagerado?",
+    "ver": "video"
+   }
+  ]
+ }
+}

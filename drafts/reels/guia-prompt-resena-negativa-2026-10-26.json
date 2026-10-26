@@ -1,0 +1,50 @@
+{
+ "id": "guia-prompt-resena-negativa-2026-10-26",
+ "t": "Guía: el prompt para responder una reseña negativa",
+ "k": "Inspiración",
+ "listo": false,
+ "sale": "2026-10-26 19",
+ "ig": {
+  "formato": "guia",
+  "estilo": "prompt",
+  "pronunciar": {},
+  "escenas": [
+   {
+    "tipo": "portada",
+    "titulo": "El prompt para responder una *reseña negativa*",
+    "sub": "Cópialo y pruébalo con cualquier IA",
+    "voz": "Te dejaron una reseña de una estrella. Este es el prompt para contestarla bien. Cópialo y pruébalo con cualquier inteligencia artificial."
+   },
+   {
+    "tipo": "prompt",
+    "prompt": "Actúa como encargado de atención a clientes de [tu negocio] en [tu ciudad]. Un cliente dejó esta reseña negativa: [pega la reseña]. Escribe una respuesta de máximo 4 líneas, amable y sin pelear: agradece, reconoce el problema concreto, di qué vas a cambiar e invítalo a volver con una solución.",
+    "voz": "Pídele que actúe como encargado de atención a clientes de tu negocio. Pega la reseña y pide una respuesta de máximo cuatro líneas, amable y sin pelear: que agradezca, reconozca el problema, diga qué vas a cambiar e invite a volver."
+   },
+   {
+    "tipo": "respuesta",
+    "pregunta": "Taquería en Cuernavaca: \"Tardaron 40 minutos y llegó frío\"",
+    "lineas": [
+     "Gracias por decírnoslo, y una disculpa.",
+     "Tienes razón: 40 minutos es demasiado.",
+     "Ya sumamos un repartidor en la noche.",
+     "Tu próxima orden va por nuestra cuenta."
+    ],
+    "voz": "Por ejemplo, para una taquería en Cuernavaca te puede salir: gracias por decírnoslo, tienes razón, ya sumamos un repartidor en la noche, y tu próxima orden va por nuestra cuenta."
+   },
+   {
+    "tipo": "tip",
+    "titulo": "Antes de publicarla...",
+    "cuerpo": "Contesta en menos de 24 horas, nunca discutas en público y lleva el detalle a mensaje privado.",
+    "voz": "Antes de publicarla: contesta en menos de un día, nunca discutas en público y lleva los detalles a mensaje privado. Quien lee tu respuesta es el próximo cliente."
+   },
+   {
+    "tipo": "cierre",
+    "titulo": "Guárdalo para tu *próxima reseña*",
+    "sub": "Comenta RESEÑA y te paso más prompts.",
+    "voz": "Guárdalo para tu próxima reseña. Y mándaselo a ese amigo con negocio que siempre se pelea en los comentarios."
+   }
+  ],
+  "caption": "El prompt para responder una reseña negativa sin perder clientes ⭐\n\nCópialo:\n\"Actúa como encargado de atención a clientes de [tu negocio] en [tu ciudad]. Un cliente dejó esta reseña negativa: [pega la reseña]. Escribe una respuesta de máximo 4 líneas, amable y sin pelear: agradece, reconoce el problema concreto, di qué vas a cambiar e invítalo a volver con una solución.\"\n\nAntes de publicarla: contesta en menos de 24 horas, no discutas en público y lleva el detalle a mensaje privado. Tu respuesta la lee el próximo cliente.\n\n¿Tú contestas las reseñas de tu negocio o las dejas pasar?\nGuárdalo y mándaselo a ese amigo con negocio que siempre se pelea en los comentarios 🔖\n\nSíguenos: un prompt útil para tu negocio cada semana\n\n#InteligenciaArtificial #Emprendedores #AtencionAlCliente #MarketingDigital #NegociosEnMexico",
+  "caption_tiktok": "Cómo responder una reseña negativa con IA sin perder clientes ⭐ Cópiate el prompt. ¿Contestas tus reseñas o las ignoras? Síguenos para más prompts para tu negocio #ia #emprendedores #negocios #chatgpt"
+ }
+}
