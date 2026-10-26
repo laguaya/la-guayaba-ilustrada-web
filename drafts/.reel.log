@@ -1,15 +1,16 @@
-2026-10-26T19:24:16.658412 sephora-seth-rogen-regalos-navidad
-ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
+2026-10-26T21:23:02.902998 pantene-john-stamos-embajador-1994
 ElevenLabs usó eleven_v4
-Pausas recortadas: 15 4.7s
-Caché guardada: https://www.youtube.com/watch?v=I2TjIBq9vLQ 201
+Pausas recortadas: 17 5.1s
+Caché guardada: https://www.youtube.com/watch?v=abuDjgZPl60 201
 Video av1 -> h264 ok
-Fuente 1 campana 30.0s 18 tomas
-Video desde caché: https://www.youtube.com/watch?v=I2TjIBq9vLQ
-Video av1 -> h264 ok
-Fuente 2 https://www.youtube.com/watch?v=I2TjIBq9vLQ 30.0s 18 tomas
-yt-dlp default : b'ERROR: [Instagram] DeuNWiqhSD2: There is no video in this post\n'
-yt-dlp default : b'ERROR: [twitter] 2114689878503948544: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U\n'
-Toma de arranque: 17.8-20.3 puntaje 2.70
-Reel: [(0.0, 2.4, 'video1'), (2.4, 4.4, 'video1'), (4.4, 5.7, 'video1'), (5.7, 6.9, 'video1'), (6.9, 8.0, 'video1'), (8.0, 9.6, 'video1'), (9.6, 12.0, 'video1'), (12.0, 12.5, 'video1'), (12.5, 14.4, 'video2'), (14.4, 15.9, 'video2'), (15.9, 17.3, 'video2'), (17.3, 18.3, 'video1'), (18.3, 21.2, 'video1'), (21.2, 22.7, 'video1'), (22.7, 23.7, 'video1'), (23.7, 25.7, 'video2'), (25.7, 27.4, 'video2'), (27.4, 29.3, 'video2'), (29.3, 30.3, 'video2'), (30.3, 32.8, 'video2'), (32.8, 34.0, 'video2'), (34.0, 40.0, 'video1')]
+Fuente 3 campana 145.0s 59 tomas
+Caché guardada: https://www.instagram.com/p/DezdwsAu1cU/ 201
+Video vp9 -> h264 ok
+Fuente 4 https://www.instagram.com/p/DezdwsAu1cU/ 145.0s 59 tomas
+Caché guardada: https://www.instagram.com/p/DXh-4lWFdqq/ 201
+Video vp9 -> h264 ok
+Fuente 5 https://www.instagram.com/p/DXh-4lWFdqq/ 30.1s 6 tomas
+Fuente 6 https://shots.net/news/view/john-stamos-looks-for-a-pantene-hair-exten 2.3s 1 tomas
+Toma de arranque: 8.6-10.4 puntaje 3.00
+Reel: [(0.0, 1.7, 'video3'), (1.7, 4.9, 'video3'), (4.9, 9.5, 'video3'), (9.5, 11.3, 'video3'), (11.3, 13.1, 'video3'), (13.1, 18.5, 'video5'), (18.5, 21.5, 'video4'), (21.5, 23.8, 'video6'), (23.8, 25.5, 'video3'), (25.5, 28.6, 'video3'), (28.6, 31.6, 'video3'), (31.6, 33.3, 'video3'), (33.3, 40.0, 'video3')]
 
