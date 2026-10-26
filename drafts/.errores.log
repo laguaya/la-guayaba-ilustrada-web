@@ -247,3 +247,4 @@ RuntimeError: La nota no tiene video de la campaña para el Reel
 2026-10-26T15:04:49.311631 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
 2026-10-26T15:04:51.179261 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
 2026-10-26T15:04:53.004857 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
+2026-10-26T16:00:05.043828 enviando Reel nex-wrexham-reynolds-entrevista-nina
