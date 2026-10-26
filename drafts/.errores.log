@@ -258,3 +258,4 @@ RuntimeError: La nota no tiene video de la campaña para el Reel
 2026-10-26T19:24:22.373147 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
 2026-10-26T19:24:22.758352 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
 2026-10-26T19:24:23.174047 Telegram editMessageReplyMarkup falló: Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+2026-10-26T20:00:11.805463 enviando Reel sephora-seth-rogen-regalos-navidad
