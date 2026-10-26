@@ -1,18 +1,15 @@
-2026-10-26T18:18:42.332818 walmart-muppets-walton-goggins-scrooge
-Video desde caché: https://www.youtube.com/watch?v=iWFlFNm2IPk
+2026-10-26T19:24:16.658412 sephora-seth-rogen-regalos-navidad
+ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
+ElevenLabs usó eleven_v4
+Pausas recortadas: 15 4.7s
+Caché guardada: https://www.youtube.com/watch?v=I2TjIBq9vLQ 201
 Video av1 -> h264 ok
-Fuente 24 campana 138.7s 6 tomas
-Video desde caché: https://www.youtube.com/watch?v=iWFlFNm2IPk
+Fuente 1 campana 30.0s 18 tomas
+Video desde caché: https://www.youtube.com/watch?v=I2TjIBq9vLQ
 Video av1 -> h264 ok
-Fuente 25 https://www.youtube.com/watch?v=iWFlFNm2IPk 138.7s 6 tomas
-Video desde caché: https://www.youtube.com/watch?v=ceaj_n78RYU
-Video av1 -> h264 ok
-Fuente 26 https://www.youtube.com/watch?v=ceaj_n78RYU 90.1s 4 tomas
-Video desde caché: https://www.youtube.com/watch?v=uUroInAgrnw
-Fuente 27 https://www.youtube.com/watch?v=uUroInAgrnw 30.1s 12 tomas
-Video desde caché: https://www.instagram.com/reel/DezQiN8qGO3/
-Fuente 28 https://www.instagram.com/reel/DezQiN8qGO3/ 47.0s 19 tomas
-Toma de arranque: 55.6-62.0 puntaje 1.45
-Reel: [(0.0, 3.9, 'video24'), (3.9, 8.9, 'video24'), (8.9, 12.5, 'video26'), (12.5, 14.4, 'video28'), (14.4, 17.3, 'video24'), (17.3, 21.0, 'video27'), (21.0, 26.6, 'video24'), (26.6, 30.9, 'video24'), (30.9, 36.0, 'video24'), (36.0, 40.0, 'video24')]
-Diseños TikTok: ['tres', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'tres', 'original']
+Fuente 2 https://www.youtube.com/watch?v=I2TjIBq9vLQ 30.0s 18 tomas
+yt-dlp default : b'ERROR: [Instagram] DeuNWiqhSD2: There is no video in this post\n'
+yt-dlp default : b'ERROR: [twitter] 2114689878503948544: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U\n'
+Toma de arranque: 17.8-20.3 puntaje 2.70
+Reel: [(0.0, 2.4, 'video1'), (2.4, 4.4, 'video1'), (4.4, 5.7, 'video1'), (5.7, 6.9, 'video1'), (6.9, 8.0, 'video1'), (8.0, 9.6, 'video1'), (9.6, 12.0, 'video1'), (12.0, 12.5, 'video1'), (12.5, 14.4, 'video2'), (14.4, 15.9, 'video2'), (15.9, 17.3, 'video2'), (17.3, 18.3, 'video1'), (18.3, 21.2, 'video1'), (21.2, 22.7, 'video1'), (22.7, 23.7, 'video1'), (23.7, 25.7, 'video2'), (25.7, 27.4, 'video2'), (27.4, 29.3, 'video2'), (29.3, 30.3, 'video2'), (30.3, 32.8, 'video2'), (32.8, 34.0, 'video2'), (34.0, 40.0, 'video1')]
 

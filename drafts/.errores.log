@@ -250,3 +250,11 @@ RuntimeError: La nota no tiene video de la campaña para el Reel
 2026-10-26T16:00:05.043828 enviando Reel nex-wrexham-reynolds-entrevista-nina
 2026-10-26T18:00:01.900711 enviando Reel walmart-muppets-walton-goggins-scrooge
 2026-10-26T19:00:27.564440 enviando Reel guia-copiale-heineken
+2026-10-26T19:24:17.345291 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
+2026-10-26T19:24:18.726359 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
+2026-10-26T19:24:19.961676 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
+2026-10-26T19:24:21.175024 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
+2026-10-26T19:24:21.586715 Telegram editMessageReplyMarkup falló: Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+2026-10-26T19:24:22.373147 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
+2026-10-26T19:24:22.758352 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
+2026-10-26T19:24:23.174047 Telegram editMessageReplyMarkup falló: Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
