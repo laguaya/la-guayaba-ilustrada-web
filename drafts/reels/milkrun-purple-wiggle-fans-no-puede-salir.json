@@ -1,0 +1,64 @@
+{
+ "id": "milkrun-purple-wiggle-fans-no-puede-salir",
+ "t": "El Wiggle morado no puede salir de su casa por sus fans en el nuevo comercial de MILKRUN",
+ "k": "Noticias",
+ "src": "https://campaignbrief.com/milkrun-partners-with-purple-wiggle-to-cause-fan-frenzy-in-new-campaign-via-double-woo/",
+ "yt": "axdvO0FlN4g",
+ "ig": {
+  "etiqueta": "Última hora",
+  "portada": "Sus fans *no lo dejan salir* de su casa",
+  "marca": "MILKRUN",
+  "caption": "El Wiggle morado no puede salir de su casa porque las mamás y papás fans lo esperan afuera 😅\n\nEs el nuevo comercial de MILKRUN, la app de súper a domicilio de Australia, con John Pearce de The Wiggles.\nLa agencia Double Woo convirtió su fama de galán de TikTok en el problema que resuelve la marca.\nMarketing con celebridad que tiene sentido: el famoso no presume, necesita el producto.\n\n¿Genial o exagerado?\nMándaselo a tu amiga que todavía canta las canciones de los Wiggles.\n\n🎥 Video: MILKRUN / Double Woo\nTodos los días las campañas más locas de las marcas, síguenos\n\n#MILKRUN #TheWiggles #PublicidadCreativa #MarketingDigital",
+  "caption_tiktok": "El comercial del Wiggle morado que no puede salir de su casa por sus fans 😂 Las mamás lo esperan con letreros y él tiene que pedir el súper por app. ¿Tú también serías fan? 🎥 Video: MILKRUN / Double Woo. Síguenos: una campaña nueva cada 2 horas #wiggles #publicidad #marketingtiktok #parati",
+  "videos": [
+   "https://campaignbrief.com/milkrun-partners-with-purple-wiggle-to-cause-fan-frenzy-in-new-campaign-via-double-woo/",
+   "https://retailworldmagazine.com.au/milkrun-partners-with-purple-wiggle-in-new-campaign/",
+   "https://www.youtube.com/watch?v=axdvO0FlN4g"
+  ],
+  "pronunciar": {
+   "MILKRUN": "Mílkran",
+   "Wiggles": "Uíguels",
+   "Wiggle": "Uíguel",
+   "John Pearce": "Yon Pírs"
+  },
+  "escenas": [
+   {
+    "voz": "John Pearce no puede salir de su propia casa.",
+    "ver": "video",
+    "desde": 0,
+    "hasta": 3
+   },
+   {
+    "voz": "Es el Wiggle morado, del grupo infantil más famoso de Australia.",
+    "ver": "video"
+   },
+   {
+    "voz": "Afuera lo esperan mamás y papás con letreros, como a una estrella de rock.",
+    "ver": "video"
+   },
+   {
+    "voz": "Tocan la puerta. Se asoman por la ventana. Y otra vez, y otra.",
+    "ver": "video"
+   },
+   {
+    "voz": "Lo más loco: en TikTok le dicen el galán de las mamás. La marca lo sabía.",
+    "ver": "video",
+    "video": "https://retailworldmagazine.com.au/milkrun-partners-with-purple-wiggle-in-new-campaign/"
+   },
+   {
+    "voz": "Así que pide todo por MILKRUN, la app de súper que quebró en 2023 y resucitó.",
+    "ver": "video",
+    "video": "https://campaignbrief.com/milkrun-partners-with-purple-wiggle-to-cause-fan-frenzy-in-new-campaign-via-double-woo/"
+   },
+   {
+    "voz": "A mí me pareció buenísimo: el famoso no presume, tiene un problema real.",
+    "ver": "video",
+    "video": "https://www.youtube.com/watch?v=axdvO0FlN4g"
+   },
+   {
+    "voz": "Mándaselo a tu amiga que ama a los Wiggles. ¿Genial o exagerado?",
+    "ver": "video"
+   }
+  ]
+ }
+}
