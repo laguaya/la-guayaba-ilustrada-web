@@ -55,5 +55,6 @@
     "ver": "video"
    }
   ]
- }
+ },
+ "fallo": "La nota no tiene video de la campaña para el Reel"
 }
