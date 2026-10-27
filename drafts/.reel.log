@@ -1,11 +1,12 @@
-2026-10-27T13:40:51.165390 toast-tyler-florence-cocineros-ia
-Video desde caché: https://www.youtube.com/watch?v=nkzw98sABiA
+2026-10-27T14:35:47.889590 dollar-shave-club-perfectly-good-hielo
+Video desde caché: https://www.youtube.com/watch?v=x6uitT2n4NE
 Video av1 -> h264 ok
-Fuente 3 campana 30.0s 17 tomas
-yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://lbbonline.com/work/185462/embed?no_credits=true\n'
-yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://lbbonline.com/work/185463/embed?no_credits=true\n'
-yt-dlp default : b'ERROR: [generic] toast-iq-puts-too-many-cooks-in-the-kitchen-in-arnold-s-debut-campaign: Unable to download webpage: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>)\n'
-Toma de arranque: 7.0-7.3 puntaje 2.65
-Reel: [(0.0, 5.5, 'video3'), (5.5, 7.1, 'video3'), (7.1, 8.1, 'video3'), (8.1, 9.5, 'video3'), (9.5, 10.8, 'video3'), (10.8, 40.0, 'video3')]
-Diseños TikTok: ['dos', 'original', 'original', 'original', 'tres', 'original']
+Fuente 4 campana 30.0s 18 tomas
+Video desde caché: https://www.youtube.com/watch?v=x6uitT2n4NE
+Video av1 -> h264 ok
+Fuente 5 https://www.youtube.com/watch?v=x6uitT2n4NE 30.0s 18 tomas
+yt-dlp default : b'ERROR: [generic] Got HTTP Error 403 caused by Cloudflare anti-bot challenge; try again with  --extractor-args "generic:impersonate"\n'
+yt-dlp default : b'on using  yt-dlp -U\nERROR: [Instagram] Dd1faBzpWOf: No video formats found!; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U\n'
+Reel: [(0.0, 3.9, 'video4'), (3.9, 5.4, 'video4'), (5.4, 7.1, 'video4'), (7.1, 9.2, 'video5'), (9.2, 10.8, 'video5'), (10.8, 12.8, 'video5'), (12.8, 14.5, 'video5'), (14.5, 16.0, 'video4'), (16.0, 17.8, 'video5'), (17.8, 18.4, 'video4'), (18.4, 19.6, 'video4'), (19.6, 20.7, 'video5'), (20.7, 22.1, 'video4'), (22.1, 23.2, 'video5'), (23.2, 24.2, 'video4'), (24.2, 40.0, 'video5')]
+Diseños TikTok: ['dos', 'original', 'dos', 'original', 'tres', 'original', 'dos', 'original', 'dos', 'original', 'original', 'original', 'tres', 'original', 'original', 'original']
 
