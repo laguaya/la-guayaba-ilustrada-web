@@ -20,14 +20,42 @@
    "Chocolate Rain": "Chócolet Réin"
   },
   "escenas": [
-   {"voz": "El chavo del Numa Numa volvió a bailar, veinte años después.", "ver": "video"},
-   {"voz": "En dos mil cuatro ese baile fue de los videos más vistos del mundo.", "ver": "video", "video": "https://www.youtube.com/watch?v=Cqd1Gvq-RBY"},
-   {"voz": "Y no está solo. Regresan la novia intensa y la naranja molesta.", "ver": "video"},
-   {"voz": "Hasta Tay Zonday, el de Chocolate Rain.", "ver": "video", "video": "https://www.youtube.com/watch?v=EwTZ2xpQwpA"},
-   {"voz": "Lo más loco: es un comercial de Firefox contra el rastreo y la inteligencia artificial forzada.", "ver": "video", "video": "https://www.famouscampaigns.com/wp-content/uploads/2026/10/Its-time-to-come-back-to-Firefox.-The-Internet-you-loved-is-still-here.mp4"},
-   {"voz": "Firefox llegó a tener treinta y dos por ciento del mercado. Hoy tiene menos de tres.", "ver": "video"},
-   {"voz": "A mí me pareció brillante. Tu pasado también puede ser tu mejor anuncio.", "ver": "video"},
-   {"voz": "Mándaselo a tu amigo que se sabe todos los memes. ¿Genial o pura nostalgia?", "ver": "video"}
+   {
+    "voz": "El chavo del Numa Numa volvió a bailar, veinte años después.",
+    "ver": "video"
+   },
+   {
+    "voz": "En dos mil cuatro ese baile fue de los videos más vistos del mundo.",
+    "ver": "video",
+    "video": "https://www.youtube.com/watch?v=Cqd1Gvq-RBY"
+   },
+   {
+    "voz": "Y no está solo. Regresan la novia intensa y la naranja molesta.",
+    "ver": "video"
+   },
+   {
+    "voz": "Hasta Tay Zonday, el de Chocolate Rain.",
+    "ver": "video",
+    "video": "https://www.youtube.com/watch?v=EwTZ2xpQwpA"
+   },
+   {
+    "voz": "Lo más loco: es un comercial de Firefox contra el rastreo y la inteligencia artificial forzada.",
+    "ver": "video",
+    "video": "https://www.famouscampaigns.com/wp-content/uploads/2026/10/Its-time-to-come-back-to-Firefox.-The-Internet-you-loved-is-still-here.mp4"
+   },
+   {
+    "voz": "Firefox llegó a tener treinta y dos por ciento del mercado. Hoy tiene menos de tres.",
+    "ver": "video"
+   },
+   {
+    "voz": "A mí me pareció brillante. Tu pasado también puede ser tu mejor anuncio.",
+    "ver": "video"
+   },
+   {
+    "voz": "Mándaselo a tu amigo que se sabe todos los memes. ¿Genial o pura nostalgia?",
+    "ver": "video"
+   }
   ]
- }
+ },
+ "listo": true
 }

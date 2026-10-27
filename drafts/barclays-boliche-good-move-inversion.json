@@ -12,13 +12,15 @@
   "La campaña acompaña Invest for the Future, una iniciativa de la industria financiera británica para que más gente invierta, y suma un videopodcast de VCCP que explica la inversión con analogías de la vida diaria. El branding del banco aparece en lo esencial: el azul y el águila dentro de la bola, sin saturar la escena con logotipos.",
   "Para tu marca: si vendes algo que da miedo o parece complicado, busca una metáfora que tu cliente ya entienda. Una escuela de manejo puede usar las rueditas de una bicicleta; un despacho contable, un GPS que recalcula la ruta. Grábalo en una sola escena con un gesto claro y deja que la imagen explique el beneficio. Una buena metáfora ahorra párrafos de explicación."
  ],
- "img": "assets/work/nota-barclays-boliche-good-move-inversion.webp",
+ "img": "assets/work/nota-barclays-boliche-good-move-inversion-foto-src1.webp",
  "alt": "Comercial Bumpers de Barclays: hombre en un boliche retro lanza una bola transparente con el águila de Barclays entre barreras",
- "cr": "",
+ "cr": "Foto: thedrum.com",
  "src": "https://www.thedrum.com/news/barclays-makes-investing-look-easy-but-not-too-easy-with-a-bowling-split",
  "sn": "Con información de The Drum",
  "yt": "Ly2Kq3k_dM0",
- "fuentes": ["https://creative.salon/articles/work/barclays-good-move-vccp"],
+ "fuentes": [
+  "https://creative.salon/articles/work/barclays-good-move-vccp"
+ ],
  "buscar": "Barclays Good Move Bumpers",
  "ig": {
   "etiqueta": "Inspiración",
@@ -32,5 +34,12 @@
   "marca": "Barclays",
   "caption": "Barclays resolvió el peor tiro del boliche con una app de inversión 🎳\n\nEl comercial Bumpers de la campaña Good Move muestra a un hombre que abre su cuenta y suben las barreras de la pista.\nLa publicidad busca quitarle el miedo a invertir a más de 10 millones de británicos.\nLo dirigió Andreas Nilsson, el mismo de The Epic Split de Volvo con Van Damme.\nMarketing financiero explicado con una sola imagen.\n\n¿Qué metáfora usarías para explicar tu negocio?\nGuárdalo para tu próxima idea de campaña.\n\nNota completa en el link de la bio.\n🎥 Video: Barclays / VCCP\nSíguenos para las noticias de marcas, diseño y publicidad que sí importan, todos los días.\n\n#Barclays #PublicidadCreativa #MarketingFinanciero #MarketingMexico",
   "caption_tiktok": "El comercial de Barclays que explica invertir con un tiro imposible de boliche. Del director de The Epic Split. ¿Tú lo entendiste a la primera? 🎥 Barclays / VCCP. Una campaña nueva cada 2 horas, síguenos #barclays #publicidad #finanzaspersonales #marketingdigital"
- }
+ },
+ "cands": [
+  "assets/work/nota-barclays-boliche-good-move-inversion-foto-src1.webp",
+  "assets/work/nota-barclays-boliche-good-move-inversion-foto-src2.webp"
+ ],
+ "ig1": "assets/work/nota-barclays-boliche-good-move-inversion-foto-src1.webp",
+ "ig2": "assets/work/nota-barclays-boliche-good-move-inversion-foto-src2.webp",
+ "cands_v": 2
 }
