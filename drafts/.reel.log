@@ -1,10 +1,11 @@
-2026-10-27T13:32:35.279813 guia guia-antes-despues-kfc-2026-10-27
-Foto busca: KFC restaurant HTTPSConnectionPool(host='api.openverse.org', port=443): Read timed out. (read timeout=30)
-ElevenLabs usó eleven_v4
-Caché guardada: https://www.youtube.com/watch?v=ulWCL6TlIDo 201
-ElevenLabs usó eleven_v4
-ElevenLabs usó eleven_v4
-ElevenLabs usó eleven_v4
-ElevenLabs usó eleven_v4
-ElevenLabs usó eleven_v4
+2026-10-27T13:40:51.165390 toast-tyler-florence-cocineros-ia
+Video desde caché: https://www.youtube.com/watch?v=nkzw98sABiA
+Video av1 -> h264 ok
+Fuente 3 campana 30.0s 17 tomas
+yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://lbbonline.com/work/185462/embed?no_credits=true\n'
+yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://lbbonline.com/work/185463/embed?no_credits=true\n'
+yt-dlp default : b'ERROR: [generic] toast-iq-puts-too-many-cooks-in-the-kitchen-in-arnold-s-debut-campaign: Unable to download webpage: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>)\n'
+Toma de arranque: 7.0-7.3 puntaje 2.65
+Reel: [(0.0, 5.5, 'video3'), (5.5, 7.1, 'video3'), (7.1, 8.1, 'video3'), (8.1, 9.5, 'video3'), (9.5, 10.8, 'video3'), (10.8, 40.0, 'video3')]
+Diseños TikTok: ['dos', 'original', 'original', 'original', 'tres', 'original']
 
