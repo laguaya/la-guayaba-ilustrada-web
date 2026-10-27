@@ -1,0 +1,92 @@
+{
+ "id": "guia-antes-despues-kfc-2026-10-27",
+ "t": "Guía: el nuevo logo de KFC y el muslo de pollo escondido en la C",
+ "k": "Inspiración",
+ "listo": false,
+ "sale": "2026-10-27 13",
+ "ig": {
+  "formato": "guia",
+  "estilo": "antes_despues",
+  "pronunciar": {
+   "JKR": "jota ka erre",
+   "Studio Drama": "Estudio Drama",
+   "FedEx": "Fédex"
+  },
+  "escenas": [
+   {
+    "tipo": "portada",
+    "video": [
+     "https://www.youtube.com/watch?v=ulWCL6TlIDo",
+     "ytsearch1:KFC new brand identity 2026 JKR"
+    ],
+    "desde": 2,
+    "foto": "busca:KFC restaurant",
+    "titulo": "El nuevo logo de *KFC* esconde un muslo de pollo",
+    "sub": "Antes y después, explicado en 30 segundos",
+    "voz": "El nuevo logo de KFC esconde un muslo de pollo. Te explico el antes y el después en treinta segundos."
+   },
+   {
+    "tipo": "compara",
+    "antes": "logo:KFC",
+    "despues": "logo:KFC 2026",
+    "fondo_antes": "#FFFFFF",
+    "fondo_despues": "#FFFFFF",
+    "antes_txt": "Antes",
+    "despues_txt": "2026",
+    "titulo": "Letras más *gruesas y redondas*",
+    "cuerpo": "Mantiene la inclinación y los remates de siempre, pero se lee mejor en pantallas.",
+    "voz": "Las letras ahora son más gruesas y redondas para leerse mejor en el celular, pero conservan su inclinación de siempre."
+   },
+   {
+    "tipo": "punto",
+    "video": [
+     "https://www.youtube.com/watch?v=ulWCL6TlIDo",
+     "ytsearch1:KFC new brand identity 2026 JKR"
+    ],
+    "desde": 12,
+    "titulo": "Un muslo *escondido en la C*",
+    "cuerpo": "El espacio de la C y el símbolo de marca registrada forman una pieza de pollo.",
+    "voz": "Lo más ingenioso: dentro de la C hay un muslo de pollo, y el símbolo de marca registrada completa la figura. Sus diseñadores querían su propia flecha de FedEx."
+   },
+   {
+    "tipo": "punto",
+    "video": [
+     "https://www.youtube.com/watch?v=ulWCL6TlIDo",
+     "ytsearch1:KFC new brand identity 2026 JKR"
+    ],
+    "desde": 24,
+    "titulo": "Las rayas *ahora hablan*",
+    "cuerpo": "Las franjas de la cubeta llevan las letras K, F y C, y el Coronel estrena moño más grande.",
+    "voz": "Las rayas de la cubeta ahora llevan las letras K, F y C, y el Coronel estrena un moño más grande."
+   },
+   {
+    "tipo": "colores",
+    "colores": [
+     [
+      "Rojo KFC",
+      "#E4002B"
+     ],
+     [
+      "Verde hierbas",
+      "#2E7D32"
+     ],
+     [
+      "Naranja especias",
+      "#F28C28"
+     ]
+    ],
+    "titulo": "Colores que *saben a receta*",
+    "cuerpo": "Al rojo de siempre se suman un verde por las hierbas y un naranja por las especias.",
+    "voz": "Y al rojo de siempre le sumó dos colores: verde por las hierbas y naranja por las especias de su receta."
+   },
+   {
+    "tipo": "cierre",
+    "titulo": "La lección: no cambies tu marca, *haz que se note*",
+    "sub": "Fuentes: The Drum y Yum! Brands, 2026. Diseño: JKR y Studio Drama. Comenta POLLO y te digo qué esconder en tu logo.",
+    "voz": "La lección: no cambies tu marca, haz que se note lo que ya tenías. Comenta POLLO y te digo qué podrías esconder en tu logo."
+   }
+  ],
+  "caption": "El nuevo logo de KFC esconde un muslo de pollo dentro de la C 🍗\n\nAntes: letras más delgadas y las rayas solo como adorno.\nDespués (2026): letras más gruesas y redondas, un muslo en el espacio de la C, las rayas con las letras K, F y C y dos colores nuevos, verde hierbas y naranja especias.\n\nLa lección: no cambies tu marca, haz que se note lo que ya tenías.\n\n¿Ya habías visto el muslo? Comenta POLLO 👇\n\nFuentes: The Drum y Yum! Brands. Diseño: JKR y Studio Drama.\nSíguenos: un antes y después de marca cada martes\n\n#KFC #Rebranding #Branding #DiseñoGrafico #AntesYDespues",
+  "caption_tiktok": "El nuevo logo de KFC tiene un muslo de pollo escondido en la C. ¿Lo habías visto? Síguenos: un antes y después de marca cada martes #kfc #rebranding #diseñografico #branding"
+ }
+}
