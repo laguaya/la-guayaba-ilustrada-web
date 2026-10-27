@@ -1,11 +1,10 @@
-2026-10-27T15:22:47.714886 kohler-chloe-fineman-gala-museo-bano
-ElevenLabs usó eleven_v4
-Pausas recortadas: 13 4.2s
-Caché guardada: https://www.youtube.com/watch?v=Io15HEi2nTc 201
+2026-10-27T16:56:54.669340 kohler-chloe-fineman-gala-museo-bano
+Video desde caché: https://www.youtube.com/watch?v=Io15HEi2nTc
 Video av1 -> h264 ok
-Fuente 6 campana 45.1s 26 tomas
+Fuente 7 campana 45.1s 26 tomas
 yt-dlp default : b'ERROR: [generic] ad-of-the-day-chloe-fineman-crashes-kohler-s-red-carpet-bathroom-private-view: Unable to download webpage: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>)\n'
 yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://www.prnewswire.com/news-releases/kohler-celebrates-the-art-of-curation-in-new-collections-campaign-302914223.html\n'
 Toma de arranque: 23.1-26.2 puntaje 2.49
-Reel: [(0.0, 3.0, 'video6'), (3.0, 4.4, 'video6'), (4.4, 7.0, 'video6'), (7.0, 8.8, 'video6'), (8.8, 11.0, 'video6'), (11.0, 13.0, 'video6'), (13.0, 14.8, 'video6'), (14.8, 16.2, 'video6'), (16.2, 17.9, 'video6'), (17.9, 18.2, 'video6'), (18.2, 19.4, 'video6'), (19.4, 20.4, 'video6'), (20.4, 21.5, 'video6'), (21.5, 22.8, 'video6'), (22.8, 23.4, 'video6'), (23.4, 24.4, 'video6'), (24.4, 34.9, 'video6'), (34.9, 40.0, 'video6')]
+Reel: [(0.0, 3.0, 'video7'), (3.0, 4.4, 'video7'), (4.4, 6.2, 'video7'), (6.2, 8.4, 'video7'), (8.4, 9.1, 'video7'), (9.1, 10.2, 'video7'), (10.2, 11.6, 'video7'), (11.6, 13.0, 'video7'), (13.0, 14.1, 'video7'), (14.1, 15.2, 'video7'), (15.2, 16.2, 'video7'), (16.2, 17.5, 'video7'), (17.5, 40.0, 'video7')]
+Diseños TikTok: ['tres', 'original', 'dos', 'original', 'original', 'original', 'dos', 'original', 'original', 'original', 'original', 'original', 'original']
 
