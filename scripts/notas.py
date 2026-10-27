@@ -16,6 +16,7 @@ API = f'https://api.telegram.org/bot{TOKEN}/'
 OFFSET = 'drafts/.offset'
 MSGS = 'drafts/.msgs.json'
 IGQ = 'drafts/.igqueue.json'
+PAUSA = 'drafts/.pausa.json'   # si existe, no salen notas, Reels ni Guías nuevas (los botones siguen funcionando)
 COLORS = {'Noticias': '#FF9D00', 'Tendencias': '#FF3674', 'Inspiración': '#FFA4BE'}
 MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic']
 changed = False
@@ -709,6 +710,8 @@ def build_reel_solo(r, tiktok=False):
 def reels_sueltos():
     """Arma cada Reel en cuanto llega y lo manda a Telegram en punto: uno por horario (8 a 22 h, cada 2 horas)."""
     global changed
+    if os.path.exists(PAUSA):            # Sergio pausó: no se arman ni se mandan Reels ni Guías (sin créditos de voz)
+        return
     for path in sorted(glob.glob(f'{REELS}/*.json')):
         r = load(path)
         if r.get('tg') or r.get('fallo'):
@@ -1133,6 +1136,8 @@ def send_pending():
     for path in sorted(glob.glob('drafts/*.json')):
         n = load(path)
         if n.get('tg'):
+            continue
+        if os.path.exists(PAUSA) and not n.get('urgente'):   # Sergio pausó las publicaciones
             continue
         if 'cands' not in n:
             poner_candidatas(n); n['cands_v'] = 2
