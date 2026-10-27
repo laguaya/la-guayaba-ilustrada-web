@@ -1,0 +1,33 @@
+{
+ "id": "firefox-estrellas-memes-come-back",
+ "t": "Firefox reúne a las estrellas de los memes de los 2000 en su nuevo comercial",
+ "k": "Inspiración",
+ "src": "https://blog.mozilla.org/en/firefox/come-back-to-firefox/",
+ "yt": "E2AoYIKwJqM",
+ "ig": {
+  "etiqueta": "Inspiración",
+  "portada": "El chavo del *Numa Numa* volvió para Firefox",
+  "marca": "Firefox",
+  "caption": "Firefox trajo de vuelta al Numa Numa, Chocolate Rain y la novia sobreapegada para su nuevo comercial 💻\n\nCome Back to Firefox es la campaña de Mozilla para recuperar a quienes dejaron su navegador.\nLas estrellas de los memes de YouTube recrean sus videos originales, en los mismos sets, para burlarse del rastreo de datos y de la inteligencia artificial forzada.\nPublicidad que usa la nostalgia del internet de los 2000 como estrategia de marketing.\n\n¿Cuál de estos memes viste primero?\nMándaselo a alguien que se acuerde del Numa Numa.\n\n🎥 Video: Mozilla Firefox / We Believers\nTodos los días las campañas más locas de las marcas, síguenos 📲\n\n#Firefox #PublicidadCreativa #MarketingDigital #Memes",
+  "caption_tiktok": "El comercial de Firefox con los memes de los 2000: Numa Numa, Chocolate Rain y la novia sobreapegada otra vez. ¿Te los sabes todos? 🎥 Mozilla / We Believers. Una campaña nueva cada 2 horas, síguenos #firefox #memes #nostalgia #marketingtiktok #publicidad",
+  "videos": [
+   "https://www.famouscampaigns.com/wp-content/uploads/2026/10/Its-time-to-come-back-to-Firefox.-The-Internet-you-loved-is-still-here.mp4",
+   "https://www.youtube.com/watch?v=Cqd1Gvq-RBY",
+   "https://www.youtube.com/watch?v=EwTZ2xpQwpA"
+  ],
+  "pronunciar": {
+   "Tay Zonday": "Téi Sondéi",
+   "Chocolate Rain": "Chócolet Réin"
+  },
+  "escenas": [
+   {"voz": "El chavo del Numa Numa volvió a bailar, veinte años después.", "ver": "video"},
+   {"voz": "En dos mil cuatro ese baile fue de los videos más vistos del mundo.", "ver": "video", "video": "https://www.youtube.com/watch?v=Cqd1Gvq-RBY"},
+   {"voz": "Y no está solo. Regresan la novia intensa y la naranja molesta.", "ver": "video"},
+   {"voz": "Hasta Tay Zonday, el de Chocolate Rain.", "ver": "video", "video": "https://www.youtube.com/watch?v=EwTZ2xpQwpA"},
+   {"voz": "Lo más loco: es un comercial de Firefox contra el rastreo y la inteligencia artificial forzada.", "ver": "video", "video": "https://www.famouscampaigns.com/wp-content/uploads/2026/10/Its-time-to-come-back-to-Firefox.-The-Internet-you-loved-is-still-here.mp4"},
+   {"voz": "Firefox llegó a tener treinta y dos por ciento del mercado. Hoy tiene menos de tres.", "ver": "video"},
+   {"voz": "A mí me pareció brillante. Tu pasado también puede ser tu mejor anuncio.", "ver": "video"},
+   {"voz": "Mándaselo a tu amigo que se sabe todos los memes. ¿Genial o pura nostalgia?", "ver": "video"}
+  ]
+ }
+}
