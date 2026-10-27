@@ -1,10 +1,13 @@
-2026-10-27T16:56:54.669340 kohler-chloe-fineman-gala-museo-bano
-Video desde caché: https://www.youtube.com/watch?v=Io15HEi2nTc
+2026-10-27T17:44:06.951316 verizon-chris-briney-cuelga-cupon-starbucks
+ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
+ElevenLabs usó eleven_v4
+Pausas recortadas: 21 6.1s
+Caché guardada: https://www.youtube.com/watch?v=kWtg_n6sZXM 201
 Video av1 -> h264 ok
-Fuente 7 campana 45.1s 26 tomas
-yt-dlp default : b'ERROR: [generic] ad-of-the-day-chloe-fineman-crashes-kohler-s-red-carpet-bathroom-private-view: Unable to download webpage: HTTP Error 403: Forbidden (caused by <HTTPError 403: Forbidden>)\n'
-yt-dlp default : b'WARNING: [generic] Falling back on generic information extractor\nERROR: Unsupported URL: https://www.prnewswire.com/news-releases/kohler-celebrates-the-art-of-curation-in-new-collections-campaign-302914223.html\n'
-Toma de arranque: 23.1-26.2 puntaje 2.49
-Reel: [(0.0, 3.0, 'video7'), (3.0, 4.4, 'video7'), (4.4, 6.2, 'video7'), (6.2, 8.4, 'video7'), (8.4, 9.1, 'video7'), (9.1, 10.2, 'video7'), (10.2, 11.6, 'video7'), (11.6, 13.0, 'video7'), (13.0, 14.1, 'video7'), (14.1, 15.2, 'video7'), (15.2, 16.2, 'video7'), (16.2, 17.5, 'video7'), (17.5, 40.0, 'video7')]
-Diseños TikTok: ['tres', 'original', 'dos', 'original', 'original', 'original', 'dos', 'original', 'original', 'original', 'original', 'original', 'original']
+Fuente 1 campana 122.7s 44 tomas
+Caché guardada: https://www.youtube.com/watch?v=zF7UHmoG4sA 201
+Video av1 -> h264 ok
+Fuente 2 https://www.youtube.com/watch?v=zF7UHmoG4sA 39.6s 27 tomas
+Fuente 3 https://musebyclios.com/film-tv/verizon-casts-chris-briney-in-moody-re 122.8s 44 tomas
+Reel: [(0.0, 4.1, 'video1'), (4.1, 5.2, 'video1'), (5.2, 6.4, 'video1'), (6.4, 8.6, 'video1'), (8.6, 10.0, 'video1'), (10.0, 11.9, 'video1'), (11.9, 14.4, 'video1'), (14.4, 16.5, 'video1'), (16.5, 19.6, 'video1'), (19.6, 21.0, 'video1'), (21.0, 22.3, 'video2'), (22.3, 25.2, 'video1'), (25.2, 26.7, 'video3'), (26.7, 29.0, 'video1'), (29.0, 30.1, 'video1'), (30.1, 31.7, 'video1'), (31.7, 34.4, 'video1'), (34.4, 34.8, 'video1'), (34.8, 40.0, 'video1')]
 
