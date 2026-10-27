@@ -1,15 +1,11 @@
-2026-10-27T19:33:10.746840 kylie-jenner-stella-mccartney-caballo-mar
+2026-10-27T21:28:30.110631 kristen-bell-marketplace-noah-equivocado
 ElevenLabs usó eleven_v4
-Pausas recortadas: 14 3.9s
-Caché guardada: https://www.youtube.com/watch?v=yEcNC72MhrM 201
+Pausas recortadas: 14 3.3s
+Caché guardada: https://www.youtube.com/watch?v=hijMAm2pqSQ 201
 Video av1 -> h264 ok
-Fuente 4 campana 77.3s 35 tomas
-Caché guardada: https://www.instagram.com/p/Dey36B6sRt1 201
-Video vp9 -> h264 ok
-Fuente 5 https://www.instagram.com/p/Dey36B6sRt1 77.2s 35 tomas
-yt-dlp default : b''
-yt-dlp ['youtube:player_client=tv'] : b'ERROR: [youtube] 4nbyRLUpE-I: The page needs to be reloaded.\n'
-Caché guardada: https://www.youtube.com/watch?v=4nbyRLUpE-I 201
-Fuente 6 https://www.youtube.com/watch?v=4nbyRLUpE-I 1179.1s 192 tomas
-Reel: [(0.0, 3.3, 'video4'), (3.3, 4.8, 'video5'), (4.8, 5.8, 'video5'), (5.8, 7.1, 'video5'), (7.1, 8.6, 'video5'), (8.6, 9.6, 'video5'), (9.6, 10.9, 'video5'), (10.9, 11.2, 'video4'), (11.2, 13.4, 'video5'), (13.4, 14.4, 'video4'), (14.4, 16.0, 'video4'), (16.0, 18.6, 'video6'), (18.6, 19.6, 'video4'), (19.6, 20.6, 'video4'), (20.6, 22.7, 'video4'), (22.7, 25.8, 'video4'), (25.8, 27.3, 'video4'), (27.3, 28.8, 'video4'), (28.8, 31.7, 'video4'), (31.7, 40.0, 'video4')]
+Fuente 7 campana 60.1s 19 tomas
+Video desde caché: https://www.youtube.com/watch?v=hijMAm2pqSQ
+Video av1 -> h264 ok
+Fuente 8 https://www.youtube.com/watch?v=hijMAm2pqSQ 60.1s 19 tomas
+Reel: [(0.0, 3.4, 'video7'), (3.4, 8.4, 'video8'), (8.4, 9.6, 'video8'), (9.6, 12.4, 'video8'), (12.4, 15.2, 'video7'), (15.2, 19.2, 'video8'), (19.2, 24.1, 'video7'), (24.1, 27.4, 'video8'), (27.4, 32.4, 'video7'), (32.4, 40.0, 'video7')]
 
