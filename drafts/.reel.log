@@ -1,13 +1,15 @@
-2026-10-27T17:44:06.951316 verizon-chris-briney-cuelga-cupon-starbucks
-ElevenLabs: voz l2MzrQUmaydmQn5rFHJV modelo eleven_v4
+2026-10-27T19:33:10.746840 kylie-jenner-stella-mccartney-caballo-mar
 ElevenLabs usó eleven_v4
-Pausas recortadas: 21 6.1s
-Caché guardada: https://www.youtube.com/watch?v=kWtg_n6sZXM 201
+Pausas recortadas: 14 3.9s
+Caché guardada: https://www.youtube.com/watch?v=yEcNC72MhrM 201
 Video av1 -> h264 ok
-Fuente 1 campana 122.7s 44 tomas
-Caché guardada: https://www.youtube.com/watch?v=zF7UHmoG4sA 201
-Video av1 -> h264 ok
-Fuente 2 https://www.youtube.com/watch?v=zF7UHmoG4sA 39.6s 27 tomas
-Fuente 3 https://musebyclios.com/film-tv/verizon-casts-chris-briney-in-moody-re 122.8s 44 tomas
-Reel: [(0.0, 4.1, 'video1'), (4.1, 5.2, 'video1'), (5.2, 6.4, 'video1'), (6.4, 8.6, 'video1'), (8.6, 10.0, 'video1'), (10.0, 11.9, 'video1'), (11.9, 14.4, 'video1'), (14.4, 16.5, 'video1'), (16.5, 19.6, 'video1'), (19.6, 21.0, 'video1'), (21.0, 22.3, 'video2'), (22.3, 25.2, 'video1'), (25.2, 26.7, 'video3'), (26.7, 29.0, 'video1'), (29.0, 30.1, 'video1'), (30.1, 31.7, 'video1'), (31.7, 34.4, 'video1'), (34.4, 34.8, 'video1'), (34.8, 40.0, 'video1')]
+Fuente 4 campana 77.3s 35 tomas
+Caché guardada: https://www.instagram.com/p/Dey36B6sRt1 201
+Video vp9 -> h264 ok
+Fuente 5 https://www.instagram.com/p/Dey36B6sRt1 77.2s 35 tomas
+yt-dlp default : b''
+yt-dlp ['youtube:player_client=tv'] : b'ERROR: [youtube] 4nbyRLUpE-I: The page needs to be reloaded.\n'
+Caché guardada: https://www.youtube.com/watch?v=4nbyRLUpE-I 201
+Fuente 6 https://www.youtube.com/watch?v=4nbyRLUpE-I 1179.1s 192 tomas
+Reel: [(0.0, 3.3, 'video4'), (3.3, 4.8, 'video5'), (4.8, 5.8, 'video5'), (5.8, 7.1, 'video5'), (7.1, 8.6, 'video5'), (8.6, 9.6, 'video5'), (9.6, 10.9, 'video5'), (10.9, 11.2, 'video4'), (11.2, 13.4, 'video5'), (13.4, 14.4, 'video4'), (14.4, 16.0, 'video4'), (16.0, 18.6, 'video6'), (18.6, 19.6, 'video4'), (19.6, 20.6, 'video4'), (20.6, 22.7, 'video4'), (22.7, 25.8, 'video4'), (25.8, 27.3, 'video4'), (27.3, 28.8, 'video4'), (28.8, 31.7, 'video4'), (31.7, 40.0, 'video4')]
 
