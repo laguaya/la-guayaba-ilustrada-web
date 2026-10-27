@@ -276,3 +276,4 @@ RuntimeError: La nota no tiene video de la campaña para el Reel
 2026-10-27T16:52:03.114884 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
 2026-10-27T16:53:14.602045 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
 2026-10-27T16:53:16.042589 Telegram answerCallbackQuery falló: Bad Request: query is too old and response timeout expired or query ID is invalid
+2026-10-27T18:00:19.794002 enviando Reel verizon-chris-briney-cuelga-cupon-starbucks
