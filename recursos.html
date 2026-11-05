@@ -50,7 +50,7 @@ i.it{font-style:italic;font-weight:400;letter-spacing:-0.02em}
 .nav-links a{color:#BDBDBD;font-size:15px;font-weight:500;line-height:1}
 .nav-links a:hover,.nav-links a[aria-current]{color:var(--white)}
 .nav-end{justify-self:end;display:flex;align-items:center;gap:14px}
-.nav-end span{color:#BDBDBD;font-size:14px;line-height:1}
+.nav-end span{color:#BDBDBD;font-size:14px;line-height:1;white-space:nowrap}@media (max-width:1240px){.nav-end span{display:none}}
 /* Menú fijo: baja contigo al hacer scroll */
 .nav{position:sticky;top:10px;z-index:90;box-shadow:0 8px 24px rgba(0,0,0,.12)}
 body::before{content:"";position:fixed;z-index:89;top:-120px;left:0;right:0;height:calc(var(--navh,84px) + 120px);background:var(--white);pointer-events:none}
@@ -235,6 +235,12 @@ footer small{font-size:13px;color:var(--gray)}
 .don input{width:110px;border:1.5px solid var(--ink);border-radius:12px;padding:8px 10px;font-weight:700;text-align:center;background:var(--white)}
 .don + .cta{margin-top:0}
 .cta[disabled]{opacity:.55;pointer-events:none}
+.cod{width:100%;font-size:14.5px}
+.cod summary{cursor:pointer;font-weight:700;text-decoration:underline;text-underline-offset:3px;list-style:none}
+.cod summary::-webkit-details-marker{display:none}
+.cod-f{display:flex;gap:8px;margin-top:10px}
+.cod-f input{flex:1;min-width:0;border:1.5px solid var(--ink);border-radius:12px;padding:10px 12px;font-weight:700;text-transform:uppercase;background:var(--white);color:var(--ink)}
+.tier.hot .cod-f .cta{background:var(--ink);color:var(--white)}
 .msg{font-size:13.5px;color:var(--gray);min-height:1em}
 .faqs{max-width:860px;margin:30px auto 0;width:100%}
 .faqs h2{font-weight:900;font-size:clamp(32px,4vw,52px);text-align:center;margin-bottom:10px}
@@ -350,7 +356,7 @@ const tier = (rec, n) => {
     ${n.destacado ? '<span class="badge">El más elegido</span>' : '<span class="badge">Pago único</span>'}<h3>${esc(n.nombre)}</h3>
     <div class="amt">${money(total(n))} <small>MXN</small></div><p class="fee">Incluye la comisión de Mercado Pago</p>
     <ul>${lis}</ul>
-    <button type="button" class="cta go">Comprar con Mercado Pago</button><p class="msg" aria-live="polite"></p></article>`;
+    <button type="button" class="cta go">Comprar con Mercado Pago</button>${n.codigos ? `<details class="cod"><summary>¿Tienes un código de regalo?</summary><form class="cod-f"><input id="cod-${rec.id}-${n.id}" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="LGI-PRO-XXXXXX" aria-label="Código de regalo"><button type="submit" class="cta sm">Canjear</button></form></details>` : ''}<p class="msg" aria-live="polite"></p></article>`;
 };
 $('#lista').innerHTML = RECURSOS.map(rec => `<section class="rc" id="${rec.id}" data-para="${esc(rec.para.join('|'))}">
   <div class="rc-top"><div class="chips"><span class="chip k">${esc(rec.tipo)}</span>${rec.para.map(p => `<span class="chip">${esc(p)}</span>`).join('')}</div>
@@ -398,6 +404,21 @@ document.addEventListener('click', async e => {
   msg.textContent = '';
   if (don && !m) { aviso('¡Listo!', 'Tu descarga empezó. Si no se abre, usa el botón. El enlace es válido por 1 hora.', res.archivos); location.href = res.archivos[0].url; }
   else location.href = res.url;
+});
+
+/* código de regalo */
+document.addEventListener('submit', async e => {
+  const fm = e.target.closest('.cod-f'); if (!fm) return;
+  e.preventDefault();
+  const t = fm.closest('.tier'), msg = t.querySelector('.msg'), btn = fm.querySelector('button');
+  const codigo = fm.querySelector('input').value.trim();
+  if (!codigo) { msg.textContent = 'Escribe tu código.'; return; }
+  btn.disabled = true; msg.textContent = 'Revisando tu código…';
+  const res = await api('codigo', { r: t.dataset.r, n: t.dataset.n, codigo });
+  btn.disabled = false;
+  if (!res.archivos) { msg.textContent = res.error || 'No pudimos revisar el código.'; return; }
+  msg.textContent = '';
+  aviso('¡Código aceptado!', `${res.recurso} · ${res.nivel} es tuyo. Los enlaces funcionan durante 24 horas.`, res.archivos);
 });
 
 /* aviso */

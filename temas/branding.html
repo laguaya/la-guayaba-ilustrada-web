@@ -51,7 +51,7 @@ i.it{font-style:italic;font-weight:400;letter-spacing:-0.02em}
 .nav-links a{color:#BDBDBD;font-size:15px;font-weight:500;line-height:1}
 .nav-links a:hover,.nav-links a[aria-current]{color:var(--white)}
 .nav-end{justify-self:end;display:flex;align-items:center;gap:14px}
-.nav-end span{color:#BDBDBD;font-size:14px;line-height:1}
+.nav-end span{color:#BDBDBD;font-size:14px;line-height:1;white-space:nowrap}@media (max-width:1240px){.nav-end span{display:none}}
 /* Menú fijo: baja contigo al hacer scroll */
 .nav{position:sticky;top:10px;z-index:90;box-shadow:0 8px 24px rgba(0,0,0,.12)}
 body::before{content:"";position:fixed;z-index:89;top:-120px;left:0;right:0;height:calc(var(--navh,84px) + 120px);background:var(--white);pointer-events:none}

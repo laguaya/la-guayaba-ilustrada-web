@@ -51,7 +51,7 @@ i.it{font-style:italic;font-weight:400;letter-spacing:-0.02em}
 .nav-links a{color:#BDBDBD;font-size:15px;font-weight:500;line-height:1}
 .nav-links a:hover,.nav-links a[aria-current]{color:var(--white)}
 .nav-end{justify-self:end;display:flex;align-items:center;gap:14px}
-.nav-end span{color:#BDBDBD;font-size:14px;line-height:1}
+.nav-end span{color:#BDBDBD;font-size:14px;line-height:1;white-space:nowrap}@media (max-width:1240px){.nav-end span{display:none}}
 /* Menú fijo: baja contigo al hacer scroll */
 .nav{position:sticky;top:10px;z-index:90;box-shadow:0 8px 24px rgba(0,0,0,.12)}
 body::before{content:"";position:fixed;z-index:89;top:-120px;left:0;right:0;height:calc(var(--navh,84px) + 120px);background:var(--white);pointer-events:none}
@@ -257,6 +257,7 @@ th{font-size:12px;letter-spacing:.1em;text-transform:uppercase}
         <div class="kpi"><span>Donativos</span><b id="k-don">$0</b></div>
       </div>
       <div id="por"></div>
+      <div class="box" id="cods" hidden><h2>Códigos de regalo</h2><div id="cods-l"></div></div>
       <div class="box"><h2>Actividad reciente</h2><table><thead><tr><th>Fecha</th><th>Recurso</th><th>Nivel</th><th>Monto</th></tr></thead><tbody id="log"></tbody></table></div>
       <button class="cta light" type="button" id="recargar" style="margin:16px auto 0;display:flex">Actualizar</button>
     </div>
@@ -297,6 +298,8 @@ async function cargar() {
     const max = Math.max(1, ...rec.niveles.map(n => n.n));
     return `<div class="box"><h2>${esc(rec.nombre)} · ${rec.total.toLocaleString('es-MX')}</h2>${rec.niveles.map(n => `<div class="bar"><span>${esc(n.nombre)}</span><i style="width:${(n.n / max) * 100}%"></i><em>${n.n}</em></div>`).join('')}</div>`;
   }).join('');
+  $('#cods').hidden = !(d.codigos || []).length;
+  $('#cods-l').innerHTML = (d.codigos || []).map(c => `<div class="bar"><span>${esc(c.nivel)}</span><i style="width:${Math.max(1, (c.usados / c.usos) * 100)}%"></i><em>${c.usados}/${c.usos}</em></div>`).join('');
   $('#log').innerHTML = d.log.length ? d.log.map(x => { const [a, b] = nom(x.r, x.n); return `<tr><td>${new Date(x.t).toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' })}</td><td>${esc(a)}</td><td>${esc(b)}</td><td>${x.m ? money(x.m) : 'Gratis'}</td></tr>`; }).join('') : '<tr><td colspan="4">Todavía no hay descargas.</td></tr>';
 }
 $('#login').addEventListener('submit', e => { e.preventDefault(); clave = $('#clave').value.trim(); if (clave) cargar(); });

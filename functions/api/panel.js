@@ -16,7 +16,11 @@ export async function onRequestGet({ request, env }) {
     for (const niv of rec.niveles) niveles.push({ id: niv.id, nombre: niv.nombre, n: await num(`n:${rec.id}:${niv.id}`) });
     recursos.push({ id: rec.id, nombre: rec.nombre, total: niveles.reduce((a, b) => a + b.n, 0), niveles });
   }
+  const codigos = [];
+  for (const rec of RECURSOS) for (const niv of rec.niveles) for (const c of niv.codigos || [])
+    codigos.push({ id: c.id, nivel: niv.nombre, usados: await num(`codigo:${c.id}`), usos: c.usos });
   return json({
+    codigos,
     total: await num('n:total'),
     ventas: await num('m:ventas'),
     donativos: await num('m:donativos'),
