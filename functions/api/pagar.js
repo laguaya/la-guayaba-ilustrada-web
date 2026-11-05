@@ -1,13 +1,14 @@
 // Crea el cobro en Mercado Pago (Checkout Pro) y devuelve el enlace de pago.
 // Sirve para los niveles de pago y para los donativos de la versión gratuita.
 import { buscar, total as totalDe } from '../../lib/recursos.js';
-import { json, body } from './_comun.js';
+import { json, body, listo } from './_comun.js';
 
 export async function onRequestPost({ request, env }) {
-  if (!env.MP_TOKEN || !env.ARCHIVOS) return json({ error: 'Los pagos todavía no están activos.' }, 503);
+  if (!env.MP_TOKEN) return json({ error: 'Los pagos todavía no están activos.' }, 503);
   const { r, n, monto } = await body(request);
   const f = buscar(r, n);
   if (!f) return json({ error: 'Recurso no encontrado.' }, 404);
+  if (!listo(env, f.niv)) return json({ error: 'Este nivel todavía no está disponible.' }, 503);
 
   let total, titulo;
   if (f.niv.base) {

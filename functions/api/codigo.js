@@ -1,6 +1,6 @@
 // Canjea un código de regalo: entrega el nivel sin pago si el código es válido y tiene usos.
 import { buscar } from '../../lib/recursos.js';
-import { json, enlaces, contar, body } from './_comun.js';
+import { json, enlaces, contar, body, listo } from './_comun.js';
 
 const huella = async t => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)))]
   .map(b => b.toString(16).padStart(2, '0')).join('');
@@ -20,7 +20,7 @@ export async function onRequestPost({ request, env }) {
   if (usados >= cod.usos) return json({ error: 'Este código ya se agotó.' }, 410);
 
   const archivos = await enlaces(env, new URL(request.url).origin, f.rec, f.niv, `codigo-${cod.id}-${usados + 1}`, 24);
-  if (!archivos.length || !env.ARCHIVOS) return json({ error: 'La descarga todavía no está disponible.' }, 503);
+  if (!archivos.length || !listo(env, f.niv)) return json({ error: 'La descarga todavía no está disponible.' }, 503);
   if (kv) await kv.put(k, String(usados + 1));
   await contar(env, { ...f, ref: `codigo ${cod.id}` });
   return json({ archivos, recurso: f.rec.nombre, nivel: f.niv.nombre });

@@ -1,7 +1,7 @@
 // Al regresar de Mercado Pago: verifica el pago y entrega enlaces firmados (válidos 7 días).
 // La descarga se cuenta una sola vez por pago, aunque la persona recargue la página.
 import { buscar, total } from '../../lib/recursos.js';
-import { json, enlaces, contar, body } from './_comun.js';
+import { json, enlaces, contar, body, listo } from './_comun.js';
 
 export async function onRequestPost({ request, env }) {
   const { pago } = await body(request);
@@ -21,7 +21,7 @@ export async function onRequestPost({ request, env }) {
   if (f.niv.base && monto < total(f.niv)) return json({ error: 'El monto pagado no coincide con el precio.' }, 400);
 
   const archivos = await enlaces(env, new URL(request.url).origin, f.rec, f.niv, String(pago), 24 * 7);
-  if (!archivos.length || !env.ARCHIVOS) return json({ error: `Tu pago ${pago} quedó registrado. Escríbenos por WhatsApp con ese número y te mandamos el archivo.` }, 503);
+  if (!archivos.length || !listo(env, f.niv)) return json({ error: `Tu pago ${pago} quedó registrado. Escríbenos por WhatsApp con ese número y te mandamos el archivo.` }, 503);
 
   const kv = env.RECURSOS;
   if (kv && !(await kv.get(`pago:${pago}`))) {

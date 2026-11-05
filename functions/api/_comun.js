@@ -1,6 +1,8 @@
 // Utilidades compartidas por las funciones de recursos (no es una ruta).
 // Configuración en Cloudflare Pages > Settings:
-//   ARCHIVOS      enlace (binding) a un bucket privado de R2 con los archivos
+//   DRIVE_GRATIS, DRIVE_PRO, DRIVE_SFX  enlace de Google Drive de cada archivo (secretos).
+//                 El cliente nunca ve estos enlaces: la página descarga el archivo por él.
+//   ARCHIVOS      (opcional) bucket privado de R2; si existe, se usa en lugar de Drive
 //   RECURSOS      enlace (binding) a un espacio KV para contar descargas
 //   MP_TOKEN      Access Token de producción de Mercado Pago (secreto)
 //   PANEL_CLAVE   contraseña del panel /panel (secreto)
@@ -15,6 +17,16 @@ export const json = (data, status = 200) =>
 export async function body(req) {
   try { return await req.json(); } catch { return {}; }
 }
+
+// ---------- almacenamiento ----------
+const claveDrive = a => 'DRIVE_' + a.replace(/\.zip$/, '').replace(/[^a-z0-9]/gi, '_').toUpperCase();
+export const idDrive = (env, a) => {
+  const v = String(env[claveDrive(a)] || '').trim();
+  const m = v.match(/\/d\/([\w-]{20,})/) || v.match(/[?&]id=([\w-]{20,})/) || v.match(/^([\w-]{20,})$/);
+  return m ? m[1] : '';
+};
+// ¿Están disponibles todos los archivos de este nivel?
+export const listo = (env, niv) => !!env.ARCHIVOS || niv.archivos.every(a => idDrive(env, a));
 
 // ---------- enlaces firmados ----------
 const b64 = buf => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
