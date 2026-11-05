@@ -7,7 +7,7 @@ export async function onRequestPost({ request, env }) {
   const f = buscar(r, n);
   if (!f || f.niv.base) return json({ error: 'Este nivel no es gratuito.' }, 400);
   const archivos = await enlaces(env, new URL(request.url).origin, f.rec, f.niv, 'gratis', 1);
-  if (!archivos.length || !env.ARCHIVOS) return json({ error: 'La descarga todavía no está disponible. Escríbenos por WhatsApp y te la mandamos.' }, 503);
+  if (!archivos.length || !env.ARCHIVOS) return json({ error: 'La descarga todavía no está disponible.' }, 503);
   await contar(env, { ...f, ref: 'gratis' });
   return json({ archivos });
 }

@@ -223,6 +223,7 @@ footer small{font-size:13px;color:var(--gray)}
 .tier{border:1.5px solid var(--line);border-radius:32px;padding:30px 24px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;background:var(--white)}
 .tier.hot{background:var(--pink);border-color:var(--pink)}
 .tiers .tier{transition:scale .35s var(--ease),box-shadow .35s var(--ease),opacity .9s var(--ease) var(--rvd,0ms),translate .9s var(--ease) var(--rvd,0ms)}
+.tiers .cta,.tiers .cta:hover{transform:none}
 .tiers .tier:hover{scale:1.02;box-shadow:0 14px 34px rgba(0,0,0,.08)}
 @media (prefers-reduced-motion:reduce){.tiers .tier,.tiers .tier:hover{transition:none;scale:none}}
 .tier .badge{background:var(--ink);color:var(--white);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;border-radius:999px;padding:7px 13px;line-height:1}
@@ -413,7 +414,7 @@ document.addEventListener('click', async e => {
   const res = don && !m ? await api('descargar', { r, n }) : await api('pagar', { r, n, monto: m });
   go.disabled = false;
   const listo = res.archivos || res.url;
-  if (!res.ok || !listo) { msg.innerHTML = esc(res.error || 'Algo salió mal.') + ` <a href="${WA + encodeURIComponent('Hola, quiero el recurso ' + r)}" target="_blank" rel="noopener"><u>WhatsApp</u></a>`; return; }
+  if (!res.ok || !listo) { msg.innerHTML = esc(res.error || 'Algo salió mal.') + ` <a href="${WA + encodeURIComponent('Hola, quiero el recurso ' + r)}" target="_blank" rel="noopener"><u>Escríbenos por WhatsApp</u></a>`; return; }
   msg.textContent = '';
   if (don && !m) { aviso('¡Listo!', 'Tu descarga empezó. Si no se abre, usa el botón. El enlace es válido por 1 hora.', res.archivos); location.href = res.archivos[0].url; }
   else location.href = res.url;

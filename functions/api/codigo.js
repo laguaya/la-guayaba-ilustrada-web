@@ -20,7 +20,7 @@ export async function onRequestPost({ request, env }) {
   if (usados >= cod.usos) return json({ error: 'Este código ya se agotó.' }, 410);
 
   const archivos = await enlaces(env, new URL(request.url).origin, f.rec, f.niv, `codigo-${cod.id}-${usados + 1}`, 24);
-  if (!archivos.length || !env.ARCHIVOS) return json({ error: 'La descarga todavía no está disponible. Escríbenos por WhatsApp.' }, 503);
+  if (!archivos.length || !env.ARCHIVOS) return json({ error: 'La descarga todavía no está disponible.' }, 503);
   if (kv) await kv.put(k, String(usados + 1));
   await contar(env, { ...f, ref: `codigo ${cod.id}` });
   return json({ archivos, recurso: f.rec.nombre, nivel: f.niv.nombre });
