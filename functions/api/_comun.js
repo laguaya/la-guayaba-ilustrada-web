@@ -1,6 +1,6 @@
 // Utilidades compartidas por las funciones de recursos (no es una ruta).
 // Configuración en Cloudflare Pages > Settings:
-//   DRIVE_GRATIS, DRIVE_PRO, DRIVE_SFX  enlace de Google Drive de cada archivo (secretos).
+//   DRIVE_GRATIS, DRIVE_PRO  enlace de Google Drive de cada archivo (secretos).
 //                 El cliente nunca ve estos enlaces: la página descarga el archivo por él.
 //   ARCHIVOS      (opcional) bucket privado de R2; si existe, se usa en lugar de Drive
 //   RECURSOS      enlace (binding) a un espacio KV para contar descargas

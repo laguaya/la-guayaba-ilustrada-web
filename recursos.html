@@ -11,13 +11,13 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="La Guayaba Ilustrada · Noticias" href="/feed.xml">
 <title>Recursos para diseñadores, animadores y editores · La Guayaba Ilustrada</title>
-<meta name="description" content="Skills, editables para After Effects, Premiere Pro y CapCut, sonidos y transiciones para video. Recursos gratis y de pago creados por La Guayaba Ilustrada.">
+<meta name="description" content="Skills para Claude y editables para After Effects, Premiere Pro y CapCut. Recursos gratis y de pago creados por La Guayaba Ilustrada.">
 <link rel="canonical" href="https://guayabailustrada.com.mx/recursos">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="La Guayaba Ilustrada">
 <meta property="og:locale" content="es_MX">
 <meta property="og:title" content="Recursos para diseñadores, animadores y editores · La Guayaba Ilustrada">
-<meta property="og:description" content="Skills, editables para After Effects, Premiere Pro y CapCut, sonidos y transiciones para video. Recursos gratis y de pago creados por La Guayaba Ilustrada.">
+<meta property="og:description" content="Skills para Claude y editables para After Effects, Premiere Pro y CapCut. Recursos gratis y de pago creados por La Guayaba Ilustrada.">
 <meta property="og:url" content="https://guayabailustrada.com.mx/recursos">
 <meta name="twitter:card" content="summary">
 <style>
@@ -219,7 +219,7 @@ footer small{font-size:13px;color:var(--gray)}
 .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
 .chip{background:var(--pink-wash);border-radius:999px;padding:7px 14px;font-size:13.5px;font-weight:700;line-height:1}
 .chip.k{background:var(--ink);color:var(--white)}
-.tiers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:stretch}
+.tiers{display:grid;grid-template-columns:repeat(var(--n,3),minmax(0,1fr));max-width:calc(var(--n,3) * 400px);margin-inline:auto;width:100%;gap:16px;align-items:stretch}
 .tier{border:1.5px solid var(--line);border-radius:32px;padding:30px 24px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;background:var(--white)}
 .tier.hot{background:var(--pink);border-color:var(--pink)}
 .tiers .tier{transition:scale .35s var(--ease),box-shadow .35s var(--ease),opacity .9s var(--ease) var(--rvd,0ms),translate .9s var(--ease) var(--rvd,0ms)}
@@ -375,7 +375,7 @@ $('#lista').innerHTML = RECURSOS.map(rec => `<section class="rc" id="${rec.id}" 
   <div class="rc-intro${rec.demo ? ' con-demo' : ''}"><div class="rc-top"><span class="eyebrow">${esc(rec.tipo)}</span>
   <h2>${esc(rec.nombre)}</h2><p>${esc(rec.resumen)}</p>${rec.demo ? '<span class="demo-tag">Así queda tu video</span>' : ''}</div>
   ${rec.demo ? `<figure class="demo-v"><video src="${esc(rec.demo.video)}" poster="${esc(rec.demo.poster)}" controls playsinline preload="none"></video><figcaption>${esc(rec.demo.nota)}</figcaption></figure>` : ''}</div>
-  <div class="tiers">${rec.niveles.map(n => tier(rec, n)).join('')}</div></section>`).join('');
+  <div class="tiers" style="--n:${rec.niveles.length}">${rec.niveles.map(n => tier(rec, n)).join('')}</div></section>`).join('');
 
 /* donativo */
 const montoDe = don => {
