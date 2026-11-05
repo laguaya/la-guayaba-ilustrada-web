@@ -1,6 +1,6 @@
 // Crea el cobro en Mercado Pago (Checkout Pro) y devuelve el enlace de pago.
 // Sirve para los niveles de pago y para los donativos de la versión gratuita.
-import { buscar, precio } from '../../lib/recursos.js';
+import { buscar, total as totalDe } from '../../lib/recursos.js';
 import { json, body } from './_comun.js';
 
 export async function onRequestPost({ request, env }) {
@@ -11,7 +11,7 @@ export async function onRequestPost({ request, env }) {
 
   let total, titulo;
   if (f.niv.base) {
-    total = precio(f.niv.base);
+    total = totalDe(f.niv);
     titulo = `${f.rec.nombre} · ${f.niv.nombre}`;
   } else {
     total = Math.round(Number(monto));

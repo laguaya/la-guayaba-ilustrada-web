@@ -317,7 +317,7 @@ dialog.ok .acts{display:flex;flex-direction:column;gap:10px}
 <script>window.REVEAL=".head > *, .rc-top > *, .tier, .faqs > *, .closing > *, footer > *";</script>
 <script src="reveal.js"></script>
 <script type="module">
-import { RECURSOS, DONATIVOS, precio } from '/lib/recursos.js';
+import { RECURSOS, DONATIVOS, total } from '/lib/recursos.js';
 const $ = s => document.querySelector(s);
 const money = n => '$' + Number(n).toLocaleString('es-MX');
 const WA = 'https://wa.me/527209097907?text=';
@@ -348,7 +348,7 @@ const tier = (rec, n) => {
   }
   return `<article class="tier${n.destacado ? ' hot' : ''}" data-r="${rec.id}" data-n="${n.id}">
     ${n.destacado ? '<span class="badge">El más elegido</span>' : '<span class="badge">Pago único</span>'}<h3>${esc(n.nombre)}</h3>
-    <div class="amt">${money(precio(n.base))} <small>MXN</small></div><p class="fee">Incluye la comisión de Mercado Pago</p>
+    <div class="amt">${money(total(n))} <small>MXN</small></div><p class="fee">Incluye la comisión de Mercado Pago</p>
     <ul>${lis}</ul>
     <button type="button" class="cta go">Comprar con Mercado Pago</button><p class="msg" aria-live="polite"></p></article>`;
 };
