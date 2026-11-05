@@ -2,14 +2,15 @@
 // Webhook de Meta (Instagram API con inicio de sesión de Instagram): https://guayabailustrada.com.mx/api/ig
 //
 // Variables en Cloudflare Pages (Configuración > Variables y secretos):
-//   IG_DM_TOKEN     token de acceso de la cuenta de Instagram (secreto). Se renueva solo cada 30 días.
-//   IG_APP_SECRET   clave secreta de la app de Instagram en Meta (secreto). Valida que el aviso venga de Meta.
+//   IG_DM_TOKEN     token del usuario del sistema "Guayaba Bot" del porfolio La Guayaba Ilustrada (secreto, no caduca).
+//   IG_ID           id de la cuenta @guayabailustrada. Por defecto: 17841448502239351
+//   IG_APP_SECRET   clave secreta de la app "La Guayaba Ilustrada" en Meta (secreto). Valida que el aviso venga de Meta.
 //   IG_VERIFY       palabra que tú inventas para verificar el webhook (secreto).
 //   IG_USUARIO      (opcional) usuario de la cuenta, sin @. Por defecto: guayabailustrada
 //   IG_MEDIA_ID     (opcional) id de una publicación; si existe, solo responde en esa publicación.
 // Usa el KV RECURSOS para no responder dos veces el mismo comentario y para contar.
 
-const API = 'https://graph.instagram.com/v21.0';
+const API = 'https://graph.facebook.com/v21.0';
 const PALABRAS = ['edicion'];
 const ENLACE = 'https://guayabailustrada.com.mx/recursos?utm_source=instagram&utm_medium=dm&utm_campaign=edicion';
 
@@ -20,6 +21,7 @@ const TXT = {
   publico: ['¡Te mandé un mensaje! 📩', '¡Revisa tus mensajes! 🎬', '¡Listo, ya te escribí! 📩'],
 };
 
+const cuentaId = env => env.IG_ID || '17841448502239351';
 const normal = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 const coincide = t => PALABRAS.some(p => normal(t).split(/[^a-z0-9ñ]+/).includes(p));
 
@@ -27,7 +29,7 @@ const coincide = t => PALABRAS.some(p => normal(t).split(/[^a-z0-9ñ]+/).include
 async function token(env) {
   const base = env.IG_DM_TOKEN || '';
   const kv = env.RECURSOS;
-  if (!kv || !base) return base;
+  if (!kv || !base || base.startsWith('EAA')) return base;   // los tokens de usuario del sistema no caducan
   const marca = base.slice(-12);
   const g = JSON.parse((await kv.get('ig:token')) || 'null');
   const vigente = g && g.base === marca;
@@ -81,8 +83,8 @@ async function alComentar(env, cuenta, v) {
     if (await kv.get(`ig:c:${v.id}`)) return;                              // ya respondido
     await kv.put(`ig:c:${v.id}`, '1', { expirationTtl: 60 * 864e2 });
   }
-  const r = await ig(env, 'me/messages', 'POST', { recipient: { comment_id: v.id }, message: pedirSeguir(env) });
-  if (!r.ok) await ig(env, 'me/messages', 'POST', {                         // respaldo en texto
+  const r = await ig(env, `${cuentaId(env)}/messages`, 'POST', { recipient: { comment_id: v.id }, message: pedirSeguir(env) });
+  if (!r.ok) await ig(env, `${cuentaId(env)}/messages`, 'POST', {                         // respaldo en texto
     recipient: { comment_id: v.id },
     message: { text: `${TXT.seguir}\n\n${perfil(env)}\n\nCuando me sigas, contesta "Ya te sigo".` },
   });
@@ -95,13 +97,13 @@ async function alComentar(env, cuenta, v) {
 async function revisarSeguidor(env, igsid) {
   const p = await ig(env, `${igsid}?fields=is_user_follow_business,username`);
   if (p.is_user_follow_business) {
-    await ig(env, 'me/messages', 'POST', {
+    await ig(env, `${cuentaId(env)}/messages`, 'POST', {
       recipient: { id: igsid },
       message: botones(TXT.listo, [{ type: 'web_url', url: ENLACE, title: 'Descargar skill' }]),
     });
     await contar(env, 'ig:entregas');
   } else {
-    await ig(env, 'me/messages', 'POST', {
+    await ig(env, `${cuentaId(env)}/messages`, 'POST', {
       recipient: { id: igsid },
       message: botones(TXT.noSigue, [
         { type: 'web_url', url: perfil(env), title: 'Seguir' },
