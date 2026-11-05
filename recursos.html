@@ -280,11 +280,12 @@ dialog.ok .acts{display:flex;flex-direction:column;gap:10px}
 
   <section class="faqs">
     <h2>Preguntas</h2>
-    <details class="qa"><summary>¿Cómo recibo mi archivo?</summary><p>En cuanto Mercado Pago confirma tu pago, regresas a esta página y aparece el botón de descarga. En la versión gratuita la descarga empieza al momento.</p></details>
+    <details class="qa"><summary>¿Cómo recibo mi archivo?</summary><p>Primero pagas en Mercado Pago. En cuanto se confirma el pago, regresas a esta página y aparecen tus botones de descarga, que funcionan durante 7 días. En la versión gratuita la descarga empieza al momento.</p></details>
     <details class="qa"><summary>¿Con qué puedo pagar?</summary><p>Con tarjeta de crédito o débito y con saldo de Mercado Pago. Son pagos que se acreditan al momento para que descargues sin esperar.</p></details>
     <details class="qa"><summary>¿Por qué el precio no es redondo?</summary><p>El precio ya incluye la comisión que cobra Mercado Pago por cada venta, para que veas el total real desde el principio.</p></details>
     <details class="qa"><summary>¿El donativo es obligatorio?</summary><p>No. La versión gratuita se descarga en $0. Si quieres apoyar para que sigamos liberando recursos, puedes elegir la cantidad que tú quieras.</p></details>
-    <details class="qa"><summary>¿Necesito Claude para usar la skill?</summary><p>Sí. La skill se instala en Claude y funciona dentro de tus conversaciones o en Claude Code. La guía incluida te explica cómo hacerlo.</p></details>
+    <details class="qa"><summary>¿Necesito Claude para usar la skill?</summary><p>Sí. La skill se instala en Claude (Configuración, Capacidades, Skills) y funciona en tus conversaciones o en Claude Code.</p></details>
+    <details class="qa"><summary>¿Qué diferencia hay entre la versión gratis y la Pro?</summary><p>Las dos hacen el video. La gratis entrega solo el MP4. La Pro entrega además los editables por elemento para Premiere Pro, After Effects y CapCut, para que ajustes cada parte a tu gusto.</p></details>
     <details class="qa"><summary>No me llegó el archivo, ¿qué hago?</summary><p>Escríbenos por WhatsApp al 720 909 7907 con tu número de pago y te lo mandamos.</p></details>
   </section>
   </main>
@@ -392,16 +393,18 @@ document.addEventListener('click', async e => {
   go.disabled = true; msg.textContent = don && !m ? 'Preparando tu descarga…' : 'Abriendo Mercado Pago…';
   const res = don && !m ? await api('descargar', { r, n }) : await api('pagar', { r, n, monto: m });
   go.disabled = false;
-  if (!res.ok || !res.url) { msg.innerHTML = esc(res.error || 'Algo salió mal.') + ` <a href="${WA + encodeURIComponent('Hola, quiero el recurso ' + r)}" target="_blank" rel="noopener"><u>WhatsApp</u></a>`; return; }
+  const listo = res.archivos || res.url;
+  if (!res.ok || !listo) { msg.innerHTML = esc(res.error || 'Algo salió mal.') + ` <a href="${WA + encodeURIComponent('Hola, quiero el recurso ' + r)}" target="_blank" rel="noopener"><u>WhatsApp</u></a>`; return; }
   msg.textContent = '';
-  if (don && !m) { aviso('¡Listo!', 'Tu descarga empezó. Si no se abre, usa el botón.', res.url); location.href = res.url; }
+  if (don && !m) { aviso('¡Listo!', 'Tu descarga empezó. Si no se abre, usa el botón. El enlace es válido por 1 hora.', res.archivos); location.href = res.archivos[0].url; }
   else location.href = res.url;
 });
 
 /* aviso */
-function aviso(t, p, url) {
+const NOMBRES = { 'gratis.zip': 'Descargar la skill', 'pro.zip': 'Descargar Skill Pro', 'sfx.zip': 'Descargar efectos de sonido' };
+function aviso(t, p, archivos) {
   $('#av-t').textContent = t; $('#av-p').textContent = p;
-  $('#av-a').innerHTML = (url ? `<a class="cta" href="${esc(url)}" target="_blank" rel="noopener">Descargar archivo</a>` : '') + '<button type="button" class="cta light" id="av-x">Cerrar</button>';
+  $('#av-a').innerHTML = (archivos || []).map(a => `<a class="cta" href="${esc(a.url)}">${esc(NOMBRES[a.nombre] || 'Descargar ' + a.nombre)}</a>`).join('') + '<button type="button" class="cta light" id="av-x">Cerrar</button>';
   $('#av-x').onclick = () => $('#aviso').close();
   $('#aviso').showModal();
 }
@@ -414,7 +417,7 @@ if (pago && pago !== 'null') {
   if (st === 'approved') {
     aviso('Confirmando tu pago…', 'Un momento, estamos verificando con Mercado Pago.');
     api('entrega', { pago }).then(res => {
-      if (res.url) aviso('¡Gracias por tu compra!', `${res.recurso} · ${res.nivel}. Guarda esta página: con este enlace puedes volver a descargar.`, res.url);
+      if (res.archivos) aviso('¡Gracias por tu compra!', `${res.recurso} · ${res.nivel}. Guarda esta página: desde aquí puedes volver a descargar durante 7 días.`, res.archivos);
       else if (res.estado) aviso('Pago en proceso', 'Mercado Pago todavía no confirma tu pago. Recarga esta página en unos minutos.');
       else aviso('Casi listo', res.error || 'No pudimos confirmar tu pago. Escríbenos por WhatsApp.');
     });
