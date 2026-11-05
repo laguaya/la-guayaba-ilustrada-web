@@ -4,5 +4,6 @@ Disallow: /drafts/
 Disallow: /inbox/
 Disallow: /scripts/
 Disallow: /worker/
+Disallow: /panel
 
 Sitemap: https://guayabailustrada.com.mx/sitemap.xml

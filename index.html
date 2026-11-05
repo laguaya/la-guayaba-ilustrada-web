@@ -164,7 +164,7 @@ section{scroll-margin-top:20px}
 .drawer{display:grid;grid-template-rows:0fr;transition:grid-template-rows .6s var(--ease)}
 .svc.open .drawer{grid-template-rows:1fr}
 .drawer > div{overflow:hidden;min-height:0}
-.panel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:18px;padding:18px 4px 6px;align-items:start}
+.panel{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.5fr);gap:18px;padding:18px 4px 6px;align-items:start}
 .prices{list-style:none;margin:0;padding:6px 22px;border:1.5px solid var(--line);border-radius:24px}
 .prices li{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 0;border-bottom:1.5px solid var(--line);opacity:0;transform:translateY(10px);transition:opacity .5s var(--ease),transform .6s var(--ease)}
 .prices li:last-child{border-bottom:0}
@@ -178,14 +178,14 @@ section{scroll-margin-top:20px}
 .prices b{display:block;font-weight:700;font-size:16.5px;line-height:1.2}
 .prices small{display:block;font-size:13.5px;color:var(--gray)}
 .prices em{font-style:normal;font-weight:900;font-size:18px;white-space:nowrap;font-variant-numeric:tabular-nums;text-align:right}
-.gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.gallery .ph{position:relative;display:block;width:100%;aspect-ratio:4/5;margin:0;border-radius:20px;background:var(--pink-wash);border:0;padding:0;overflow:hidden;cursor:zoom-in;text-decoration:none;color:inherit;opacity:0;transform:translateY(16px);transition:opacity .5s var(--ease),transform .6s var(--ease)}
+.gallery{columns:2;column-gap:14px}
+.gallery .ph{position:relative;display:block;width:100%;aspect-ratio:var(--r,.8);margin:0 0 14px;break-inside:avoid;-webkit-column-break-inside:avoid;border-radius:20px;background:var(--pink-wash);border:0;padding:0;overflow:hidden;cursor:zoom-in;text-decoration:none;color:inherit;opacity:0;transform:translateY(16px);transition:opacity .5s var(--ease),transform .6s var(--ease)}
 .svc.open .gallery .ph{opacity:1;transform:none}
 .gallery.sq .ph{aspect-ratio:1}
 .gallery .ph.more{display:none}
 .gallery .ph::after{content:'';position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1.5px rgba(0,0,0,.08);pointer-events:none}
 .gallery.all .ph.more{display:block}
-.gallery .ph img{width:100%;height:100%;object-fit:contain;display:block;transition:transform .6s var(--ease)}
+.gallery .ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s var(--ease)}
 .gallery .ph.cover img{object-fit:cover}
 .gallery .ph:hover img{transform:scale(1.04)}
 .gallery .ph .pl{position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;background:rgba(0,0,0,.6);display:grid;place-items:center}
@@ -504,6 +504,7 @@ footer small{font-size:13px;color:var(--gray)}
       <a href="#planes">Planes</a>
       <a href="#proyectos">Proyectos</a>
       <a href="blog.html">Noticias</a>
+      <a href="recursos">Recursos</a>
       <a href="#contacto">Contacto</a>
     </div>
     </div>
@@ -720,7 +721,7 @@ footer small{font-size:13px;color:var(--gray)}
   <footer>
     <a class="logo" href="#inicio"><b>LG.I</b><span>La Guayaba<br>Ilustrada</span></a>
     <p>Organizando ideas creativas para ejecutarlas.</p>
-    <nav class="foot-links" aria-label="Más"><a href="/precios">Precios</a><a href="/blog">Noticias</a><a href="https://wa.me/527209097907" target="_blank" rel="noopener">WhatsApp</a><a href="mailto:hola@guayabailustrada.com.mx">Correo</a><a href="https://instagram.com/guayabailustrada" target="_blank" rel="noopener">Instagram</a><a href="https://www.instagram.com/lgi.newsbrand/" target="_blank" rel="noopener">Newsbrand</a><a href="https://www.facebook.com/guayabailustrada" target="_blank" rel="noopener">Facebook</a></nav>
+    <nav class="foot-links" aria-label="Más"><a href="/precios">Precios</a><a href="/blog">Noticias</a><a href="/recursos">Recursos</a><a href="https://wa.me/527209097907" target="_blank" rel="noopener">WhatsApp</a><a href="mailto:hola@guayabailustrada.com.mx">Correo</a><a href="https://instagram.com/guayabailustrada" target="_blank" rel="noopener">Instagram</a><a href="https://www.instagram.com/lgi.newsbrand/" target="_blank" rel="noopener">Newsbrand</a><a href="https://www.facebook.com/guayabailustrada" target="_blank" rel="noopener">Facebook</a></nav>
     <small>© 2026 La Guayaba Ilustrada · Cuernavaca, Morelos</small>
   </footer>
 
@@ -777,7 +778,7 @@ SVC.forEach((s,n)=>{
   const el=document.createElement('div');el.className='svc';el.id='svc-'+n;
   const rows=s.pr.map((r,k)=>`<li style="transition-delay:${60+k*60}ms"><a href="${WA+encodeURIComponent('Hola, quiero cotizar: '+r[0]+' ('+s.t+')')}" target="_blank" rel="noopener"><span><b>${r[0]}</b><small>${r[1]}</small></span><span class="pr-r"><em>${label(r)}</em><i class="wa">Cotizar <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></i></span></a></li>`).join('');
   const items=(window.PORT||{})[s.k]||[];const play='<span class="pl" aria-hidden="true"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg></span>';
-  const ph=items.map((p,j)=>{const cls='ph'+(j>=9?' more':'')+(p.v?' cover':'');const st=`transition-delay:${120+Math.min(j,6)*60}ms;background:${p.b||'#FFEDF2'}`;const im=`<img src="${p.s}" alt="${p.a}" loading="lazy" width="600" height="${Math.round(600/(p.r||1))}">`;
+  const ph=items.map((p,j)=>{const cls='ph'+(j>=9?' more':'')+(p.v?' cover':'');const st=`transition-delay:${120+Math.min(j,6)*60}ms;background:${p.b||'#FFEDF2'};--r:${Math.min(1.8,Math.max(.5,p.r||.8))}`;const im=`<img src="${p.s}" alt="${p.a}" loading="lazy" width="600" height="${Math.round(600/(p.r||1))}">`;
     return p.u?`<a class="${cls}" href="${p.u}" target="_blank" rel="noopener" style="${st}">${im}<span class="go">Visitar sitio</span></a>`:`<button type="button" class="${cls}" data-k="${s.k}" data-src="${p.s}" aria-label="Ver ${p.a}" style="${st}">${im}${p.v?play:''}</button>`}).join('');
   const more=items.length>9?`<button type="button" class="gmore" data-n="${items.length}">Ver todo (${items.length})</button>`:'';
   el.innerHTML=`<button type="button" class="cap ${s.c}" aria-expanded="false" aria-controls="dr-${n}"><span class="ico" aria-hidden="true">${ICON[s.i]}</span><span><h3>${s.t}</h3><p>${s.d}</p></span><span class="price">Desde ${money(minPrice(s))}</span><span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button><div class="drawer" id="dr-${n}"><div><div class="panel"><ul class="prices">${rows}</ul><div class="gwrap"><div class="gallery${s.k==='brand'?' sq':''}">${ph}</div>${more}</div></div></div></div>`;

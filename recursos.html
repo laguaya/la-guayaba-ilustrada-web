@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="theme-color" content="#ffffff">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script>if(location.hostname.endsWith(".pages.dev"))location.replace("https://guayabailustrada.com.mx"+location.pathname+location.search+location.hash)</script>
+<link rel="icon" href="/favicon.ico?v=2" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=2">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=2">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="La Guayaba Ilustrada · Noticias" href="/feed.xml">
+<title>Recursos para diseñadores, animadores y editores · La Guayaba Ilustrada</title>
+<meta name="description" content="Skills, editables para After Effects, Premiere Pro y CapCut, sonidos y transiciones para video. Recursos gratis y de pago creados por La Guayaba Ilustrada.">
+<link rel="canonical" href="https://guayabailustrada.com.mx/recursos">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="La Guayaba Ilustrada">
+<meta property="og:locale" content="es_MX">
+<meta property="og:title" content="Recursos para diseñadores, animadores y editores · La Guayaba Ilustrada">
+<meta property="og:description" content="Skills, editables para After Effects, Premiere Pro y CapCut, sonidos y transiciones para video. Recursos gratis y de pago creados por La Guayaba Ilustrada.">
+<meta property="og:url" content="https://guayabailustrada.com.mx/recursos">
+<meta name="twitter:card" content="summary">
+<style>
+
+@font-face{font-family:"Linear Grotesk";src:url("assets/lg-light.woff2") format("woff2");font-weight:300;font-display:swap}
+@font-face{font-family:"Linear Grotesk";src:url("assets/lg-regular.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Linear Grotesk";src:url("assets/lg-italic.woff2") format("woff2");font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:"Linear Grotesk";src:url("assets/lg-medium.woff2") format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"Linear Grotesk";src:url("assets/lg-bold.woff2") format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"Linear Grotesk";src:url("assets/lg-black.woff2") format("woff2");font-weight:900;font-display:swap}
+:root{--pink:#FF3674;--pink-3:#FFA4BE;--pink-wash:#FFEDF2;--gray:#565656;--line:#EFE7EA;--ink:#000;--white:#fff;--font:"Linear Grotesk","Helvetica Neue",Arial,sans-serif;--ease:cubic-bezier(.22,.8,.2,1);color-scheme:light}
+*{box-sizing:border-box}
+html{overflow-x:clip;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;background:var(--white);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.55;padding-inline:16px;padding-block:14px 28px}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+h1,h2,h3{margin:0;text-wrap:balance;line-height:.98;letter-spacing:-0.035em}
+p{margin:0}
+i.it{font-style:italic;font-weight:400;letter-spacing:-0.02em}
+:focus-visible{outline:3px solid #FF5B00;outline-offset:3px;border-radius:10px}
+.wrap{max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+
+/* barra */
+.nav{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;height:64px;background:var(--ink);border-radius:999px;padding:0 8px 0 24px}
+.logo{display:flex;align-items:center;gap:9px;color:var(--white);justify-self:start}
+.logo b{font-weight:700;font-size:28px;letter-spacing:-0.05em;line-height:1}
+.logo span{font-weight:300;font-size:12px;line-height:1.05}
+.nav-links{display:flex;gap:24px;justify-content:center}
+.nav-links a{color:#BDBDBD;font-size:15px;font-weight:500;line-height:1}
+.nav-links a:hover,.nav-links a[aria-current]{color:var(--white)}
+.nav-end{justify-self:end;display:flex;align-items:center;gap:14px}
+.nav-end span{color:#BDBDBD;font-size:14px;line-height:1}
+/* Menú fijo: baja contigo al hacer scroll */
+.nav{position:sticky;top:10px;z-index:90;box-shadow:0 8px 24px rgba(0,0,0,.12)}
+body::before{content:"";position:fixed;z-index:89;top:-120px;left:0;right:0;height:calc(var(--navh,84px) + 120px);background:var(--white);pointer-events:none}
+[id]{scroll-margin-top:96px}
+
+.quote{display:inline-flex;align-items:center;justify-content:center;height:48px;padding:0 24px;border-radius:999px;background:var(--pink);color:var(--ink);font-weight:700;font-size:15px;line-height:1}
+
+.cta{display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;line-height:1;background:var(--ink);color:var(--white);border-radius:14px;padding:16px 24px;transition:transform .2s}
+.cta:hover{transform:scale(1.04)}
+.cta.light{background:var(--white);color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+.cta.sm{padding:13px 20px;font-size:15px}
+
+/* portada del blog */
+.head{background:var(--pink);border-radius:36px;padding:64px 32px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.head h1{font-weight:900;font-size:clamp(48px,8vw,116px)}
+.head p{font-size:19px;max-width:46ch}
+.tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;padding-top:10px}
+.tabs button{background:var(--pink-wash);border-radius:999px;padding:11px 20px;font-weight:700;font-size:15px;line-height:1;transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+.tabs button:hover{transform:scale(1.05)}
+.tabs button[aria-pressed="true"]{background:var(--ink);color:var(--white)}
+
+.feature{display:grid;grid-template-columns:1.2fr 1fr;border:1.5px solid var(--line);border-radius:32px;overflow:hidden;transition:transform .25s}
+.feature:hover{transform:translateY(-3px)}
+.feature .pic{min-height:360px;background:var(--pink-wash)}
+.feature .pic img{width:100%;height:100%;object-fit:cover}
+.feature .in{padding:40px 32px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px}
+.feature h2{font-weight:900;font-size:clamp(30px,3.6vw,46px)}
+.feature p{color:var(--gray);max-width:40ch}
+
+.grid{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;width:100%}
+.grid .post{flex:0 1 calc((100% - 32px) / 3);min-width:260px}
+.post{border:1.5px solid var(--line);border-radius:28px;overflow:hidden;display:flex;flex-direction:column;align-items:center;text-align:center;transition:transform .25s}
+.post:hover{transform:scale(1.02)}
+.pic{position:relative}.pic .play{position:absolute;left:50%;top:50%;width:68px;height:68px;margin:-34px 0 0 -34px;border-radius:50%;background:rgba(0,0,0,.72);display:grid;place-items:center;pointer-events:none;transition:transform .4s var(--ease)}.pic .play::after{content:"";margin-left:5px;border-left:20px solid #fff;border-top:12px solid transparent;border-bottom:12px solid transparent}a:hover .pic .play{transform:scale(1.08)}
+.post .pic{width:100%;aspect-ratio:4/3;overflow:hidden;background:var(--pink-wash)}
+.post .pic img,.feature .pic img{transition:transform .6s var(--ease)}
+.post .pic img{width:100%;height:100%;object-fit:cover}
+.post:hover .pic img,.feature:hover .pic img{transform:scale(1.04)}
+.post .in{padding:6px 24px 26px;display:flex;flex-direction:column;align-items:center;gap:12px;flex:1}
+.post h3{font-weight:900;font-size:24px;line-height:1.05}
+.post p{font-size:15.5px;color:var(--gray)}
+.post .cta{margin-top:auto}
+.kind{border-radius:999px;padding:7px 14px;font-weight:700;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;line-height:1}
+time{font-size:14px;color:var(--gray)}
+.empty{text-align:center;color:var(--gray);padding:40px 0}
+.tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}.tags a{border:1.5px solid var(--line);border-radius:999px;padding:7px 14px;font-weight:700;font-size:13px}.tags a:hover{background:var(--pink-wash)}
+
+/* nota completa */
+.article{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;padding-top:20px}
+.article .back{align-self:center}
+.article h1{font-weight:900;font-size:clamp(38px,5.6vw,80px);max-width:18ch}
+.article .dek{font-size:21px;color:var(--gray);max-width:44ch}
+.article .by{font-size:15px;font-weight:700}
+.article .cover{width:100%;max-width:1100px;border-radius:32px;overflow:hidden;background:var(--pink-wash);aspect-ratio:16/9}
+.article .cover img{width:100%;height:100%;object-fit:cover}
+.article .body{display:flex;flex-direction:column;gap:20px;max-width:62ch;font-size:19px;line-height:1.65;padding-block:16px}
+.share{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.more{display:flex;flex-direction:column;align-items:center;gap:22px;padding-top:40px;border-top:1.5px solid var(--line);margin-top:20px;width:100%}
+.more h2{font-weight:900;font-size:clamp(30px,3.6vw,46px)}
+
+.closing{background:var(--ink);color:var(--white);border-radius:36px;padding:56px 32px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;margin-top:22px}
+.closing h2{font-weight:900;font-size:clamp(34px,5vw,64px)}
+.closing h2 i.it{color:var(--pink)}
+.closing .cta{background:var(--pink);color:var(--ink)}
+footer{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:28px 4px 4px}
+footer .logo{color:var(--ink)}
+footer p{font-weight:300;font-size:15px}
+footer small{font-size:13px;color:var(--gray)}
+
+.fade{animation:fade .5s var(--ease)}
+@keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+@media (max-width:1000px){
+  .nav{grid-template-columns:1fr auto;grid-template-rows:56px auto;height:auto;border-radius:28px;row-gap:0;padding:0 8px 0 18px}
+  .nav-links{display:flex;grid-column:1/-1;grid-row:2;justify-content:flex-start;gap:20px;overflow-x:auto;scrollbar-width:none;padding:2px 10px 14px 0;-webkit-overflow-scrolling:touch;mask-image:linear-gradient(90deg,#000 88%,transparent)}
+  .nav-links::-webkit-scrollbar{display:none}
+  .nav-links a{white-space:nowrap;font-size:14.5px}
+  [id]{scroll-margin-top:130px}
+  .grid{max-width:480px;margin-inline:auto}
+  .grid .post{flex-basis:100%}
+  .feature{grid-template-columns:1fr}
+  .feature .pic{min-height:0;aspect-ratio:4/3}
+}
+@media (max-width:640px){
+  body{font-size:16px}
+  .nav-end span{display:none}
+  .nav{padding:0 8px 0 18px}
+  .head,.closing{padding:44px 18px}
+  .feature .in{padding:28px 20px}
+  .article .body{font-size:17.5px}
+  .article .cover{border-radius:24px;aspect-ratio:4/3}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.clock{display:flex;flex-direction:column;align-items:center;gap:8px;margin:2px 0 4px}
+.article .clock b{font-size:clamp(28px,3vw,36px)}
+.clock b{font-weight:900;font-size:clamp(34px,4vw,48px);letter-spacing:-0.03em;font-variant-numeric:tabular-nums;line-height:1}
+.clock span{font-size:14px;font-weight:500;letter-spacing:.02em}
+.credit{font-size:12.5px;color:var(--gray,#565656);text-align:center;margin:8px 0 0}
+.gal{width:100%;max-width:62ch;display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 0 10px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.gal::-webkit-scrollbar{display:none}
+.gal figure{flex:0 0 86%;margin:0;scroll-snap-align:center;display:flex;flex-direction:column;gap:8px}
+.gal.one figure{flex-basis:100%}
+.gal img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:22px;background:var(--pink-wash);cursor:zoom-in}
+.gal figcaption{font-size:13.5px;color:var(--gray,#565656);text-align:center}
+.gal-hint{font-size:13px;color:var(--gray,#565656);text-align:center;margin:-8px 0 0}
+.zoom{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;padding:20px;cursor:zoom-out}
+.zoom img{max-width:100%;max-height:100%;border-radius:16px}
+.source{font-size:14px;color:var(--gray,#565656);border-top:1.5px solid var(--line,#eee);padding-top:16px;margin:0}
+.source a{color:var(--ink,#000);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.loadmore{display:flex;justify-content:center;margin-top:10px}
+@view-transition{navigation:auto}
+::view-transition-old(root){animation:vt-out .35s cubic-bezier(.4,0,.2,1) both}
+::view-transition-new(root){animation:vt-in .6s cubic-bezier(.2,.7,.2,1) both}
+@keyframes vt-out{to{opacity:0;transform:translateY(-8px)}}
+@keyframes vt-in{from{opacity:0;transform:translateY(14px)}}
+.nav{view-transition-name:nav}
+::view-transition-group(nav){animation-duration:0s}
+@media (prefers-reduced-motion:reduce){::view-transition-old(root),::view-transition-new(root){animation:none}}
+.article{animation:art-in .7s cubic-bezier(.2,.7,.2,1) both}
+@keyframes art-in{from{opacity:0;transform:translateY(16px)}}
+.foot-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;font-size:14px;font-weight:700}.foot-links a{color:inherit;text-decoration:none;font-weight:700;transition:color .25s}.foot-links a:hover{color:var(--pink)}
+.menu-btn{display:none}
+.nav-links>div{display:flex;gap:24px;justify-content:center}
+@media (max-width:1000px){
+  .nav{grid-template-columns:1fr auto;grid-template-rows:60px;height:auto;border-radius:30px;padding:0 6px 0 20px;row-gap:0;transition:border-radius .4s var(--ease)}
+  .nav .logo b{font-size:25px}.nav .logo span{font-size:11px}
+  .nav-end{gap:6px}
+  .nav .quote{height:46px;padding:0 20px;font-size:14.5px}
+  .menu-btn{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:46px;height:46px;border-radius:50%;background:#1d1d1d;border:0;cursor:pointer;padding:0}
+  .menu-btn i{display:block;width:18px;height:2px;border-radius:2px;background:var(--white);transition:transform .4s var(--ease)}
+  .nav.open .menu-btn i:first-child{transform:translateY(3.5px) rotate(45deg)}
+  .nav.open .menu-btn i:last-child{transform:translateY(-3.5px) rotate(-45deg)}
+  .nav-links{grid-column:1/-1;grid-row:2;display:grid;grid-template-rows:0fr;overflow:hidden;mask-image:none;padding:0;gap:0;transition:grid-template-rows .45s var(--ease)}
+  .nav-links{justify-self:stretch;width:100%;justify-content:stretch;grid-template-columns:1fr}
+  .nav-links>div{min-height:0;display:flex;flex-direction:column;gap:2px;width:100%;padding-right:14px}
+  .nav.open .nav-links{grid-template-rows:1fr}
+  .nav.open{border-radius:28px}
+  .nav-links a{font-size:21px;font-weight:700;color:var(--white);padding:11px 2px;border-top:1px solid #222;opacity:0;translate:0 -6px;transition:opacity .35s var(--ease),translate .35s var(--ease),color .2s}
+  .nav-links a:first-child{margin-top:4px}
+  .nav-links a:last-child{margin-bottom:14px}
+  .nav.open .nav-links a{opacity:1;translate:0 0}
+  .nav.open .nav-links a:nth-child(2){transition-delay:.04s}.nav.open .nav-links a:nth-child(3){transition-delay:.08s}.nav.open .nav-links a:nth-child(4){transition-delay:.12s}.nav.open .nav-links a:nth-child(5){transition-delay:.16s}.nav.open .nav-links a:nth-child(6){transition-delay:.2s}
+}
+.cover.video{width:100%;max-width:1100px;aspect-ratio:16/9;border-radius:28px;overflow:hidden;background:#000}
+.cover.video iframe,.cover.video video{width:100%;height:100%;border:0;display:block;background:#000}
+@media (max-width:700px){.cover.video{border-radius:18px}}
+</style><style>
+
+.head .tabs button{background:var(--white)}
+.head .tabs button[aria-pressed="true"]{background:var(--ink);color:var(--white)}
+.rc{display:flex;flex-direction:column;gap:22px;padding-top:44px}
+.rc[hidden]{display:none}
+.rc-top{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px}
+.rc-top h2{font-weight:900;font-size:clamp(36px,5vw,68px)}
+.rc-top p{font-size:18px;max-width:52ch;color:var(--gray)}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.chip{background:var(--pink-wash);border-radius:999px;padding:7px 14px;font-size:13.5px;font-weight:700;line-height:1}
+.chip.k{background:var(--ink);color:var(--white)}
+.tiers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:stretch}
+.tier{border:1.5px solid var(--line);border-radius:32px;padding:30px 24px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;background:var(--white)}
+.tier.hot{background:var(--pink);border-color:var(--pink)}
+.tier .badge{background:var(--ink);color:var(--white);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;border-radius:999px;padding:7px 13px;line-height:1}
+.tier h3{font-weight:900;font-size:28px}
+.tier .amt{font-weight:900;font-size:clamp(44px,4.4vw,58px);letter-spacing:-0.04em;line-height:1;font-variant-numeric:tabular-nums}
+.tier .amt small{font-weight:400;font-size:16px;letter-spacing:0}
+.tier .fee{font-size:13.5px;color:var(--ink);opacity:.7;margin-top:-6px}
+.tier ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;font-size:15.5px;width:100%}
+.tier li{padding-bottom:9px;border-bottom:1.5px solid var(--line)}
+.tier.hot li{border-color:rgba(0,0,0,.14)}
+.tier li:last-child{border-bottom:0}
+.tier .cta{margin-top:auto;width:100%}
+.tier.hot .cta{background:var(--ink);color:var(--white)}
+.don{width:100%;background:var(--pink-wash);border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:10px;margin-top:auto}
+.don b{font-size:14.5px}
+.don .opts{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+.don .opts button{background:var(--white);border-radius:999px;padding:9px 13px;font-weight:700;font-size:14px;line-height:1;transition:transform .2s}
+.don .opts button:hover{transform:scale(1.05)}
+.don .opts button[aria-pressed="true"]{background:var(--ink);color:var(--white)}
+.don label{display:none;align-items:center;justify-content:center;gap:6px;font-weight:700}
+.don.otra label{display:flex}
+.don input{width:110px;border:1.5px solid var(--ink);border-radius:12px;padding:8px 10px;font-weight:700;text-align:center;background:var(--white)}
+.don + .cta{margin-top:0}
+.cta[disabled]{opacity:.55;pointer-events:none}
+.msg{font-size:13.5px;color:var(--gray);min-height:1em}
+.faqs{max-width:860px;margin:30px auto 0;width:100%}
+.faqs h2{font-weight:900;font-size:clamp(32px,4vw,52px);text-align:center;margin-bottom:10px}
+.qa{border-bottom:1.5px solid var(--line);padding:16px 0}
+.qa summary{font-weight:700;cursor:pointer}
+.qa p{color:var(--gray);margin-top:8px}
+dialog.ok{border:0;border-radius:32px;padding:34px 28px;max-width:440px;width:calc(100% - 32px);text-align:center}
+dialog.ok::backdrop{background:rgba(0,0,0,.55)}
+dialog.ok h2{font-weight:900;font-size:34px;margin-bottom:10px}
+dialog.ok p{color:var(--gray);margin-bottom:20px}
+dialog.ok .acts{display:flex;flex-direction:column;gap:10px}
+@media (max-width:1000px){.tiers{grid-template-columns:1fr;max-width:480px;margin:0 auto;width:100%}}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="nav" aria-label="Principal">
+    <a class="logo" href="index.html" aria-label="La Guayaba Ilustrada, inicio"><b>LG.I</b><span>La Guayaba<br>Ilustrada</span></a>
+    <div class="nav-links"><div>
+      <a href="index.html#servicios">Servicios</a>
+      <a href="index.html#cotizador">Cotizador</a>
+      <a href="index.html#planes">Planes</a>
+      <a href="index.html#proyectos">Proyectos</a>
+      <a href="blog.html" >Noticias</a>
+      <a href="recursos">Recursos</a>
+      <a href="index.html#contacto">Contacto</a>
+    </div>
+    </div>
+    <div class="nav-end"><span>Cuernavaca, Morelos</span><a class="quote" href="index.html#cotizador">Cotizar</a><button class="menu-btn" type="button" aria-label="Abrir menú" aria-expanded="false"><i></i><i></i></button></div>
+  </nav>
+
+  <main>
+  <section class="head">
+    <span class="eyebrow">Recursos</span>
+    <h1>Recursos para <i class="it">crear</i>.</h1>
+    <p>Herramientas para diseñadores, animadores y editores. Algunas son gratis y otras traen extras para llevar tus proyectos más lejos.</p>
+    <div class="tabs" id="filtros" role="group" aria-label="Filtrar recursos"></div>
+  </section>
+
+  <div id="lista"></div>
+
+  <section class="faqs">
+    <h2>Preguntas</h2>
+    <details class="qa"><summary>¿Cómo recibo mi archivo?</summary><p>En cuanto Mercado Pago confirma tu pago, regresas a esta página y aparece el botón de descarga. En la versión gratuita la descarga empieza al momento.</p></details>
+    <details class="qa"><summary>¿Con qué puedo pagar?</summary><p>Con tarjeta de crédito o débito y con saldo de Mercado Pago. Son pagos que se acreditan al momento para que descargues sin esperar.</p></details>
+    <details class="qa"><summary>¿Por qué el precio no es redondo?</summary><p>El precio ya incluye la comisión que cobra Mercado Pago por cada venta, para que veas el total real desde el principio.</p></details>
+    <details class="qa"><summary>¿El donativo es obligatorio?</summary><p>No. La versión gratuita se descarga en $0. Si quieres apoyar para que sigamos liberando recursos, puedes elegir la cantidad que tú quieras.</p></details>
+    <details class="qa"><summary>¿Necesito Claude para usar la skill?</summary><p>Sí. La skill se instala en Claude y funciona dentro de tus conversaciones o en Claude Code. La guía incluida te explica cómo hacerlo.</p></details>
+    <details class="qa"><summary>No me llegó el archivo, ¿qué hago?</summary><p>Escríbenos por WhatsApp al 720 909 7907 con tu número de pago y te lo mandamos.</p></details>
+  </section>
+  </main>
+
+  <section class="closing">
+    <h2>¿Necesitas algo hecho a la <i class="it">medida</i>?</h2>
+    <a class="cta" href="index.html#cotizador">Cotiza tu proyecto</a>
+  </section>
+
+  <dialog class="ok" id="aviso">
+    <h2 id="av-t"></h2>
+    <p id="av-p"></p>
+    <div class="acts" id="av-a"></div>
+  </dialog>
+
+  <footer>
+    <a class="logo" href="index.html"><b>LG.I</b><span>La Guayaba<br>Ilustrada</span></a>
+    <p>Organizando ideas creativas para ejecutarlas.</p>
+    <nav class="foot-links" aria-label="Más"><a href="/precios">Precios</a><a href="/blog">Noticias</a><a href="/recursos">Recursos</a><a href="https://wa.me/527209097907" target="_blank" rel="noopener">WhatsApp</a><a href="mailto:hola@guayabailustrada.com.mx">Correo</a><a href="https://instagram.com/guayabailustrada" target="_blank" rel="noopener">Instagram</a><a href="https://www.instagram.com/lgi.newsbrand/" target="_blank" rel="noopener">Newsbrand</a><a href="https://www.facebook.com/guayabailustrada" target="_blank" rel="noopener">Facebook</a></nav>
+    <small>© 2026 La Guayaba Ilustrada · Cuernavaca, Morelos</small>
+  </footer>
+
+</div>
+<script>addEventListener("pageshow",e=>{if(e.persisted)location.reload()})</script>
+<script>document.write('<script src="/temas.js?t='+Math.floor(Date.now()/60000)+'"><\/script>')</script>
+<script src="chat.js"></script>
+<script>(()=>{const n=document.querySelector(".nav");if(!n)return;const f=()=>document.documentElement.style.setProperty("--navh",(n.offsetHeight+18)+"px");f();addEventListener("resize",f);addEventListener("load",f)})()</script>
+<script>(()=>{const n=document.querySelector(".nav"),b=n&&n.querySelector(".menu-btn");if(!b)return;const set=o=>{n.classList.toggle("open",o);b.setAttribute("aria-expanded",o);b.setAttribute("aria-label",o?"Cerrar menú":"Abrir menú")};b.addEventListener("click",()=>set(!n.classList.contains("open")));n.querySelectorAll(".nav-links a").forEach(a=>a.addEventListener("click",()=>set(false)));document.addEventListener("click",e=>{if(!n.contains(e.target))set(false)});addEventListener("scroll",()=>{if(n.classList.contains("open")&&Math.abs(scrollY-(n._y??scrollY))>160)set(false)},{passive:true});b.addEventListener("click",()=>{n._y=scrollY})})()</script>
+<script>window.REVEAL=".head > *, .rc-top > *, .tier, .faqs > *, .closing > *, footer > *";</script>
+<script src="reveal.js"></script>
+<script type="module">
+import { RECURSOS, DONATIVOS, precio } from '/lib/recursos.js';
+const $ = s => document.querySelector(s);
+const money = n => '$' + Number(n).toLocaleString('es-MX');
+const WA = 'https://wa.me/527209097907?text=';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/* filtros por perfil */
+const perfiles = ['Todos', ...new Set(RECURSOS.flatMap(r => r.para))];
+let filtro = 'Todos';
+$('#filtros').innerHTML = perfiles.map(p => `<button type="button" aria-pressed="${p === filtro}" data-p="${esc(p)}">${esc(p)}</button>`).join('');
+$('#filtros').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  filtro = b.dataset.p;
+  $('#filtros').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+  document.querySelectorAll('.rc').forEach(s => { s.hidden = filtro !== 'Todos' && !s.dataset.para.split('|').includes(filtro); });
+});
+
+/* tarjetas */
+const tier = (rec, n) => {
+  const lis = n.incluye.map(i => `<li>${esc(i)}</li>`).join('');
+  if (!n.base) {
+    const opts = DONATIVOS.map((d, i) => `<button type="button" data-m="${d}" aria-pressed="${i === 0}">${d ? money(d) : 'Sin donativo'}</button>`).join('');
+    return `<article class="tier" data-r="${rec.id}" data-n="${n.id}">
+      <span class="badge">Gratis</span><h3>${esc(n.nombre)}</h3><div class="amt">$0</div>
+      <ul>${lis}</ul>
+      <div class="don" data-m="0"><b>¿Cuánto quieres donar?</b><div class="opts">${opts}<button type="button" data-m="otra" aria-pressed="false">Otra</button></div>
+      <label>$ <input type="number" min="10" max="5000" step="1" inputmode="numeric" placeholder="150" aria-label="Cantidad a donar en pesos"></label></div>
+      <button type="button" class="cta go">Descargar gratis</button><p class="msg" aria-live="polite"></p></article>`;
+  }
+  return `<article class="tier${n.destacado ? ' hot' : ''}" data-r="${rec.id}" data-n="${n.id}">
+    ${n.destacado ? '<span class="badge">El más elegido</span>' : '<span class="badge">Pago único</span>'}<h3>${esc(n.nombre)}</h3>
+    <div class="amt">${money(precio(n.base))} <small>MXN</small></div><p class="fee">Incluye la comisión de Mercado Pago</p>
+    <ul>${lis}</ul>
+    <button type="button" class="cta go">Comprar con Mercado Pago</button><p class="msg" aria-live="polite"></p></article>`;
+};
+$('#lista').innerHTML = RECURSOS.map(rec => `<section class="rc" id="${rec.id}" data-para="${esc(rec.para.join('|'))}">
+  <div class="rc-top"><div class="chips"><span class="chip k">${esc(rec.tipo)}</span>${rec.para.map(p => `<span class="chip">${esc(p)}</span>`).join('')}</div>
+  <h2>${esc(rec.nombre)}</h2><p>${esc(rec.resumen)}</p></div>
+  <div class="tiers">${rec.niveles.map(n => tier(rec, n)).join('')}</div></section>`).join('');
+
+/* donativo */
+const montoDe = don => {
+  if (don.dataset.m !== 'otra') return Number(don.dataset.m);
+  const v = Math.round(Number(don.querySelector('input').value));
+  return v > 0 ? v : 0;
+};
+const textoBoton = t => {
+  const don = t.querySelector('.don'); if (!don) return;
+  const m = montoDe(don);
+  t.querySelector('.go').textContent = m ? `Donar ${money(m)} y descargar` : 'Descargar gratis';
+};
+document.addEventListener('click', e => {
+  const b = e.target.closest('.don .opts button'); if (!b) return;
+  const don = b.closest('.don');
+  don.querySelectorAll('.opts button').forEach(x => x.setAttribute('aria-pressed', x === b));
+  don.dataset.m = b.dataset.m; don.classList.toggle('otra', b.dataset.m === 'otra');
+  if (b.dataset.m === 'otra') don.querySelector('input').focus();
+  textoBoton(b.closest('.tier'));
+});
+document.addEventListener('input', e => { if (e.target.closest('.don')) textoBoton(e.target.closest('.tier')); });
+
+/* acciones */
+const api = async (ruta, datos) => {
+  const r = await fetch('/api/' + ruta, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(datos) });
+  const j = await r.json().catch(() => ({ error: 'No pudimos conectar. Intenta de nuevo.' }));
+  return { ok: r.ok, status: r.status, ...j };
+};
+document.addEventListener('click', async e => {
+  const go = e.target.closest('.tier .go'); if (!go) return;
+  const t = go.closest('.tier'), msg = t.querySelector('.msg');
+  const r = t.dataset.r, n = t.dataset.n, don = t.querySelector('.don');
+  const m = don ? montoDe(don) : null;
+  if (don && don.dataset.m === 'otra' && (m < 10 || m > 5000)) { msg.textContent = 'Escribe un donativo de $10 a $5,000, o elige "Sin donativo".'; return; }
+  go.disabled = true; msg.textContent = don && !m ? 'Preparando tu descarga…' : 'Abriendo Mercado Pago…';
+  const res = don && !m ? await api('descargar', { r, n }) : await api('pagar', { r, n, monto: m });
+  go.disabled = false;
+  if (!res.ok || !res.url) { msg.innerHTML = esc(res.error || 'Algo salió mal.') + ` <a href="${WA + encodeURIComponent('Hola, quiero el recurso ' + r)}" target="_blank" rel="noopener"><u>WhatsApp</u></a>`; return; }
+  msg.textContent = '';
+  if (don && !m) { aviso('¡Listo!', 'Tu descarga empezó. Si no se abre, usa el botón.', res.url); location.href = res.url; }
+  else location.href = res.url;
+});
+
+/* aviso */
+function aviso(t, p, url) {
+  $('#av-t').textContent = t; $('#av-p').textContent = p;
+  $('#av-a').innerHTML = (url ? `<a class="cta" href="${esc(url)}" target="_blank" rel="noopener">Descargar archivo</a>` : '') + '<button type="button" class="cta light" id="av-x">Cerrar</button>';
+  $('#av-x').onclick = () => $('#aviso').close();
+  $('#aviso').showModal();
+}
+
+/* regreso de Mercado Pago */
+const q = new URLSearchParams(location.search);
+const pago = q.get('payment_id') || q.get('collection_id');
+const st = q.get('status') || q.get('collection_status');
+if (pago && pago !== 'null') {
+  if (st === 'approved') {
+    aviso('Confirmando tu pago…', 'Un momento, estamos verificando con Mercado Pago.');
+    api('entrega', { pago }).then(res => {
+      if (res.url) aviso('¡Gracias por tu compra!', `${res.recurso} · ${res.nivel}. Guarda esta página: con este enlace puedes volver a descargar.`, res.url);
+      else if (res.estado) aviso('Pago en proceso', 'Mercado Pago todavía no confirma tu pago. Recarga esta página en unos minutos.');
+      else aviso('Casi listo', res.error || 'No pudimos confirmar tu pago. Escríbenos por WhatsApp.');
+    });
+  } else if (st) aviso('El pago no se completó', 'No se hizo ningún cargo. Puedes intentarlo de nuevo cuando quieras.');
+}
+</script>
+</body>
+</html>

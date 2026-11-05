@@ -347,12 +347,12 @@ def main():
 
     # sitemap, robots, rss, llms
     today = datetime.now().strftime('%Y-%m-%d')
-    urls = [(SITE + '/', today, '1.0'), (SITE + '/precios', today, '0.9'), (SITE + '/blog', iso(POSTS[0]['d'])[:10] if POSTS else today, '0.8')]
+    urls = [(SITE + '/', today, '1.0'), (SITE + '/precios', today, '0.9'), (SITE + '/recursos', today, '0.9'), (SITE + '/blog', iso(POSTS[0]['d'])[:10] if POSTS else today, '0.8')]
     urls += [(u, d, '0.7') for u, d in temas_urls]
     urls += [(f'{SITE}/notas/{n["id"]}', iso(n.get('d'))[:10], '0.6') for n in POSTS]
     write(p('sitemap.xml'), '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
           ''.join(f'  <url><loc>{u}</loc><lastmod>{d}</lastmod><priority>{pr_}</priority></url>\n' for u, d, pr_ in urls) + '</urlset>\n')
-    write(p('robots.txt'), f'User-agent: *\nAllow: /\nDisallow: /drafts/\nDisallow: /inbox/\nDisallow: /scripts/\nDisallow: /worker/\n\n'
+    write(p('robots.txt'), f'User-agent: *\nAllow: /\nDisallow: /drafts/\nDisallow: /inbox/\nDisallow: /scripts/\nDisallow: /worker/\nDisallow: /panel\n\n'
                            f'Sitemap: {SITE}/sitemap.xml\n')
     rfc = lambda d: datetime.fromisoformat(iso(d)).strftime('%a, %d %b %Y %H:%M:%S -0600')
     write(p('feed.xml'), '<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel>'
