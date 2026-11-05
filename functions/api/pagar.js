@@ -4,7 +4,7 @@ import { buscar, total as totalDe } from '../../lib/recursos.js';
 import { json, body } from './_comun.js';
 
 export async function onRequestPost({ request, env }) {
-  if (!env.MP_TOKEN) return json({ error: 'Los pagos todavía no están activos.' }, 503);
+  if (!env.MP_TOKEN || !env.ARCHIVOS) return json({ error: 'Los pagos todavía no están activos.' }, 503);
   const { r, n, monto } = await body(request);
   const f = buscar(r, n);
   if (!f) return json({ error: 'Recurso no encontrado.' }, 404);
