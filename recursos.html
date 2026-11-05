@@ -222,10 +222,9 @@ footer small{font-size:13px;color:var(--gray)}
 .tiers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:stretch}
 .tier{border:1.5px solid var(--line);border-radius:32px;padding:30px 24px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;background:var(--white)}
 .tier.hot{background:var(--pink);border-color:var(--pink)}
-.tier{overflow:hidden}
-.tier-v{margin:-30px -24px 4px;width:calc(100% + 48px);aspect-ratio:16/10;background:#000;position:relative}
-.tier-v video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s var(--ease)}
-.tier:hover .tier-v video{transform:scale(1.05)}
+.tiers .tier{transition:scale .35s var(--ease),box-shadow .35s var(--ease),opacity .9s var(--ease) var(--rvd,0ms),translate .9s var(--ease) var(--rvd,0ms)}
+.tiers .tier:hover{scale:1.02;box-shadow:0 14px 34px rgba(0,0,0,.08)}
+@media (prefers-reduced-motion:reduce){.tiers .tier,.tiers .tier:hover{transition:none;scale:none}}
 .tier .badge{background:var(--ink);color:var(--white);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;border-radius:999px;padding:7px 13px;line-height:1}
 .tier h3{font-weight:900;font-size:28px}
 .tier .amt{font-weight:900;font-size:clamp(44px,4.4vw,58px);letter-spacing:-0.04em;line-height:1;font-variant-numeric:tabular-nums}
@@ -356,17 +355,16 @@ $('#filtros').addEventListener('click', e => {
 /* tarjetas */
 const tier = (rec, n) => {
   const lis = n.incluye.map(i => `<li>${esc(i)}</li>`).join('');
-  const vid = n.loop ? `<div class="tier-v"><video src="${esc(n.loop)}.mp4" poster="${esc(n.loop)}.webp" muted loop playsinline autoplay preload="metadata" aria-hidden="true"></video></div>` : '';
   if (!n.base) {
     const opts = DONATIVOS.map((d, i) => `<button type="button" data-m="${d}" aria-pressed="${i === 0}">${d ? money(d) : 'Sin donativo'}</button>`).join('');
-    return `<article class="tier" data-r="${rec.id}" data-n="${n.id}">${vid}
+    return `<article class="tier" data-r="${rec.id}" data-n="${n.id}">
       <span class="badge">Gratis</span><h3>${esc(n.nombre)}</h3><div class="amt">$0</div>
       <ul>${lis}</ul>
       <div class="don" data-m="0"><b>¿Cuánto quieres donar?</b><div class="opts">${opts}<button type="button" data-m="otra" aria-pressed="false">Otra</button></div>
       <label>$ <input type="number" min="10" max="5000" step="1" inputmode="numeric" placeholder="150" aria-label="Cantidad a donar en pesos"></label></div>
       <button type="button" class="cta go">Descargar gratis</button><p class="msg" aria-live="polite"></p></article>`;
   }
-  return `<article class="tier${n.destacado ? ' hot' : ''}" data-r="${rec.id}" data-n="${n.id}">${vid}
+  return `<article class="tier${n.destacado ? ' hot' : ''}" data-r="${rec.id}" data-n="${n.id}">
     ${n.destacado ? '<span class="badge">El más elegido</span>' : '<span class="badge">Pago único</span>'}<h3>${esc(n.nombre)}</h3>
     <div class="amt">${money(total(n))} <small>MXN</small></div><p class="fee">Incluye la comisión de Mercado Pago</p>
     <ul>${lis}</ul>
@@ -377,15 +375,6 @@ $('#lista').innerHTML = RECURSOS.map(rec => `<section class="rc" id="${rec.id}" 
   <h2>${esc(rec.nombre)}</h2><p>${esc(rec.resumen)}</p>${rec.demo ? '<span class="demo-tag">Así queda tu video</span>' : ''}</div>
   ${rec.demo ? `<figure class="demo-v"><video src="${esc(rec.demo.video)}" poster="${esc(rec.demo.poster)}" controls playsinline preload="none"></video><figcaption>${esc(rec.demo.nota)}</figcaption></figure>` : ''}</div>
   <div class="tiers">${rec.niveles.map(n => tier(rec, n)).join('')}</div></section>`).join('');
-
-/* videos de las tarjetas: se reproducen solo cuando se ven */
-const vids = document.querySelectorAll('.tier-v video');
-const quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
-if (quieto) vids.forEach(v => { v.removeAttribute('autoplay'); v.pause(); });
-else if ('IntersectionObserver' in window) {
-  const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? e.target.play().catch(() => {}) : e.target.pause()), { threshold: .2 });
-  vids.forEach(v => io.observe(v));
-}
 
 /* donativo */
 const montoDe = don => {
