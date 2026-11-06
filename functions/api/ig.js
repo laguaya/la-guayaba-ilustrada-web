@@ -167,20 +167,21 @@ export async function onRequestGet({ request, env }) {
       try { return await (await fetch(`${env.IG_API || API}/${ruta}${ruta.includes('?') ? '&' : '?'}access_token=${encodeURIComponent(pt)}`, { method: metodo })).json(); }
       catch (e) { return { error: { message: String(e) } }; }
     };
-    const sus = await llamar(`${paginaId(env)}/subscribed_apps?subscribed_fields=feed,messages,messaging_postbacks`, 'POST');
+    const sus = await llamar(`${paginaId(env)}/subscribed_apps?subscribed_fields=feed`, 'POST');
     const out = {
       token_pagina: pt !== env.IG_DM_TOKEN,
       pagina: await llamar(`${paginaId(env)}?fields=name,instagram_business_account`),
       suscribir_pagina: sus,
       apps_pagina: await llamar(`${paginaId(env)}/subscribed_apps`),
       apps_ig: await llamar(`${cuentaId(env)}/subscribed_apps`),
-      mensajes: await llamar(`${paginaId(env)}/conversations?platform=instagram&limit=1`),
+      mensajes: await llamar(`${paginaId(env)}/conversations?platform=instagram&limit=1&fields=id`),
       avisos: kv ? Number((await kv.get('ig:avisos')) || 0) : null,
       comentarios: kv ? Number((await kv.get('ig:comentarios')) || 0) : null,
       entregas: kv ? Number((await kv.get('ig:entregas')) || 0) : null,
       errores: kv ? JSON.parse((await kv.get('ig:errores')) || '[]') : null,
     };
-    const limpiar = o => JSON.parse(JSON.stringify(o, (k, v) => (k === 'access_token' ? '***' : v)));
+    const limpiar = o => JSON.parse(JSON.stringify(o, (k, v) =>
+      k === 'access_token' || k === 'paging' ? undefined : typeof v === 'string' ? v.replace(/access_token=[^&\s"]+/g, 'access_token=***') : v));
     return new Response(JSON.stringify(limpiar(out), null, 2), { headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
   }
   if (q.get('hub.mode') === 'subscribe' && env.IG_VERIFY && q.get('hub.verify_token') === env.IG_VERIFY)
