@@ -248,11 +248,17 @@ footer small{font-size:13px;color:var(--gray)}
 .don input{width:110px;border:1.5px solid var(--ink);border-radius:12px;padding:8px 10px;font-weight:700;text-align:center;background:var(--white)}
 .don + .cta{margin-top:0}
 .cta[disabled]{opacity:.55;pointer-events:none}
-.cod{width:100%;font-size:14.5px}
-.cod summary{cursor:pointer;font-weight:700;text-decoration:underline;text-underline-offset:3px;list-style:none}
+.cod{width:100%;font-size:15px}
+.cod summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 16px;border:2px dashed currentColor;border-radius:14px;font-weight:800;font-size:16.5px;line-height:1.25;text-align:center;transition:background .2s}
+.cod summary:hover{background:rgba(255,255,255,.22)}
+.cod summary .ico{font-size:22px;line-height:1}
+.cod summary small{display:block;font-weight:600;font-size:13px;opacity:.8;margin-top:2px}
+.cod[open] summary{border-style:solid}
 .cod summary::-webkit-details-marker{display:none}
-.cod-f{display:flex;gap:8px;margin-top:10px}
-.cod-f input{flex:1;min-width:0;border:1.5px solid var(--ink);border-radius:12px;padding:10px 12px;font-weight:700;text-transform:uppercase;background:var(--white);color:var(--ink)}
+.cod-f{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.cod-f input{width:100%;box-sizing:border-box;flex:none;border:2px solid var(--ink);border-radius:12px;padding:14px 12px;font-size:18px;font-weight:800;letter-spacing:.06em;text-align:center;text-transform:uppercase;background:var(--white);color:var(--ink)}
+.cod-f input::placeholder{color:var(--ink);opacity:.35}
+.cod-f .cta{width:100%}
 .tier.hot .cod-f .cta{background:var(--ink);color:var(--white)}
 .msg{font-size:13.5px;color:var(--gray);min-height:1em}
 .faqs{max-width:860px;margin:30px auto 0;width:100%}
@@ -369,7 +375,7 @@ const tier = (rec, n) => {
     ${n.destacado ? '<span class="badge">El más elegido</span>' : '<span class="badge">Pago único</span>'}<h3>${esc(n.nombre)}</h3>
     <div class="amt">${money(total(n))} <small>MXN</small></div><p class="fee">Incluye la comisión de Mercado Pago</p>
     <ul>${lis}</ul>
-    <button type="button" class="cta go">Comprar con Mercado Pago</button>${n.codigos ? `<details class="cod"><summary>¿Tienes un código de regalo?</summary><form class="cod-f"><input id="cod-${rec.id}-${n.id}" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="LGI-PRO-XXXXXX" aria-label="Código de regalo"><button type="submit" class="cta sm">Canjear</button></form></details>` : ''}<p class="msg" aria-live="polite"></p></article>`;
+    <button type="button" class="cta go">Comprar con Mercado Pago</button>${n.codigos ? `<details class="cod"><summary><span class="ico" aria-hidden="true">🎁</span><span>¿Tienes un código de regalo?<small>Toca aquí para canjearlo</small></span></summary><form class="cod-f"><input id="cod-${rec.id}-${n.id}" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="LGI-PRO-XXXXXX" aria-label="Código de regalo"><button type="submit" class="cta">Canjear código</button></form></details>` : ''}<p class="msg" aria-live="polite"></p></article>`;
 };
 $('#lista').innerHTML = RECURSOS.map(rec => `<section class="rc" id="${rec.id}" data-para="${esc(rec.para.join('|'))}">
   <div class="rc-intro${rec.demo ? ' con-demo' : ''}"><div class="rc-top"><span class="eyebrow">${esc(rec.tipo)}</span>
