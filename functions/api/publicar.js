@@ -59,7 +59,7 @@ export async function onRequestGet({ request, env }) {
   if (!est.ig_post) {
     if (!est.ig_cont) {
       if (!video) return json({ error: 'falta video' }, 400);
-      const c = await g(`${IG_ID}/media`, t, 'POST', { media_type: 'REELS', video_url: video, caption: copy, share_to_feed: true });
+      const c = await g(`${IG_ID}/media`, t, 'POST', { media_type: 'REELS', video_url: video, caption: copy, share_to_feed: true, thumb_offset: Number(q.get('seg') || 3) * 1000 });
       if (c.id) est.ig_cont = c.id; else est.ig_error = err(c);
     } else {
       const s = await g(`${est.ig_cont}?fields=status_code,status`, t);
@@ -99,6 +99,22 @@ export async function onRequestGet({ request, env }) {
     }
   }
 
+  // ---------- Portada del Reel de Facebook: &portada=<url de una imagen jpg> ----------
+  const portada = q.get('portada');
+  if (portada && est.fb_vid && est.fb_portada !== portada) {
+    try {
+      const img = await fetch(portada);
+      const fd = new FormData();
+      fd.append('source', new Blob([await img.arrayBuffer()], { type: 'image/jpeg' }), 'portada.jpg');
+      fd.append('is_preferred', 'true');
+      const r = await fetch(`${API}/${est.fb_vid}/thumbnails`, { method: 'POST', headers: { authorization: `Bearer ${t}` }, body: fd });
+      const j = await r.json().catch(() => ({}));
+      if (j.success || j.id) { est.fb_portada = portada; delete est.fb_portada_error; } else est.fb_portada_error = err(j) || JSON.stringify(j).slice(0, 200);
+    } catch (e) { est.fb_portada_error = String(e); }
+  }
+
+  if (est.ig_post) delete est.ig_error;
+  if (est.fb_post) delete est.fb_error;
   est.video = video;
   est.t = new Date().toISOString();
   await kv.put(k, JSON.stringify(est));
