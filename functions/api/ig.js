@@ -4,6 +4,7 @@
 // Variables en Cloudflare Pages (Configuración > Variables y secretos):
 //   IG_DM_TOKEN     token del usuario del sistema "Guayaba Bot" del porfolio La Guayaba Ilustrada (secreto, no caduca).
 //   IG_ID           id de la cuenta @guayabailustrada. Por defecto: 17841448502239351
+//   IG_PAGE_ID      id de la Página de Facebook unida a la cuenta. Por defecto: 103453035328282
 //   IG_APP_SECRET   clave secreta de la app "La Guayaba Ilustrada" en Meta (secreto). Valida que el aviso venga de Meta.
 //   IG_VERIFY       palabra que tú inventas para verificar el webhook (secreto).
 //   IG_USUARIO      (opcional) usuario de la cuenta, sin @. Por defecto: guayabailustrada
@@ -22,6 +23,7 @@ const TXT = {
 };
 
 const cuentaId = env => env.IG_ID || '17841448502239351';
+const paginaId = env => env.IG_PAGE_ID || '103453035328282';
 const normal = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 const coincide = t => PALABRAS.some(p => normal(t).split(/[^a-z0-9ñ]+/).includes(p));
 
@@ -47,15 +49,39 @@ async function token(env) {
   return t;
 }
 
+// Los mensajes de Instagram se mandan con el token de la Página de Facebook unida a la cuenta.
+async function tokenPagina(env) {
+  const base = await token(env);
+  const kv = env.RECURSOS;
+  if (kv) {
+    const g = JSON.parse((await kv.get('ig:pt')) || 'null');
+    if (g && g.b === base.slice(-12) && Date.now() - g.f < 7 * 864e5) return g.t;
+  }
+  let j = {};
+  try { j = await (await fetch(`${env.IG_API || API}/${paginaId(env)}?fields=access_token&access_token=${encodeURIComponent(base)}`)).json(); } catch {}
+  if (!j.access_token) { await nota(env, 'token pagina', j); return base; }
+  if (kv) await kv.put('ig:pt', JSON.stringify({ t: j.access_token, f: Date.now(), b: base.slice(-12) }));
+  return j.access_token;
+}
+
+// Guarda los últimos errores en el KV para poder revisarlos.
+async function nota(env, donde, j) {
+  console.log('IG error', donde, JSON.stringify(j).slice(0, 300));
+  const kv = env.RECURSOS; if (!kv) return;
+  const l = JSON.parse((await kv.get('ig:errores')) || '[]');
+  l.unshift({ t: new Date().toISOString(), donde, e: (j && j.error && j.error.message) || JSON.stringify(j).slice(0, 200) });
+  await kv.put('ig:errores', JSON.stringify(l.slice(0, 20)));
+}
+
 async function ig(env, ruta, metodo = 'GET', cuerpo) {
-  const t = await token(env);
+  const t = await tokenPagina(env);
   const r = await fetch(`${env.IG_API || API}/${ruta}`, {
     method: metodo,
     headers: { authorization: `Bearer ${t}`, 'content-type': 'application/json' },
     body: cuerpo ? JSON.stringify(cuerpo) : undefined,
   });
   const j = await r.json().catch(() => ({}));
-  if (!r.ok) console.log('IG error', ruta, JSON.stringify(j).slice(0, 300));
+  if (!r.ok) await nota(env, `${metodo} ${ruta.split('?')[0]}`, j);
   return { ok: r.ok, ...j };
 }
 
@@ -83,8 +109,8 @@ async function alComentar(env, cuenta, v) {
     if (await kv.get(`ig:c:${v.id}`)) return;                              // ya respondido
     await kv.put(`ig:c:${v.id}`, '1', { expirationTtl: 60 * 864e2 });
   }
-  const r = await ig(env, `${cuentaId(env)}/messages`, 'POST', { recipient: { comment_id: v.id }, message: pedirSeguir(env) });
-  if (!r.ok) await ig(env, `${cuentaId(env)}/messages`, 'POST', {                         // respaldo en texto
+  const r = await ig(env, `${paginaId(env)}/messages`, 'POST', { recipient: { comment_id: v.id }, message: pedirSeguir(env) });
+  if (!r.ok) await ig(env, `${paginaId(env)}/messages`, 'POST', {                         // respaldo en texto
     recipient: { comment_id: v.id },
     message: { text: `${TXT.seguir}\n\n${perfil(env)}\n\nCuando me sigas, contesta "Ya te sigo".` },
   });
@@ -97,13 +123,13 @@ async function alComentar(env, cuenta, v) {
 async function revisarSeguidor(env, igsid) {
   const p = await ig(env, `${igsid}?fields=is_user_follow_business,username`);
   if (p.is_user_follow_business) {
-    await ig(env, `${cuentaId(env)}/messages`, 'POST', {
+    await ig(env, `${paginaId(env)}/messages`, 'POST', {
       recipient: { id: igsid },
       message: botones(TXT.listo, [{ type: 'web_url', url: ENLACE, title: 'Descargar skill' }]),
     });
     await contar(env, 'ig:entregas');
   } else {
-    await ig(env, `${cuentaId(env)}/messages`, 'POST', {
+    await ig(env, `${paginaId(env)}/messages`, 'POST', {
       recipient: { id: igsid },
       message: botones(TXT.noSigue, [
         { type: 'web_url', url: perfil(env), title: 'Seguir' },
@@ -140,8 +166,12 @@ export async function onRequestGet({ request, env }) {
 // Meta avisa de comentarios y mensajes con un POST
 export async function onRequestPost({ request, env, waitUntil }) {
   const crudo = await request.text();
-  if (!(await firmaValida(env, crudo, request.headers.get('x-hub-signature-256') || ''))) return new Response('firma', { status: 401 });
+  if (!(await firmaValida(env, crudo, request.headers.get('x-hub-signature-256') || ''))) {
+    waitUntil(nota(env, 'firma', { error: { message: 'firma no válida' } }));
+    return new Response('firma', { status: 401 });
+  }
   let d; try { d = JSON.parse(crudo); } catch { return new Response('ok'); }
+  if (env.RECURSOS) waitUntil(contar(env, 'ig:avisos'));
   const tareas = [];
   for (const e of d.entry || []) {
     for (const c of e.changes || []) if (c.field === 'comments') tareas.push(alComentar(env, e.id, c.value));
